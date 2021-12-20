@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='From BUUOJ'><title>MRCTF2020 reverse writeups</title>
+
+<link rel='canonical' href='/post/mrctf2020-reverse-writeups/mrctf2020-reverse-writeups/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='MRCTF2020 reverse writeups'>
+<meta property='og:description' content='From BUUOJ'>
+<meta property='og:url' content='/post/mrctf2020-reverse-writeups/mrctf2020-reverse-writeups/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='BUUOJ' /><meta property='article:published_time' content='2021-03-04T16:38:52&#43;00:00'/><meta property='article:modified_time' content='2021-03-04T16:38:52&#43;00:00'/>
+<meta name="twitter:title" content="MRCTF2020 reverse writeups">
+<meta name="twitter:description" content="From BUUOJ">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/ctf/" >
+                CTF
+            </a>
+        
+            <a href="/categories/reverse/" >
+                Reverse
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/mrctf2020-reverse-writeups/mrctf2020-reverse-writeups/">MRCTF2020 reverse writeups</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        From BUUOJ
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 04, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    2 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="transform">Transform</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">dword <span style="color:#f92672">=</span> [ <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">0xa</span>, <span style="color:#ae81ff">0xf</span>, <span style="color:#ae81ff">0x17</span>, <span style="color:#ae81ff">0x7</span>, <span style="color:#ae81ff">0x18</span>, <span style="color:#ae81ff">0xc</span>, <span style="color:#ae81ff">0x6</span>, <span style="color:#ae81ff">0x1</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0x3</span>, <span style="color:#ae81ff">0x11</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0x1D</span>, <span style="color:#ae81ff">0x0b</span>, <span style="color:#ae81ff">0x1e</span>, <span style="color:#ae81ff">0x1b</span>, <span style="color:#ae81ff">0x16</span>, <span style="color:#ae81ff">0x4</span>, <span style="color:#ae81ff">0x0d</span>, <span style="color:#ae81ff">0x13</span>, <span style="color:#ae81ff">0x14</span>, <span style="color:#ae81ff">0x15</span>, <span style="color:#ae81ff">0x2</span>, <span style="color:#ae81ff">0x19</span>, <span style="color:#ae81ff">0x5</span>, <span style="color:#ae81ff">0x1f</span>, <span style="color:#ae81ff">0x8</span>, <span style="color:#ae81ff">0x12</span>, <span style="color:#ae81ff">0x1a</span>, <span style="color:#ae81ff">0x1c</span>, <span style="color:#ae81ff">0xe</span>, <span style="color:#ae81ff">0</span> ]
+
+flag <span style="color:#f92672">=</span> [ <span style="color:#ae81ff">0x67</span>, <span style="color:#ae81ff">0x79</span>, <span style="color:#ae81ff">0x7b</span>, <span style="color:#ae81ff">0x7f</span>, <span style="color:#ae81ff">0x75</span>, <span style="color:#ae81ff">0x2b</span>, <span style="color:#ae81ff">0x3c</span>, <span style="color:#ae81ff">0x52</span>, <span style="color:#ae81ff">0x53</span>, <span style="color:#ae81ff">0x79</span>, <span style="color:#ae81ff">0x57</span>, <span style="color:#ae81ff">0x5E</span>, <span style="color:#ae81ff">0x5D</span>, <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0x7B</span>, <span style="color:#ae81ff">0x2D</span>, <span style="color:#ae81ff">0x2A</span>, <span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0x7E</span>, <span style="color:#ae81ff">0x4C</span>, <span style="color:#ae81ff">0x57</span>, <span style="color:#ae81ff">0x79</span>, <span style="color:#ae81ff">0x41</span>, <span style="color:#ae81ff">0x6B</span>, <span style="color:#ae81ff">0x7E</span>, <span style="color:#ae81ff">0x65</span>, <span style="color:#ae81ff">0x3C</span>, <span style="color:#ae81ff">0x5C</span>, <span style="color:#ae81ff">0x45</span>, <span style="color:#ae81ff">0x6F</span>, <span style="color:#ae81ff">0x62</span>, <span style="color:#ae81ff">0x4D</span>, <span style="color:#ae81ff">0x3f</span>]
+print(len(dword), len(flag))
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(dword)):
+    flag[i] <span style="color:#f92672">^=</span> dword[i]
+
+code <span style="color:#f92672">=</span> [ <span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">33</span>)]
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(dword)):
+    code[dword[i]] <span style="color:#f92672">=</span> flag[i]
+ 
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(code)):
+    print(chr(code[i]), end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>)
+print()
+</code></pre></div><p>flag: <code>MRCTF{Tr4nsp0sltiON_Clph3r_1s_3z}</code></p>
+<h1 id="xor">Xor</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;MSAWB~FXZ:J:`tQJ&#34;N@ bpdd}8g&#39;</span>
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">27</span>):
+    print(chr(ord(flag[i]) <span style="color:#f92672">^</span> i), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+
+print()
+</code></pre></div><p>flag: <code>MRCTF{@_R3@1ly_E2_R3verse!}</code></p>
+<h2 id="hello_world_go">hello_world_go</h2>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">.rodata:00000000004D3C58 unk_4D3C58      db  66h ; f             ; DATA XREF: main_main:loc_49A40A↑o
+.rodata:00000000004D3C58                                         ; main_main+25C↑o
+.rodata:00000000004D3C59                 db  6Ch ; l
+.rodata:00000000004D3C5A                 db  61h ; a
+.rodata:00000000004D3C5B                 db  67h ; g
+.rodata:00000000004D3C5C                 db  7Bh ; {
+.rodata:00000000004D3C5D                 db  68h ; h
+.rodata:00000000004D3C5E                 db  65h ; e
+.rodata:00000000004D3C5F                 db  6Ch ; l
+.rodata:00000000004D3C60                 db  6Ch ; l
+.rodata:00000000004D3C61                 db  6Fh ; o
+.rodata:00000000004D3C62                 db  5Fh ; _
+.rodata:00000000004D3C63                 db  77h ; w
+.rodata:00000000004D3C64                 db  6Fh ; o
+.rodata:00000000004D3C65                 db  72h ; r
+.rodata:00000000004D3C66                 db  6Ch ; l
+.rodata:00000000004D3C67                 db  64h ; d
+.rodata:00000000004D3C68                 db  5Fh ; _
+.rodata:00000000004D3C69                 db  67h ; g
+.rodata:00000000004D3C6A                 db  6Fh ; o
+.rodata:00000000004D3C6B                 db  67h ; g
+.rodata:00000000004D3C6C                 db  6Fh ; o
+.rodata:00000000004D3C6D                 db  67h ; g
+.rodata:00000000004D3C6E                 db  6Fh ; o
+.rodata:00000000004D3C6F                 db  7Dh ; }
+</code></pre><h2 id="pixelshooter">PixelShooter</h2>
+<p>先使用NoxPlayer打开这个apk，发现游戏结束后有个flag信息，说得分不够高，说明flag会在游戏结束时根据得分获得</p>
+<p>使用apktool解压</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ java -jar apktool_2.5.0.jar d PixelShooter.apk
+</code></pre></div><p>这个显然是unity3d逆向，找到 <code>/assets/bin/Data/Managed</code>，使用 dnSpy打开 <code>Assembly-CSharp.dll</code></p>
+<p>看到有个gameController，其中有个gameOver</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> GameOver()
+	{
+		<span style="color:#66d9ef">this</span>.isGameOver = <span style="color:#66d9ef">true</span>;
+		<span style="color:#66d9ef">this</span>.UI.GetComponent&lt;UIController&gt;().GameOver(<span style="color:#66d9ef">this</span>.score, <span style="color:#66d9ef">this</span>.bestScore);
+		<span style="color:#66d9ef">if</span> (PlayerPrefs.HasKey(<span style="color:#e6db74">&#34;bestScore&#34;</span>))
+		{
+			<span style="color:#66d9ef">this</span>.bestScore = Mathf.Max(<span style="color:#66d9ef">this</span>.score, PlayerPrefs.GetInt(<span style="color:#e6db74">&#34;bestScore&#34;</span>));
+		}
+		<span style="color:#66d9ef">else</span>
+		{
+			<span style="color:#66d9ef">this</span>.bestScore = <span style="color:#66d9ef">this</span>.score;
+		}
+		<span style="color:#66d9ef">base</span>.GetComponent&lt;AudioSource&gt;().Stop();
+	}
+</code></pre></div><p>有个获取ui的函数，查看</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> GameOver(<span style="color:#66d9ef">int</span> score, <span style="color:#66d9ef">int</span> bestScore)
+	{
+		<span style="color:#66d9ef">this</span>.pad.SetActive(<span style="color:#66d9ef">false</span>);
+		Time.timeScale = <span style="color:#ae81ff">0f</span>;
+		<span style="color:#66d9ef">string</span> text = <span style="color:#e6db74">&#34;您的飞机已坠毁\n&#34;</span>;
+		<span style="color:#66d9ef">if</span> (bestScore &lt; score)
+		{
+			<span style="color:#66d9ef">string</span> text2 = text;
+			text = <span style="color:#66d9ef">string</span>.Concat(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">object</span>[]
+			{
+				text2,
+				<span style="color:#e6db74">&#34;获得最高分:&#34;</span>,
+				score,
+				<span style="color:#e6db74">&#34;!\n&#34;</span>
+			});
+			PlayerPrefs.SetInt(<span style="color:#e6db74">&#34;bestScore&#34;</span>, score);
+		}
+		<span style="color:#66d9ef">if</span> (score &lt; <span style="color:#ae81ff">20</span>)
+		{
+			text += <span style="color:#e6db74">&#34;少年继续努力！要拿到flag还差亿点点\n&#34;</span>;
+		}
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (score &lt; <span style="color:#ae81ff">100</span>)
+		{
+			text += <span style="color:#e6db74">&#34;战绩不错！但是要拿到flag还差亿点&#34;</span>;
+		}
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (score &lt; <span style="color:#ae81ff">500</span>)
+		{
+			text += <span style="color:#e6db74">&#34;惊人的成绩！！但是要拿到flag还差一点\n&#34;</span>;
+		}
+		<span style="color:#66d9ef">else</span>
+		{
+			text += <span style="color:#e6db74">&#34;MRCTF{Unity_1S_Fun_233}\n&#34;</span>;
+		}
+		<span style="color:#66d9ef">if</span> (Time.time - <span style="color:#66d9ef">this</span>.lastTime &lt; <span style="color:#ae81ff">15f</span>)
+		{
+			text += <span style="color:#e6db74">&#34;以及，别作死啊！\n&#34;</span>;
+		}
+		<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (Time.time - <span style="color:#66d9ef">this</span>.lastTime &lt; <span style="color:#ae81ff">60f</span>)
+		{
+			text += <span style="color:#e6db74">&#34;以及注意闪避！&#34;</span>;
+		}
+		<span style="color:#66d9ef">this</span>.gameOverText.text = text;
+		<span style="color:#66d9ef">this</span>.gameOverUI.SetActive(<span style="color:#66d9ef">true</span>);
+	}
+</code></pre></div><p>拿到flag</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+            <a href="/tags/reverse/">Reverse</a>
+        
+            <a href="/tags/buuoj/">BUUOJ</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/guetctf2019-reverse-writeups/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">GUETCTF2019 re writeups</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/start-reversing/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Start Reversing</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/aitmc-challenge/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AITMC-challenge</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2021 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#transform">Transform</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#hello_world_go">hello_world_go</a></li>
+    <li><a href="#pixelshooter">PixelShooter</a></li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

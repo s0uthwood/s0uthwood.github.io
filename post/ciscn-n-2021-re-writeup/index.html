@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='题目质量很高，终于补完了'><title>CISCN-N 2021 RE Writeup</title>
+
+<link rel='canonical' href='/post/ciscn-n-2021-re-writeup/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='CISCN-N 2021 RE Writeup'>
+<meta property='og:description' content='题目质量很高，终于补完了'>
+<meta property='og:url' content='/post/ciscn-n-2021-re-writeup/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='CISCN' /><meta property='article:published_time' content='2021-06-22T23:25:43&#43;00:00'/><meta property='article:modified_time' content='2021-06-22T23:25:43&#43;00:00'/>
+<meta name="twitter:title" content="CISCN-N 2021 RE Writeup">
+<meta name="twitter:description" content="题目质量很高，终于补完了">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/ctf/" >
+                CTF
+            </a>
+        
+            <a href="/categories/reverse/" >
+                Reverse
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/ciscn-n-2021-re-writeup/">CISCN-N 2021 RE Writeup</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        题目质量很高，终于补完了
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 22, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    13 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="imnotavirus">imnotavirus</h2>
+<p>解exe，解密pyc</p>
+<p>利用解密后的pyc，找到注入的shellcode，用ida解smc，最后解密</p>
+<p>比赛的时候还被迫阅读了一下pyinstaller的源码，收获很大</p>
+<h3 id="解exe">解exe</h3>
+<p>看到附件给了个pyinstaller，猜测是python逆向</p>
+<p>先ida看一眼，有upx壳，自动脱壳，再用exeinfo确认了一下是python逆向，pyinstxtractor.py解包（之前V&amp;N2021就吃了这个亏）</p>
+<h3 id="解pyc">解pyc</h3>
+<p>解包时提示被加密了</p>
+<p>取struct头作为标准头，用pycdc还原出main.py，发现调用了sign</p>
+<p>去PYZ00文件夹看一下，发现被加密了，看一下目录，发现pyimod和比一般情况多了一些东西，把这些都解开看一下，有一个key文件</p>
+<p>同时发现archive中有一个Cipher类，但是pycdc缺少指令，无法全部还原，考虑看一下pycdas解出来的字节码</p>
+<p>字节码中有个对pyinstaller源码的引用，直接去文件夹里面看，发现能解密出来的部分完全一致</p>
+<p>照着源码中的方法解密sign</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> key <span style="color:#f92672">import</span> key
+<span style="color:#f92672">import</span> tinyaes
+
+print (key)
+
+f <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;./PYZ-00.pyz_extracted/sign.pyc.encrypted&#39;</span>, <span style="color:#e6db74">&#39;rb&#39;</span>)
+
+data <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()
+
+cipher <span style="color:#f92672">=</span> tinyaes<span style="color:#f92672">.</span>AES(key<span style="color:#f92672">.</span>encode(), data[:<span style="color:#ae81ff">16</span>])
+output <span style="color:#f92672">=</span> cipher<span style="color:#f92672">.</span>CTR_xcrypt_buffer(data[<span style="color:#ae81ff">16</span>:])
+
+f<span style="color:#f92672">.</span>close()
+<span style="color:#f92672">import</span> zlib
+output <span style="color:#f92672">=</span> zlib<span style="color:#f92672">.</span>decompress(output)
+
+f <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;./sign.pyc&#39;</span>, <span style="color:#e6db74">&#39;wb&#39;</span>)
+f<span style="color:#f92672">.</span>write(output)
+</code></pre></div><h3 id="解密">解密</h3>
+<p>解出sign后看到有三个base64，其中两个是执行的语句，此外大部分语句涉及到了内存</p>
+<p>另外一个base解出来是乱码，用字节码辅助恢复函数（其实特征已经很明显了），发现进行了rc4加密，直接打印出解密结果，将结果写入文件，用ida查看</p>
+<p>发现smc</p>
+<pre tabindex="0"><code class="language-asmmible" data-lang="asmmible">        mov     eax, 41178Bh
+        mov     ecx, 411802h
+        sub     ecx, eax
+loc_2A:
+        mov     ebx, [rax]
+        xor     ebx, 77h
+        mov     [rax], ebx
+        loop    loc_2A
+</code></pre><p>解出来后尝试恢复了一下函数，结果很丑&hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">seg000:000000000000007E loc_7E:                                 ; CODE XREF: sub_0+73↑j
+seg000:000000000000007E                 mov     eax, [rbp+var_20]
+seg000:0000000000000081                 cmp     eax, [rbp+var_8]
+seg000:0000000000000084                 jge     short loc_B2
+seg000:0000000000000086                 mov     eax, [rbp+8]
+seg000:0000000000000089                 add     eax, [rbp+var_20]
+seg000:000000000000008C                 movsx   ecx, byte ptr [rax]
+seg000:000000000000008F                 xor     ecx, 13h
+seg000:0000000000000092                 mov     edx, [rbp+8]
+seg000:0000000000000095                 add     edx, [rbp+var_20]
+seg000:0000000000000098                 mov     [rdx], cl
+seg000:000000000000009A                 mov     eax, [rbp+8]
+seg000:000000000000009D                 add     eax, [rbp+var_20]
+seg000:00000000000000A0                 movsx   ecx, byte ptr [rax+1]
+seg000:00000000000000A4                 xor     ecx, 37h
+seg000:00000000000000A7                 mov     edx, [rbp+8]
+seg000:00000000000000AA                 add     edx, [rbp+var_20]
+seg000:00000000000000AD                 mov     [rdx+1], cl
+seg000:00000000000000B0                 jmp     short loc_75
+</code></pre><p>发现是两两一组进行加密，分别异或0x13和0x37</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(cipher)):
+<span style="color:#f92672">...</span>     <span style="color:#66d9ef">if</span> i <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+<span style="color:#f92672">...</span>             print (chr(cipher[i] <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x13</span>), end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>)
+<span style="color:#f92672">...</span>     <span style="color:#66d9ef">else</span>:
+<span style="color:#f92672">...</span>             print (chr(cipher[i] <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x37</span>), end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>)
+<span style="color:#f92672">...</span>
+<span style="color:#a6e22e">@rey0ug0nn2</span><span style="color:#960050;background-color:#1e0010">$</span><span style="color:#ae81ff">1</span>gnth1s0r1tw1llb3y0ursurv1
+</code></pre></div><h2 id="内卷">内卷</h2>
+<p>这题是赛后边补边写的，所以废话略多</p>
+<h3 id="花指令">花指令</h3>
+<p>搜索静态字符串能找到很多有用的字符串，但发现找不到引用</p>
+<p>从start开始往里面翻一翻，发现有个一大片数据没有被解析出来，说明是个花指令，之前没见过这个花，简单记录一下</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">.text:00000001400016AB                 call    loc_1400016B3
+.text:00000001400016AB ; ---------------------------------------------------------------------------
+.text:00000001400016B0                 db 0E8h, 0EBh, 12h
+.text:00000001400016B3 ; ---------------------------------------------------------------------------
+.text:00000001400016B3
+.text:00000001400016B3 loc_1400016B3:                          ; CODE XREF: sub_1400015E2+C9↑j
+.text:00000001400016B3                 pop     rax             ; 取出栈顶数据
+.text:00000001400016B4                 add     rax, 1          ; 对其进行+1
+.text:00000001400016B8                 push    rax             ; 然后再压栈
+.text:00000001400016B9                 mov     rax, rsp
+.text:00000001400016BC                 xchg    rax, [rax]
+.text:00000001400016BF                 pop     rsp
+.text:00000001400016C0                 mov     [rsp+0], rax
+.text:00000001400016C4                 retn
+</code></pre><p>这个花长这样，所以 <code>Call loc_1400016B3</code> 的操作就是跳过 <code>E8</code>，把第一个<code>E8</code> patch成nop，发现<code>EB 12</code>就是跳到这个函数的后面，所以这条 <code>Call</code> 指令也可以Patch掉</p>
+<p>还有一些长跳转，这个就直接按c转成指令就行</p>
+<p>还有这个花</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">.text:0000000140006D12 loc_140006D12:                          ; CODE XREF: sub_1400015E2:loc_140006D12↑j
+.text:0000000140006D12                 jmp     short near ptr loc_140006D12+1
+</code></pre><p>把 <code>jmp</code> 指令的第一个字节patch了就行</p>
+<p>花指令全部去掉之后发现结尾还有一部分没有反编译，这个比赛的时候没想出来怎么搞，不知道怎么回时，所以这题后面也就没有怎么做了</p>
+<h3 id="运算简化">运算简化</h3>
+<p>比赛的时候想直接动调跳过这些运算的，结果看到和input还有关系，这就不好办了，尝试手动看一下这是什么运算，但也没啥想法</p>
+<p>结果，晚上再看这道题的时候发现竟然看懂这个离谱运算了，啊啊啊啊啊好气啊</p>
+<p>虽然有一堆函数，观察发现，通常每一个for循环中，包裹了两个while循环，但比赛的时候一直以for循环为单位在想代码的含义，晚上再看的时候才发现，每一个while循环才是一个单位函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">v1155 <span style="color:#f92672">=</span> ll;
+v1154 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>i64;
+v1153 <span style="color:#f92672">=</span> ll <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>;
+v1152 <span style="color:#f92672">=</span> ll <span style="color:#f92672">^</span> <span style="color:#ae81ff">1</span>;
+<span style="color:#66d9ef">while</span> ( v1153 ) {
+    v1151 <span style="color:#f92672">=</span> v1152;
+    v1150 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> v1153;
+    v1153 <span style="color:#f92672">=</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> v1153) <span style="color:#f92672">&amp;</span> v1152;
+    v1152 <span style="color:#f92672">^=</span> v1150;
+}
+ll <span style="color:#f92672">=</span> v1152;
+
+
+v1041 <span style="color:#f92672">=</span> v1043;
+v1040 <span style="color:#f92672">=</span> v1045;
+v1039 <span style="color:#f92672">=</span> v1045 <span style="color:#f92672">&amp;</span> v1043;
+v1038 <span style="color:#f92672">=</span> v1045 <span style="color:#f92672">^</span> v1043; <span style="color:#75715e">// 运算简化方法：^ 换成 +，然后只保留这一行和最后一行
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">while</span> ( v1039 ) {
+    v1037 <span style="color:#f92672">=</span> v1038;
+    v1036 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> v1039;
+    v1039 <span style="color:#f92672">=</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> v1039) <span style="color:#f92672">&amp;</span> v1038;
+    v1038 <span style="color:#f92672">^=</span> v1036;
+}
+v1043 <span style="color:#f92672">=</span> v1038;
+</code></pre></div><p>简单地说，上面这段代码，最终的执行效果就是，<code>ll = ll + 1</code>，推广到下半部分，就是 <code>v1043 = v1038 = v1043 + v1045</code></p>
+<p>好了，到此，就可以完成简化了，之后就变成了一个for循环里面一条自增的语句，所以就转换成了乘法</p>
+<p>手动将这些代码整理好看一点，就长下面这样了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">for</span> ( ii <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; ii <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">4</span>; <span style="color:#f92672">++</span>i) {
+    v1043 <span style="color:#f92672">=</span> ii <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>;
+    v1169 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>list_a_v19[<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> ii];
+    input_1 <span style="color:#f92672">=</span> input <span style="color:#f92672">+</span> v1043;
+    input_2 <span style="color:#f92672">=</span> input <span style="color:#f92672">+</span> v1043 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>;
+    sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    delta <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">884811923</span>;
+    key0 <span style="color:#f92672">=</span> v1169[<span style="color:#ae81ff">0</span>];
+    key1 <span style="color:#f92672">=</span> v1169[<span style="color:#ae81ff">1</span>];
+    key2 <span style="color:#f92672">=</span> v1169[<span style="color:#ae81ff">2</span>];
+    key3 <span style="color:#f92672">=</span> v1169[<span style="color:#ae81ff">3</span>];
+    <span style="color:#66d9ef">for</span> ( mm <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; mm <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0x1F</span>; mm<span style="color:#f92672">++</span> ) {
+        sum <span style="color:#f92672">=</span> delta <span style="color:#f92672">+</span> sum;
+        v1135 <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">*</span> input_2;
+        v1118 <span style="color:#f92672">=</span> key0 <span style="color:#f92672">+</span> v1135;
+        v1112 <span style="color:#f92672">=</span> sum <span style="color:#f92672">+</span> input_2;
+        v1109 <span style="color:#f92672">=</span> input_2 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>;
+        v1106 <span style="color:#f92672">=</span> key1 <span style="color:#f92672">+</span> v1109;
+        input_1 <span style="color:#f92672">+=</span> v1102;
+        v1095 <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">*</span> v1100;
+        v1078 <span style="color:#f92672">=</span> key2 <span style="color:#f92672">+</span> v1095;
+        v1072 <span style="color:#f92672">=</span> sum <span style="color:#f92672">+</span> input_1;
+        v1069 <span style="color:#f92672">=</span> input_1 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>;
+        v1066 <span style="color:#f92672">=</span> key3 <span style="color:#f92672">+</span> v1069;
+        input_2 <span style="color:#f92672">+=</span> v1062;
+    }
+    v1170[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> input_1;
+    v1170[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> input_2;
+}
+</code></pre></div><p>经过了一些手动处理，得到了上面的伪代码，显然就是TEA呗，第一关就这么过了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  v510 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Th1nkMyfr1end&#34;</span>;
+  v507 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">char</span> v18[<span style="color:#ae81ff">256</span>] <span style="color:#f92672">=</span> {};
+  v504 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">for</span> ( i5 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i5 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">256</span>; i5<span style="color:#f92672">++</span> )
+  {
+    v17[i5] <span style="color:#f92672">=</span> i5;
+    v18[i5] <span style="color:#f92672">=</span> v510[i5 <span style="color:#f92672">%</span> <span style="color:#ae81ff">13</span>];
+  }
+
+  <span style="color:#66d9ef">for</span> ( i5 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i5 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">256</span>; i5<span style="color:#f92672">++</span> )
+  {
+    v1 <span style="color:#f92672">=</span> v18[i5];
+    v2 <span style="color:#f92672">=</span> v17[i5];
+    v380 <span style="color:#f92672">=</span> v2 <span style="color:#f92672">+</span> v507;
+    v371 <span style="color:#f92672">=</span> v1 <span style="color:#f92672">+</span> v380;
+    v507 <span style="color:#f92672">=</span> v371 <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>;
+    v504 <span style="color:#f92672">=</span> v17[i5];
+    v17[i5] <span style="color:#f92672">=</span> v17[v507];
+    v17[v507] <span style="color:#f92672">=</span> v504;
+  }
+
+
+  v511 <span style="color:#f92672">=</span> <span style="color:#ae81ff">32</span>;
+  v507 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  i5 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">for</span> ( i17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; v511 <span style="color:#f92672">&gt;</span> i17; i17<span style="color:#f92672">++</span> )
+  {
+    i5 <span style="color:#f92672">=</span> (i5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>;           <span style="color:#75715e">// i = i + 1
+</span><span style="color:#75715e"></span>    v3 <span style="color:#f92672">=</span> v17[i5];                  <span style="color:#75715e">// S[i]
+</span><span style="color:#75715e"></span>    v507 <span style="color:#f92672">=</span> (v3 <span style="color:#f92672">+</span> v507) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>;      <span style="color:#75715e">// j = (j + S[i]) % 256
+</span><span style="color:#75715e"></span>    v155 <span style="color:#f92672">=</span> v17[i5];
+    v17[i5] <span style="color:#f92672">=</span> v17[v507];
+    v17[v507] <span style="color:#f92672">=</span> v155;              <span style="color:#75715e">// S[i], S[j] = S[j], S[i]
+</span><span style="color:#75715e"></span>    v103 <span style="color:#f92672">=</span> v17[v507] <span style="color:#f92672">+</span> v17[i5];    <span style="color:#75715e">// S[i] + S[j]
+</span><span style="color:#75715e"></span>    input[i17] <span style="color:#f92672">^=</span> v17[v103 <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>]; <span style="color:#75715e">// data ^= S[(S[i] + S[j]) % 256]
+</span><span style="color:#75715e"></span>  }
+</code></pre></div><p>256的SBOX，且仅进行一次异或，果断RC4</p>
+<p>中间见到了这样的东西</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    v100 <span style="color:#f92672">=</span> v103
+    v98 <span style="color:#f92672">=</span> v103 <span style="color:#f92672">/</span> v120;
+    v97 <span style="color:#f92672">=</span> v120;
+    v96 <span style="color:#f92672">=</span> v97 <span style="color:#f92672">*</span> v98; <span style="color:#75715e">// 去除for循环后
+</span><span style="color:#75715e"></span>    v506 <span style="color:#f92672">=</span> v100 <span style="color:#f92672">-</span> v96;
+</code></pre></div><p>$v103 - (v120 * (v103 / v120)) = v103 - (v103 - (v103 % v120))$，显然就是取模运算了</p>
+<p>随后是这个</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  v1013 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">__int64</span>)input;
+  v1012 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">__int64</span>)v20;
+  v1011 <span style="color:#f92672">=</span> strlen(input);
+  <span style="color:#66d9ef">for</span> ( i31 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i31 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">65</span>; <span style="color:#f92672">++</span>i31 )
+  {
+    v978 <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">823</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">5</span>; <span style="color:#75715e">// 12345
+</span><span style="color:#75715e"></span>    v948 <span style="color:#f92672">=</span> i31 <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x114514</span>;
+    v18[i31] <span style="color:#f92672">=</span> v948 <span style="color:#f92672">%</span> v978;
+  }
+  <span style="color:#66d9ef">while</span> ( v1011 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span> )
+  {
+    v6 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1013 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>;
+    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1012 <span style="color:#f92672">=</span> v18[v6 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3f</span>];
+    v1012 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1012 <span style="color:#f92672">=</span> v18[(<span style="color:#ae81ff">16</span> <span style="color:#f92672">*</span> (v1013[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>)) <span style="color:#f92672">|</span> (v1013[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x0f</span>];
+    v1012 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+    v818 <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> (v1013[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x0f</span>);
+    v10 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(v1013 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">6</span>;
+    v804 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
+    v803 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+    v802 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    v801 <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1012 <span style="color:#f92672">=</span> v18[v818 <span style="color:#f92672">|</span> v10 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>];
+    v1012 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+    v11 <span style="color:#f92672">=</span> v1013[<span style="color:#ae81ff">2</span>];
+
+    v5 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)v18[v11 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x63</span>];
+    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1012 <span style="color:#f92672">=</span> v5;
+    v1012 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+    v1011 <span style="color:#f92672">=</span> <span style="color:#f92672">~</span>(<span style="color:#f92672">~</span>v1011 <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>); <span style="color:#75715e">// v1011 -= 3
+</span><span style="color:#75715e"></span>    v1013 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">3</span>;
+  }
+  <span style="color:#66d9ef">if</span> ( v1011 )
+  {
+    v12 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1013 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>;
+    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1012 <span style="color:#f92672">=</span> v18[v12 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3f</span>];
+    v1012<span style="color:#f92672">++</span>;
+    <span style="color:#66d9ef">if</span> ( v1011 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span> ) {
+      v16 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1013;
+      v640 <span style="color:#f92672">=</span> (v16 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>;
+      <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1012 <span style="color:#f92672">=</span> v18[v640];
+      v1012<span style="color:#f92672">++</span>;
+      v586 <span style="color:#f92672">=</span> <span style="color:#ae81ff">64</span>;
+      <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1012 <span style="color:#f92672">=</span> v18[v586];
+      v1012<span style="color:#f92672">++</span>;
+    }
+    <span style="color:#66d9ef">else</span> {
+      v13 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1013;
+      v720 <span style="color:#f92672">=</span> (v13 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>;
+      v14 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(v1013 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">4</span>;
+      <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1012 <span style="color:#f92672">=</span> v18[v720 <span style="color:#f92672">|</span> v14 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xf</span>];
+      v1012<span style="color:#f92672">++</span>;
+      v15 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span> <span style="color:#f92672">*</span>)(v1013 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+      v666 <span style="color:#f92672">=</span> (v15 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xf</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">2</span>;
+      <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1012 <span style="color:#f92672">=</span> v18[v666];
+      v1012<span style="color:#f92672">++</span>;
+    }
+    v564 <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>;
+    v548 <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>;
+    v534 <span style="color:#f92672">=</span> v548;
+    v533 <span style="color:#f92672">=</span> v564;
+    v532 <span style="color:#f92672">=</span> <span style="color:#ae81ff">64</span>;
+    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)v1012 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)v18[v532];
+    v1012<span style="color:#f92672">++</span>;
+  }
+</code></pre></div><p>第一个for循环是v18的生成，后面是个base64换表换成v18的</p>
+<p>根据字符串提示，后面就是check了，但这部分好像反编译不出来</p>
+<p>看了下汇编（patch前的忘记存了）</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">07FF7D3CE9906                 lea     rcx, aWowThatIsAmazi ; &quot;Wow.....That is amazing.......You actua&quot;...
+.text:00007FF7D3CE990D                 call    print
+.text:00007FF7D3CE9912                 mov     [rbp+2A80h+var_14], 0
+.text:00007FF7D3CE991C                 jmp     loc_7FF7D3CE9A16
+
+.text:00007FF7D3CE9A16 loc_7FF7D3CE9A16:                       ; CODE XREF: sub_7FF7D3CE15E2+833A↑j
+.text:00007FF7D3CE9A16                 nop
+.text:00007FF7D3CE9A17                 nop
+.text:00007FF7D3CE9A18                 nop
+.text:00007FF7D3CE9A19                 nop
+.text:00007FF7D3CE9A1A                 nop
+.text:00007FF7D3CE9A1B                 nop
+.text:00007FF7D3CE9A1C                 nop
+.text:00007FF7D3CE9A1D                 nop
+.text:00007FF7D3CE9A1E                 nop
+.text:00007FF7D3CE9A1F                 nop
+.text:00007FF7D3CE9A20                 nop
+.text:00007FF7D3CE9A21                 nop
+.text:00007FF7D3CE9A22                 nop
+.text:00007FF7D3CE9A23                 nop
+.text:00007FF7D3CE9A24                 nop
+.text:00007FF7D3CE9A25                 nop
+.text:00007FF7D3CE9A26                 lea     rcx, aOkYouWinTheRes ; &quot;Ok you win. The result will be shown la&quot;...
+.text:00007FF7D3CE9A2D                 call    print
+.text:00007FF7D3CE9A32                 mov     [rbp+2A80h+var_18], 0
+.text:00007FF7D3CE9A3C                 jmp     loc_7FF7D3CE9B1A
+</code></pre><p>本来有一个判断和一个跳转，直接patch掉，中间应该是一些浪费时间的东西，再重新反编译一下，就能看到check部分了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  v1272 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">while</span> ( <span style="color:#ae81ff">1</span> )
+  {
+    v37 <span style="color:#f92672">=</span> <span style="color:#ae81ff">49</span>;
+    <span style="color:#66d9ef">if</span> ( v1272 <span style="color:#f92672">&gt;=</span> v37 )
+      <span style="color:#66d9ef">break</span>;
+    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)v21 <span style="color:#f92672">+</span> v1272) <span style="color:#f92672">!=</span> <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)off_7FF7D3D02010 <span style="color:#f92672">+</span> v1272) )
+    {
+      print((<span style="color:#66d9ef">__int64</span>)<span style="color:#e6db74">&#34;No</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+      <span style="color:#66d9ef">return</span>;
+    }
+    <span style="color:#75715e">/* 从内存中取出的数据
+</span><span style="color:#75715e">    unsigned char off_7FF7D3D02010[] =
+</span><span style="color:#75715e">    {
+</span><span style="color:#75715e">        0x06, 0xAB, 0x05, 0x6A, 0xA0, 0x72, 0x71, 0x0D, 0x0A, 0x6F, 
+</span><span style="color:#75715e">        0xAC, 0x15, 0x05, 0xA5, 0x76, 0x41, 0x0A, 0x77, 0x13, 0xD8, 
+</span><span style="color:#75715e">        0x69, 0x03, 0x14, 0x78, 0xD5, 0xA8, 0x44, 0x0F, 0xA7, 0x76, 
+</span><span style="color:#75715e">        0x05, 0xAA, 0xA4, 0x09, 0x69, 0xA7, 0x0B, 0x11, 0x15, 0x42, 
+</span><span style="color:#75715e">        0x11, 0x72, 0x14, 0xAD, 0x00, 0x00, 0x00, 0x00
+</span><span style="color:#75715e">    };
+</span><span style="color:#75715e">    */</span>
+    v1272 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+  }
+</code></pre></div><p>至此全部分析完毕，依次进行了TEA，RC4和Base64，中间进行了密钥生成，最后做个反向进行解密即可。</p>
+<h3 id="补充静态分析while语句实现的加法运算">补充：静态分析while语句实现的加法运算</h3>
+<p>之前的分析其实是用python实现一遍，然后找规律得到的（毕竟为了速度），但还是应该稍微静态分析一下具体发生了什么事情</p>
+<p>看的时候就感觉很像是数电中的加法器，还是用简单的例子分析一下（删去了没有用到的语句）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">v1153 <span style="color:#f92672">=</span> ll <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>;                  <span style="color:#75715e">// 判断结尾是否为1
+</span><span style="color:#75715e"></span>v1152 <span style="color:#f92672">=</span> ll <span style="color:#f92672">^</span> <span style="color:#ae81ff">1</span>;                  <span style="color:#75715e">// 如果结尾是1，将其变为0
+</span><span style="color:#75715e"></span>                                 <span style="color:#75715e">// 如果结尾是0，将其变为1
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">while</span> ( v1153 ) {                <span style="color:#75715e">// 如果此前结尾为1，将会涉及到进位的问题，因此进入循环
+</span><span style="color:#75715e"></span>                                 <span style="color:#75715e">// 如果此前结尾为0，就没有进位的问题了，无需进入循环
+</span><span style="color:#75715e"></span>    v1150 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> v1153;           <span style="color:#75715e">// 将结尾左移1
+</span><span style="color:#75715e"></span>    v1153 <span style="color:#f92672">=</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> v1153) <span style="color:#f92672">&amp;</span> v1152; <span style="color:#75715e">// 与加法之后的结果再进行一次按位与，这个的目的是看接下来是否还需要进位
+</span><span style="color:#75715e"></span>    v1152 <span style="color:#f92672">^=</span> v1150;              <span style="color:#75715e">// 进行无进位加法
+</span><span style="color:#75715e"></span>}                                <span style="color:#75715e">// 什么时候不会产生进位的问题了，什么时候就可以退出循环了
+</span><span style="color:#75715e"></span>ll <span style="color:#f92672">=</span> v1152;
+</code></pre></div><p>简单的说，就是用异或运算作为无进位的加法，然后通过一个while循环来完成进位</p>
+<h2 id="vs">vs</h2>
+<p>这道题就比赛的时候简单看了一下，逆向难度很低，从一个文件读取指令，另一个文件当作内存，vm指令其实不难，但文件中的指令很多，需要手写一个vm的分析代码。</p>
+<p>写完之后发现行数略多，先手动分析找了找规律，然后写了个自动化脚本提取，生成python代码，直接拿flag。</p>
+<h3 id="vm的解析脚本">vm的解析脚本</h3>
+<p><code>vmreader.py:</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">memory <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">0x0C</span>, <span style="color:#ae81ff">0xF4</span>, <span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0xE9</span>, <span style="color:#ae81ff">0xF2</span>, <span style="color:#ae81ff">0xE6</span>, <span style="color:#ae81ff">0x87</span>, <span style="color:#ae81ff">0x4C</span>, <span style="color:#ae81ff">0x5E</span>, <span style="color:#ae81ff">0x61</span>, <span style="color:#ae81ff">0x11</span>, <span style="color:#ae81ff">0x7B</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x11</span>, <span style="color:#ae81ff">0x7F</span>, <span style="color:#ae81ff">0xB4</span>, <span style="color:#ae81ff">0xB2</span>, <span style="color:#ae81ff">0xEB</span>, <span style="color:#ae81ff">0x65</span>, <span style="color:#ae81ff">0xE2</span>, <span style="color:#ae81ff">0x15</span>, <span style="color:#ae81ff">0xC6</span>, <span style="color:#ae81ff">0x8B</span>, <span style="color:#ae81ff">0x02</span>, <span style="color:#ae81ff">0x8C</span>, <span style="color:#ae81ff">0xC1</span>, <span style="color:#ae81ff">0x50</span>, <span style="color:#ae81ff">0xD0</span>, <span style="color:#ae81ff">0x0D</span>, <span style="color:#ae81ff">0xA1</span>, <span style="color:#ae81ff">0xCD</span>, <span style="color:#ae81ff">0x3A</span>
+]
+
+cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">OPCode</span>:
+    <span style="color:#66d9ef">def</span> __init__(self, code_len, code, arglen, pes_code):
+        self<span style="color:#f92672">.</span>code_len <span style="color:#f92672">=</span> code_len
+        self<span style="color:#f92672">.</span>code <span style="color:#f92672">=</span> code
+        self<span style="color:#f92672">.</span>arglen <span style="color:#f92672">=</span> arglen
+        self<span style="color:#f92672">.</span>pes_code <span style="color:#f92672">=</span> pes_code
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Reader</span>:
+    <span style="color:#66d9ef">def</span> __init__(self, file):
+        self<span style="color:#f92672">.</span>index <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+        self<span style="color:#f92672">.</span>buf <span style="color:#f92672">=</span> open(file, <span style="color:#e6db74">&#39;rb&#39;</span>)<span style="color:#f92672">.</span>read()
+        self<span style="color:#f92672">.</span>length <span style="color:#f92672">=</span> len(self<span style="color:#f92672">.</span>buf)
+        self<span style="color:#f92672">.</span>asm <span style="color:#f92672">=</span> []
+        
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_asm</span>(self, asm: OPCode):
+        self<span style="color:#f92672">.</span>asm<span style="color:#f92672">.</span>append(asm)
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">read</span>(self):
+        <span style="color:#66d9ef">global</span> cnt
+        <span style="color:#66d9ef">while</span> len(self<span style="color:#f92672">.</span>buf) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+            <span style="color:#66d9ef">for</span> a <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>asm:
+                <span style="color:#66d9ef">if</span> a<span style="color:#f92672">.</span>code(self<span style="color:#f92672">.</span>buf[:a<span style="color:#f92672">.</span>code_len]):
+                    <span style="color:#75715e"># self.output += a.pes_code</span>
+                    op_code <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>buf[:a<span style="color:#f92672">.</span>code_len]
+                    self<span style="color:#f92672">.</span>buf <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>buf[a<span style="color:#f92672">.</span>code_len:]
+                    <span style="color:#66d9ef">if</span> op_code <span style="color:#f92672">==</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xff\xff</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">and</span> self<span style="color:#f92672">.</span>buf[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>:
+                        print (cnt, op_code)
+                        cnt <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+                        <span style="color:#66d9ef">break</span>
+                    args <span style="color:#f92672">=</span> [_ <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>buf[:a<span style="color:#f92672">.</span>arglen]]
+                    a<span style="color:#f92672">.</span>pes_code(op_code, args)
+                    self<span style="color:#f92672">.</span>buf <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>buf[a<span style="color:#f92672">.</span>arglen:]
+                    <span style="color:#66d9ef">break</span>
+            <span style="color:#66d9ef">else</span>:
+                print (cnt, self<span style="color:#f92672">.</span>buf[<span style="color:#ae81ff">0</span>])
+                cnt <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+                self<span style="color:#f92672">.</span>buf <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>buf[<span style="color:#ae81ff">1</span>:]
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">basic_io_code</span>(op_code):
+    <span style="color:#66d9ef">if</span> op_code <span style="color:#f92672">==</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xFF\xFF</span><span style="color:#e6db74">&#39;</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">basic_io_op</span>(op_code, args):
+    <span style="color:#66d9ef">global</span> cnt
+    <span style="color:#66d9ef">if</span> args[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
+        <span style="color:#66d9ef">if</span> args[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x20</span> <span style="color:#f92672">and</span> args[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x7f</span>:
+            print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> print </span><span style="color:#e6db74">%c</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (cnt, args[<span style="color:#ae81ff">0</span>]))
+            cnt <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
+        <span style="color:#66d9ef">else</span>:
+            print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> print </span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">x</span><span style="color:#e6db74">%02x</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (cnt, args[<span style="color:#ae81ff">0</span>]))
+            cnt <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
+    <span style="color:#66d9ef">elif</span> args[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+        print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> mem[</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">] = &lt;input&gt;&#39;</span> <span style="color:#f92672">%</span> (cnt, args[<span style="color:#ae81ff">0</span>]))
+        cnt <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
+    <span style="color:#66d9ef">elif</span> args[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+        print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> exit(0)&#39;</span> <span style="color:#f92672">%</span> cnt)
+        cnt <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
+    <span style="color:#66d9ef">else</span>:
+        print (op_code, args)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">jmp_code</span>(op_code):
+    <span style="color:#66d9ef">if</span> int<span style="color:#f92672">.</span>from_bytes(op_code, <span style="color:#e6db74">&#39;little&#39;</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x8000</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">jmp_op</span>(op_code, args):
+    <span style="color:#66d9ef">global</span> cnt
+    pc <span style="color:#f92672">=</span> int<span style="color:#f92672">.</span>from_bytes(op_code, <span style="color:#e6db74">&#39;little&#39;</span>) 
+    addr <span style="color:#f92672">=</span> pc <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x1FF</span>
+    <span style="color:#66d9ef">if</span> (addr <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">31</span>:
+        <span style="color:#66d9ef">if</span> (memory[(addr <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">32</span>] <span style="color:#f92672">&gt;&gt;</span> (addr <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">7</span>)) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+            print (<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>cnt<span style="color:#e6db74">}</span><span style="color:#e6db74"> goto </span><span style="color:#e6db74">{</span>cnt <span style="color:#f92672">+</span> ((pc <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">9</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3f</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+        <span style="color:#66d9ef">else</span>:
+            print (<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>cnt<span style="color:#e6db74">}</span><span style="color:#e6db74"> nop&#39;</span>)
+    <span style="color:#66d9ef">else</span>:
+        print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> if ((mem[ </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> ] &gt;&gt; </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> ) &amp; 1) == 0&#39;</span> <span style="color:#f92672">%</span> (cnt, addr <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">3</span>, addr <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">7</span>), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;goto </span><span style="color:#e6db74">{</span>cnt<span style="color:#f92672">+</span>((pc <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">9</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3f</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+    cnt <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">jmp2_code</span>(op_code):
+    <span style="color:#66d9ef">if</span> int<span style="color:#f92672">.</span>from_bytes(op_code, <span style="color:#e6db74">&#39;little&#39;</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x8000</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> op_code <span style="color:#f92672">!=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xff\xff</span><span style="color:#e6db74">&#39;</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">jmp2_op</span>(op_code, args):
+    <span style="color:#66d9ef">global</span> cnt
+    pc <span style="color:#f92672">=</span> int<span style="color:#f92672">.</span>from_bytes(op_code, <span style="color:#e6db74">&#39;little&#39;</span>) 
+    addr <span style="color:#f92672">=</span> pc <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x1FF</span>
+    <span style="color:#66d9ef">if</span> (addr <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">31</span>:
+        <span style="color:#66d9ef">if</span> (memory[(addr <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">32</span>] <span style="color:#f92672">&gt;&gt;</span> (addr <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">7</span>)) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+            print (<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>cnt<span style="color:#e6db74">}</span><span style="color:#e6db74"> goto </span><span style="color:#e6db74">{</span>cnt <span style="color:#f92672">+</span> ((pc <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">9</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3f</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+        <span style="color:#66d9ef">else</span>:
+            print (<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>cnt<span style="color:#e6db74">}</span><span style="color:#e6db74"> nop&#39;</span>)
+    <span style="color:#66d9ef">else</span>:
+        print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> if ((mem[ </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> ] &gt;&gt; </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> ) &amp; 1) != 0&#39;</span> <span style="color:#f92672">%</span> (cnt, addr <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">3</span>, addr <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">7</span>), <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;goto </span><span style="color:#e6db74">{</span>cnt<span style="color:#f92672">+</span>((pc <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">9</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3f</span>)<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+    cnt <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+
+
+basic_io <span style="color:#f92672">=</span> OPCode(<span style="color:#ae81ff">2</span>, basic_io_code, <span style="color:#ae81ff">2</span>, basic_io_op)
+r <span style="color:#f92672">=</span> Reader(<span style="color:#e6db74">&#39;program&#39;</span>)
+jmp <span style="color:#f92672">=</span> OPCode(<span style="color:#ae81ff">2</span>, jmp_code, <span style="color:#ae81ff">0</span>, jmp_op)
+jmp2 <span style="color:#f92672">=</span> OPCode(<span style="color:#ae81ff">2</span>, jmp2_code, <span style="color:#ae81ff">0</span>, jmp2_op)
+r<span style="color:#f92672">.</span>add_asm(basic_io)
+r<span style="color:#f92672">.</span>add_asm(jmp)
+r<span style="color:#f92672">.</span>add_asm(jmp2)
+r<span style="color:#f92672">.</span>read()
+</code></pre></div><h3 id="分析指令">分析指令</h3>
+<pre tabindex="0"><code>0 print P
+2 print l
+4 print e
+6 print a
+8 print s
+10 print e
+12 print \x20
+14 print i
+16 print n
+18 print p
+20 print u
+22 print t
+24 print \x20
+26 print y
+28 print o
+30 print u
+32 print r
+34 print \x20
+36 print f
+38 print l
+40 print a
+42 print g
+44 print :
+46 print \x20
+48 mem[0] = &lt;input&gt;
+50 mem[1] = &lt;input&gt;
+52 mem[2] = &lt;input&gt;
+54 mem[3] = &lt;input&gt;
+56 mem[4] = &lt;input&gt;
+58 mem[5] = &lt;input&gt;
+60 mem[6] = &lt;input&gt;
+62 mem[7] = &lt;input&gt;
+64 mem[8] = &lt;input&gt;
+66 mem[9] = &lt;input&gt;
+68 mem[10] = &lt;input&gt;
+70 mem[11] = &lt;input&gt;
+72 mem[12] = &lt;input&gt;
+74 mem[13] = &lt;input&gt;
+76 mem[14] = &lt;input&gt;
+78 mem[15] = &lt;input&gt;
+80 mem[16] = &lt;input&gt;
+82 mem[17] = &lt;input&gt;
+84 mem[18] = &lt;input&gt;
+86 mem[19] = &lt;input&gt;
+88 mem[20] = &lt;input&gt;
+90 mem[21] = &lt;input&gt;
+92 mem[22] = &lt;input&gt;
+94 mem[23] = &lt;input&gt;
+96 mem[24] = &lt;input&gt;
+98 mem[25] = &lt;input&gt;
+100 mem[26] = &lt;input&gt;
+102 mem[27] = &lt;input&gt;
+104 mem[28] = &lt;input&gt;
+106 mem[29] = &lt;input&gt;
+108 mem[30] = &lt;input&gt;
+110 mem[31] = &lt;input&gt;
+</code></pre><p>这部分是简单的输出和输入，直接看二进制文件的字节也能看出来</p>
+<p>然后是输入的判断部分</p>
+<pre tabindex="0"><code>112 if ((mem[ 12 ] &gt;&gt; 5 ) &amp; 1) != 0 goto 125
+113 nop
+114 if ((mem[ 19 ] &gt;&gt; 2 ) &amp; 1) == 0 goto 125
+115 print N
+117 print o
+119 print !
+121 print \x0a
+123 exit(0)
+125 goto 127
+126 if ((mem[ 22 ] &gt;&gt; 6 ) &amp; 1) != 0 goto 146
+127 goto 131
+128 if ((mem[ 1 ] &gt;&gt; 1 ) &amp; 1) != 0 goto 140
+129 if ((mem[ 0 ] &gt;&gt; 3 ) &amp; 1) != 0 goto 140
+130 b'\xff\xff'
+131 goto 133
+132 b'\xff\xff'
+133 if ((mem[ 30 ] &gt;&gt; 5 ) &amp; 1) == 0 goto 146
+134 nop
+135 nop
+136 print N
+138 print o
+140 print !
+142 print \x0a
+144 exit(0)
+146 nop
+147 if ((mem[ 6 ] &gt;&gt; 4 ) &amp; 1) != 0 goto 169
+148 goto 150
+149 b'\xff\xff'
+150 goto 154
+151 if ((mem[ 0 ] &gt;&gt; 4 ) &amp; 1) == 0 goto 163
+152 if ((mem[ 3 ] &gt;&gt; 0 ) &amp; 1) != 0 goto 163
+153 b'\xff\xff'
+154 if ((mem[ 8 ] &gt;&gt; 0 ) &amp; 1) == 0 goto 169
+155 goto 159
+156 if ((mem[ 1 ] &gt;&gt; 0 ) &amp; 1) == 0 goto 168
+157 if ((mem[ 1 ] &gt;&gt; 7 ) &amp; 1) != 0 goto 168
+158 b'\xff\xff'
+159 print N
+161 print o
+163 print !
+165 print \x0a
+167 exit(0)
+169 if ((mem[ 4 ] &gt;&gt; 4 ) &amp; 1) != 0 goto 190
+170 goto 172
+171 b'\xff\xff'
+172 if ((mem[ 20 ] &gt;&gt; 0 ) &amp; 1) == 0 goto 190
+173 nop
+174 b'\xff\xff'
+175 if ((mem[ 2 ] &gt;&gt; 1 ) &amp; 1) != 0 goto 179 ; 由于ffff后会直接跳过下一个，所以这一句也没有用
+176 goto 180
+177 if ((mem[ 1 ] &gt;&gt; 3 ) &amp; 1) != 0 goto 189
+178 if ((mem[ 3 ] &gt;&gt; 3 ) &amp; 1) == 0 goto 189
+179 b'\xff\xff'
+180 print N
+182 print o
+184 print !
+186 print \x0a
+188 exit(0)
+</code></pre><p>二进制文件中出现了很多奇奇怪怪的 <code>\xFF\xFF</code>，感觉起到了一部分的花指令作用，所以对于不满足的情况全部拆开处理了，但这又导致读取后的逻辑不是很清晰，需要进行简单的手动分析</p>
+<blockquote>
+<p>程序中 <code>if ((mem[ 1 ] &gt;&gt; 3 ) &amp; 1) != 0</code> 之间空格实际上是为了后续进一步读取准备的</p>
+</blockquote>
+<p>分析时可以看出，flag的判断逻辑显然是对输入的每一比特加了限定，目的就是跳过所有的退出</p>
+<p>对这一部分手动分析，删掉没有用的部分</p>
+<pre tabindex="0"><code>112 if ((mem[ 12 ] &gt;&gt; 5 ) &amp; 1) != 0 goto 125
+114 if ((mem[ 19 ] &gt;&gt; 2 ) &amp; 1) == 0 goto 125
+115 print No!
+123 exit(0)
+125 goto 127
+126 if ((mem[ 22 ] &gt;&gt; 6 ) &amp; 1) != 0 goto 146 ; 这句话也没有用，但自动提取时不容易处理，仍然保留
+127 goto 131
+131 goto 133
+133 if ((mem[ 30 ] &gt;&gt; 5 ) &amp; 1) == 0 goto 146
+136 print No!
+144 exit(0)
+146 nop
+147 if ((mem[ 6 ] &gt;&gt; 4 ) &amp; 1) != 0 goto 169
+148 goto 150
+150 goto 154
+154 if ((mem[ 8 ] &gt;&gt; 0 ) &amp; 1) == 0 goto 169
+155 goto 159
+159 print No!
+167 exit(0)
+169 if ((mem[ 4 ] &gt;&gt; 4 ) &amp; 1) != 0 goto 190
+170 goto 172
+172 if ((mem[ 20 ] &gt;&gt; 0 ) &amp; 1) == 0 goto 190
+173 nop
+176 goto 180
+180 print No!
+188 exit(0)
+</code></pre><p>可以看到，可用的跳转一定是跳转到exit后面的，这样就可以实现一个自动化脚本了</p>
+<p><code>extract.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">infile <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;1.txt&#39;</span>)
+
+code <span style="color:#f92672">=</span> infile<span style="color:#f92672">.</span>read()
+code <span style="color:#f92672">=</span> code<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+
+target <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> code:
+    <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;exit&#39;</span> <span style="color:#f92672">in</span> line:
+        target<span style="color:#f92672">.</span>append(str(int(line<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39; &#39;</span>)[<span style="color:#ae81ff">0</span>]) <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>))
+
+<span style="color:#75715e"># print (target)</span>
+
+<span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> code:
+    tmp <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39; &#39;</span>)
+    <span style="color:#66d9ef">if</span> tmp[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">in</span> target:
+        print (line)
+</code></pre></div><p>最后再自动生成一个z3脚本</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fmt</span>(in_list):
+    ret <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+    <span style="color:#66d9ef">if</span> in_list[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;==&#39;</span>:
+        ret <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;eq(&#39;</span>
+    <span style="color:#66d9ef">elif</span> in_list[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;!=&#39;</span>:
+        ret <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;neq(&#39;</span>
+    ret <span style="color:#f92672">+=</span> in_list[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;, &#39;</span> <span style="color:#f92672">+</span> in_list[<span style="color:#ae81ff">1</span>]
+    ret <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;)&#39;</span>
+    <span style="color:#66d9ef">return</span> ret
+
+infile <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;2.txt&#39;</span>)
+
+print (<span style="color:#e6db74">&#39;&#39;&#39;from z3 import *
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">s = Solver()
+</span><span style="color:#e6db74">flag = [BitVec(&#39;flag</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39; </span><span style="color:#e6db74">% i</span><span style="color:#e6db74">, 8) for i in range(32)]
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">for f in flag:
+</span><span style="color:#e6db74">    s.add(f &gt; 0x20)
+</span><span style="color:#e6db74">    s.add(f &lt; 0x7f)
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">def eq(pos_f, pos_b):
+</span><span style="color:#e6db74">    return flag[pos_f] &amp; (1 &lt;&lt; pos_b) == 0
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">def neq(pos_f, pos_b):
+</span><span style="color:#e6db74">    return flag[pos_f] &amp; (1 &lt;&lt; pos_b) != 0
+</span><span style="color:#e6db74">&#39;&#39;&#39;</span>)
+
+lines <span style="color:#f92672">=</span> infile<span style="color:#f92672">.</span>read()
+lines <span style="color:#f92672">=</span> lines<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(lines) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>):
+    a, b <span style="color:#f92672">=</span> lines[i], lines[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+    a <span style="color:#f92672">=</span> a<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39; &#39;</span>)
+    b <span style="color:#f92672">=</span> b<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39; &#39;</span>)
+    a <span style="color:#f92672">=</span> [a[<span style="color:#ae81ff">3</span>], a[<span style="color:#ae81ff">6</span>], a[<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>]]
+    b <span style="color:#f92672">=</span> [b[<span style="color:#ae81ff">3</span>], b[<span style="color:#ae81ff">6</span>], b[<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>]]
+    print (<span style="color:#e6db74">&#39;s.add(Or(&#39;</span> <span style="color:#f92672">+</span> fmt(a) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;, &#39;</span> <span style="color:#f92672">+</span> fmt(b) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;))&#39;</span>)
+
+
+print (<span style="color:#e6db74">&#39;&#39;&#39;
+</span><span style="color:#e6db74">if s.check() == sat:
+</span><span style="color:#e6db74">    model = s.model()
+</span><span style="color:#e6db74">    for f in flag:
+</span><span style="color:#e6db74">        print (chr(model[f].as_long().real), end = &#39;&#39;)
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">print (&#39;</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">nfinish&#39;)&#39;&#39;&#39;</span>)
+</code></pre></div><p>运行之后就可以得到flag了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># python3 vmreader.py &gt; 1.txt</span>
+<span style="color:#75715e"># python3 extract.py &gt; 2.txt</span>
+<span style="color:#75715e"># python3 to_py.py &gt; 3.py</span>
+<span style="color:#75715e"># python3 3.py</span>
+flag<span style="color:#f92672">{</span>_2_SAT_15_a_P_pr0b13M_4F6v<span style="color:#f92672">}</span>
+finish
+<span style="color:#75715e"># ./vs</span>
+Please input your flag: flag<span style="color:#f92672">{</span>_2_SAT_15_a_P_pr0b13M_4F6v<span style="color:#f92672">}</span>
+Congratulation!
+</code></pre></div><p>通过程序验证</p>
+<h3 id="总结">总结</h3>
+<p>还是第一次在一个逆向题目中写这么多代码，最近又看到一些需要写代码的题目，还是需要提高开发能力啊</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+            <a href="/tags/reverse/">Reverse</a>
+        
+            <a href="/tags/ciscn/">CISCN</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/ciscn2021-re-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CISCN2021 RE writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/buuoj-re-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BUUOJ RE (2)</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/buuoj-re-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BUUOJ RE (1)</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/jinmen-cup-goodre-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">津门杯 GoodRE writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/buuoj-re0-flareon-challenge/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BUUOJ RE (0) - FlareOn Challenge</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2021 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#imnotavirus">imnotavirus</a>
+      <ul>
+        <li><a href="#解exe">解exe</a></li>
+        <li><a href="#解pyc">解pyc</a></li>
+        <li><a href="#解密">解密</a></li>
+      </ul>
+    </li>
+    <li><a href="#内卷">内卷</a>
+      <ul>
+        <li><a href="#花指令">花指令</a></li>
+        <li><a href="#运算简化">运算简化</a></li>
+        <li><a href="#补充静态分析while语句实现的加法运算">补充：静态分析while语句实现的加法运算</a></li>
+      </ul>
+    </li>
+    <li><a href="#vs">vs</a>
+      <ul>
+        <li><a href="#vm的解析脚本">vm的解析脚本</a></li>
+        <li><a href="#分析指令">分析指令</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

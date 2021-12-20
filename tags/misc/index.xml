@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Misc on s0uthwood&#39;s Blog</title>
+    <link>/tags/misc/</link>
+    <description>Recent content in Misc on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 26 Sep 2021 00:10:18 +0000</lastBuildDate><atom:link href="/tags/misc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DASCTF 2021-09 Writeup</title>
+      <link>/post/dasctf-2021-09-writeup/</link>
+      <pubDate>Sun, 26 Sep 2021 00:10:18 +0000</pubDate>
+      
+      <guid>/post/dasctf-2021-09-writeup/</guid>
+      <description>[RE]ea5ycpp 一开始还被逻辑绕了一下，结果发现核心部分就是brainfuck
+有一些结构体，可以恢复一下，会比较好看
+brainfuck解析出来就是简单的加减法
+#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt; unsigned char a[9999]; int c; int main(int argc, char **argv) { a[24] += 2; while (a[24]) { ++a[0]; --a[24]; } a[24] += 3; while (a[24]) { ++a[1]; --a[24]; } a[24] += 4; while (a[24]) { ++a[2]; --a[24]; } a[24] += 5; while (a[24]) { ++a[3]; --a[24]; } a[24] += 6; while (a[24]) { ++a[4]; --a[24]; } a[24] += 7; while (a[24]) { ++a[5]; --a[24]; } a[24] += 8; while (a[24]) { ++a[6]; --a[24]; } a[24] += 9; while (a[24]) { ++a[7]; --a[24]; } a[24] += 10; while (a[24]) { ++a[8]; --a[24]; } a[24] += 11; while (a[24]) { ++a[9]; --a[24]; } a[24] += 12; while (a[24]) { ++a[10]; --a[24]; } a[24] += 13; while (a[24]) { ++a[11]; --a[24]; } a[24] += 14; while (a[24]) { ++a[12]; --a[24]; } a[24] += 15; while (a[24]) { ++a[13]; --a[24]; } a[24] += 16; while (a[24]) { ++a[14]; --a[24]; } a[24] += 18; while (a[24]) { ++a[15]; --a[24]; } a[24] += 19; while (a[24]) { ++a[16]; --a[24]; } a[24] += 20; while (a[24]) { ++a[17]; --a[24]; } a[24] += 21; while (a[24]) { ++a[18]; --a[24]; } a[24] += 22; while (a[24]) { ++a[19]; --a[24]; } a[24] += 23; while (a[24]) { ++a[20]; --a[24]; } a[24] += 24; while (a[24]) { ++a[21]; --a[24]; } a[24] += 25; while (a[24]) { ++a[22]; --a[24]; } a[24] += 26; while (a[24]) { ++a[23]; --a[24]; } return 0; } 根据字符串就能看到比较的位置，密文减一下就行</description>
+    </item>
+    
+  </channel>
+</rss>

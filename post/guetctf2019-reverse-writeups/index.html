@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='平台：BUUOJ'><title>GUETCTF2019 re writeups</title>
+
+<link rel='canonical' href='/post/guetctf2019-reverse-writeups/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='GUETCTF2019 re writeups'>
+<meta property='og:description' content='平台：BUUOJ'>
+<meta property='og:url' content='/post/guetctf2019-reverse-writeups/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='BUUOJ' /><meta property='article:published_time' content='2021-03-04T16:17:36&#43;00:00'/><meta property='article:modified_time' content='2021-03-04T16:17:36&#43;00:00'/>
+<meta name="twitter:title" content="GUETCTF2019 re writeups">
+<meta name="twitter:description" content="平台：BUUOJ">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/ctf/" >
+                CTF
+            </a>
+        
+            <a href="/categories/reverse/" >
+                Reverse
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/guetctf2019-reverse-writeups/">GUETCTF2019 re writeups</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        平台：BUUOJ
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 04, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    7 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="re">re</h2>
+<h3 id="思路">思路</h3>
+<p>先upx脱壳</p>
+<p>然后拖入ida</p>
+<p>找到关键字符串</p>
+<p>进入函数</p>
+<p>发现是对每一位进行乘法然后判断</p>
+<p>直接扔到python里算一下，发现 <code>a[6]</code> 缺失，以及有一位算不出来，可能出现了溢出</p>
+<p>用c语言把这一位算出来，得到是 <code>a</code></p>
+<p>对第7位进行暴力破解，发现1可以，得到flag</p>
+<p><code>flag{e165421110ba03099a1c039337}</code></p>
+<h3 id="脚本">脚本</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">x <span style="color:#f92672">=</span> [ <span style="color:#ae81ff">1629056</span>,  <span style="color:#ae81ff">6771600</span>,  <span style="color:#ae81ff">3682944</span>, <span style="color:#ae81ff">10431000</span>,  <span style="color:#ae81ff">3977328</span>,  <span style="color:#ae81ff">5138336</span>,  <span style="color:#ae81ff">7532250</span>,  <span style="color:#ae81ff">5551632</span>,  <span style="color:#ae81ff">3409728</span>, <span style="color:#ae81ff">13013670</span>,  <span style="color:#ae81ff">6088797</span>,  <span style="color:#ae81ff">7884663</span>,  <span style="color:#ae81ff">8944053</span>,  <span style="color:#ae81ff">5198490</span>,  <span style="color:#ae81ff">4544518</span>,   <span style="color:#ae81ff">10115280</span>,<span style="color:#ae81ff">3645600</span>,  <span style="color:#ae81ff">9667504</span>,  <span style="color:#ae81ff">5364450</span>, <span style="color:#ae81ff">13464540</span>,  <span style="color:#ae81ff">5488432</span>, <span style="color:#ae81ff">14479500</span>,  <span style="color:#ae81ff">6451830</span>,  <span style="color:#ae81ff">6252576</span>,  <span style="color:#ae81ff">7763364</span>,  <span style="color:#ae81ff">7327320</span>,  <span style="color:#ae81ff">8741520</span>,  <span style="color:#ae81ff">8871876</span>,  <span style="color:#ae81ff">4086720</span>,  <span style="color:#ae81ff">9374400</span>, <span style="color:#ae81ff">5759124</span> ]
+a <span style="color:#f92672">=</span> [ <span style="color:#ae81ff">166163712</span> , <span style="color:#ae81ff">731332800</span> , <span style="color:#ae81ff">357245568</span> , <span style="color:#ae81ff">1074393000</span>, <span style="color:#ae81ff">489211344</span> , <span style="color:#ae81ff">518971936</span> , <span style="color:#ae81ff">406741500</span> , <span style="color:#ae81ff">294236496</span> , <span style="color:#ae81ff">177305856</span> ,  <span style="color:#ae81ff">650683500</span>,  <span style="color:#ae81ff">298351053</span>,  <span style="color:#ae81ff">386348487</span>,  <span style="color:#ae81ff">438258597</span>,  <span style="color:#ae81ff">249527520</span>,  <span style="color:#ae81ff">445362764</span>, <span style="color:#ae81ff">981182160</span>, <span style="color:#ae81ff">174988800</span>, <span style="color:#ae81ff">493042704</span>,  <span style="color:#ae81ff">257493600</span>,  <span style="color:#ae81ff">767478780</span>,  <span style="color:#ae81ff">312840624</span>,  <span style="color:#ae81ff">140451150</span>,  <span style="color:#ae81ff">316139670</span>,  <span style="color:#ae81ff">619005024</span>,  <span style="color:#ae81ff">372641472</span>,  <span style="color:#ae81ff">373693320</span>,  <span style="color:#ae81ff">498266640</span>,  <span style="color:#ae81ff">452465676</span>,  <span style="color:#ae81ff">208422720</span>,  <span style="color:#ae81ff">515592000</span>,  <span style="color:#ae81ff">719890500</span> ]
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(x)):
+    <span style="color:#66d9ef">if</span> (a[i] <span style="color:#f92672">%</span> x[i] <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>):
+        print (chr(a[i] <span style="color:#f92672">//</span> x[i]), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+    <span style="color:#66d9ef">else</span>:
+        print (<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>, i)
+print (<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">finish&#39;</span>)
+</code></pre></div><p>输出为</p>
+<pre tabindex="0"><code>flag{e65421110ba03099
+ 21
+1c039337}
+finish
+</code></pre><p>再写个c把这一位算一下（其实不如直接用c暴力破解了）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+    <span style="color:#66d9ef">char</span> x;
+    <span style="color:#66d9ef">for</span> (x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x21</span>; x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x7f</span>; x<span style="color:#f92672">++</span>){
+        <span style="color:#66d9ef">if</span> (<span style="color:#ae81ff">14479500</span> <span style="color:#f92672">*</span> x <span style="color:#f92672">==</span> <span style="color:#ae81ff">1404511500</span>){
+            printf(<span style="color:#e6db74">&#34;%c</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, x);
+        }
+    }
+    printf(<span style="color:#e6db74">&#34;finish</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><h2 id="number-game">number game</h2>
+<p>先拖入ida进行静态分析，查看main函数核心代码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  __isoc99_scanf(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>v5, a3);
+  <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)check_input((<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v5) )<span style="color:#75715e">// 长度为10且只能是&#34;01234&#34;
+</span><span style="color:#75715e"></span>  {
+    v3 <span style="color:#f92672">=</span> sub_400758((<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v5, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">10</span>);
+    sub_400807((<span style="color:#66d9ef">__int64</span>)v3, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v7);
+    v9 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    sub_400881((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v7);                    <span style="color:#75715e">// v7 = &#34;0421421430&#34;
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)sub_400917() )
+    {
+      puts(<span style="color:#e6db74">&#34;TQL!&#34;</span>);
+      printf(<span style="color:#e6db74">&#34;flag{&#34;</span>, <span style="color:#f92672">&amp;</span>v7);
+      printf(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>v5);
+      puts(<span style="color:#e6db74">&#34;}&#34;</span>);
+    }
+    <span style="color:#66d9ef">else</span>
+    {
+      puts(<span style="color:#e6db74">&#34;your are cxk!!&#34;</span>);
+    }
+  }
+</code></pre></div><p>输入的字符串需要通过两个if语句</p>
+<p>先看第一个if语句对应的函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  <span style="color:#66d9ef">if</span> ( strlen(a1) <span style="color:#f92672">==</span> <span style="color:#ae81ff">10</span> )
+  {
+    <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">9</span>; <span style="color:#f92672">++</span>i )
+    {
+      <span style="color:#66d9ef">if</span> ( a1[i] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">52</span> <span style="color:#f92672">||</span> a1[i] <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">47</span> )
+      {
+        puts(<span style="color:#e6db74">&#34;Wrong!&#34;</span>);
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0LL</span>;
+      }
+    }
+    result <span style="color:#f92672">=</span> <span style="color:#ae81ff">1LL</span>;
+  }
+  <span style="color:#66d9ef">else</span>
+  {
+    puts(<span style="color:#e6db74">&#34;Wrong!&#34;</span>);
+    result <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
+  }
+</code></pre></div><p>这是对输入数据的简单要求，要求是10个0-4自成的字符串</p>
+<p>再查看第二个if中的函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  v1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">4</span>; <span style="color:#f92672">++</span>i )
+  {
+    <span style="color:#66d9ef">for</span> ( j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">4</span>; <span style="color:#f92672">++</span>j )
+    {
+      <span style="color:#66d9ef">for</span> ( k <span style="color:#f92672">=</span> j <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>; k <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">4</span>; <span style="color:#f92672">++</span>k )
+      {
+        <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>unk_601060 <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> i <span style="color:#f92672">+</span> j) <span style="color:#f92672">==</span> <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>unk_601060 <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> i <span style="color:#f92672">+</span> k) )
+          v1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>unk_601060 <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> j <span style="color:#f92672">+</span> i) <span style="color:#f92672">==</span> <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>unk_601060 <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> k <span style="color:#f92672">+</span> i) )
+          v1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+      }
+    }
+  }
+</code></pre></div><p>要求在某条件下unk_601060中的两个字符不相同</p>
+<p>再查看一下中间的几个函数</p>
+<p>先查看 <code>sub_400881</code> 函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">__int64</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">sub_400881</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>a1)
+{
+  <span style="color:#66d9ef">__int64</span> result; <span style="color:#75715e">// rax
+</span><span style="color:#75715e"></span>
+  byte_601062 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>a1;
+  byte_601067 <span style="color:#f92672">=</span> a1[<span style="color:#ae81ff">1</span>];
+  byte_601069 <span style="color:#f92672">=</span> a1[<span style="color:#ae81ff">2</span>];
+  byte_60106B <span style="color:#f92672">=</span> a1[<span style="color:#ae81ff">3</span>];
+  byte_60106E <span style="color:#f92672">=</span> a1[<span style="color:#ae81ff">4</span>];
+  byte_60106F <span style="color:#f92672">=</span> a1[<span style="color:#ae81ff">5</span>];
+  byte_601071 <span style="color:#f92672">=</span> a1[<span style="color:#ae81ff">6</span>];
+  byte_601072 <span style="color:#f92672">=</span> a1[<span style="color:#ae81ff">7</span>];
+  byte_601076 <span style="color:#f92672">=</span> a1[<span style="color:#ae81ff">8</span>];
+  result <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)a1[<span style="color:#ae81ff">9</span>];
+  byte_601077 <span style="color:#f92672">=</span> a1[<span style="color:#ae81ff">9</span>];
+  <span style="color:#66d9ef">return</span> result;
+}
+</code></pre></div><p>是将a1中的数据放到指定的内存位置上</p>
+<p>查看这个内存地址</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">data:0000000000601060 unk_601060      db  31h ; 1
+.data:0000000000601061                 db  34h ; 4
+.data:0000000000601062 byte_601062     db 23h                  ; DATA XREF: sub_400881+F↑w
+.data:0000000000601063                 db  32h ; 2
+.data:0000000000601064                 db  33h ; 3
+.data:0000000000601065                 db  33h ; 3
+.data:0000000000601066                 db  30h ; 0
+.data:0000000000601067 byte_601067     db 23h                  ; DATA XREF: sub_400881+1D↑w
+.data:0000000000601068                 db  31h ; 1
+.data:0000000000601069 byte_601069     db 23h                  ; DATA XREF: sub_400881+2B↑w
+.data:000000000060106A                 db  30h ; 0
+.data:000000000060106B byte_60106B     db 23h                  ; DATA XREF: sub_400881+39↑w
+.data:000000000060106C                 db  32h ; 2
+.data:000000000060106D                 db  33h ; 3
+.data:000000000060106E byte_60106E     db 23h                  ; DATA XREF: sub_400881+47↑w
+.data:000000000060106F byte_60106F     db 23h                  ; DATA XREF: sub_400881+55↑w
+.data:0000000000601070                 db  33h ; 3
+.data:0000000000601071 byte_601071     db 23h                  ; DATA XREF: sub_400881+63↑w
+.data:0000000000601072 byte_601072     db 23h                  ; DATA XREF: sub_400881+71↑w
+.data:0000000000601073                 db  30h ; 0
+.data:0000000000601074                 db  34h ; 4
+.data:0000000000601075                 db  32h ; 2
+.data:0000000000601076 byte_601076     db 23h                  ; DATA XREF: sub_400881+7F↑w
+.data:0000000000601077 byte_601077     db 23h                  ; DATA XREF: sub_400881+8D↑w
+.data:0000000000601078                 db  31h ; 1
+</code></pre><p>发现与 <code>unk_601060</code> 对应</p>
+<p>说明这个程序是将输入数据填到指定内存上，然后判断是否符合某个特殊条件</p>
+<p>由于总共有25个字符，并且程序中出现了形如 <code>5 * i + j</code> 的值，以及题目名称 <code>number_game</code> 推测是一种类似数独的填数游戏，每行每列数字只能为01234且不能重复</p>
+<p>查看已有的数字</p>
+<pre tabindex="0"><code>14 23
+30 1 
+0 23 
+ 3  0
+42  1
+</code></pre><p>那么最后v7中应该为 <code>0421421430</code></p>
+<p>简单查看了 <code>sub_400758</code> 和 <code>sub_400807</code> 后，确定这两个函数只进行了顺序的转换，只要得知其结果就可以</p>
+<p>因此使用gdb进行动态调试，目的是找到这两个函数的顺序调换结果</p>
+<p>首先 <code>start</code> 运行程序</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">gdb-peda$ start
+</code></pre></div><p>在 <code>0x40a62</code> 处打上断点（输入后，第一个if前）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">gdb-peda$ b *0x400a62
+</code></pre></div><p>运行，并输入 <code>0123456789</code></p>
+<p>接下来需要绕过第一个if判断</p>
+<p>在调用函数前修改eip，直接跳到jz后面</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">gdb-peda$ set var $rip<span style="color:#f92672">=</span>0x400a76
+</code></pre></div><p>接下来需要查看两个函数运行后的值，这个值是 <code>sub_400881</code> 的参数，因此在call这个函数前打上断点，并查看 rdi 寄存器的结果即可</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">gdb-peda$ b *0x400aae
+Breakpoint <span style="color:#ae81ff">3</span> at 0x400aae
+gdb-peda$ c
+Continuing.
+<span style="color:#f92672">[</span>----------------------------------registers-----------------------------------<span style="color:#f92672">]</span>
+RAX: 0x7ffffffedf40
+RBX: 0x400b20 --&gt; 0x41ff894156415741
+RCX: 0xe
+RDX: 0x7ffffffedf40
+RSI: 0x7ffffffedf40
+RDI: 0x7ffffffedf40
+RBP: 0x7ffffffedf60
+RSP: 0x7ffffffedf20
+RIP: 0x400aae --&gt; 0xb8fffffdcee8
+R8 : 0x6033d0 --&gt; 0x36 <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;6&#39;</span><span style="color:#f92672">)</span>
+R9 : 0x7c <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;|&#39;</span><span style="color:#f92672">)</span>
+R10: 0x4003ce --&gt; 0x5f00636f6c6c616d <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;malloc&#39;</span><span style="color:#f92672">)</span>
+R11: 0x7fffff78bbe0 --&gt; 0x6033e0 --&gt; 0x0
+R12: 0x4005e0 --&gt; 0x89485ed18949ed31
+R13: 0x7ffffffee050
+R14: 0x0
+R15: 0x0
+EFLAGS: 0x246 <span style="color:#f92672">(</span>carry PARITY adjust ZERO sign trap INTERRUPT direction overflow<span style="color:#f92672">)</span>
+<span style="color:#f92672">[</span>-------------------------------------code-------------------------------------<span style="color:#f92672">]</span>
+   0x400aa3:    mov    BYTE PTR <span style="color:#f92672">[</span>rbp-0x16<span style="color:#f92672">]</span>,0x0
+   0x400aa7:    lea    rax,<span style="color:#f92672">[</span>rbp-0x20<span style="color:#f92672">]</span>
+   0x400aab:    mov    rdi,rax
+<span style="color:#f92672">=</span>&gt; 0x400aae:    call   0x400881
+   0x400ab3:    mov    eax,0x0
+   0x400ab8:    call   0x400917
+   0x400abd:    test   eax,eax
+   0x400abf:    je     0x400afc
+Guessed arguments:
+arg<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>: 0x7ffffffedf40
+<span style="color:#f92672">[</span>------------------------------------stack-------------------------------------<span style="color:#f92672">]</span>
+Invalid $SP address: 0x7ffffffedf20
+<span style="color:#f92672">[</span>------------------------------------------------------------------------------<span style="color:#f92672">]</span>
+Legend: code, data, rodata, value
+
+Breakpoint 3, 0x0000000000400aae in ?? <span style="color:#f92672">()</span>
+</code></pre></div><p>注意到 <code>RDI: 0x7ffffffedf40</code></p>
+<p>因此查看这个内存地址下的值即可</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">gdb-peda$ x/2x 0x7ffffffedf40
+0x7ffffffedf40: 0x3530343931383337      0x0000000000003632
+</code></pre></div><p>根据小端模式</p>
+<p><code>0123456789</code> 被转换为 <code>7381940526</code></p>
+<p>根据这个信息将 <code>0421421430</code> 还原，得到 <code>1134240024</code></p>
+<p>运行程序</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ ./number_game
+<span style="color:#ae81ff">1134240024</span>
+TQL!
+flag<span style="color:#f92672">{</span>1134240024<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="encrypt">encrypt</h2>
+<p>拖入ida，查看主函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  printf(<span style="color:#e6db74">&#34;please input your flag:&#34;</span>, a2, v19);
+  scanf(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>s);
+  memset(<span style="color:#f92672">&amp;</span>v9, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x408uLL</span>);
+  sub_4006B6(<span style="color:#f92672">&amp;</span>v9, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v10, <span style="color:#ae81ff">8</span>);
+  v3 <span style="color:#f92672">=</span> strlen(<span style="color:#f92672">&amp;</span>s);
+  sub_4007DB(<span style="color:#f92672">&amp;</span>v9, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>s, v3);
+  v4 <span style="color:#f92672">=</span> strlen(<span style="color:#f92672">&amp;</span>s);
+  sub_4008FA((<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>s, v4, v19, <span style="color:#f92672">&amp;</span>v6);
+  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">50</span>; <span style="color:#f92672">++</span>i )
+  {
+    <span style="color:#66d9ef">if</span> ( v19[i] <span style="color:#f92672">!=</span> byte_602080[i] )
+    {
+      puts(<span style="color:#e6db74">&#34;Wrong&#34;</span>);
+      <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0LL</span>;
+    }
+  }
+  puts(<span style="color:#e6db74">&#34;Good&#34;</span>);
+</code></pre></div><p>在进行判断前执行了三个函数</p>
+<p>最后一个函数是一个类base64</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  <span style="color:#66d9ef">while</span> ( v20 <span style="color:#f92672">&lt;</span> a2 )
+  {
+    v4 <span style="color:#f92672">=</span> v20<span style="color:#f92672">++</span>;
+    v17 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(v4 <span style="color:#f92672">+</span> a1);
+    <span style="color:#66d9ef">if</span> ( v20 <span style="color:#f92672">&gt;=</span> a2 )
+    {
+      v6 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    }
+    <span style="color:#66d9ef">else</span>
+    {
+      v5 <span style="color:#f92672">=</span> v20<span style="color:#f92672">++</span>;
+      v6 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(v5 <span style="color:#f92672">+</span> a1);
+    }
+    v18 <span style="color:#f92672">=</span> v6;
+    <span style="color:#66d9ef">if</span> ( v20 <span style="color:#f92672">&gt;=</span> a2 )
+    {
+      v8 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    }
+    <span style="color:#66d9ef">else</span>
+    {
+      v7 <span style="color:#f92672">=</span> v20<span style="color:#f92672">++</span>;
+      v8 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(v7 <span style="color:#f92672">+</span> a1);
+    }
+    v9 <span style="color:#f92672">=</span> v8;
+    v10 <span style="color:#f92672">=</span> v19;
+    v11 <span style="color:#f92672">=</span> v19 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+    a3[v10] <span style="color:#f92672">=</span> ((v17 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3F</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">61</span>;
+    v12 <span style="color:#f92672">=</span> v11<span style="color:#f92672">++</span>;
+    a3[v12] <span style="color:#f92672">=</span> ((((v18 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFF</span>) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">|</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">*</span> v17) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3F</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">61</span>;
+    a3[v11] <span style="color:#f92672">=</span> ((((v9 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFF</span>) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">6</span>) <span style="color:#f92672">|</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> v18) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3F</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">61</span>;
+    v13 <span style="color:#f92672">=</span> v11 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+    v19 <span style="color:#f92672">=</span> v11 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>;
+    a3[v13] <span style="color:#f92672">=</span> (v9 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3F</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">61</span>;
+  }
+  <span style="color:#66d9ef">if</span> ( a2 <span style="color:#f92672">%</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> )
+  {
+    a3[<span style="color:#f92672">--</span>v19] <span style="color:#f92672">=</span> <span style="color:#ae81ff">61</span>;
+  }
+  <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> ( a2 <span style="color:#f92672">%</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span> )
+  {
+    <span style="color:#66d9ef">goto</span> LABEL_15;
+  }
+  a3[v19 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">61</span>;
+</code></pre></div><p>将每一位减少61后映射到base64的字符串上就可以得到base64结果</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Z`TzzTrD|fQP[_VVL|yneURyUmFklVJgLasJroZpHRxIUlH</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">vZE&#39;</span> <span style="color:#75715e"># 注意转义字符</span>
+base <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+map <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#39;</span>
+<span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> str:
+    base <span style="color:#f92672">+=</span> map[ord(c) <span style="color:#f92672">-</span> <span style="color:#ae81ff">61</span>]
+print (base)
+<span style="color:#75715e"># base = &#39;djX99X1H/pUTeiZZP/8xoYV8YwJuvZNqPk2N1ydzLV7MYvLf5dI&#39;</span>
+<span style="color:#75715e"># 最后再补充一个 &#39;=&#39; 即可</span>
+</code></pre></div><p>破解完这个函数后再查看上两个函数</p>
+<p>根据调用判断第一个函数为第二个函数提供密钥，这个应该是固定结果，动态调试即可得到</p>
+<p>查看第二个函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> a3; <span style="color:#f92672">++</span>i ) {
+    v7 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(v7 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+    v3 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)(<span style="color:#ae81ff">4LL</span> <span style="color:#f92672">*</span> v7 <span style="color:#f92672">+</span> v9);
+    v8 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(v8 <span style="color:#f92672">+</span> v3);
+    v4 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)(<span style="color:#ae81ff">4LL</span> <span style="color:#f92672">*</span> v8 <span style="color:#f92672">+</span> v9);
+    <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)(v9 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4LL</span> <span style="color:#f92672">*</span> v7) <span style="color:#f92672">=</span> v4;
+    <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)(v9 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4LL</span> <span style="color:#f92672">*</span> v8) <span style="color:#f92672">=</span> v3;
+    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(i <span style="color:#f92672">+</span> a2) <span style="color:#f92672">^=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(<span style="color:#ae81ff">4LL</span> <span style="color:#f92672">*</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(v3 <span style="color:#f92672">+</span> v4) <span style="color:#f92672">+</span> v9);
+  }
+</code></pre></div><p>这对输入的每一位做了个异或运算，异或的数字也是固定的，直接进行动态调试即可（根据经验猜测是RC4或者与其类似）</p>
+<p>根据base64的位数得知flag最多有39位</p>
+<p>进行动态调试</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">gdb-peda$ start
+gdb-peda$ c
+Continuing.
+please input your flag:flag<span style="color:#f92672">{</span>abcdefghijklmnopqrstuvwxyz0123456<span style="color:#f92672">}</span>
+<span style="color:#f92672">[</span>----------------------------------registers-----------------------------------<span style="color:#f92672">]</span>
+RAX: 0x27 <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&#39;&#34;</span><span style="color:#f92672">)</span>
+RBX: 0x0
+RCX: 0x0
+RDX: 0x7ffffffed9c0 <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;flag{abcdefghijklmnopqrstuvwxyz0123456}&#34;</span><span style="color:#f92672">)</span>
+RSI: 0x7ffffffed9b0 --&gt; 0x4010202030302010
+RDI: 0x7ffffffed9e0 --&gt; 0x7d363534333231 <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;123456}&#39;</span><span style="color:#f92672">)</span>
+RBP: 0x7ffffffeded0 --&gt; 0x400c80 --&gt; 0x41ff894156415741
+RSP: 0x7ffffffed590 --&gt; 0x0
+RIP: 0x400bbc --&gt; 0xfffaf08d8d48c289
+R8 : 0x0
+R9 : 0x0
+R10: 0x3
+R11: 0x7fffff18ee90 <span style="color:#f92672">(</span>&lt;__memset_avx2_unaligned_erms&gt;:    vmovd  xmm0,esi<span style="color:#f92672">)</span>
+R12: 0x4005c0 --&gt; 0x89485ed18949ed31
+R13: 0x7ffffffedfb0 --&gt; 0x1
+R14: 0x0
+R15: 0x0
+EFLAGS: 0x206 <span style="color:#f92672">(</span>carry PARITY adjust zero sign trap INTERRUPT direction overflow<span style="color:#f92672">)</span>
+<span style="color:#f92672">[</span>-------------------------------------code-------------------------------------<span style="color:#f92672">]</span>
+   0x400bad:    lea    rax,<span style="color:#f92672">[</span>rbp-0x510<span style="color:#f92672">]</span>
+   0x400bb4:    mov    rdi,rax
+   0x400bb7:    call   0x400550 &lt;strlen@plt&gt;
+<span style="color:#f92672">=</span>&gt; 0x400bbc:    mov    edx,eax
+   0x400bbe:    lea    rcx,<span style="color:#f92672">[</span>rbp-0x510<span style="color:#f92672">]</span>
+   0x400bc5:    lea    rax,<span style="color:#f92672">[</span>rbp-0x930<span style="color:#f92672">]</span>
+   0x400bcc:    mov    rsi,rcx
+   0x400bcf:    mov    rdi,rax
+<span style="color:#f92672">[</span>------------------------------------stack-------------------------------------<span style="color:#f92672">]</span>
+0000| 0x7ffffffed590 --&gt; 0x0
+0008| 0x7ffffffed598 --&gt; 0x5f4f636d <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;mcO_&#39;</span><span style="color:#f92672">)</span>
+0016| 0x7ffffffed5a0 --&gt; 0x0
+0024| 0x7ffffffed5a8 --&gt; 0x31000000b0
+0032| 0x7ffffffed5b0 --&gt; 0x7000000075 <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;u&#39;</span><span style="color:#f92672">)</span>
+0040| 0x7ffffffed5b8 --&gt; 0xdf000000f8
+0048| 0x7ffffffed5c0 --&gt; 0x3c00000007
+0056| 0x7ffffffed5c8 --&gt; 0x7100000078 <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;x&#39;</span><span style="color:#f92672">)</span>
+<span style="color:#f92672">[</span>------------------------------------------------------------------------------<span style="color:#f92672">]</span>
+Legend: code, data, rodata, value
+
+Breakpoint 2, 0x0000000000400bbc in ?? <span style="color:#f92672">()</span>
+gdb-peda$ x/10x $rdx
+0x7ffffffed9c0: 0x6362617b67616c66      0x6b6a696867666564
+0x7ffffffed9d0: 0x737271706f6e6d6c      0x307a797877767574
+0x7ffffffed9e0: 0x007d363534333231      0x0000000000000000
+0x7ffffffed9f0: 0x0000000000000000      0x0000000000000000
+0x7ffffffeda00: 0x0000000000000000      0x0000000000000000
+gdb-peda$ c
+Continuing.
+<span style="color:#f92672">[</span>----------------------------------registers-----------------------------------<span style="color:#f92672">]</span>
+RAX: 0x7ffffffed5a0 --&gt; 0x1c00000027
+RBX: 0x0
+RCX: 0x138
+RDX: 0x1c
+RSI: 0x7d <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;}&#39;</span><span style="color:#f92672">)</span>
+RDI: 0x7ffffffed5a0 --&gt; 0x1c00000027
+RBP: 0x7ffffffeded0 --&gt; 0x400c80 --&gt; 0x41ff894156415741
+RSP: 0x7ffffffed590 --&gt; 0x0
+RIP: 0x400bd7 --&gt; 0x48fffffaf0858d48
+R8 : 0x0
+R9 : 0x0
+R10: 0x3
+R11: 0x7fffff18ee90 <span style="color:#f92672">(</span>&lt;__memset_avx2_unaligned_erms&gt;:    vmovd  xmm0,esi<span style="color:#f92672">)</span>
+R12: 0x4005c0 --&gt; 0x89485ed18949ed31
+R13: 0x7ffffffedfb0 --&gt; 0x1
+R14: 0x0
+R15: 0x0
+EFLAGS: 0x246 <span style="color:#f92672">(</span>carry PARITY adjust ZERO sign trap INTERRUPT direction overflow<span style="color:#f92672">)</span>
+<span style="color:#f92672">[</span>-------------------------------------code-------------------------------------<span style="color:#f92672">]</span>
+   0x400bcc:    mov    rsi,rcx
+   0x400bcf:    mov    rdi,rax
+   0x400bd2:    call   0x4007db
+<span style="color:#f92672">=</span>&gt; 0x400bd7:    lea    rax,<span style="color:#f92672">[</span>rbp-0x510<span style="color:#f92672">]</span>
+   0x400bde:    mov    rdi,rax
+   0x400be1:    call   0x400550 &lt;strlen@plt&gt;
+   0x400be6:    mov    esi,eax
+   0x400be8:    lea    rcx,<span style="color:#f92672">[</span>rbp-0x93c<span style="color:#f92672">]</span>
+<span style="color:#f92672">[</span>------------------------------------stack-------------------------------------<span style="color:#f92672">]</span>
+0000| 0x7ffffffed590 --&gt; 0x0
+0008| 0x7ffffffed598 --&gt; 0x5f4f636d <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;mcO_&#39;</span><span style="color:#f92672">)</span>
+0016| 0x7ffffffed5a0 --&gt; 0x1c00000027
+0024| 0x7ffffffed5a8 --&gt; 0x67000000b0
+0032| 0x7ffffffed5b0 --&gt; 0x4b000000b8
+0040| 0x7ffffffed5b8 --&gt; 0xe000000069
+0048| 0x7ffffffed5c0 --&gt; 0x3f000000b9
+0056| 0x7ffffffed5c8 --&gt; 0xc5000000ec
+<span style="color:#f92672">[</span>------------------------------------------------------------------------------<span style="color:#f92672">]</span>
+Legend: code, data, rodata, value
+
+Breakpoint 3, 0x0000000000400bd7 in ?? <span style="color:#f92672">()</span>
+gdb-peda$ x/10x 0x7ffffffed9c0
+0x7ffffffed9c0: 0xc6ad437df5fd3576      0xa862a26e0d237b16
+0x7ffffffed9d0: 0x2c84ae7c0c342488      0x5e656c6895cb5d7c
+0x7ffffffed9e0: 0x00e699b5d8f9689b      0x0000000000000000
+0x7ffffffed9f0: 0x0000000000000000      0x0000000000000000
+0x7ffffffeda00: 0x0000000000000000      0x0000000000000000
+</code></pre></div><p>将输入在函数执行前后两次的结果进行异或即可得到异或的数字，再与base64解码的结果进行异或即可，注意大小端问题</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> n2s, s2n
+
+before <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x7d363534333231307a797877767574737271706f6e6d6c6b6a6968676665646362617b67616c66</span>
+after <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xe699b5d8f9689b5e656c6895cb5d7c2c84ae7c0c342488a862a26e0d237b16c6ad437df5fd3576</span>
+flag <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;v5</span><span style="color:#ae81ff">\xfd\xf5</span><span style="color:#e6db74">}G</span><span style="color:#ae81ff">\xfe\x95\x13</span><span style="color:#e6db74">z&amp;Y?</span><span style="color:#ae81ff">\xff</span><span style="color:#e6db74">1</span><span style="color:#ae81ff">\xa1\x85</span><span style="color:#e6db74">|c</span><span style="color:#ae81ff">\x02</span><span style="color:#e6db74">n</span><span style="color:#ae81ff">\xbd\x93</span><span style="color:#e6db74">j&gt;M</span><span style="color:#ae81ff">\x8d\xd7</span><span style="color:#e6db74">&#39;s-^</span><span style="color:#ae81ff">\xcc</span><span style="color:#e6db74">b</span><span style="color:#ae81ff">\xf2\xdf\xe5\xd2</span><span style="color:#e6db74">&#34;</span>[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+
+print (len(flag))
+
+print (n2s(s2n(flag) <span style="color:#f92672">^</span> before <span style="color:#f92672">^</span> after)[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])
+<span style="color:#75715e"># b&#39;flag{e10adc3949ba59abbe56e057f20f883e}\x9b&#39;</span>
+</code></pre></div><p>得到flag</p>
+<p><code>flag{e10adc3949ba59abbe56e057f20f883e}</code></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+            <a href="/tags/reverse/">Reverse</a>
+        
+            <a href="/tags/buuoj/">BUUOJ</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/start-reversing/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Start Reversing</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/aitmc-challenge/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AITMC-challenge</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2021 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#re">re</a>
+      <ul>
+        <li><a href="#思路">思路</a></li>
+        <li><a href="#脚本">脚本</a></li>
+      </ul>
+    </li>
+    <li><a href="#number-game">number game</a></li>
+    <li><a href="#encrypt">encrypt</a></li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

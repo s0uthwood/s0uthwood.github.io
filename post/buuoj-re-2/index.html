@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='firmware 一道水题，主要学习一下工控逆向
+不难看出，给的附件是squashfs文件，直接进行binwalk
+ 在安装sasquatch时遇到了一些坑，好像必须clone到~/Downloads等文件夹内才行
+ binwalk之后逛一下目录，能够找到一个叫做 backdoor 的二进制文件
+目标是找到连接的ip和端口，进去找一找就能看到
+[FlareOn4]greek_to_me 尝试运行一下，发现不能输入
+逆向，发现127.0.0.1的字样，以及socket等明显的网络通信函数
+直接运行的时候看一下主机端口，发现是 127.0.0.1:2222，用Windows下的nc连上去就可以进行调试了
+SMC还是很明显的
+发现解SMC时仅用了第一个字节，但由于不知道里面有什么，猜测可能是对后面的字节进行验证，所以决定将程序本地复现一下，爆破解SMC的密钥
+#include &amp;lt;stdio.h&amp;gt; unsigned char ida_chars[] = { 0x33, 0xE1, 0xC4, 0x99, 0x11, 0x06, 0x81, 0x16, 0xF0, 0x32, 0x9F, 0xC4, 0x91, 0x17, 0x06, 0x81, 0x14, 0xF0, 0x06, 0x81, 0x15, 0xF1, 0xC4, 0x91, 0x1A, 0x06, 0x81, 0x1B, 0xE2, 0x06, 0x81, 0x18, 0xF2, 0x06, 0x81, 0x19, 0xF1, 0x06, 0x81, 0x1E, 0xF0, 0xC4, 0x99, 0x1F, 0xC4, 0x91, 0x1C, 0x06, 0x81, 0x1D, 0xE6, 0x06, 0x81, 0x62, 0xEF, 0x06, 0x81, 0x63, 0xF2, 0x06, 0x81, 0x60, 0xE3, 0xC4, 0x99, 0x61, 0x06, 0x81, 0x66, 0xBC, 0x06, 0x81, 0x67, 0xE6, 0x06, 0x81, 0x64, 0xE8, 0x06, 0x81, 0x65, 0x9D, 0x06, 0x81, 0x6A, 0xF2, 0xC4, 0x99, 0x6B, 0x06, 0x81, 0x68, 0xA9, 0x06, 0x81, 0x69, 0xEF, 0x06, 0x81, 0x6E, 0xEE, 0x06, 0x81, 0x6F, 0xAE, 0x06, 0x81, 0x6C, 0xE3, 0x06, 0x81, 0x6D, 0xEF, 0x06, 0x81, 0x72, 0xE9, 0x06, 0x81, 0x73, 0x7C }; #define HIBYTE(x) ((x &amp;amp; 0xFF00) &amp;gt;&amp;gt; 8)  int main(){ for (unsigned short buf = 0; buf &amp;lt;= 0xff; buf&#43;&#43;){ unsigned char new_char[130]; unsigned char *a1 = new_char; unsigned int i = 0; do { *a1 = (buf ^ ida_chars[i&#43;&#43;]) &#43; 34; &#43;&#43;a1; } while ( i &amp;lt; 121 ); unsigned int v2 = 0x79; // 0x79  a1 = new_char; unsigned short v3 = 255; for ( i = 255; v2; v3 = HIBYTE(v3) &#43; (unsigned char)v3 ) { unsigned short v5 = i; int v6 = v2; if ( v2 &amp;gt; 0x14 ) v6 = 0x14; v2 -= v6; do { v5 &#43;= *a1; v3 &#43;= v5; &#43;&#43;a1; --v6; } while ( v6 ); i = HIBYTE(v5) &#43; (unsigned char)v5; } int ret = (HIBYTE(i) &#43; (unsigned char)i) | ((v3 &amp;lt;&amp;lt; 8) &#43; (v3 &amp;amp; 0xFF00)); // if (buf == &amp;#39;f&amp;#39;)  // printf(&amp;#34;%x\n&amp;#34;, ret); // 0xf51c  // if (buf == &amp;#39;@&amp;#39;)  // printf(&amp;#34;%x\n&amp;#34;, ret); // 0x60ee  if (ret == 0xFB5E) { printf(&amp;#34;%d\n&amp;#34;, buf); break; } // printf(&amp;#34;%c %x\n&amp;#34;, buf, ret);  } } 一开始给的范围小了（以为会是可见字符），一直爆破不出来，反复验证了好多次，后来才发现范围是 0-0xff'><title>BUUOJ RE (2)</title>
+
+<link rel='canonical' href='/post/buuoj-re-2/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='BUUOJ RE (2)'>
+<meta property='og:description' content='firmware 一道水题，主要学习一下工控逆向
+不难看出，给的附件是squashfs文件，直接进行binwalk
+ 在安装sasquatch时遇到了一些坑，好像必须clone到~/Downloads等文件夹内才行
+ binwalk之后逛一下目录，能够找到一个叫做 backdoor 的二进制文件
+目标是找到连接的ip和端口，进去找一找就能看到
+[FlareOn4]greek_to_me 尝试运行一下，发现不能输入
+逆向，发现127.0.0.1的字样，以及socket等明显的网络通信函数
+直接运行的时候看一下主机端口，发现是 127.0.0.1:2222，用Windows下的nc连上去就可以进行调试了
+SMC还是很明显的
+发现解SMC时仅用了第一个字节，但由于不知道里面有什么，猜测可能是对后面的字节进行验证，所以决定将程序本地复现一下，爆破解SMC的密钥
+#include &amp;lt;stdio.h&amp;gt; unsigned char ida_chars[] = { 0x33, 0xE1, 0xC4, 0x99, 0x11, 0x06, 0x81, 0x16, 0xF0, 0x32, 0x9F, 0xC4, 0x91, 0x17, 0x06, 0x81, 0x14, 0xF0, 0x06, 0x81, 0x15, 0xF1, 0xC4, 0x91, 0x1A, 0x06, 0x81, 0x1B, 0xE2, 0x06, 0x81, 0x18, 0xF2, 0x06, 0x81, 0x19, 0xF1, 0x06, 0x81, 0x1E, 0xF0, 0xC4, 0x99, 0x1F, 0xC4, 0x91, 0x1C, 0x06, 0x81, 0x1D, 0xE6, 0x06, 0x81, 0x62, 0xEF, 0x06, 0x81, 0x63, 0xF2, 0x06, 0x81, 0x60, 0xE3, 0xC4, 0x99, 0x61, 0x06, 0x81, 0x66, 0xBC, 0x06, 0x81, 0x67, 0xE6, 0x06, 0x81, 0x64, 0xE8, 0x06, 0x81, 0x65, 0x9D, 0x06, 0x81, 0x6A, 0xF2, 0xC4, 0x99, 0x6B, 0x06, 0x81, 0x68, 0xA9, 0x06, 0x81, 0x69, 0xEF, 0x06, 0x81, 0x6E, 0xEE, 0x06, 0x81, 0x6F, 0xAE, 0x06, 0x81, 0x6C, 0xE3, 0x06, 0x81, 0x6D, 0xEF, 0x06, 0x81, 0x72, 0xE9, 0x06, 0x81, 0x73, 0x7C }; #define HIBYTE(x) ((x &amp;amp; 0xFF00) &amp;gt;&amp;gt; 8)  int main(){ for (unsigned short buf = 0; buf &amp;lt;= 0xff; buf&#43;&#43;){ unsigned char new_char[130]; unsigned char *a1 = new_char; unsigned int i = 0; do { *a1 = (buf ^ ida_chars[i&#43;&#43;]) &#43; 34; &#43;&#43;a1; } while ( i &amp;lt; 121 ); unsigned int v2 = 0x79; // 0x79  a1 = new_char; unsigned short v3 = 255; for ( i = 255; v2; v3 = HIBYTE(v3) &#43; (unsigned char)v3 ) { unsigned short v5 = i; int v6 = v2; if ( v2 &amp;gt; 0x14 ) v6 = 0x14; v2 -= v6; do { v5 &#43;= *a1; v3 &#43;= v5; &#43;&#43;a1; --v6; } while ( v6 ); i = HIBYTE(v5) &#43; (unsigned char)v5; } int ret = (HIBYTE(i) &#43; (unsigned char)i) | ((v3 &amp;lt;&amp;lt; 8) &#43; (v3 &amp;amp; 0xFF00)); // if (buf == &amp;#39;f&amp;#39;)  // printf(&amp;#34;%x\n&amp;#34;, ret); // 0xf51c  // if (buf == &amp;#39;@&amp;#39;)  // printf(&amp;#34;%x\n&amp;#34;, ret); // 0x60ee  if (ret == 0xFB5E) { printf(&amp;#34;%d\n&amp;#34;, buf); break; } // printf(&amp;#34;%c %x\n&amp;#34;, buf, ret);  } } 一开始给的范围小了（以为会是可见字符），一直爆破不出来，反复验证了好多次，后来才发现范围是 0-0xff'>
+<meta property='og:url' content='/post/buuoj-re-2/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='FlareOn' /><meta property='article:tag' content='BUUOJ' /><meta property='article:published_time' content='2021-06-10T03:20:33&#43;00:00'/><meta property='article:modified_time' content='2021-06-10T03:20:33&#43;00:00'/>
+<meta name="twitter:title" content="BUUOJ RE (2)">
+<meta name="twitter:description" content="firmware 一道水题，主要学习一下工控逆向
+不难看出，给的附件是squashfs文件，直接进行binwalk
+ 在安装sasquatch时遇到了一些坑，好像必须clone到~/Downloads等文件夹内才行
+ binwalk之后逛一下目录，能够找到一个叫做 backdoor 的二进制文件
+目标是找到连接的ip和端口，进去找一找就能看到
+[FlareOn4]greek_to_me 尝试运行一下，发现不能输入
+逆向，发现127.0.0.1的字样，以及socket等明显的网络通信函数
+直接运行的时候看一下主机端口，发现是 127.0.0.1:2222，用Windows下的nc连上去就可以进行调试了
+SMC还是很明显的
+发现解SMC时仅用了第一个字节，但由于不知道里面有什么，猜测可能是对后面的字节进行验证，所以决定将程序本地复现一下，爆破解SMC的密钥
+#include &amp;lt;stdio.h&amp;gt; unsigned char ida_chars[] = { 0x33, 0xE1, 0xC4, 0x99, 0x11, 0x06, 0x81, 0x16, 0xF0, 0x32, 0x9F, 0xC4, 0x91, 0x17, 0x06, 0x81, 0x14, 0xF0, 0x06, 0x81, 0x15, 0xF1, 0xC4, 0x91, 0x1A, 0x06, 0x81, 0x1B, 0xE2, 0x06, 0x81, 0x18, 0xF2, 0x06, 0x81, 0x19, 0xF1, 0x06, 0x81, 0x1E, 0xF0, 0xC4, 0x99, 0x1F, 0xC4, 0x91, 0x1C, 0x06, 0x81, 0x1D, 0xE6, 0x06, 0x81, 0x62, 0xEF, 0x06, 0x81, 0x63, 0xF2, 0x06, 0x81, 0x60, 0xE3, 0xC4, 0x99, 0x61, 0x06, 0x81, 0x66, 0xBC, 0x06, 0x81, 0x67, 0xE6, 0x06, 0x81, 0x64, 0xE8, 0x06, 0x81, 0x65, 0x9D, 0x06, 0x81, 0x6A, 0xF2, 0xC4, 0x99, 0x6B, 0x06, 0x81, 0x68, 0xA9, 0x06, 0x81, 0x69, 0xEF, 0x06, 0x81, 0x6E, 0xEE, 0x06, 0x81, 0x6F, 0xAE, 0x06, 0x81, 0x6C, 0xE3, 0x06, 0x81, 0x6D, 0xEF, 0x06, 0x81, 0x72, 0xE9, 0x06, 0x81, 0x73, 0x7C }; #define HIBYTE(x) ((x &amp;amp; 0xFF00) &amp;gt;&amp;gt; 8)  int main(){ for (unsigned short buf = 0; buf &amp;lt;= 0xff; buf&#43;&#43;){ unsigned char new_char[130]; unsigned char *a1 = new_char; unsigned int i = 0; do { *a1 = (buf ^ ida_chars[i&#43;&#43;]) &#43; 34; &#43;&#43;a1; } while ( i &amp;lt; 121 ); unsigned int v2 = 0x79; // 0x79  a1 = new_char; unsigned short v3 = 255; for ( i = 255; v2; v3 = HIBYTE(v3) &#43; (unsigned char)v3 ) { unsigned short v5 = i; int v6 = v2; if ( v2 &amp;gt; 0x14 ) v6 = 0x14; v2 -= v6; do { v5 &#43;= *a1; v3 &#43;= v5; &#43;&#43;a1; --v6; } while ( v6 ); i = HIBYTE(v5) &#43; (unsigned char)v5; } int ret = (HIBYTE(i) &#43; (unsigned char)i) | ((v3 &amp;lt;&amp;lt; 8) &#43; (v3 &amp;amp; 0xFF00)); // if (buf == &amp;#39;f&amp;#39;)  // printf(&amp;#34;%x\n&amp;#34;, ret); // 0xf51c  // if (buf == &amp;#39;@&amp;#39;)  // printf(&amp;#34;%x\n&amp;#34;, ret); // 0x60ee  if (ret == 0xFB5E) { printf(&amp;#34;%d\n&amp;#34;, buf); break; } // printf(&amp;#34;%c %x\n&amp;#34;, buf, ret);  } } 一开始给的范围小了（以为会是可见字符），一直爆破不出来，反复验证了好多次，后来才发现范围是 0-0xff">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/ctf/" >
+                CTF
+            </a>
+        
+            <a href="/categories/reverse/" >
+                Reverse
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/buuoj-re-2/">BUUOJ RE (2)</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 10, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    6 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="firmware">firmware</h2>
+<p>一道水题，主要学习一下工控逆向</p>
+<p>不难看出，给的附件是squashfs文件，直接进行binwalk</p>
+<blockquote>
+<p>在安装sasquatch时遇到了一些坑，好像必须clone到~/Downloads等文件夹内才行</p>
+</blockquote>
+<p>binwalk之后逛一下目录，能够找到一个叫做 <code>backdoor</code> 的二进制文件</p>
+<p>目标是找到连接的ip和端口，进去找一找就能看到</p>
+<h2 id="flareon4greek_to_me">[FlareOn4]greek_to_me</h2>
+<p>尝试运行一下，发现不能输入</p>
+<p>逆向，发现127.0.0.1的字样，以及socket等明显的网络通信函数</p>
+<p>直接运行的时候看一下主机端口，发现是 <code>127.0.0.1:2222</code>，用Windows下的nc连上去就可以进行调试了</p>
+<p>SMC还是很明显的</p>
+<p>发现解SMC时仅用了第一个字节，但由于不知道里面有什么，猜测可能是对后面的字节进行验证，所以决定将程序本地复现一下，爆破解SMC的密钥</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> ida_chars[] <span style="color:#f92672">=</span>
+{
+  <span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0xE1</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0x99</span>, <span style="color:#ae81ff">0x11</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x16</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x32</span>, 
+  <span style="color:#ae81ff">0x9F</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0x91</span>, <span style="color:#ae81ff">0x17</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x14</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, 
+  <span style="color:#ae81ff">0x15</span>, <span style="color:#ae81ff">0xF1</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0x91</span>, <span style="color:#ae81ff">0x1A</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x1B</span>, <span style="color:#ae81ff">0xE2</span>, <span style="color:#ae81ff">0x06</span>, 
+  <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x18</span>, <span style="color:#ae81ff">0xF2</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x19</span>, <span style="color:#ae81ff">0xF1</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x1E</span>, 
+  <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0x99</span>, <span style="color:#ae81ff">0x1F</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0x91</span>, <span style="color:#ae81ff">0x1C</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x1D</span>, 
+  <span style="color:#ae81ff">0xE6</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x62</span>, <span style="color:#ae81ff">0xEF</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x63</span>, <span style="color:#ae81ff">0xF2</span>, <span style="color:#ae81ff">0x06</span>, 
+  <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x60</span>, <span style="color:#ae81ff">0xE3</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0x99</span>, <span style="color:#ae81ff">0x61</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0xBC</span>, 
+  <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x67</span>, <span style="color:#ae81ff">0xE6</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0xE8</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, 
+  <span style="color:#ae81ff">0x65</span>, <span style="color:#ae81ff">0x9D</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x6A</span>, <span style="color:#ae81ff">0xF2</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0x99</span>, <span style="color:#ae81ff">0x6B</span>, <span style="color:#ae81ff">0x06</span>, 
+  <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0xA9</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x69</span>, <span style="color:#ae81ff">0xEF</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x6E</span>, 
+  <span style="color:#ae81ff">0xEE</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x6F</span>, <span style="color:#ae81ff">0xAE</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x6C</span>, <span style="color:#ae81ff">0xE3</span>, <span style="color:#ae81ff">0x06</span>, 
+  <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x6D</span>, <span style="color:#ae81ff">0xEF</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x72</span>, <span style="color:#ae81ff">0xE9</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x73</span>, 
+  <span style="color:#ae81ff">0x7C</span>
+};
+
+<span style="color:#75715e">#define HIBYTE(x) ((x &amp; 0xFF00) &gt;&gt; 8)
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> buf <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; buf <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0xff</span>; buf<span style="color:#f92672">++</span>){
+        <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> new_char[<span style="color:#ae81ff">130</span>]; 
+        <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>a1 <span style="color:#f92672">=</span> new_char;
+        <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">do</span> {
+            <span style="color:#f92672">*</span>a1 <span style="color:#f92672">=</span> (buf <span style="color:#f92672">^</span> ida_chars[i<span style="color:#f92672">++</span>]) <span style="color:#f92672">+</span> <span style="color:#ae81ff">34</span>;
+            <span style="color:#f92672">++</span>a1;
+        } <span style="color:#66d9ef">while</span> ( i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">121</span> );
+        <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x79</span>;                                      <span style="color:#75715e">// 0x79
+</span><span style="color:#75715e"></span>        a1 <span style="color:#f92672">=</span> new_char;
+        <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> v3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">255</span>;
+        <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">255</span>; v2; v3 <span style="color:#f92672">=</span> HIBYTE(v3) <span style="color:#f92672">+</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)v3 ) {
+            <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> v5 <span style="color:#f92672">=</span> i;
+            <span style="color:#66d9ef">int</span> v6 <span style="color:#f92672">=</span> v2;
+            <span style="color:#66d9ef">if</span> ( v2 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x14</span> )
+                v6 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x14</span>;
+            v2 <span style="color:#f92672">-=</span> v6;
+            <span style="color:#66d9ef">do</span> {
+                v5 <span style="color:#f92672">+=</span> <span style="color:#f92672">*</span>a1;
+                v3 <span style="color:#f92672">+=</span> v5;
+                <span style="color:#f92672">++</span>a1;
+                <span style="color:#f92672">--</span>v6;
+            } <span style="color:#66d9ef">while</span> ( v6 );
+            i <span style="color:#f92672">=</span> HIBYTE(v5) <span style="color:#f92672">+</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)v5;
+        }
+        <span style="color:#66d9ef">int</span> ret <span style="color:#f92672">=</span> (HIBYTE(i) <span style="color:#f92672">+</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)i) <span style="color:#f92672">|</span> ((v3 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">+</span> (v3 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFF00</span>));
+        <span style="color:#75715e">// if (buf == &#39;f&#39;) 
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//     printf(&#34;%x\n&#34;, ret); // 0xf51c
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// if (buf == &#39;@&#39;)
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//     printf(&#34;%x\n&#34;, ret); // 0x60ee
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xFB5E</span>) {
+            printf(<span style="color:#e6db74">&#34;%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, buf);
+            <span style="color:#66d9ef">break</span>;
+        }
+        <span style="color:#75715e">// printf(&#34;%c %x\n&#34;, buf, ret);
+</span><span style="color:#75715e"></span>    }
+}
+</code></pre></div><p>一开始给的范围小了（以为会是可见字符），一直爆破不出来，反复验证了好多次，后来才发现范围是 <code>0-0xff</code></p>
+<p>最后爆破出来是 <code>0xA2</code>，思考了一下怎么nc传递不可见字符，然后决定直接动调改内存</p>
+<p>下断点，然后修改buf，之后看一眼SMC解密结果，发现直接给flag了，去栈里dump一下</p>
+<h2 id="flareon5fleggo">[FlareOn5]FLEGGO</h2>
+<p>看名字还以为是个go呢，结果发现是个披着re外套的misc（流汗</p>
+<p>解压后发现有一堆程序，先随便挑一个日</p>
+<p>动调发现需要输入一串字符串，刚开始还想看看是不是和base64有关，后来发现这串字符串就在exe文件中，那就直接上python整批量操作了</p>
+<p>发现password存的地址是固定的，那就用subprocess对每个exe运行一下</p>
+<p>放个脚本</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> subprocess
+<span style="color:#f92672">import</span> os
+<span style="color:#75715e"># from pwn import *</span>
+
+files <span style="color:#f92672">=</span> [
+    <span style="color:#e6db74">&#34;./1BpnGjHOT7h5vvZsV4vISSb60Xj3pX5G.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./1JpPaUMynR9GflWbxfYvZviqiCB59RcI.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./2AljFfLleprkThTHuVvg63I7OgjG2LQT.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./3Jh0ELkck1MuRvzr8PLIpBNUGlspmGnu.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./4ihY3RWK4WYqI4XOXLtAH6XV5lkoIdgv.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./7mCysSKfiHJ4WqH2T8ERLE33Wrbp6Mqe.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./AEVYfSTJwubrlJKgxV8RAl0AdZJ5vhhy.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./BG3IDbHOUt9yHumPceLTVbObBHFneYEu.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./Bl0Iv5lT6wkpVCuy7jtcva7qka8WtLYY.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./Bp7836noYu71VAWc27sUdfaGwieALfc2.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./E36RGTbCE4LDtyLi97l9lSFoR7xVMKGN.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./Ew93SSPDbgiQYo4E4035A16MJUxXegDW.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./HDHugJBqTJqKKVtqi3sfR4BTq6P5XLZY.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./IXITujCLucnD4P3YrXOud5gC7Bwcw6mr.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./JIdE7SESzC1aS58Wwe5j3i6XbpkCa3S6.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./JXADoHafRHDyHmcTUjEBOvqq95spU7sj.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./K7HjR3Hf10SGG7rgke9WrRfxqhaGixS0.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./MrA1JmEDfPhnTi5MNMhqVS8aaTKdxbMe.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./NaobGsJ2w6qqblcIsj4QYNIBQhg3gmTR.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./P2PxxSJpnquBQ3xCvLoYj4pD3iyQcaKj.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./PvlqINbYjAY1E4WFfc2N6rZ2nKVhNZTP.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./SDIADRKhATsagJ3K8WwaNcQ52708TyRo.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./SeDdxvPJFHCr7uoQMjwmdRBAYEelHBZB.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./aSfSVMn7B8eRtxgJgwPP5Y5HiDEidvKg.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./azcyERV8HUbXmqPTEq5JFt7Ax1W5K4wl.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./bmYBZTBJlaFNbbwpiOiiQVdzimx8QVTI.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./cWvFLbliUfJl7KFDUYF1ABBFYFb6FJMz.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./d4NlRo5umkvWhZ2FmEG32rXBNeSSLt2Q.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./dT4Xze8paLOG7srCdGLsbLE1s6m3EsfX.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./dnAciAGVdlovQFSJmNiPOdHjkM3Ji18o.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./eEJhUoNbuc40kLHRo8GB7bwFPkuhgaVN.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./eovBHrlDb809jf08yaAcSzcX4T37F1NI.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./gFZw7lPUlbOXBvHRc31HJI5PKwy745Wv.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./hajfdokqjogmoWfpyp4w0feoeyhs1QLo.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./iJO15JsCa1bV5anXnZ9dTC9iWbEDmdtf.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./jJHgJjbyeWTTyQqISuJMpEGgE1aFs5ZB.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./kGQY35HJ7gvXzDJLWe8mabs3oKpwCo6L.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./lk0SOpnVIzTcC1Dcou9R7prKAC3laX0k.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./u3PL12jk5jCZKiVm0omvh46yK7NDfZLT.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./u8mbI3GZ8WtwruEiFkIl0UKxJS917407.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./v6RkHsLya4wTAh71C65hMXBsTc1ZhGZT.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./w3Y5YeglxqIWstp1PLbFoHvrQ9rN3F3x.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./wmkeAU8MdYrC9tEUMHH2tRMgaGdiFnga.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./x4neMBrqkYIQxDuXpwJNQZOlfyfA0eXs.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./xatgydl5cadiWFY4EXMRuoQr22ZIRC1Y.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./xyjJcvGAgswB7Yno5e9qLF4i13L1iGoT.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./y77GmQGdwVL7Fc9mMdiLJMgFQ8rgeSrl.exe&#34;</span>,
+    <span style="color:#e6db74">&#34;./zRx3bsMfOwG8IaayOeS8rHSSpiRfc9IB.exe&#34;</span>
+]
+
+
+<span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> files:
+    cur_file <span style="color:#f92672">=</span> open(f, <span style="color:#e6db74">&#39;rb&#39;</span>)
+    cur_file<span style="color:#f92672">.</span>seek(<span style="color:#ae81ff">0x2AB0</span>)
+    read_file <span style="color:#f92672">=</span> cur_file<span style="color:#f92672">.</span>read(<span style="color:#ae81ff">32</span>)
+    password <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;&#39;</span>
+    <span style="color:#66d9ef">for</span> p <span style="color:#f92672">in</span> read_file:
+        <span style="color:#66d9ef">if</span> p <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+            password <span style="color:#f92672">+=</span> p<span style="color:#f92672">.</span>to_bytes(<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;big&#39;</span>)
+    <span style="color:#75715e"># print (password)</span>
+    p <span style="color:#f92672">=</span> subprocess<span style="color:#f92672">.</span>Popen(f, stdin<span style="color:#f92672">=</span>subprocess<span style="color:#f92672">.</span>PIPE, stdout<span style="color:#f92672">=</span>subprocess<span style="color:#f92672">.</span>PIPE, stderr<span style="color:#f92672">=</span>subprocess<span style="color:#f92672">.</span>PIPE, shell<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+    out, err <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>communicate(password <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+    <span style="color:#75715e"># print (out)</span>
+    pic_name <span style="color:#f92672">=</span> out[<span style="color:#ae81ff">47</span>:<span style="color:#ae81ff">59</span>]
+    char_of_pic <span style="color:#f92672">=</span> out[<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>]<span style="color:#f92672">.</span>to_bytes(<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;big&#39;</span>)
+    os<span style="color:#f92672">.</span>rename(pic_name, char_of_pic <span style="color:#f92672">+</span> pic_name)
+</code></pre></div><p>输出会说每个图片对应的字符，点开图片后发现左上角有数字，应该是下标</p>
+<p>这tm就是misc啊！</p>
+<p>剩下的就是手动找位置了，屑</p>
+<h2 id="mr2020shit">[MR2020]Shit</h2>
+<p>这题最后的解法很屑（</p>
+<p>首先是去花，但花指令和CISCN2021-N的RE2一样，就不细说了</p>
+<p>一直尝试反调试，但一直没成功，就用爆破来解了&hellip;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">char</span> <span style="color:#66d9ef">__cdecl</span> <span style="color:#a6e22e">sub_DA12F0</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>a1)
+{
+  <span style="color:#66d9ef">int</span> v2; <span style="color:#75715e">// [esp+14h] [ebp-14h]
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> i; <span style="color:#75715e">// [esp+1Ch] [ebp-Ch]
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v4; <span style="color:#75715e">// [esp+20h] [ebp-8h]
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v5; <span style="color:#75715e">// [esp+20h] [ebp-8h]
+</span><span style="color:#75715e"></span>
+  v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> strlen(a1); i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">4</span> )
+  {
+    v4 <span style="color:#f92672">=</span> __ROR4__(a1[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>] <span style="color:#f92672">|</span> (a1[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">|</span> (a1[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">|</span> (a1[i] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">24</span>), dword_DA5034[i <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>]);
+    v5 <span style="color:#f92672">=</span> ((v4 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">|</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int16</span>)<span style="color:#f92672">~</span>HIWORD(v4)) <span style="color:#f92672">^</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> dword_DA5034[i <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>]);
+    <span style="color:#66d9ef">if</span> ( i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> )
+      v5 <span style="color:#f92672">^=</span> v2;
+    v2 <span style="color:#f92672">=</span> v5;
+    <span style="color:#66d9ef">if</span> ( v5 <span style="color:#f92672">!=</span> dword_DA5018[i <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>] )
+      <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+  }
+  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+}
+</code></pre></div><p>既然每四位进行一系列位运算，且密钥只有六位，那就爆破吧</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+a <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x8C2C133A</span>, <span style="color:#ae81ff">0x0F74CB3F6</span>, <span style="color:#ae81ff">0x0FEDFA6F2</span>, <span style="color:#ae81ff">0x0AB293E3B</span>, <span style="color:#ae81ff">0x26CF8A2A</span>, <span style="color:#ae81ff">0x88A1F279</span>]
+
+<span style="color:#66d9ef">for</span> t <span style="color:#f92672">in</span> range(len(a)):
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">32</span>):
+        tmp <span style="color:#f92672">=</span> a[t]
+        <span style="color:#66d9ef">if</span> t <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+            tmp <span style="color:#f92672">=</span> tmp <span style="color:#f92672">^</span> a[t <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>]
+        tmp <span style="color:#f92672">=</span> tmp <span style="color:#f92672">^</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> i)
+        tmp <span style="color:#f92672">=</span> ((<span style="color:#f92672">~</span>tmp <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">|</span> (tmp <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">16</span>)
+        res <span style="color:#f92672">=</span> n2s(((tmp <span style="color:#f92672">&gt;&gt;</span> (<span style="color:#ae81ff">0x20</span> <span style="color:#f92672">-</span> i)) <span style="color:#f92672">|</span> (tmp <span style="color:#f92672">&lt;&lt;</span> i)) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffff</span>)
+        <span style="color:#66d9ef">if</span> res[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x20</span> <span style="color:#f92672">and</span> res[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x7f</span>:
+            <span style="color:#66d9ef">if</span> res[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x20</span> <span style="color:#f92672">and</span> res[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x7f</span>:
+                <span style="color:#66d9ef">if</span> res[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x20</span> <span style="color:#f92672">and</span> res[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x7f</span>:
+                    <span style="color:#66d9ef">if</span> res[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x20</span> <span style="color:#f92672">and</span> res[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x7f</span>:
+                        print (res)
+    print ()
+</code></pre></div><p>最后甚至直接上四个 <code>if</code> 了&hellip;</p>
+<p>爆破结果</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;flag&#39;</span> <span style="color:#75715e"># 必选</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;,ag&amp;&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;a&#39;f,&#34;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;gf,!&#39;</span>
+
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;_2{`&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;3{`^&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;{a_3&#39;</span> <span style="color:#75715e"># 必选</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;`_3z&#39;</span>
+
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;[a2}&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a2y_&#39;</span> <span style="color:#75715e"># 剩下三个有大括号，排除</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;6}_a&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;}_e2&#39;</span>
+
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;re_f&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;e_gs&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;^fse&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;fsd_&#39;</span>
+
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;_4o2&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;or_t&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;2_t/&#39;</span>
+
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;=</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">t&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;est}&#39;</span> <span style="color:#75715e"># 必选</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;s4=e&#39;</span>
+<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;t=e3&#39;</span>
+</code></pre></div><p>中间根据前后单词拼接一下就行了</p>
+<h2 id="suctf2018hellopython">[SUCTF2018]HelloPython</h2>
+<h3 id="解pyc">解pyc</h3>
+<p>uncompyle6</p>
+<h3 id="算法识别">算法识别</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">(<span style="color:#66d9ef">lambda</span> __target: [ (<span style="color:#66d9ef">lambda</span> __target: [ [ __this() <span style="color:#66d9ef">for</span> __g[<span style="color:#e6db74">&#39;n&#39;</span>] <span style="color:#f92672">in</span> [__operator<span style="color:#f92672">.</span>isub(__g[<span style="color:#e6db74">&#39;n&#39;</span>], <span style="color:#ae81ff">1</span>)] ][<span style="color:#ae81ff">0</span>] <span style="color:#66d9ef">for</span> __target<span style="color:#f92672">.</span>value <span style="color:#f92672">in</span> [__operator<span style="color:#f92672">.</span>iadd(__target<span style="color:#f92672">.</span>value, (y<span style="color:#f92672">.</span>value <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">+</span> k[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">^</span> y<span style="color:#f92672">.</span>value <span style="color:#f92672">+</span> x<span style="color:#f92672">.</span>value <span style="color:#f92672">^</span> (y<span style="color:#f92672">.</span>value <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> k[<span style="color:#ae81ff">3</span>])] ][<span style="color:#ae81ff">0</span>])(z) <span style="color:#66d9ef">for</span> __target<span style="color:#f92672">.</span>value <span style="color:#f92672">in</span> [__operator<span style="color:#f92672">.</span>iadd(__target<span style="color:#f92672">.</span>value, (z<span style="color:#f92672">.</span>value <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">+</span> k[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">^</span> z<span style="color:#f92672">.</span>value <span style="color:#f92672">+</span> x<span style="color:#f92672">.</span>value <span style="color:#f92672">^</span> (z<span style="color:#f92672">.</span>value <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> k[<span style="color:#ae81ff">1</span>])] ][<span style="color:#ae81ff">0</span>])(y)
+</code></pre></div><p>很明显是tea</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">encrypt</span> (<span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> v, <span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> k) {  
+    <span style="color:#66d9ef">uint32_t</span> v0<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">0</span>], v1<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">1</span>], sum<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, i;           <span style="color:#75715e">/* set up */</span>  
+    <span style="color:#66d9ef">uint32_t</span> delta<span style="color:#f92672">=</span><span style="color:#ae81ff">0x9e3779b9</span>;                     <span style="color:#75715e">/* a key schedule constant */</span>  
+    <span style="color:#66d9ef">uint32_t</span> k0<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">0</span>], k1<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">1</span>], k2<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">2</span>], k3<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">3</span>];   <span style="color:#75715e">/* cache key */</span>  
+    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">32</span>; i<span style="color:#f92672">++</span>) {                       <span style="color:#75715e">/* basic cycle start */</span>  
+        sum <span style="color:#f92672">+=</span> delta;  
+        v0 <span style="color:#f92672">+=</span> ((v1<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">4</span>) <span style="color:#f92672">+</span> k0) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">+</span> sum) <span style="color:#f92672">^</span> ((v1<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> k1);  
+        v1 <span style="color:#f92672">+=</span> ((v0<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">4</span>) <span style="color:#f92672">+</span> k2) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">+</span> sum) <span style="color:#f92672">^</span> ((v0<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> k3);  
+    }                                              <span style="color:#75715e">/* end cycle */</span>  
+    v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>v0; v[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>v1;  
+}
+</code></pre></div><p>对比一下，z是v[1]，x是sum，y是v[0]，或者看下面这段</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">for</span> __g[<span style="color:#e6db74">&#39;x&#39;</span>] <span style="color:#f92672">in</span> [c_uint32(<span style="color:#ae81ff">0</span>)] ][<span style="color:#ae81ff">0</span>] <span style="color:#66d9ef">for</span> __g[<span style="color:#e6db74">&#39;z&#39;</span>] <span style="color:#f92672">in</span> [c_uint32(v[<span style="color:#ae81ff">1</span>])] ][<span style="color:#ae81ff">0</span>] <span style="color:#66d9ef">for</span> __g[<span style="color:#e6db74">&#39;y&#39;</span>] <span style="color:#f92672">in</span> [c_uint32(v[<span style="color:#ae81ff">0</span>])]
+</code></pre></div><h3 id="寻找常数">寻找常数</h3>
+<p>delta常数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">for</span> __g[<span style="color:#e6db74">&#39;u&#39;</span>] <span style="color:#f92672">in</span> [<span style="color:#ae81ff">2654435769</span>]
+</code></pre></div><p>密钥常数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">for</span> __g[<span style="color:#e6db74">&#39;k&#39;</span>] <span style="color:#f92672">in</span> [[<span style="color:#ae81ff">3735928559</span>, <span style="color:#ae81ff">590558003</span>, <span style="color:#ae81ff">19088743</span>, <span style="color:#ae81ff">4275878552</span>]]
+</code></pre></div><p>到题目描述里找到密文 <code>f1f5d29b6e4414ec</code>（这还得自己去github找，离谱）</p>
+<h3 id="解密">解密</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;  </span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdint.h&gt;  </span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>  
+<span style="color:#75715e">//加密函数  
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">encrypt</span> (<span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> v, <span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> k) {  
+    <span style="color:#66d9ef">uint32_t</span> v0<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">0</span>], v1<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">1</span>], sum<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, i;           <span style="color:#75715e">/* set up */</span>  
+    <span style="color:#66d9ef">uint32_t</span> delta<span style="color:#f92672">=</span><span style="color:#ae81ff">0x9e3779b9</span>;                     <span style="color:#75715e">/* a key schedule constant */</span>  
+    <span style="color:#66d9ef">uint32_t</span> k0<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">0</span>], k1<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">1</span>], k2<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">2</span>], k3<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">3</span>];   <span style="color:#75715e">/* cache key */</span>  
+    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">32</span>; i<span style="color:#f92672">++</span>) {                       <span style="color:#75715e">/* basic cycle start */</span>  
+        sum <span style="color:#f92672">+=</span> delta;  
+        v0 <span style="color:#f92672">+=</span> ((v1<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">4</span>) <span style="color:#f92672">+</span> k0) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">+</span> sum) <span style="color:#f92672">^</span> ((v1<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> k1);  
+        v1 <span style="color:#f92672">+=</span> ((v0<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">4</span>) <span style="color:#f92672">+</span> k2) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">+</span> sum) <span style="color:#f92672">^</span> ((v0<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> k3);  
+    }                                              <span style="color:#75715e">/* end cycle */</span>  
+    v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>v0; v[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>v1;  
+}  
+<span style="color:#75715e">//解密函数  
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">decrypt</span> (<span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> v, <span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> k) {  
+    <span style="color:#66d9ef">uint32_t</span> v0<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">0</span>], v1<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">1</span>], sum<span style="color:#f92672">=</span><span style="color:#ae81ff">0xC6EF3720</span>, i;  <span style="color:#75715e">/* set up */</span>  
+    <span style="color:#66d9ef">uint32_t</span> delta<span style="color:#f92672">=</span><span style="color:#ae81ff">0x9e3779b9</span>;                     <span style="color:#75715e">/* a key schedule constant */</span>  
+    <span style="color:#66d9ef">uint32_t</span> k0<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">0</span>], k1<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">1</span>], k2<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">2</span>], k3<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">3</span>];   <span style="color:#75715e">/* cache key */</span>  
+    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">32</span>; i<span style="color:#f92672">++</span>) {                         <span style="color:#75715e">/* basic cycle start */</span>  
+        v1 <span style="color:#f92672">-=</span> ((v0<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">4</span>) <span style="color:#f92672">+</span> k2) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">+</span> sum) <span style="color:#f92672">^</span> ((v0<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> k3);  
+        v0 <span style="color:#f92672">-=</span> ((v1<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">4</span>) <span style="color:#f92672">+</span> k0) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">+</span> sum) <span style="color:#f92672">^</span> ((v1<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> k1);  
+        sum <span style="color:#f92672">-=</span> delta;  
+    }                                              <span style="color:#75715e">/* end cycle */</span>  
+    v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>v0; v[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>v1;  
+}  
+  
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()  
+{  
+    <span style="color:#66d9ef">uint32_t</span> v[<span style="color:#ae81ff">2</span>]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">0xf1f5d29b</span>, <span style="color:#ae81ff">0x6e4414ec</span>},k[<span style="color:#ae81ff">4</span>]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">3735928559</span>, <span style="color:#ae81ff">590558003</span>, <span style="color:#ae81ff">19088743</span>, <span style="color:#ae81ff">4275878552</span>};  
+    <span style="color:#75715e">// v为要加密的数据是两个32位无符号整数  
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// k为加密解密密钥，为4个32位无符号整数，即密钥长度为128位  
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// printf(&#34;加密前原始数据：%u %u\n&#34;,v[0],v[1]);  
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// encrypt(v, k);  
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// printf(&#34;加密后的数据：%u %u\n&#34;,v[0],v[1]);  
+</span><span style="color:#75715e"></span>    decrypt(v, k);  
+    printf(<span style="color:#e6db74">&#34;解密后的数据：%x %x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v[<span style="color:#ae81ff">0</span>],v[<span style="color:#ae81ff">1</span>]);  
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;  
+}  
+</code></pre></div><h2 id="总结">总结</h2>
+<ul>
+<li>最近遇到了好几道网络编程和squashfs</li>
+<li>还是得好好学一下angr</li>
+<li>Shit这道题还是要看一下别人的WP，学习一下正确的思路</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+            <a href="/tags/reverse/">Reverse</a>
+        
+            <a href="/tags/flareon/">FlareOn</a>
+        
+            <a href="/tags/buuoj/">BUUOJ</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/buuoj-re-1/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BUUOJ RE (1)</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/buuoj-re0-flareon-challenge/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BUUOJ RE (0) - FlareOn Challenge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/gwctf2019-re3-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">GWCTF2019 re3 writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/wustctf2020-re-writeups/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">WUSTCTF2020 re writeups</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/mrctf2020-reverse-writeups/mrctf2020-reverse-writeups/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MRCTF2020 reverse writeups</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2021 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#firmware">firmware</a></li>
+    <li><a href="#flareon4greek_to_me">[FlareOn4]greek_to_me</a></li>
+    <li><a href="#flareon5fleggo">[FlareOn5]FLEGGO</a></li>
+    <li><a href="#mr2020shit">[MR2020]Shit</a></li>
+    <li><a href="#suctf2018hellopython">[SUCTF2018]HelloPython</a>
+      <ul>
+        <li><a href="#解pyc">解pyc</a></li>
+        <li><a href="#算法识别">算法识别</a></li>
+        <li><a href="#寻找常数">寻找常数</a></li>
+        <li><a href="#解密">解密</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='参考文献：Hyperledger Fabric: A Distributed Operation System for Permissioned Blockchains
+架构 整体结构 Fabric是一个许可区块链的分布式操作系统，可以执行多种编程语言编写的分布式应用。它能够在一个只能追加的数据结构中安全地跟踪执行历史，并且没有内置的加密账本。
+Fabric使用了“执行-order-验证”的区块链架构，而没有遵顼标准的“order-执行”设计。其整体的分布式应用可以分为两个部分
+  智能合约，称为链码 (Chaincode) ，是一段实现了应用逻辑的程序代码，并在执行过程中运行。链码是Fabric分布式应用的核心部分，可能会被未受信任的开发者修改。有一种特殊的链码被用于管理区块链系统并维护参数，被称为系统链码 (system chaincode)
+  背书政策 (endorsement policy) 在验证阶段进行评价。许可政策无法被未受信任的开发者选择或修改。其在区块链中充当一个用于事物验证的静态库，且只能通过链码进行参数化。只有指定的管理员有权限使用系统管理功能修改。
+  “执行-排序-验证”结构示意图：
+
+一个客户端向背书政策指定的peer节点(peers)发送交易。这个交易被特殊的peer节点执行并且记录输出信息，这一步骤被称为背书。执行完成后，交易进入了排序(ordering)阶段，在这一个阶段中，使用了一种可插入的共识协议来产生一个完成排序的已背书交易的序列，并按区块分组。这些交易被广播到所有的节点。这个序列的顺序由输出和状态的依赖性决定。在验证阶段，每个peer节点都需要根据背书政策和执行的一致性对已背书交易的状态变化进行验证。所有peer节点都已相同的顺序进行验证，因此结果具有确定性。
+Fabric网络支持多个区块链链接到同一个排序服务上。每个区块链被称为一个通道(Channel)，可以有不同的peer节点作为其成员。这些通道可以被用来分离不同的区块链之间的状态，但每个通道的共识并不一致，并且通道中的交易顺序是相互分开的。认为所有排序都是可信的部署，可以通过通道访问控制来实现对节点的控制。
+其中的节点可分为：客户端、peer节点（其中一部分为背书节点）、排序服务节点(OSN, Ordering Service Nodes or orderers)
+交易的三个阶段 transaction_flow
+执行阶段 在执行阶段，客户端签署并发送一个交易提案给一个或多个背书节点来执行（根据背书政策，每个chaincode都有特定的一组背书节点）。一个交易提案包含了提交客户端的身份（根据MSP），交易的载荷、参数、链码标识符、每个客户端只能使用一次的nonce（随机值或计数器），以及客户端标识符和nonce生成的交易标识符。
+背书节点会对交易提案进行模拟，在指定的区块链链码上执行操作。模拟操作在背书节点的本地区块链状态中进行模拟，不与其它节点同步，也不会将模拟的结果永久化到帐本中。区块链的状态仍然由节点交易管理器(Peer Transaction Manager)维护。一个链码创建的状态只能限定在该链码上，不能被其他的链码直接访问。需要注意的是，链码只能维护GetState、PutState、DelState操作访问的内容（可能意思是：需要使用这些接口进行访问，不能直接修改，猜测状态权限为private）。给予适当的权限，链码可以调用同一个通道的链码，并访问其状态。
+在模拟后，背书节点会产生一个writeset，其中包括模拟产生的状态更新，和一个readset，代表交易提案模拟的版本依赖（模拟时的所有密钥以及对应的版本号）。在模拟结束后，背书节点会以加密的方式签署一份“背书”消息，包括了writeset和readset（包括交易id和背书节点的一些数据），随后以响应的方式发送给客户端。客户端收集背书，直到满足链码的背书政策，开始交易。特别的，这要求政策决定的所有背书节点都返回相同的writeset和readset。然后，客户端将继续创建交易，并传递给排序阶段。
+排序阶段 客户端收集到足够的背书后，将会把交易组装起来并发送给排序服务端。整个交易包括了载荷(payload)（包括参数的链码操作）、交易元数据、背书的集合。排序阶段对每个通道的所有提交建立了一个排序。排序服务端会将多个交易分成块，输出包含交易的哈希链序列，以提高广播协议的吞吐量。
+ broadcast(tx)：客户端调用这个函数来广播交易tx，包含了载荷和签名。 B $\leftarrow$ deliver(s)：客户端调用这个函数来获取非负序列号s的区块B，$B=([tx_1,tx_2,\ldots,tx_k],h)$，$h$为s-1区块的哈希值。  排序服务确保了一个通道中的交付区块被完全排序，确保安全。
+然而，每一个单独的排序实现都允许在客户端请求中保证自己的活跃性与公平性。
+由于区块链中包含了大量的节点，但仅有少部分节点实现了排序服务，因此Fabric可以配置使用内置的gossip服务，将排序服务中交付的区块分发给所有的节点。
+验证阶段 排序服务会把区块直接分发给各个节点（或通过gossip）。随后，一个新的区块进入验证阶段，包含三个连续步骤：
+ 并行执行区块中所有的交易的背书政策评估。评估是验证系统链码(VSCC, validation system chaincode)的任务。VSCC是一个静态库，是区块链配置的一部分，负责根据链码中的背书政策验证背书。如果不满足，这个交易会被标记为无效，并被忽略。 对块中的所有交易进行读写冲突检查(read-write conflict check)（版本号比较）。对于每个交易，将会对比其中readset的版本号和节点本地存储的账本当前状态中的版本号，确保版本相同。如果版本不匹配，交易会被标记为无效，并被忽略。 最后进行账本的更新阶段，在这个阶段，区块被追加到本地存储的账本中，并且更新区块链的状态。将区块添加到账本时，前两步的检查结果将被持久化以掩码的形式表示区块中的交易有效。这有助于后面进行重建状态。此外，所有的状态更新都是通过将writeset中的键值对写入本地完成的。  信任与故障模型 Fabric可以适应灵活的信任和故障假设。通常情况下，所有的客户端都被认为是潜在的恶意用户或是Byzantine。节点都被归入组织(organization)并且每个组织组成一个信任域(trust domain)。每个节点信任其组织内部的其他节点，而不信任其他组织的节点。排序服务同样认为所有的节点（或客户端）都是潜在的拜占庭。'><title>Fabric-Architecture</title>
+
+<link rel='canonical' href='/post/fabric-architecture/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Fabric-Architecture'>
+<meta property='og:description' content='参考文献：Hyperledger Fabric: A Distributed Operation System for Permissioned Blockchains
+架构 整体结构 Fabric是一个许可区块链的分布式操作系统，可以执行多种编程语言编写的分布式应用。它能够在一个只能追加的数据结构中安全地跟踪执行历史，并且没有内置的加密账本。
+Fabric使用了“执行-order-验证”的区块链架构，而没有遵顼标准的“order-执行”设计。其整体的分布式应用可以分为两个部分
+  智能合约，称为链码 (Chaincode) ，是一段实现了应用逻辑的程序代码，并在执行过程中运行。链码是Fabric分布式应用的核心部分，可能会被未受信任的开发者修改。有一种特殊的链码被用于管理区块链系统并维护参数，被称为系统链码 (system chaincode)
+  背书政策 (endorsement policy) 在验证阶段进行评价。许可政策无法被未受信任的开发者选择或修改。其在区块链中充当一个用于事物验证的静态库，且只能通过链码进行参数化。只有指定的管理员有权限使用系统管理功能修改。
+  “执行-排序-验证”结构示意图：
+
+一个客户端向背书政策指定的peer节点(peers)发送交易。这个交易被特殊的peer节点执行并且记录输出信息，这一步骤被称为背书。执行完成后，交易进入了排序(ordering)阶段，在这一个阶段中，使用了一种可插入的共识协议来产生一个完成排序的已背书交易的序列，并按区块分组。这些交易被广播到所有的节点。这个序列的顺序由输出和状态的依赖性决定。在验证阶段，每个peer节点都需要根据背书政策和执行的一致性对已背书交易的状态变化进行验证。所有peer节点都已相同的顺序进行验证，因此结果具有确定性。
+Fabric网络支持多个区块链链接到同一个排序服务上。每个区块链被称为一个通道(Channel)，可以有不同的peer节点作为其成员。这些通道可以被用来分离不同的区块链之间的状态，但每个通道的共识并不一致，并且通道中的交易顺序是相互分开的。认为所有排序都是可信的部署，可以通过通道访问控制来实现对节点的控制。
+其中的节点可分为：客户端、peer节点（其中一部分为背书节点）、排序服务节点(OSN, Ordering Service Nodes or orderers)
+交易的三个阶段 transaction_flow
+执行阶段 在执行阶段，客户端签署并发送一个交易提案给一个或多个背书节点来执行（根据背书政策，每个chaincode都有特定的一组背书节点）。一个交易提案包含了提交客户端的身份（根据MSP），交易的载荷、参数、链码标识符、每个客户端只能使用一次的nonce（随机值或计数器），以及客户端标识符和nonce生成的交易标识符。
+背书节点会对交易提案进行模拟，在指定的区块链链码上执行操作。模拟操作在背书节点的本地区块链状态中进行模拟，不与其它节点同步，也不会将模拟的结果永久化到帐本中。区块链的状态仍然由节点交易管理器(Peer Transaction Manager)维护。一个链码创建的状态只能限定在该链码上，不能被其他的链码直接访问。需要注意的是，链码只能维护GetState、PutState、DelState操作访问的内容（可能意思是：需要使用这些接口进行访问，不能直接修改，猜测状态权限为private）。给予适当的权限，链码可以调用同一个通道的链码，并访问其状态。
+在模拟后，背书节点会产生一个writeset，其中包括模拟产生的状态更新，和一个readset，代表交易提案模拟的版本依赖（模拟时的所有密钥以及对应的版本号）。在模拟结束后，背书节点会以加密的方式签署一份“背书”消息，包括了writeset和readset（包括交易id和背书节点的一些数据），随后以响应的方式发送给客户端。客户端收集背书，直到满足链码的背书政策，开始交易。特别的，这要求政策决定的所有背书节点都返回相同的writeset和readset。然后，客户端将继续创建交易，并传递给排序阶段。
+排序阶段 客户端收集到足够的背书后，将会把交易组装起来并发送给排序服务端。整个交易包括了载荷(payload)（包括参数的链码操作）、交易元数据、背书的集合。排序阶段对每个通道的所有提交建立了一个排序。排序服务端会将多个交易分成块，输出包含交易的哈希链序列，以提高广播协议的吞吐量。
+ broadcast(tx)：客户端调用这个函数来广播交易tx，包含了载荷和签名。 B $\leftarrow$ deliver(s)：客户端调用这个函数来获取非负序列号s的区块B，$B=([tx_1,tx_2,\ldots,tx_k],h)$，$h$为s-1区块的哈希值。  排序服务确保了一个通道中的交付区块被完全排序，确保安全。
+然而，每一个单独的排序实现都允许在客户端请求中保证自己的活跃性与公平性。
+由于区块链中包含了大量的节点，但仅有少部分节点实现了排序服务，因此Fabric可以配置使用内置的gossip服务，将排序服务中交付的区块分发给所有的节点。
+验证阶段 排序服务会把区块直接分发给各个节点（或通过gossip）。随后，一个新的区块进入验证阶段，包含三个连续步骤：
+ 并行执行区块中所有的交易的背书政策评估。评估是验证系统链码(VSCC, validation system chaincode)的任务。VSCC是一个静态库，是区块链配置的一部分，负责根据链码中的背书政策验证背书。如果不满足，这个交易会被标记为无效，并被忽略。 对块中的所有交易进行读写冲突检查(read-write conflict check)（版本号比较）。对于每个交易，将会对比其中readset的版本号和节点本地存储的账本当前状态中的版本号，确保版本相同。如果版本不匹配，交易会被标记为无效，并被忽略。 最后进行账本的更新阶段，在这个阶段，区块被追加到本地存储的账本中，并且更新区块链的状态。将区块添加到账本时，前两步的检查结果将被持久化以掩码的形式表示区块中的交易有效。这有助于后面进行重建状态。此外，所有的状态更新都是通过将writeset中的键值对写入本地完成的。  信任与故障模型 Fabric可以适应灵活的信任和故障假设。通常情况下，所有的客户端都被认为是潜在的恶意用户或是Byzantine。节点都被归入组织(organization)并且每个组织组成一个信任域(trust domain)。每个节点信任其组织内部的其他节点，而不信任其他组织的节点。排序服务同样认为所有的节点（或客户端）都是潜在的拜占庭。'>
+<meta property='og:url' content='/post/fabric-architecture/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='fabric' /><meta property='article:published_time' content='2020-12-08T01:33:07&#43;00:00'/><meta property='article:modified_time' content='2020-12-08T01:33:07&#43;00:00'/>
+<meta name="twitter:title" content="Fabric-Architecture">
+<meta name="twitter:description" content="参考文献：Hyperledger Fabric: A Distributed Operation System for Permissioned Blockchains
+架构 整体结构 Fabric是一个许可区块链的分布式操作系统，可以执行多种编程语言编写的分布式应用。它能够在一个只能追加的数据结构中安全地跟踪执行历史，并且没有内置的加密账本。
+Fabric使用了“执行-order-验证”的区块链架构，而没有遵顼标准的“order-执行”设计。其整体的分布式应用可以分为两个部分
+  智能合约，称为链码 (Chaincode) ，是一段实现了应用逻辑的程序代码，并在执行过程中运行。链码是Fabric分布式应用的核心部分，可能会被未受信任的开发者修改。有一种特殊的链码被用于管理区块链系统并维护参数，被称为系统链码 (system chaincode)
+  背书政策 (endorsement policy) 在验证阶段进行评价。许可政策无法被未受信任的开发者选择或修改。其在区块链中充当一个用于事物验证的静态库，且只能通过链码进行参数化。只有指定的管理员有权限使用系统管理功能修改。
+  “执行-排序-验证”结构示意图：
+
+一个客户端向背书政策指定的peer节点(peers)发送交易。这个交易被特殊的peer节点执行并且记录输出信息，这一步骤被称为背书。执行完成后，交易进入了排序(ordering)阶段，在这一个阶段中，使用了一种可插入的共识协议来产生一个完成排序的已背书交易的序列，并按区块分组。这些交易被广播到所有的节点。这个序列的顺序由输出和状态的依赖性决定。在验证阶段，每个peer节点都需要根据背书政策和执行的一致性对已背书交易的状态变化进行验证。所有peer节点都已相同的顺序进行验证，因此结果具有确定性。
+Fabric网络支持多个区块链链接到同一个排序服务上。每个区块链被称为一个通道(Channel)，可以有不同的peer节点作为其成员。这些通道可以被用来分离不同的区块链之间的状态，但每个通道的共识并不一致，并且通道中的交易顺序是相互分开的。认为所有排序都是可信的部署，可以通过通道访问控制来实现对节点的控制。
+其中的节点可分为：客户端、peer节点（其中一部分为背书节点）、排序服务节点(OSN, Ordering Service Nodes or orderers)
+交易的三个阶段 transaction_flow
+执行阶段 在执行阶段，客户端签署并发送一个交易提案给一个或多个背书节点来执行（根据背书政策，每个chaincode都有特定的一组背书节点）。一个交易提案包含了提交客户端的身份（根据MSP），交易的载荷、参数、链码标识符、每个客户端只能使用一次的nonce（随机值或计数器），以及客户端标识符和nonce生成的交易标识符。
+背书节点会对交易提案进行模拟，在指定的区块链链码上执行操作。模拟操作在背书节点的本地区块链状态中进行模拟，不与其它节点同步，也不会将模拟的结果永久化到帐本中。区块链的状态仍然由节点交易管理器(Peer Transaction Manager)维护。一个链码创建的状态只能限定在该链码上，不能被其他的链码直接访问。需要注意的是，链码只能维护GetState、PutState、DelState操作访问的内容（可能意思是：需要使用这些接口进行访问，不能直接修改，猜测状态权限为private）。给予适当的权限，链码可以调用同一个通道的链码，并访问其状态。
+在模拟后，背书节点会产生一个writeset，其中包括模拟产生的状态更新，和一个readset，代表交易提案模拟的版本依赖（模拟时的所有密钥以及对应的版本号）。在模拟结束后，背书节点会以加密的方式签署一份“背书”消息，包括了writeset和readset（包括交易id和背书节点的一些数据），随后以响应的方式发送给客户端。客户端收集背书，直到满足链码的背书政策，开始交易。特别的，这要求政策决定的所有背书节点都返回相同的writeset和readset。然后，客户端将继续创建交易，并传递给排序阶段。
+排序阶段 客户端收集到足够的背书后，将会把交易组装起来并发送给排序服务端。整个交易包括了载荷(payload)（包括参数的链码操作）、交易元数据、背书的集合。排序阶段对每个通道的所有提交建立了一个排序。排序服务端会将多个交易分成块，输出包含交易的哈希链序列，以提高广播协议的吞吐量。
+ broadcast(tx)：客户端调用这个函数来广播交易tx，包含了载荷和签名。 B $\leftarrow$ deliver(s)：客户端调用这个函数来获取非负序列号s的区块B，$B=([tx_1,tx_2,\ldots,tx_k],h)$，$h$为s-1区块的哈希值。  排序服务确保了一个通道中的交付区块被完全排序，确保安全。
+然而，每一个单独的排序实现都允许在客户端请求中保证自己的活跃性与公平性。
+由于区块链中包含了大量的节点，但仅有少部分节点实现了排序服务，因此Fabric可以配置使用内置的gossip服务，将排序服务中交付的区块分发给所有的节点。
+验证阶段 排序服务会把区块直接分发给各个节点（或通过gossip）。随后，一个新的区块进入验证阶段，包含三个连续步骤：
+ 并行执行区块中所有的交易的背书政策评估。评估是验证系统链码(VSCC, validation system chaincode)的任务。VSCC是一个静态库，是区块链配置的一部分，负责根据链码中的背书政策验证背书。如果不满足，这个交易会被标记为无效，并被忽略。 对块中的所有交易进行读写冲突检查(read-write conflict check)（版本号比较）。对于每个交易，将会对比其中readset的版本号和节点本地存储的账本当前状态中的版本号，确保版本相同。如果版本不匹配，交易会被标记为无效，并被忽略。 最后进行账本的更新阶段，在这个阶段，区块被追加到本地存储的账本中，并且更新区块链的状态。将区块添加到账本时，前两步的检查结果将被持久化以掩码的形式表示区块中的交易有效。这有助于后面进行重建状态。此外，所有的状态更新都是通过将writeset中的键值对写入本地完成的。  信任与故障模型 Fabric可以适应灵活的信任和故障假设。通常情况下，所有的客户端都被认为是潜在的恶意用户或是Byzantine。节点都被归入组织(organization)并且每个组织组成一个信任域(trust domain)。每个节点信任其组织内部的其他节点，而不信任其他组织的节点。排序服务同样认为所有的节点（或客户端）都是潜在的拜占庭。">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/fabric/" >
+                fabric
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/fabric-architecture/">Fabric-Architecture</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Dec 08, 2020</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    1 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>参考文献：<a class="link" href="/download/1801.10228.pdf" >Hyperledger Fabric: A Distributed Operation System for Permissioned Blockchains</a></p>
+<h2 id="架构">架构</h2>
+<h3 id="整体结构">整体结构</h3>
+<p>Fabric是一个许可区块链的分布式操作系统，可以执行多种编程语言编写的分布式应用。它能够在一个只能追加的数据结构中安全地跟踪执行历史，并且没有内置的加密账本。</p>
+<p>Fabric使用了“执行-order-验证”的区块链架构，而没有遵顼标准的“order-执行”设计。其整体的分布式应用可以分为两个部分</p>
+<ul>
+<li>
+<p>智能合约，称为链码 (<em>Chaincode</em>) ，是一段实现了应用逻辑的程序代码，并在执行过程中运行。链码是Fabric分布式应用的核心部分，可能会被未受信任的开发者修改。有一种特殊的链码被用于管理区块链系统并维护参数，被称为系统链码 (<em>system chaincode</em>)</p>
+</li>
+<li>
+<p>背书政策 (<em>endorsement policy</em>) 在验证阶段进行评价。许可政策无法被未受信任的开发者选择或修改。其在区块链中充当一个用于事物验证的静态库，且只能通过链码进行参数化。只有指定的管理员有权限使用系统管理功能修改。</p>
+</li>
+</ul>
+<p>“执行-排序-验证”结构示意图：</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 302; 
+			flex-basis: 726px"
+	>
+	<a href="/post/fabric-architecture/execute-order-validate.png" data-size="521x172">
+		<img src="/post/fabric-architecture/execute-order-validate.png"
+			width="521"
+			height="172"
+			srcset="/post/fabric-architecture/execute-order-validate_hua21294e0010315c77e929f3912be8b3a_23641_480x0_resize_box_3.png 480w, /post/fabric-architecture/execute-order-validate_hua21294e0010315c77e929f3912be8b3a_23641_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>一个客户端向背书政策指定的peer节点(peers)发送交易。这个交易被特殊的peer节点执行并且记录输出信息，这一步骤被称为背书。执行完成后，交易进入了排序(ordering)阶段，在这一个阶段中，使用了一种可插入的共识协议来产生一个完成排序的已背书交易的序列，并按区块分组。这些交易被广播到所有的节点。这个序列的顺序由输出和状态的依赖性决定。在验证阶段，每个peer节点都需要根据背书政策和执行的一致性对已背书交易的状态变化进行验证。所有peer节点都已相同的顺序进行验证，因此结果具有确定性。</p>
+<p>Fabric网络支持多个区块链链接到同一个排序服务上。每个区块链被称为一个通道(<em>Channel</em>)，可以有不同的peer节点作为其成员。这些通道可以被用来分离不同的区块链之间的状态，但每个通道的共识并不一致，并且通道中的交易顺序是相互分开的。认为所有排序都是可信的部署，可以通过通道访问控制来实现对节点的控制。</p>
+<p>其中的节点可分为：客户端、peer节点（其中一部分为背书节点）、排序服务节点(OSN, <em>Ordering Service Nodes</em> or <em>orderers</em>)</p>
+<h3 id="交易的三个阶段">交易的三个阶段</h3>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 176; 
+			flex-basis: 423px"
+	>
+	<a href="/post/fabric-architecture/transaction_flow.png" data-size="654x371">
+		<img src="/post/fabric-architecture/transaction_flow.png"
+			width="654"
+			height="371"
+			srcset="/post/fabric-architecture/transaction_flow_hu0a9c6a7b10b3417d128489bbce7c86a7_46092_480x0_resize_box_3.png 480w, /post/fabric-architecture/transaction_flow_hu0a9c6a7b10b3417d128489bbce7c86a7_46092_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="transaction_flow">
+	</a>
+	
+	<figcaption>transaction_flow</figcaption>
+	
+</figure></p>
+<h4 id="执行阶段">执行阶段</h4>
+<p>在执行阶段，客户端签署并发送一个交易提案给一个或多个背书节点来执行（根据背书政策，每个chaincode都有特定的一组背书节点）。一个交易提案包含了提交客户端的身份（根据MSP），交易的载荷、参数、链码标识符、每个客户端只能使用一次的nonce（随机值或计数器），以及客户端标识符和nonce生成的交易标识符。</p>
+<p>背书节点会对交易提案进行模拟，在指定的区块链链码上执行操作。模拟操作在背书节点的本地区块链状态中进行模拟，不与其它节点同步，也不会将模拟的结果永久化到帐本中。区块链的状态仍然由节点交易管理器(<em>Peer Transaction Manager</em>)维护。一个链码创建的状态只能限定在该链码上，不能被其他的链码直接访问。需要注意的是，链码只能维护GetState、PutState、DelState操作访问的内容（<em>可能意思是：需要使用这些接口进行访问，不能直接修改，猜测状态权限为private</em>）。给予适当的权限，链码可以调用同一个通道的链码，并访问其状态。</p>
+<p>在模拟后，背书节点会产生一个<em>writeset</em>，其中包括模拟产生的状态更新，和一个<em>readset</em>，代表交易提案模拟的版本依赖（模拟时的所有密钥以及对应的版本号）。在模拟结束后，背书节点会以加密的方式签署一份“背书”消息，包括了<em>writeset</em>和<em>readset</em>（包括交易id和背书节点的一些数据），随后以响应的方式发送给客户端。客户端收集背书，直到满足链码的背书政策，开始交易。特别的，这要求政策决定的所有背书节点都返回相同的<em>writeset</em>和<em>readset</em>。然后，客户端将继续创建交易，并传递给排序阶段。</p>
+<h4 id="排序阶段">排序阶段</h4>
+<p>客户端收集到足够的背书后，将会把交易组装起来并发送给排序服务端。整个交易包括了载荷(<em>payload</em>)（包括参数的链码操作）、交易元数据、背书的集合。排序阶段对每个通道的所有提交建立了一个排序。排序服务端会将多个交易分成块，输出包含交易的哈希链序列，以提高广播协议的吞吐量。</p>
+<ul>
+<li><code>broadcast(tx)</code>：客户端调用这个函数来广播交易<code>tx</code>，包含了载荷和签名。</li>
+<li><code>B</code> $\leftarrow$ <code>deliver(s)</code>：客户端调用这个函数来获取非负序列号<code>s</code>的区块<code>B</code>，$B=([tx_1,tx_2,\ldots,tx_k],h)$，$h$为<code>s-1</code>区块的哈希值。</li>
+</ul>
+<p>排序服务确保了一个通道中的交付区块被完全排序，确保安全。</p>
+<p>然而，每一个单独的排序实现都允许在客户端请求中保证自己的活跃性与公平性。</p>
+<p>由于区块链中包含了大量的节点，但仅有少部分节点实现了排序服务，因此Fabric可以配置使用内置的gossip服务，将排序服务中交付的区块分发给所有的节点。</p>
+<h4 id="验证阶段">验证阶段</h4>
+<p>排序服务会把区块直接分发给各个节点（或通过<em>gossip</em>）。随后，一个新的区块进入验证阶段，包含三个连续步骤：</p>
+<ul>
+<li>并行执行区块中所有的交易的背书政策评估。评估是验证系统链码(VSCC, <em>validation system chaincode</em>)的任务。VSCC是一个静态库，是区块链配置的一部分，负责根据链码中的背书政策验证背书。如果不满足，这个交易会被标记为无效，并被忽略。</li>
+<li>对块中的所有交易进行读写冲突检查(<em>read-write conflict check</em>)（版本号比较）。对于每个交易，将会对比其中readset的版本号和节点本地存储的账本当前状态中的版本号，确保版本相同。如果版本不匹配，交易会被标记为无效，并被忽略。</li>
+<li>最后进行账本的更新阶段，在这个阶段，区块被追加到本地存储的账本中，并且更新区块链的状态。将区块添加到账本时，前两步的检查结果将被持久化以掩码的形式表示区块中的交易有效。这有助于后面进行重建状态。此外，所有的状态更新都是通过将<em>writeset</em>中的键值对写入本地完成的。</li>
+</ul>
+<h3 id="信任与故障模型">信任与故障模型</h3>
+<p>Fabric可以适应灵活的信任和故障假设。通常情况下，所有的客户端都被认为是潜在的恶意用户或是<em>Byzantine</em>。节点都被归入组织(<em>organization</em>)并且每个组织组成一个信任域(<em>trust domain</em>)。每个节点信任其组织内部的其他节点，而不信任其他组织的节点。排序服务同样认为所有的节点（或客户端）都是潜在的拜占庭。</p>
+<p>Fabric网络的完整性依赖于排序服务的一致性。排序服务的信任模型取决于其实现。</p>
+<p>在Fabric中，分布式应用可以定义自己的信任假设，通过背书政策来传达，并且独立于排序服务实现的共识的信任假设。</p>
+<h2 id="组件">组件</h2>
+<p>Fabric使用了gRPC架构实现客户端、节点和排序服务之间的通信。</p>
+<h3 id="成员身份管理服务msp">成员身份管理服务（MSP）</h3>
+<p>成员身份管理服务(MSP, <em>membership service provider</em>)维护了系统中所有节点（客户端、节点、排序服务）的身分，并负责发布节点的凭证，用于认证和授权。节点之间的所有交互都是通过已认证的消息（通常是数字签名）发生的。成员身份管理包括每个节点的组件，可以认证交易、验证交易的完整性、签署并确认背书、验证其他的区块链操作。MSP中还包括了用于密钥管理和节点注册的工具。</p>
+<p>MSP是抽象的，可以有不同的实例。Fabric中，默认的MSP实现可以处理基于数字签名的PKI认证方法，并且容纳商业认证机构(CA)。Fabric提供了独立的CA——Fabric-CA。</p>
+<p>Fabric允许设置区块链网络的两种模式。在离线模式下，凭证由CA生成，并分发到所有节点。peer节点和排序节点只能在离线模式下注册。对于客户端的注册，Fabric-CA提供了在线模式，向客户端发送加密凭证。MSP的配置必须要确保所有的节点都能识别相同的身份和认证认定为有效（特别是所有的peer节点）。</p>
+<p>例如，当多个组织在同一个区块链网络中时，MSP需要能够允许身份的联合。每个组织向自己的成员发放身份，每个peer节点都能识别所有组织的成员。这可以通过多个MSP实例来实现。例如，在每个组织和一个MSP之间建立一个映射。</p>
+<h3 id="排序服务">排序服务</h3>
+<p>排序服务可管理多个通道，对每个通道，都提供如下三个服务：</p>
+<ol>
+<li><em>Atomic broadcast</em>，用于对交易进行排序，实现广播和分发</li>
+<li>重新配置(<em>reconfiguration</em>)通道，成员通过广播一个配置更新事物(<em>configuration update transaction</em>)修改通道。</li>
+<li>（可选择）访问控制(<em>access control</em>)，在这些配置中，排序服务作为可信的实体，限制交易的广播和指定peer节点和客户端的块的接收</li>
+</ol>
+<p>排序服务通过系统通道上的生成块进行引导。生成块携带了配置事务(<em>configuration transaction</em>)，定义了排序服务的操作。</p>
+<p>当前版本的实现由OSN组成，OSN实现了描述的操作并且通过系统通道通信。实际的<em>atomic broadcast</em>函数由基于<em>ZooKeeper</em>的Kafka实例提供，这个实例提供了可以扩展的发布-订阅消息，在节点崩溃后仍具有强一致性(<em>consistency</em>)。这个实现可以运行在与OSN分离的物理节点上。OSN作为peers和Kafka实例之间的代理。</p>
+<p>OSN直接将收到的新交易注入到广播中。OSN将从广播中接收到的交易转换成块。只要满足三个情况之一，块就会被断开。</p>
+<ul>
+<li>区块包含了交易允许的最大值</li>
+<li>区块达到最大大小</li>
+<li>从接收到第一个交易后超过某特定时间</li>
+</ul>
+<p>批处理的过程是确定的，因此在所有节点上都会产生相同的区块。考虑到从广播中接收的交易数据流，前两项情况是已经确定的。对于第三个条件，当节点读入块中的第一个交易时，会开启一个计时器。如果计时器超时后，这个区块仍然没有断开，OSN会在通道上广播一个特殊的“到时断开(<em>time-to-cut</em>)”交易，其中记录了需要断开的区块的序列号。另一方面，每个OSN在收到“到时断开”交易后，会根据其给定的序列号，立即切断新的区块。这个交易是原子性的分发给所有连接的OSN，所以区块中都包含相同的交易列表。OSN将最近交付的一系列区块直接持久化到文件系统中，因此可以通过分发回答peer节点来回收区块。</p>
+<h3 id="peer-gossip">Peer Gossip</h3>
+<p>将三个阶段分开的好处是在开发的时候可以独立扩展。然而，由于共识算法往往有带宽限制，排序服务的吞吐量被节点的网络容量所限制。共识无法通过增加节点而扩展，反而会让吞吐量降低。然而，由于排序和验证是分开的，在排序阶段后，重要的是如何有效地广播执行阶段的结果，以交给peer节点进行验证。此外，还有如何对新加入的peer节点和长期断开的peer节点进行状态转移。这两个问题就是gossip组件所需要解决的。Fabric gossip利用流行组播(<em>epidemic multicast</em>)来解决这个问题。区块是由排序服务签署的。这意味着一个peer节点在收到所有区块后，可以独立的组装为区块链并验证其完整性。</p>
+<p>gossip的通信基于gRPC，利用TLS（传输层安全协议）进行相互识别，使得每一方都可以将TLS凭证与远程peer节点的身份绑定。gossip组件用来维护系统中当前在线的peer节点的成员视图。所有的peer节点通过定期传播成员数据独立建立一个本地视图。此外，一个peer节点可以在网络崩溃或者中断后重新连入成员视图。</p>
+<p>Fabric的gossip组件采用了两个阶段进行信息的传播：</p>
+<ul>
+<li>在<em>push</em>阶段，每个peer节点从成员视图中选择一个随机的活跃邻居集合，并向他们发送信息</li>
+<li>在<em>pull</em>阶段，每个peer节点定期探测一个随机选择的peer节点集合，并请求缺失的信息</li>
+</ul>
+<blockquote>
+<p>研究表明，同时使用这两种方法可以优化可用带宽并确保所有peer节点有很高的概率接收到所有信息。</p>
+</blockquote>
+<p>为了减少从排序节点向网络中发送的区块的负载，协议同时在peer中选择了一个领导者(<em>elects a leader peer</em>)，代表peer节点从排序服务中<em>pull</em>区块，并启动gossip分发。这个机制对领导者出现故障具有弹性。</p>
+<h3 id="分布式账本ledger">分布式账本(<em>Ledger</em>)</h3>
+<p>账本组件在各个peer节点中维持分布式账本并建立持久性的存储，并实现账本的模拟、验证和更新阶段。整体上由一个区块存储(<em>block store</em>)和一个peer节点交易管理器(<em>peer transaction manager</em>)组成。</p>
+<h4 id="区块存储ledger-block-store">区块存储(Ledger Block Store)</h4>
+<p>账本区块存储持久化交易区块，并以一组仅追加文件的形式实现。由于区块无法被改变，并以一个特定的顺序到达，一个仅追加的结构能够带来最好的性能。此外，区块存储中维护了一些索引(<em>indices</em>)，用来随机访问区块或区块中的交易。</p>
+<h4 id="peer交易管理器peer-transaction-manager">peer交易管理器(Peer Transaction Manager)</h4>
+<p>peer节点交易管理器(PTM)保持版本键值对处于最新状态。它能为每一个唯一的条目(<em>entry</em>)的<em>key</em>以(<em>key</em>,<em>val</em>, <em>ver</em>)存储一个元组，其中包含了最近存储的值<em>val</em>，和最新的版本号<em>var</em>。版本由区块序列号和区块内的交易序列号组成，因此版本号都是唯一且递增的。PTM使用了本地键值存储来识别版本变量，具体实现使用了LevelDB和Apache CouchDB。</p>
+<p>在模拟时，PTM提供了一个稳定的最新状态快照。<strong>执行阶段</strong>中提到，PTM在<em>readset</em>中为GetState访问的每个条目记录一个元组(<em>key</em>, <em>ver</em>)，在<em>writeset</em>中为交易调用PutState更新的每个条目记录一个元组(<em>key</em>, <em>val</em>)。此外，PTM支持范围查询(<em>range queries</em>)，并计算出查询结果的加密哈希（一组(<em>key</em>, <em>ver</em>)元组），并将查询字符串和哈希添加到readset中。</p>
+<p>在验证阶段，PTM依次验证一个区块中的所有交易，检查交易是否与之前的任何交易产生冲突。对于readset中的所有key，如果readset中的版本记录与最新状态的版本不同，PTM就会把这个交易标记为无效。对于范围查找，PTM会重新执行查询并与之前的<em>readset</em>比较哈希值，确保不发生错误的读取。</p>
+<h4 id="崩溃处理">崩溃处理</h4>
+<p>账本组件在更新时需要能处理peer节点的崩溃。</p>
+<p>在接收到一个新区块后，PTM已经对其进行了验证，并使用了掩码将区块中的交易标记为有效或无效。此时，账本将区块写入账本的区块存储中，刷新到磁盘，随后更新区块存储的索引。随后，PTM将所有有效交易的<em>writeset</em>状态变化应用到本地存储中。最后，计算并持久化一个<em>savepoint</em>的值，表示成功应用区块数量的最大值。从崩溃中恢复时，<em>savepoint</em>值用来从持久化块中恢复索引和最新状态。</p>
+<h3 id="链码执行">链码执行</h3>
+<p>Chaincode在一个与其余peer节点松散耦合的环境中执行。支持增添新的链码编程语言的插件。目前支持Go、Java和Node。</p>
+<p>每个用户级或应用链码都在Docker容器环境中的独立进程中执行，这使得链码和peer节点之间相互隔离，简化了链码的生命周期管理（启动、停止、中止）。链码和peer节点通过gRCP通信。通过松散的耦合关系，peer节点不知道链码具体使用了什么语言实现。</p>
+<p>不同于应用链码，系统链码直接在peer节点的进程中运行，可以实现Fabric所需要的特定功能，可以用于用户链码之间的隔离限制过多的情况。</p>
+<h3 id="配置和系统链码">配置和系统链码</h3>
+<p>Fabric通过通道配置(<em>channel configuration</em>)和系统链码(<em>system chaincodes</em>)进行定制。</p>
+<p>Fabric中每个通道都会形成一个逻辑区块链。通道的配置由元数据进行维护，并永久保留在配置区块(<em>configuration blocks</em>)中。每个配置区块都会包含完整的通道配置，并不会包括任何其他的东西。每个区块链都以一个配置区块开始，称之为创世块(<em>genesis block</em>)，用于引导通道。通道的配置包括：</p>
+<ol>
+<li>参与节点的MSP定义；</li>
+<li>OSN的网络地址；</li>
+<li>共识实现和配许服务的共享配置，比如大小和超时等设置；</li>
+<li>管理对排序服务操作（广播和分发）访问的规则；</li>
+<li>管理如何修改通道配置的各个部分的规则。</li>
+</ol>
+<p>通道的配置可以使用通道配置更新事务(<em>channel configuration update transaction</em>)进行更新，其中需要包括对配置进行的修改和一组签名。排序节点通过使用当前的配置验证该签名是否得到授权，来评估此次更新是否有效。然后，排序节点生成一个新的配置区块，嵌入新的配置和配置更新事务。Peer节点接收后，根据当前的配置验证更新是否得到了授权，有效则进行配置更新。</p>
+<p>在部署应用链码时，会<!-- raw HTML omitted -->参考<!-- raw HTML omitted -->一个认可系统链码（<em>endorsement system chaincode</em>, ESCC）和一个验证系统链码（<em>validation system chaincode</em>, VSCC）。这两个链码的选择使得ESCC输出的背书，可以作为VSCC输入的一部分进行验证。ESCC将一个提案和提案模拟的结果作为输入。如果结果符合要求，则ESCC产生一个包含结果和认可的响应。对于默认的ESCC，这个背书只是peer节点的本地签名身份的签名。VSCC将一个事务作为输入，并输出该事务是否有效。对于默认的VSCC，背书被收集，并根据为链码指定的背书策略进行评估。进一步的系统链码实现其他支持功能，如链码生命周期。</p>
+<blockquote>
+<p>系统链码的核心代码在/fabric/core/common/sysccprovider和/fabric/core/scc下</p>
+</blockquote>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/fabric/">fabric</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2021 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#架构">架构</a>
+      <ul>
+        <li><a href="#整体结构">整体结构</a></li>
+        <li><a href="#交易的三个阶段">交易的三个阶段</a></li>
+        <li><a href="#信任与故障模型">信任与故障模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#组件">组件</a>
+      <ul>
+        <li><a href="#成员身份管理服务msp">成员身份管理服务（MSP）</a></li>
+        <li><a href="#排序服务">排序服务</a></li>
+        <li><a href="#peer-gossip">Peer Gossip</a></li>
+        <li><a href="#分布式账本ledger">分布式账本(<em>Ledger</em>)</a></li>
+        <li><a href="#链码执行">链码执行</a></li>
+        <li><a href="#配置和系统链码">配置和系统链码</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>angr on s0uthwood&#39;s Blog</title>
+    <link>/tags/angr/</link>
+    <description>Recent content in angr on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 10 Dec 2021 02:01:06 +0000</lastBuildDate><atom:link href="/tags/angr/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DragonCTF Runofthemill Writeup</title>
+      <link>/post/dragonctf-runofthemill-writeup/</link>
+      <pubDate>Fri, 10 Dec 2021 02:01:06 +0000</pubDate>
+      
+      <guid>/post/dragonctf-runofthemill-writeup/</guid>
+      <description>题目分析 获取输入
+v1 = sys_read(0, byte_412000, 0x40uLL); 中间计算
+byte_412000[42] = __ROR1__(byte_412000[42], 4); *(_DWORD *)&amp;amp;byte_412000[44] ^= 0x4EC10FC6u; *(_WORD *)&amp;amp;byte_412000[15] ^= 0xEBFFu; *(_DWORD *)&amp;amp;byte_412000[38] -= 1698263770; // 以下省略 最后的验证
+v9 = byte_412000; v10 = byte_412050; v11 = 64LL; v12 = 0; do { v12 |= *v10++ ^ *v9++; --v11; } while ( v11 ); Angr求解 还是很容易看懂的，主要是如何求解
+一种思路是把汇编反过来，pizza爷用的是这种做法，于是就写了个Angr喝茶去了
+Angr用的是手动往全局变量注入符号，然后在验证前停止，手动添加约束，wp中的写法是直接用程序中的验证，并添加了 LAZY_SOLVES 参数，学到了
+之前用自己脚本跑的适合发现一直是 unsat，以为Angr会有问题，但后来发现有个wp就是用的Angr
+于是掏出了之前写的脚本做了一些尝试
+from angr import * import claripy import binascii input_length = 56 base_addr = 0x400000 proj = Project(&#39;runofthemill&#39;, main_opts={&amp;quot;base_addr&amp;quot;: base_addr}) start_addr = 0x401054 state = proj.</description>
+    </item>
+    
+    <item>
+      <title>angr ctf writeup</title>
+      <link>/post/angr-ctf-writeup/</link>
+      <pubDate>Mon, 27 Sep 2021 21:03:03 +0000</pubDate>
+      
+      <guid>/post/angr-ctf-writeup/</guid>
+      <description>&lt;p&gt;开始学angr&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;就是在抄solution&lt;/del&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Writeup on s0uthwood&#39;s Blog</title>
+    <link>/tags/writeup/</link>
+    <description>Recent content in Writeup on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 13 Dec 2021 19:37:54 +0000</lastBuildDate><atom:link href="/tags/writeup/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>All Solves During a Weekend</title>
+      <link>/post/all-solves-during-a-weekend/</link>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+      
+      <guid>/post/all-solves-during-a-weekend/</guid>
+      <description>打美团 CTF 的时候才意识到，有一种坐牢叫AK
+ [MTCTF 4th]wow 先进行脱壳，因为脱壳后用的是绝对地址，而加载的时候是动态加载，所有没有办法调试，那就直接静态看吧
+JUMPOUT 那里看一下汇编，发现有一个天堂之门
+push 0x33 call $+5 add [esp+84h+var_84], 5 retf 直接把后面的数据全 dump 出来，然后用 ida64 打开
+void __fastcall sub_0(unsigned int *a1) { unsigned int v1; // er9  int v2; // ebp  unsigned int v3; // esi  unsigned int *v4; // rdi  unsigned int *v5; // r10  unsigned int v6; // ebx  unsigned int i; // er11  unsigned int v8; // er8  int v9; // edx  unsigned int v10; // eax  unsigned int v11; // er9  unsigned int v12; // er8  int v13; // ebx  int v14; // ebx  int v15; // ebx  int v16; // edx  unsigned int v17; // eax  unsigned int v18; // er9  v1 = a1[8]; v2 = 12; v3 = 0; while ( 1 ) { v3 += 1732584193; v4 = a1 + 1; v5 = a1; v6 = v3 &amp;gt;&amp;gt; 2; for ( i = 0; i &amp;lt; 8; ++i ) { v8 = *v4; if ( (((unsigned __int8)i ^ (unsigned __int8)v6) &amp;amp; 3) !</description>
+    </item>
+    
+    <item>
+      <title>Learn Basic Signal from DNUICTF easyre</title>
+      <link>/post/learn-basic-signal-from-dnuictf-easyre/</link>
+      <pubDate>Thu, 09 Dec 2021 15:05:55 +0000</pubDate>
+      
+      <guid>/post/learn-basic-signal-from-dnuictf-easyre/</guid>
+      <description>一些信号量函数的学习 信号量的注册在init函数中
+v2.sa_handler = (__sighandler_t)sub_400E1D; v2.sa_flags = 4; sigaction(34, &amp;amp;v2, &amp;amp;v1); sigaction() 函数定义为
+int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact); sigaction 结构体定义如下
+struct sigaction { void (*sa_handler) (int); sigset_t sa_mask; int sa_flags; // 用来设置信号处理的相关操作  void (*sa_restorer) (void); } 关于 sa_flags 的定义如下 (from linux/include/uapi/asm-generic/signal-defs.h)
+#ifndef SA_NOCLDSTOP #define SA_NOCLDSTOP	0x00000001 #endif #ifndef SA_NOCLDWAIT #define SA_NOCLDWAIT	0x00000002 #endif #ifndef SA_SIGINFO #define SA_SIGINFO	0x00000004 #endif /* 0x00000008 used on alpha, mips, parisc */ /* 0x00000010 used on alpha, parisc */ /* 0x00000020 used on alpha, parisc, sparc */ /* 0x00000040 used on alpha, parisc */ /* 0x00000080 used on parisc */ /* 0x00000100 used on sparc */ /* 0x00000200 used on sparc */ #define SA_UNSUPPORTED	0x00000400 #define SA_EXPOSE_TAGBITS	0x00000800 /* 0x00010000 used on mips */ /* 0x00800000 used for internal SA_IMMUTABLE */ /* 0x01000000 used on x86 */ /* 0x02000000 used on x86 */ /* * New architectures should not define the obsolete *	SA_RESTORER	0x04000000 */ #ifndef SA_ONSTACK #define SA_ONSTACK	0x08000000 #endif #ifndef SA_RESTART #define SA_RESTART	0x10000000 #endif #ifndef SA_NODEFER #define SA_NODEFER	0x40000000 #endif #ifndef SA_RESETHAND #define SA_RESETHAND	0x80000000 #endif 题目中使用的是 SA_SIGINFO，对信号处理程序提供了附加信息：一个指向 siginfo 结构的指针以及一个指向上下文标识符的指针</description>
+    </item>
+    
+    <item>
+      <title>pbctf2021 RE writeups</title>
+      <link>/post/pbctf2021-re-writeups/</link>
+      <pubDate>Mon, 11 Oct 2021 16:07:41 +0000</pubDate>
+      
+      <guid>/post/pbctf2021-re-writeups/</guid>
+      <description>cosmo main函数在 sub_403066
+要求长度是38，简单看了一下加密逻辑，发现是两个字符一起加密并验证，还想用pintools试试，结果发现根本跑不起来
+于是又开始了快乐的手写爆破，不过这个比较简单，动调一下就知道只用了最下面的几行加密逻辑
+#include &amp;lt;stdio.h&amp;gt; long long qword_40C000[20] = { 21233875ll, 69468586ll, 146735755ll, 251265871ll, 379651085ll, 536872170ll, 719455639ll, 924911196ll, 1158088491ll, 1412368333ll, 1695680674ll, 2005272944ll, 2341407284ll, 2698316511ll, 3076262773ll, 3483634782ll, 3913551105ll, 72486322ll, 548474478ll, 0ll }; long long encrypt(char *a, int len, int cur){ int v5 = len; int res = 0; long long v3 = qword_40C000[cur - 1]; int v6 = v3 &amp;gt;&amp;gt; 16; int v7 = v3 &amp;amp; 0xffff; while(v5){ v7 += *a; v6 += v7; --v5; ++a; } if (v7 &amp;gt; 0xFFF0) v7 -= 0xFFF1; return v7 | ((v6 % 0xFFF1) &amp;lt;&amp;lt; 16); } int test_cnt(int cnt){ for (int i = 0x20; i &amp;lt; 0x80; i++){ for (int j = 0x20; j &amp;lt; 0x80; j++){ char a[] = {i, j}; if (encrypt(a, 2, cnt) == qword_40C000[cnt]){ printf(&amp;#34;%c%c&amp;#34;, i, j); return 0; } } } } int main(){ printf(&amp;#34;pbctf{&amp;#34;); for (int i = 3; i &amp;lt; 19; i++) test_cnt(i); printf(&amp;#34;\n&amp;#34;); return 0; } 除了找main函数之外也没有什么特别的</description>
+    </item>
+    
+  </channel>
+</rss>

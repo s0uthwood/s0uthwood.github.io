@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>WP on s0uthwood&#39;s Blog</title>
+    <link>/tags/wp/</link>
+    <description>Recent content in WP on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 09 Oct 2021 22:22:33 +0000</lastBuildDate><atom:link href="/tags/wp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>TSGCTF2021 RE WP</title>
+      <link>/post/tsgctf2021-re-wp/</link>
+      <pubDate>Sat, 09 Oct 2021 22:22:33 +0000</pubDate>
+      
+      <guid>/post/tsgctf2021-re-wp/</guid>
+      <description>Beginners Rev 用 fork() 遍历了 32 位输入，每个输入都分别进行一次函数运算
+do { ++v2; if ( !fork() ) { v2 = 0; v1 |= 1 &amp;lt;&amp;lt; v3; v7 = open(&amp;#34;/dev/null&amp;#34;, 1); dup2(v7, 1); } ++v3; } while ( v3 != 5 ); 每个函数运算都是将输入迭代好多次
+v4 = (unsigned __int8 *)&amp;amp;key + a2; v5 = v4[2]; v6 = 1; while ( (unsigned int)(-1217102449 * v5 + 1217102449) &amp;gt; 0xB2927C ) { ++v6; v5 += v4[2]; if ( v6 == 367 ) { v6 = -1; break; } } v7 = v4[4]; v8 = v4[3] * ((a1 + *v4) % 367 * v4[1] % 367 * v6 % 367) % 367; 被retaddr坑了一会，后面才反应过来开头那个 if ( retaddr - (_BYTE *)check !</description>
+    </item>
+    
+  </channel>
+</rss>

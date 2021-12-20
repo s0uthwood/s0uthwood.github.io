@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>fabric on s0uthwood&#39;s Blog</title>
+    <link>/tags/fabric/</link>
+    <description>Recent content in fabric on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 18 Dec 2020 13:40:28 +0000</lastBuildDate><atom:link href="/tags/fabric/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fabric-SystemChaincode</title>
+      <link>/post/fabric-systemchaincode/</link>
+      <pubDate>Fri, 18 Dec 2020 13:40:28 +0000</pubDate>
+      
+      <guid>/post/fabric-systemchaincode/</guid>
+      <description>系统链码 系统链码结构图
+与普通链码对比     系统链码 普通链码     链码源码 无main函数 有main函数   运行空间 背书节点进程 Docker   调用方式 网络+进程内部 网络   启动参数 内置 动态输入   通信方式 Golang的通道机制 网络   数据存取 Golang的通道+本地文件 网络   升级方式 和背书节点一起升级 单独升级   背书策略 无 有    系统链码在Peer节点上的注册与部署 peer节点存在于docker容器中，在启动时通过执行peer node start命令来启动peer节点。
+ /internal/peer/node/start.go
+ start命令的入口函数为serve函数。
+以下源代码中仅保留部署系统链码的部分。
+func serve(args []string) error { // Initialize chaincode service  // deploy system chaincodes 	for _, cc := range []scc.</description>
+    </item>
+    
+    <item>
+      <title>gRPC basic</title>
+      <link>/post/grpc-basic/</link>
+      <pubDate>Fri, 11 Dec 2020 02:12:29 +0000</pubDate>
+      
+      <guid>/post/grpc-basic/</guid>
+      <description>简介  A high-performance, open-source universal RPC framework
+ gRPC框架具有高性能，开源，跨语言的特点，使用了RPC框架，基于HTTP/2设计。
+ RPC(remote procedure call，远程过程调用)框架提供了一套机制，使得应用程序之间可以进行通信，遵从server/client模型。 RPC将一个服务调用封装在一个本地方法中，让调用者像使用本地方法一样调用服务，对其屏蔽实现细节。具体的实现则通过调用方和服务方的协议，基于TCP连接进行数据交互达成。
+  在本地调用过程中，通常需要通过接口，调用具体实现，最终获取相应的数据。 而在RPC中，本地获取到接口，随后通过网络，调用远程的实现。在使用网络时，需要通过数据序列化来传输数据。
+ 在gRPC中，支持多个语言的应用程序的远程调用，数据交换格式则采用了Protocol Buffer。
+gRPC-basic
+如上图所示，左侧为c++语言编写的客户端，其中包含了接口的具体实现。右侧为Ruby和Java客户端，其中对接口进行了调用。客户端获取接口后，将数据通过Protocol Buffer的序列化处理后交给服务端，服务端调用具体实现，并把数据同样以序列化的形式返回给客户端。</description>
+    </item>
+    
+    <item>
+      <title>Fabric-Architecture</title>
+      <link>/post/fabric-architecture/</link>
+      <pubDate>Tue, 08 Dec 2020 01:33:07 +0000</pubDate>
+      
+      <guid>/post/fabric-architecture/</guid>
+      <description>参考文献：Hyperledger Fabric: A Distributed Operation System for Permissioned Blockchains
+架构 整体结构 Fabric是一个许可区块链的分布式操作系统，可以执行多种编程语言编写的分布式应用。它能够在一个只能追加的数据结构中安全地跟踪执行历史，并且没有内置的加密账本。
+Fabric使用了“执行-order-验证”的区块链架构，而没有遵顼标准的“order-执行”设计。其整体的分布式应用可以分为两个部分
+  智能合约，称为链码 (Chaincode) ，是一段实现了应用逻辑的程序代码，并在执行过程中运行。链码是Fabric分布式应用的核心部分，可能会被未受信任的开发者修改。有一种特殊的链码被用于管理区块链系统并维护参数，被称为系统链码 (system chaincode)
+  背书政策 (endorsement policy) 在验证阶段进行评价。许可政策无法被未受信任的开发者选择或修改。其在区块链中充当一个用于事物验证的静态库，且只能通过链码进行参数化。只有指定的管理员有权限使用系统管理功能修改。
+  “执行-排序-验证”结构示意图：
+
+一个客户端向背书政策指定的peer节点(peers)发送交易。这个交易被特殊的peer节点执行并且记录输出信息，这一步骤被称为背书。执行完成后，交易进入了排序(ordering)阶段，在这一个阶段中，使用了一种可插入的共识协议来产生一个完成排序的已背书交易的序列，并按区块分组。这些交易被广播到所有的节点。这个序列的顺序由输出和状态的依赖性决定。在验证阶段，每个peer节点都需要根据背书政策和执行的一致性对已背书交易的状态变化进行验证。所有peer节点都已相同的顺序进行验证，因此结果具有确定性。
+Fabric网络支持多个区块链链接到同一个排序服务上。每个区块链被称为一个通道(Channel)，可以有不同的peer节点作为其成员。这些通道可以被用来分离不同的区块链之间的状态，但每个通道的共识并不一致，并且通道中的交易顺序是相互分开的。认为所有排序都是可信的部署，可以通过通道访问控制来实现对节点的控制。
+其中的节点可分为：客户端、peer节点（其中一部分为背书节点）、排序服务节点(OSN, Ordering Service Nodes or orderers)
+交易的三个阶段 transaction_flow
+执行阶段 在执行阶段，客户端签署并发送一个交易提案给一个或多个背书节点来执行（根据背书政策，每个chaincode都有特定的一组背书节点）。一个交易提案包含了提交客户端的身份（根据MSP），交易的载荷、参数、链码标识符、每个客户端只能使用一次的nonce（随机值或计数器），以及客户端标识符和nonce生成的交易标识符。
+背书节点会对交易提案进行模拟，在指定的区块链链码上执行操作。模拟操作在背书节点的本地区块链状态中进行模拟，不与其它节点同步，也不会将模拟的结果永久化到帐本中。区块链的状态仍然由节点交易管理器(Peer Transaction Manager)维护。一个链码创建的状态只能限定在该链码上，不能被其他的链码直接访问。需要注意的是，链码只能维护GetState、PutState、DelState操作访问的内容（可能意思是：需要使用这些接口进行访问，不能直接修改，猜测状态权限为private）。给予适当的权限，链码可以调用同一个通道的链码，并访问其状态。
+在模拟后，背书节点会产生一个writeset，其中包括模拟产生的状态更新，和一个readset，代表交易提案模拟的版本依赖（模拟时的所有密钥以及对应的版本号）。在模拟结束后，背书节点会以加密的方式签署一份“背书”消息，包括了writeset和readset（包括交易id和背书节点的一些数据），随后以响应的方式发送给客户端。客户端收集背书，直到满足链码的背书政策，开始交易。特别的，这要求政策决定的所有背书节点都返回相同的writeset和readset。然后，客户端将继续创建交易，并传递给排序阶段。
+排序阶段 客户端收集到足够的背书后，将会把交易组装起来并发送给排序服务端。整个交易包括了载荷(payload)（包括参数的链码操作）、交易元数据、背书的集合。排序阶段对每个通道的所有提交建立了一个排序。排序服务端会将多个交易分成块，输出包含交易的哈希链序列，以提高广播协议的吞吐量。
+ broadcast(tx)：客户端调用这个函数来广播交易tx，包含了载荷和签名。 B $\leftarrow$ deliver(s)：客户端调用这个函数来获取非负序列号s的区块B，$B=([tx_1,tx_2,\ldots,tx_k],h)$，$h$为s-1区块的哈希值。  排序服务确保了一个通道中的交付区块被完全排序，确保安全。
+然而，每一个单独的排序实现都允许在客户端请求中保证自己的活跃性与公平性。
+由于区块链中包含了大量的节点，但仅有少部分节点实现了排序服务，因此Fabric可以配置使用内置的gossip服务，将排序服务中交付的区块分发给所有的节点。
+验证阶段 排序服务会把区块直接分发给各个节点（或通过gossip）。随后，一个新的区块进入验证阶段，包含三个连续步骤：
+ 并行执行区块中所有的交易的背书政策评估。评估是验证系统链码(VSCC, validation system chaincode)的任务。VSCC是一个静态库，是区块链配置的一部分，负责根据链码中的背书政策验证背书。如果不满足，这个交易会被标记为无效，并被忽略。 对块中的所有交易进行读写冲突检查(read-write conflict check)（版本号比较）。对于每个交易，将会对比其中readset的版本号和节点本地存储的账本当前状态中的版本号，确保版本相同。如果版本不匹配，交易会被标记为无效，并被忽略。 最后进行账本的更新阶段，在这个阶段，区块被追加到本地存储的账本中，并且更新区块链的状态。将区块添加到账本时，前两步的检查结果将被持久化以掩码的形式表示区块中的交易有效。这有助于后面进行重建状态。此外，所有的状态更新都是通过将writeset中的键值对写入本地完成的。  信任与故障模型 Fabric可以适应灵活的信任和故障假设。通常情况下，所有的客户端都被认为是潜在的恶意用户或是Byzantine。节点都被归入组织(organization)并且每个组织组成一个信任域(trust domain)。每个节点信任其组织内部的其他节点，而不信任其他组织的节点。排序服务同样认为所有的节点（或客户端）都是潜在的拜占庭。</description>
+    </item>
+    
+  </channel>
+</rss>

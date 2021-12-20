@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='suibiankankan
+'><title>加密与解密学习笔记（持续更新ing）</title>
+
+<link rel='canonical' href='/post/note-of-book-encryption-and-decryption/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='加密与解密学习笔记（持续更新ing）'>
+<meta property='og:description' content='suibiankankan
+'>
+<meta property='og:url' content='/post/note-of-book-encryption-and-decryption/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Reverse' /><meta property='article:published_time' content='2021-09-25T02:15:45&#43;00:00'/><meta property='article:modified_time' content='2021-09-25T02:15:45&#43;00:00'/>
+<meta name="twitter:title" content="加密与解密学习笔记（持续更新ing）">
+<meta name="twitter:description" content="suibiankankan
+">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/ctf/" >
+                CTF
+            </a>
+        
+            <a href="/categories/reverse/" >
+                Reverse
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/note-of-book-encryption-and-decryption/">加密与解密学习笔记（持续更新ing）</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Sep 25, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    7 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>suibiankankan</p>
+<h2 id="基础知识">基础知识</h2>
+<h3 id="分析的一般途径和策略">分析的一般途径和策略</h3>
+<ol>
+<li>学会软件的操作和使用方法 $\to$ 推测出软件的设计思想和编程思路</li>
+<li>静态分析：阅读反汇编的程序清单，利用人机交互的提示信息了解片段所完成的功能，宏观了解软件的编程思路</li>
+<li>动态跟踪：首先完成反反调试，并解密加密程序，了解初始化工作，获得各个模块之间的中间结果
+<ol>
+<li>粗跟踪：不跟踪调用等指令，仅根据执行结果分析程序的功能</li>
+<li>细跟踪：针对性跟踪分析关键模块</li>
+</ol>
+</li>
+</ol>
+<h3 id="文本字符">文本字符</h3>
+<h4 id="ascii-和-unicode">ASCII 和 Unicode</h4>
+<p>Unicode 是 ASCII 的扩展，所有字符都是 16 位</p>
+<h4 id="字节存储顺序">字节存储顺序</h4>
+<p>小端序（Little-endian）：高位字节存入高地址，低位字节存入低地址</p>
+<p>大端序（Big-endian）：高位字节存入低地址，低位字节存入高地址</p>
+<table>
+<thead>
+<tr>
+<th>字节序</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>大端序</td>
+<td>12</td>
+<td>34</td>
+<td>56</td>
+<td>78</td>
+</tr>
+<tr>
+<td>小端序</td>
+<td>78</td>
+<td>56</td>
+<td>34</td>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+<h3 id="windows">Windows</h3>
+<h4 id="win-32-api">Win 32 API</h4>
+<p>32位API与64位API在名称和功能上基本没有变化</p>
+<p>Windows运转核心为DLL动态链接库</p>
+<ul>
+<li>KERNEL32.DLL：操作系统核心功能服务，进程与线程控制、内存管理、文件访问等</li>
+<li>USER32.DLL：负责处理用户接口，包括键盘和鼠标输入、窗口和菜单管理等</li>
+<li>GDI：图形设备接口，允许程序在屏幕和打印机上显示文本和图形</li>
+</ul>
+<h4 id="windows消息机制">Windows消息机制</h4>
+<p>Windows使用Message提供应用程序与应用程序、应用程序与操作系统之间的通信</p>
+<p>常用的函数如下：</p>
+<h5 id="sendmessage">SendMessage</h5>
+<p>调用一个窗口的窗口函数，将一条消息发送给那个窗口。除非消息处理完毕，否则不会返回</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">LRESULT <span style="color:#a6e22e">SendMessage</span>(
+	HWND hwnd,			<span style="color:#75715e">// 目的窗口的句柄
+</span><span style="color:#75715e"></span>	UINT Msg,			<span style="color:#75715e">// 消息标识符
+</span><span style="color:#75715e"></span>	WPARAM wParam,		<span style="color:#75715e">// 消息的WPARAM域
+</span><span style="color:#75715e"></span>	LPARAM lParam		<span style="color:#75715e">// 消息的LPARAM域
+</span><span style="color:#75715e"></span>);
+</code></pre></div><p><strong>返回值</strong>：消息投递成功，返回非零</p>
+<h5 id="wm_command">WM_COMMAND</h5>
+<p>当用户从菜单或按钮中选择一条命令或者一个控件时该消息被发送给它的父窗口，或者当一个快捷键被释放时发送该消息。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">WM_COMMAND
+	wNotifyCode <span style="color:#f92672">=</span> HIWORD(wParam);		 <span style="color:#75715e">// 通告函数
+</span><span style="color:#75715e"></span>	wID <span style="color:#f92672">=</span> LOWORD(wParam);				<span style="color:#75715e">// 菜单条目、控件或快捷键的标识符
+</span><span style="color:#75715e"></span>	hwndCtl <span style="color:#f92672">=</span> (HWND) lParam;			<span style="color:#75715e">// 控件句柄
+</span></code></pre></div><p><strong>返回值</strong>：如果应用程序处理这条消息，则返回值为零</p>
+<h5 id="wm_destory">WM_DESTORY</h5>
+<p>当一个窗口被销毁时发送该消息。该消息对应 <code>0x02</code>，没有参数</p>
+<p><strong>返回值</strong>：如果应用程序处理这条消息，则返回值为零</p>
+<h5 id="wm_gettext">WM_GETTEXT</h5>
+<p>当需要将一个窗口的文本复制到一个由呼叫程序提供的缓冲区中时，发送该消息。该消息对应 <code>0x0D</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">WM_GETTEXT
+	wParam <span style="color:#f92672">=</span> (WPARAM) cchTextMax;	<span style="color:#75715e">// 需要复制的字符数
+</span><span style="color:#75715e"></span>	lParam <span style="color:#f92672">=</span> (LPARAM) lpszText;		<span style="color:#75715e">// 接收文本的缓冲区地址
+</span></code></pre></div><p><strong>返回值</strong>：被复制的字符数</p>
+<h5 id="wm_quit">WM_QUIT</h5>
+<p>当应用程序调用 <code>PostQuitMessage</code> 时，生成 <code>WM_QUIT</code>消息，对应 <code>0x12</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">WM_QUIT
+	nExitCode <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>) wParam;		<span style="color:#75715e">// 退出代码
+</span></code></pre></div><p>无<strong>返回值</strong></p>
+<h5 id="wm_lbuttondown">WM_LBUTTONDOWN</h5>
+<p>光标停在窗口客户区且点击左键时，发送此消息</p>
+<p>如果鼠标未捕捉，将下发给光标下的窗口，否则发送给捕获鼠标动作的窗口</p>
+<p>对应 <code>0x201</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">WM_LBUTTONDOWN
+	fwkeys <span style="color:#f92672">=</span> wParam;			<span style="color:#75715e">// key旗帜
+</span><span style="color:#75715e"></span>	xPos <span style="color:#f92672">=</span> LOWORD(lParam);		<span style="color:#75715e">// 光标的水平位置
+</span><span style="color:#75715e"></span>	yPos <span style="color:#f92672">=</span> HIWORD(lParam);		<span style="color:#75715e">// 光标的垂直位置
+</span></code></pre></div><p><strong>返回值</strong>：如果应用程序处理了这条消息，返回值为零</p>
+<h4 id="虚拟内存">虚拟内存</h4>
+<ul>
+<li>应用程序不会直接访问物理地址</li>
+<li>虚拟内存管理器通过虚拟地址的访问请求来控制所有的物理地址访问</li>
+<li>每个应用都有独立的寻址空间，不同应用程序的地址空间是彼此隔离的</li>
+<li>DLL程序没有私有空间，总是被映射到其他应用程序的地址空间中，作为程序的一部分运行</li>
+</ul>
+<h2 id="动态分析技术">动态分析技术</h2>
+<h2 id="逆向分析技术">逆向分析技术</h2>
+<h3 id="win32">Win32</h3>
+<h4 id="启动">启动</h4>
+<p>程序先执行启动代码，随后调用 <code>WinMain</code> 函数</p>
+<p>实例中的系统调用：</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">Call KERNEL32.GetVersion              ; 确定Windows系统版本
+Call KERNEL32.GetCommandLineA         ; 指向系统的完整命令行的指针
+Call KERNEL32.GetStartupInfoA         ; 获取一个进程的启动信息
+Call KERNEL32.GetModuleHandleA        ; 返回进程地址空间执行文件基地址
+call 00401000                         ; 调用WinMain
+call 004012EC                         ; 退出程序
+ret
+</code></pre><blockquote>
+<p>通常无需关注启动，直接查看 <code>WinMain</code> 即可</p>
+</blockquote>
+<h4 id="函数调用">函数调用</h4>
+<p>编译器通常使用 <code>call</code> 和 <code>ret</code> 指令来调用函数</p>
+<p><code>call</code> 指令将其之后的指令地址压入栈顶，<code>ret</code> 指令则返回到调用位置</p>
+<p>有时可能利用寄存器进行间接调用，如： <code>call eax</code></p>
+<h4 id="参数传递">参数传递</h4>
+<h5 id="栈">栈</h5>
+<p>调用函数时，将参数压入栈中</p>
+<p>对于不同语言，有不同的调用约定</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>C/C++(__cdecl)</th>
+<th>pascal</th>
+<th>stdcall</th>
+<th>fastcall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>参数传递顺序</td>
+<td>从右向左</td>
+<td>从左向右</td>
+<td>从右向左</td>
+<td>使用寄存器和栈</td>
+</tr>
+<tr>
+<td>平衡栈</td>
+<td>调用者</td>
+<td>子程序</td>
+<td>子程序</td>
+<td>子程序</td>
+</tr>
+<tr>
+<td>VARARG</td>
+<td>是</td>
+<td>否</td>
+<td>允许*</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>VARARG表示参数个数可以不确定</p>
+<p>stdcall中，如果参数个数不确定，需要由调用程序来平衡栈</p>
+</blockquote>
+<p>程序执行过程：</p>
+<ul>
+<li>调用者将函数执行完毕时应返回的地址、参数压入栈</li>
+<li>函数使用 <code>ebp</code> 指针+偏移量对栈中的参数进行寻址并取出，完成操作</li>
+<li>子程序使用 <code>ret</code> 或 <code>retf</code> 指令返回， <code>eip</code> 置为栈中保存的地址，并继续执行</li>
+</ul>
+<p>栈的建立过程（两个参数时）：</p>
+<ul>
+<li>先将 <code>arg2</code> 压栈，<code>esp=K-04h</code></li>
+<li>将 <code>arg1</code> 压栈，<code>esp=K-08h</code></li>
+<li>执行 <code>call</code> ，把返回地址压栈，<code>esp=K-0Ch</code></li>
+<li>为了程序能够恢复，将 <code>ebp</code> 压栈，<code>esp=K-10h</code></li>
+<li><code>move ebp, esp</code>，将当前的栈顶设置为栈底</li>
+<li><code>sub esp, 8</code> ，定义局部变量，两个变量分别为 <code>[esp-4]</code> 和 <code>[esp-8]</code></li>
+<li>函数结束时，<code>add esp, 8</code> 释放局部变量占用，或者使用 <code>ret 8</code> 来释放</li>
+</ul>
+<blockquote>
+<p>还可以用enter和leave指令维护</p>
+<p><code>enter</code> 指令：<code>push ebp</code>，<code>mov ebp, esp</code>，<code>sub esp, xxx</code></p>
+<p><code>leave</code> 指令：<code>add esp, xxx</code>，<code>pop ebp</code></p>
+</blockquote>
+<h5 id="寄存器">寄存器</h5>
+<p>通常遵循 <code>fastcall</code> 规范</p>
+<ul>
+<li>VC++：左边两个参数分别存入 <code>ecx</code>, <code>edx</code> 中，其余压栈</li>
+<li>Borland Delphi/C++：左边三个参数分别存入 <code>eax</code>, <code>edx</code>, <code>ecx</code> 中，其余按PASCAL方式压栈</li>
+</ul>
+<p>C++非静态类成员默认调用 <code>thiscall</code> ，对象的每个函数隐含接受 <code>this</code> 参数，使用 <code>eax</code> 存放，其余参数从右到左压栈</p>
+<h5 id="名称修饰约定">名称修饰约定</h5>
+<p>为了操作符和函数重载，C++编译器会按照规则修改入口点的符号名，从而允许同一个名字有多个用法。</p>
+<p>C的规则如下：</p>
+<ul>
+<li>stdcall调用约定在输出函数名前加下划线，在后面加@，格式为 <code>_functionname@number</code></li>
+<li>__cdecl调用约定格式为 <code>_functionname</code></li>
+<li>Fastcall调用约定格式位 <code>@functionname@number</code></li>
+</ul>
+<p>均不改变大小写</p>
+<p>C++规则如下：</p>
+<ul>
+<li>stdcall调用约定以 <code>?</code> 开头，函数名后以 <code>@@YG</code> 标识参数表开始，后跟参数表，参数表第一项位返回值类型，其后依次为参数的数据类型，指针标识在其所指数据类型前，参数表后，以 <code>@Z</code> 标识整个名字的结束，若无参数，则以 <code>Z</code> 结束。格式为 <code>?functionname@@YG******@Z</code> 或 <code>?functionname@@YG*XZ</code></li>
+<li>__cdecl调用将 <code>@@YG</code> 替换为 <code>@@YA</code></li>
+<li>Fastcall调用将 <code>@@YG</code> 替换为 <code>@@YI</code></li>
+</ul>
+<h4 id="返回值">返回值</h4>
+<h5 id="return操作返回">return操作返回</h5>
+<p>存放在 <code>eax</code> 寄存器中，高32位存放在 <code>edx</code> 中</p>
+<h5 id="传引用方式返回">传引用方式返回</h5>
+<p>传引用调用方式将变量的地址传递给函数，可以在子函数中修改该内存单元中变量的值，因此允许修改原始变量</p>
+<h4 id="数据结构">数据结构</h4>
+<h5 id="局部变量">局部变量</h5>
+<p>函数内部定义的一个变量，作用域和生命周期仅局限于该函数内</p>
+<h6 id="栈存放">栈存放</h6>
+<p>先将参数压入栈中，再修改 <code>ebp</code> ，最后减小 <code>esp</code>。因此 <code>[ebp+**h]</code> 表示参数， <code>[ebp-**h]</code> 表示局部变量</p>
+<h6 id="寄存器存放">寄存器存放</h6>
+<p>有 6 个通用寄存器尽可能有效地存放局部变量， 因此需要注意确定当前的寄存器中存储的变量是哪个变量</p>
+<h5 id="全局变量">全局变量</h5>
+<p>局部变量存放在栈中，而全局变量存放在内存区中</p>
+<p>版本标记等常数通常为全局变量</p>
+<p>全局变量通常存放在数据区块 <code>.data</code> 的一个固定地址处，程序使用固定的硬编码地址进行寻址</p>
+<p>如果在只读区块，说明是一个常量</p>
+<h5 id="数组">数组</h5>
+<p>一般通过基址+变址实现寻址，如：</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov eax, [407030h + eax]
+</code></pre><p>间接寻址一般用于给数组和结构赋值，<code>[base+n]</code> 根据n的不同对结构中的相应单元赋值。</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">0040101D lea esi, dword ptr [esp+8]
+00401021 mov edi, 3
+00401026 mov eas, dword ptr [esi]
+...
+00401036 add esi, 4
+00401039 dec edi
+0040103A jnz short 00401026
+</code></pre><h4 id="虚函数">虚函数</h4>
+<blockquote>
+<p>C++面向对象中，最重要的概念就是虚函数</p>
+</blockquote>
+<p>虚函数是程序运行时定义的函数，其地址不能在编译时确定，只能在调用即将进行时确定。虚函数的引用存放在专用数组——虚函数表（Virtual Table，VTBL）中。</p>
+<p>调用时首先通过虚函数指针找到虚函数表的地址，然后在虚函数表中找到该函数的入口地址，最后进行调用。</p>
+<h4 id="控制语句">控制语句</h4>
+<h5 id="if-else">if-else</h5>
+<p>汇编形式通常为</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">cmp a, bjz  0040xxxxh  ; (jnz)
+</code></pre><p>可以用 <code>test eax, eax</code> 替代 <code>cmp</code> ，该语句（相当于逻辑与运算）表示当 <code>eax</code> 为 0 时，设置 <code>ZF</code> 为 1，<code>jz</code> 则表示 <code>ZF</code> 位为 1 时跳转</p>
+<h5 id="switch-case">switch-case</h5>
+<p>无优化版本</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">0040101D cmp [ebp-08], 01    ; case 100401021 je  0040103100401023 cmp [ebp-08], 02    ; case 200401027 je  0040104000401029 cmp [ebp-08], 0A    ; case 100040102D je  0040104F0040102F jmp 0040105E        ; default
+</code></pre><p>使用 <code>dec</code> 指令替代 <code>cmp</code></p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov eax, [esp+08]dec eax             ; case 1je  0040xxxxdec eax             ; case 2je  0040xxxxsub eax, 00000008   ; case 10je  0040xxxx
+</code></pre><p>跳转表实现（case的取值为算术级数时）</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">jmp dword ptr [4*eax+004010B0]   ; 跳转表
+</code></pre><h5 id="转移指令机器码计算">转移指令机器码计算</h5>
+<p>位移量=目的地址-起始地址-跳转指令长度</p>
+<p>转移指令机器码=转移类别机器码+位移量</p>
+<p>转移指令可以分为短转移，长转移和子程序调用（call）</p>
+<p>短转移2字节</p>
+<p>长转移无条件5字节，条件转移6字节</p>
+<p>call指令5字节</p>
+<h5 id="条件设置指令">条件设置指令</h5>
+<p>对于语句</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">c <span style="color:#f92672">=</span> (a <span style="color:#f92672">&lt;</span> b) <span style="color:#f92672">?</span> c1 : c2;
+</code></pre></div><p>条件分支语句为</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">  cmp a, b  mov eax, c1  jl  L1  mov eax, c2L1:
+</code></pre><p>使用条件设置语句可以不包含条件分支</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">xor   eax, eaxcmp   a, bsetge al       ; if a &gt;= b, al = 1, else al = 0dec   eaxand   eax, (c1 - c2)add   eax, c2
+</code></pre><p>或者使用条件传输指令</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov   eax, c2cmp   a, bcmovl eax, cl
+</code></pre><h4 id="循环语句">循环语句</h4>
+<p>通常使用 <code>ecx</code> 寄存器作为计数器，例如</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">    xor ecx, ecx ; 计数器清空:L1	inc ecx	...	cmp ecx, 05  ; 循环退出条件	jbe L1
+</code></pre><p>优化后的循环实例</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">    xor ecx, ecx    xor eax, eax:L1    add ecx, eax    inc eax    cmp eax, 64h    jle L1    xor eax, eax
+</code></pre><p>对应的源码</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">100</span>; i<span style="color:#f92672">++</span>)    sum <span style="color:#f92672">+=</span> i;
+</code></pre></div><h4 id="数学运算">数学运算</h4>
+<h5 id="加减法">加减法</h5>
+<p><code>add</code> 和 <code>sub</code> 指令，有时候可以使用 <code>lea</code> 进行优化</p>
+<p>lea 允许一个时钟内计算 <code>lea edx, [eax+ecx+78h]</code> 级别的运算</p>
+<h5 id="乘法">乘法</h5>
+<p>乘法使用 <code>mul</code> 或 <code>imul</code> 指令</p>
+<p>对于2的幂，使用 <code>shl</code> 指令可以加快运算</p>
+<p>由于 <code>lea</code> 指令可以实现乘 2, 4, 8 的运算，因此可以用来加快 3, 5, 6, 7, 9 等数字的乘法运算，如 <code>lea eax, [eax+eax*4]</code></p>
+<h5 id="除法">除法</h5>
+<p><code>div</code> 或 <code>idiv</code> 指令</p>
+<p>对于2的幂，使用 <code>shr</code> 指令加速，有符号时使用 <code>sar</code></p>
+<p>此外可以利用乘法进行加速</p>
+<p>常见的优化公式为
+$$
+\dfrac{a}{b}=a\times \dfrac{1}{b}
+$$
+因此，$\div 11$ 可以优化为 $(\times 2E8BA2E9)&raquo;(32+1)$</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov  eax, 2E8BA2E9imul ecxsar  edx, 1          ; edx中存放了乘法的高位双字节mov  ecx, edx
+</code></pre><h4 id="字符串">字符串</h4>
+<h5 id="字符串存储">字符串存储</h5>
+<p>分为两种，一种使用结束符作为标识，一种记录长度</p>
+<ul>
+<li>C语言：<code>String\0</code></li>
+<li>DOS字符串：<code>String$</code></li>
+<li>PASCAL：<code>\x05String</code></li>
+<li>Delphi：<code>\x05\x00String</code></li>
+</ul>
+<p>Go语言使用一个64位整型记录长度</p>
+<h5 id="字符寻址指令">字符寻址指令</h5>
+<p>mov将当前指令所在的内存复制并放到目的寄存器中，可操作常量或指针</p>
+<p>lea是装入有效地址，操作数是地址</p>
+<p>以下两条指令是等价的</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">lea eax, [401000h]mov eax, 401000h
+</code></pre><p>都是将401000h写入eax寄存器中</p>
+<p>因此，以下两个指令也是等价的</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">lea eax, [eax+8]add eax, 8
+</code></pre><p>常被编译器用来计算加法</p>
+<h5 id="ascii大小写转换">ASCII大小写转换</h5>
+<p>区别在于二进制的第五位，大写字母为0，小写字母为1</p>
+<p>因此有如下方法</p>
+<ul>
+<li>大小写转换：$\pm\ \mathrm{0x}20$，$\oplus\ \mathrm{0x}20$</li>
+<li>转大写：$&amp;\ \mathrm{0b}11011111$</li>
+<li>转小写：$|\ \mathrm{0b}00100000$</li>
+</ul>
+<h5 id="计算长度">计算长度</h5>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov ecx, FFFFFFFF  ; 这一句是一个重要特征xor eax, eax       ; 清零，原文为subrepnz              ; 复制串操作，直到ecx为0scasb              ; 串扫描指令，把al中的内容与edi指向的附加段中的数据逐一比较not ecx            ; ecx=字符长度+1dec ecx            ; ecx=字符长度je xxxxxx          ; 如果ecx为0，说明长度为0
+</code></pre><h4 id="指令修改技巧">指令修改技巧</h4>
+<p>eax有优化，尽可能使用</p>
+<p>替换字节：</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>机器码</th>
+<th>指令字节长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nop</td>
+<td>90</td>
+<td>1</td>
+</tr>
+<tr>
+<td>push eax + pop eax</td>
+<td>50 58</td>
+<td>2</td>
+</tr>
+<tr>
+<td>inc eax + dec eax</td>
+<td>40 48</td>
+<td>2</td>
+</tr>
+<tr>
+<td>mov edi, edi</td>
+<td>8B FF</td>
+<td>2</td>
+</tr>
+<tr>
+<td>jmp xx</td>
+<td>EB 00</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>用nop就行</p>
+<p>寄存器清零：</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>机器码</th>
+<th>指令字节长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mov eax, 00000000h</td>
+<td>B8 00 00 00 00</td>
+<td>5</td>
+</tr>
+<tr>
+<td>push 0 + pop eax</td>
+<td>6A 00 + 58</td>
+<td>3</td>
+</tr>
+<tr>
+<td>sub eax, eax</td>
+<td>2B C0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>xor eax, eax</td>
+<td>33 C0</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>测试寄存器是否为0：</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>机器码</th>
+<th>指令字节长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cmp eax, 00000000h</td>
+<td>83 F8 00</td>
+<td>3</td>
+</tr>
+<tr>
+<td>or eax, eax / test eax, eax</td>
+<td>0B C0 / 85 C0</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>后接 <code>je label</code> 字节码为 <code>74 xx</code> 或 <code>0F 84 xxxxxxxx</code>，长度为2或6，取决于近跳转还是远跳转</p>
+<p>寄存器置 <code>0FFFFFFFFh</code></p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>机器码</th>
+<th>指令字节长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mov eax, 0FFFFFFFFh</td>
+<td>B8 FF FF FF FF</td>
+<td>5</td>
+</tr>
+<tr>
+<td>（清零后）dec eax</td>
+<td>48</td>
+<td>1</td>
+</tr>
+<tr>
+<td>std + sbb eax, eax</td>
+<td>F9 + 2B C0</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>转移指令</p>
+<table>
+<thead>
+<tr>
+<th>指令</th>
+<th>机器码</th>
+<th>指令字节长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jmp label</td>
+<td>EB xx / E9 xxxxxxxx</td>
+<td>2 / 6</td>
+</tr>
+<tr>
+<td>push label + ret</td>
+<td>68 xxxxxxxx + C3</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+<h3 id="64位">64位</h3>
+<p>与32位有很多重叠</p>
+<h4 id="寄存器-1">寄存器</h4>
+<p>64位通用寄存器 R 开头</p>
+<p>8个128位 XMM 寄存器，通常用来优化（SIMD指令）</p>
+<p>此外， <code>AX</code> 低16位，<code>AL</code> 低8位， <code>AH</code> 第 $8\sim 15$ 位</p>
+<p><code>R8</code> 则有 <code>R8D</code> 低32位，<code>R8W</code> 低16位，<code>R8B</code> 低8位</p>
+<h4 id="函数">函数</h4>
+<h5 id="栈-1">栈</h5>
+<p>x64中有如下区别</p>
+<ul>
+<li>
+<p>一个栈空间8字节（64位）</p>
+</li>
+<li>
+<p>汇编指令对栈顶需要对齐16（被16整除）</p>
+</li>
+</ul>
+<h5 id="根据start寻找main">根据start寻找main</h5>
+<p>start函数结束前会有如下指令</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">jmp __tmainCRTStartup
+</code></pre><p>进入该函数后可以看到 <code>main</code> 函数</p>
+<p>如果符号表被去除，可根据前后特征进行定位</p>
+<blockquote>
+<p>在调用完成main后，通常会调用exit来退出进程，所以exit前的一个call就是main函数（也可能在该函数内部的call中）。</p>
+</blockquote>
+<h5 id="调用约定">调用约定</h5>
+<p>使用寄存器快速调用约定</p>
+<p>前几个参数使用的寄存器是固定的，后续的参数从右往左栈，非1, 2, 4, 8字节大小的参数必须用引用（地址）传参</p>
+<p>传递顺序为 <code>RCX</code>， <code>RDX</code>， <code>R8</code>， <code>R9</code>，所有浮点参数由XMM传参，顺序依次为 <code>XMM0</code> ~ <code>XMM3</code></p>
+<blockquote>
+<p>为了使得寄存器仍然能够使用，会预留栈空间，将寄存器的值存入栈空间中，该空间由调用者申请并平衡</p>
+</blockquote>
+<h5 id="函数返回值">函数返回值</h5>
+<p>使用 <code>RAX</code> 返回参数，返回值过大可以使用栈空间作为参数间接访问</p>
+<h4 id="数据结构-1">数据结构</h4>
+<h5 id="局部变量-1">局部变量</h5>
+<p>使用栈区进行存放</p>
+<p>Release版会更多地使用寄存器</p>
+<h5 id="全局变量-1">全局变量</h5>
+<p>地址通常在编译期固定</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov eax, cs:140009150h
+</code></pre><h5 id="数组-1">数组</h5>
+<p>$地址=首地址+类型大小\times 下标$</p>
+<blockquote>
+<p>IDA中使用Y快捷键来修改数据类型，可以反编译成下标模式，更好看一些</p>
+</blockquote>
+<p>汇编通常为 <code>[地址+寄存器*n]</code>（或者循环中每次循环 <code>地址+=n</code>？）</p>
+<h4 id="控制语句-1">控制语句</h4>
+<p>通常虚线箭头表示有条件跳转，实线箭头表示无条件跳转</p>
+<p>if 语句：jxx跳转，且目的地址后没有jxx（说明不是循环）</p>
+<p>if else语句：jxx跳转，且目的地之前有一个jmp实跳转，目的地址后无跳转</p>
+<p>if elif else语句：多个jxx跳转，每个Block以jmp结尾，最后一个Block不含跳转</p>
+<p>switch case语句：分支数 $\geqslant 6$ 使用case表，$&lt;6$ 使用else if</p>
+<blockquote>
+<p>无法使用case表的情况下，为减少if的判断次数，可能使用二叉平衡树来减少if判断次数</p>
+</blockquote>
+<h4 id="循环语句-1">循环语句</h4>
+<h5 id="do-while">do while</h5>
+<p>先执行，后判断</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">do_while_start:{	; 代码}cmp a, bjxx do_while_start
+</code></pre><p>通常有一个向上跳转</p>
+<h5 id="while循环">while循环</h5>
+<p>先判断，后执行</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">while_start:cmp a, bjxx while_end{	; 代码}jmp while_startwhile_end:; 后续代码
+</code></pre><p>通常为一个向下的条件跳转，该目的地之前有一个向上的实跳转，跳转到向下跳转前</p>
+<h5 id="for-循环">for 循环</h5>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">jmp for_iffor_step:  步长for_if:  循环条件jxx for_endfor 代码jmp for_stepfor_end:
+</code></pre><p>很常见的代码，比while循环多一个向下跳转</p>
+<h4 id="数学运算符">数学运算符</h4>
+<h5 id="加减法-1">加减法</h5>
+<p>add和sub指令，可用lea指令进行优化</p>
+<p>此外还有<strong>常量折叠</strong>的优化方法，即编译时提前完成常量间的计算，节省运行消耗的时间</p>
+<h5 id="乘法-1">乘法</h5>
+<p>imul为有符号乘法，mul为无符号乘法</p>
+<p>通常使用lea比例因子寻址优化</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">lea edx, ds:0[rcx*4] ; *4imul edx, 7          ; *7lea edx, [rbc+rbc*8] ; *9
+</code></pre><h5 id="除法-1">除法</h5>
+<h6 id="有符号">有符号</h6>
+<p>除数为 $2^n$ 时，使用位移进行优化</p>
+<p>除数为 $-2^n$ 时，使用位移，同时增加求补（x为负数时，计算 $-((x+(2^n-1))\gg n)$ ）</p>
+<h5 id="取模">取模</h5>
+<h2 id="软件保护技术">软件保护技术</h2>
+<h3 id="序列号">序列号</h3>
+<p>序列号（注册码）的方式是目前最常见的一种保护</p>
+<p>过程通常为：用户提交个人信息，公司计算得到序列号并返回给用户，用户通过序列号进行注册。软件从磁盘文件或注册表中获取注册信息</p>
+<h4 id="保护机制">保护机制</h4>
+<h5 id="本地计算用户信息并与序列号比较">本地计算用户信息并与序列号比较</h5>
+<p>即：$序列号=F(用户名)$</p>
+<p>对于这种方式，可以直接使用调试的手段，在内存中直接找到计算后的序列号，同时，将F函数复制出即可生成注册机</p>
+<h5 id="通过注册码求逆并与用户信息比较">通过注册码求逆并与用户信息比较</h5>
+<p>即：用公式 $序列号=F(用户名)$ 生成，用公式 $用户名=F^{-1}(序列号)$ 验证</p>
+<p>破解方法有</p>
+<ul>
+<li>通过 $F^{-1}$ 求出 $F$</li>
+<li>给定用户名，穷举序列号</li>
+<li>给定序列号，用 $F^{-1}$ 计算出用户名（通常包含不可见字符）</li>
+</ul>
+<h5 id="对等函数检查">对等函数检查</h5>
+<p>即：$F_1(用户名)=F_2(序列号)$</p>
+<p>通常 $F_2$ 可逆，借鉴上两种破解思路即可</p>
+<h5 id="二元函数">二元函数</h5>
+<p>即：$特定值=F(用户名，序列号)$</p>
+<p>缺陷在于可能缺少用户名与序列号的一一对应关系，开发者不易写出注册机</p>
+<h4 id="攻击方法">攻击方法</h4>
+<p>法一：通过跟踪输入，找到判断逻辑</p>
+<blockquote>
+<p>软件通常调用api将用户输入复制到缓冲区，常用api有：<code>GetWindowsTextA(W)</code>，<code>GetDiaItemTextA(W)</code>，<code>GetDlgItemInt</code>，<code>hmemcpy</code>，或者查找输出函数（对话框或标准输出等）</p>
+</blockquote>
+<p>法二：跟踪程序启动时对注册码的判断过程</p>
+<blockquote>
+<p>注册表中的序列号会调用 <code>RegQueryValueExA(W)</code>，INI文件中 <code>GetPrivateProfileStringA(W)</code>等等</p>
+</blockquote>
+<h5 id="根据数据约束性">根据数据约束性</h5>
+<p>对于采用明文比较的程序，正确注册码通常在输入注册码的前后 <code>90h</code> 字节的地方</p>
+<h5 id="hmemcpy">hmemcpy</h5>
+<p>这个函数是 <code>Windows 9x</code> 系统的内部函数，是万能断点</p>
+<p>现在同样可以使用系统的API下断点</p>
+<h5 id="消息断点">消息断点</h5>
+<p>按下和释放鼠标时，会发送 <code>WM_LBUTTONDOWN (0201h)</code> 和 <code>WM_LBUTTONUP (0202h)</code> 消息</p>
+<p>可以利用消息断点断在按钮的事件代码处</p>
+<h5 id="人机交互信息">人机交互信息</h5>
+<p>软件大多数采用了人机对话的方式进行，因此可以直接通过搜索字符串和交叉引用找到关键函数</p>
+<p>应该是目前最常用的方法了</p>
+<h4 id="字符串比较">字符串比较</h4>
+<ol>
+<li>寄存器直接比较</li>
+<li>函数比较</li>
+<li>串比较</li>
+</ol>
+<p>串比较有些少见，记录一下：</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">lea edi []
+lea esi []
+repz cmpsd
+jz (jnz)
+</code></pre><h4 id="制作注册机">制作注册机</h4>
+<h5 id="明码泄露的攻击">明码泄露的攻击</h5>
+<p>序列号在内存中曾以明码出现过即可</p>
+<p>可以使用keymake编写内存注册机，或利用 <code>Int 3</code> 等 <code>Debug API</code> 手写内存注册机</p>
+<h5 id="无明码">无明码</h5>
+<p>进行加密算法的逆向解密</p>
+<p>或者直接将汇编嵌入注册机中</p>
+<h3 id="警告窗口">警告窗口</h3>
+<p>软件不时提醒用户购买正式版本</p>
+<p>可以通过设置窗口为不可见来去除，或者在窗口的创建函数处将其跳过</p>
+<p>利用 <code>Resource Hacker</code> 软件可以找到窗口的 id，然后再汇编中搜索即可找到窗口的程序</p>
+<p>程序中，是否注册的 <code>flag</code> 标记可能是全局变量，找到这个变量并 patch 程序使其为 1 即可</p>
+<h3 id="时间限制">时间限制</h3>
+<p>限制单次运行时长，或者限制软件的使用时间</p>
+<h4 id="计时器">计时器</h4>
+<h5 id="settimer-函数">setTimer() 函数</h5>
+<p>程序运行时会申请一个计时器，并指定间隔，并获得一个处理计时器超时的回调函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">UINT <span style="color:#a6e22e">SetTimer</span>(
+    HWND hWnd,             <span style="color:#75715e">// 窗口句柄，计时器到时后，将向这个窗口发送WM_TIMER消息
+</span><span style="color:#75715e"></span>    UINT nIDEvent,         <span style="color:#75715e">// 计时器标识
+</span><span style="color:#75715e"></span>    UINT uElapse,          <span style="color:#75715e">// 指定计时器时间间隔（单位为毫秒）
+</span><span style="color:#75715e"></span>    TIMERPROC lpTimerFunc  <span style="color:#75715e">// 回调函数，超时后将调用
+</span><span style="color:#75715e"></span>);
+</code></pre></div><h5 id="高精度计时器">高精度计时器</h5>
+<p>通过调用 <code>timeSecEvent()</code> 函数启动</p>
+<h5 id="gettickcount-函数及-timegettime-函数">GetTickCount() 函数及 timeGetTime() 函数</h5>
+<p>该函数返回系统自成功启动以来所经过的时间，将两次返回值相减，即可得到当前运行时间</p>
+<p>这种方法也可以使用 <code>time()</code> 等函数</p>
+<h4 id="时间限制-1">时间限制</h4>
+<p>软件通常将第一次运行时的系统时间，存放在注册表或文件或某扇区中，每次运行时获取该时间，并与当前时间进行比较</p>
+<p>为了避免用户修改系统时间，软件会在保存安装时间（并存放于多个地方）之外，再保存最近一次运行的时间，每次运行时用当前时间替换</p>
+<h4 id="拆解时间限制">拆解时间限制</h4>
+<ol>
+<li>直接跳过 <code>SetTimer()</code> 函数</li>
+<li>利用 <code>WM_TIMER</code> 消息，查找到时间比较的位置，对二进制文件进行patch（去掉退出跳转等等）</li>
+</ol>
+<blockquote>
+<p>动态分析时，可以配合变速齿轮使用，这样就可以很快到达软件的限制时间，进行调试</p>
+</blockquote>
+<h3 id="菜单功能限制">菜单功能限制</h3>
+<p>当注册版和正式版文件相同，只是部分功能被限制无法使用时，可以恢复正式版的功能</p>
+<h4 id="相关函数">相关函数</h4>
+<h5 id="enablemenuitem">EnableMenuItem()</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">BOOL EnableMenuItem(
+    HMENU hMenu,        <span style="color:#75715e">// 菜单句柄
+</span><span style="color:#75715e"></span>    UINT uIDEnableItem, <span style="color:#75715e">// 欲允许或禁止的一个菜单条目的标识符
+</span><span style="color:#75715e"></span>    UINT uEnable,       <span style="color:#75715e">// 控制标志，包括允许、灰化、禁止等
+</span><span style="color:#75715e"></span>)
+</code></pre></div><h5 id="enablewindow">EnableWindow()</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">BOOL EnableWindow(
+    HWND hWnd,    <span style="color:#75715e">// 窗口句柄
+</span><span style="color:#75715e"></span>    BOOL bEnable  <span style="color:#75715e">// True为允许，False为禁止
+</span><span style="color:#75715e"></span>)
+</code></pre></div><h4 id="拆解菜单限制保护">拆解菜单限制保护</h4>
+<p>找到关键函数，把函数的参数patch一下即可</p>
+<h3 id="keyfile保护">KeyFile保护</h3>
+<p>KeyFile通常是一个小文件，可能是可见字符，也可能是二进制文件，由软件开发者定义</p>
+<p>软件启动后，会从KeyFile文件中读取数据，根据处理结果判断是否正确注册</p>
+<h4 id="相关api">相关API</h4>
+<p>与文件操作有关的API都可以下断点</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FindFirstFileA</td>
+<td>确定注册文件是否存在</td>
+</tr>
+<tr>
+<td>CreateFileA, _lopen</td>
+<td>确定文件是否存在，打开文件以获得句柄</td>
+</tr>
+<tr>
+<td>GetFileSize, GetFileSizeEx</td>
+<td>获得文件的大小</td>
+</tr>
+<tr>
+<td>GetFileAttributesA, GetFileAttributesExA</td>
+<td>获得文件的属性</td>
+</tr>
+<tr>
+<td>SetFilePointer, SetFilePointerEx</td>
+<td>移动文件指针</td>
+</tr>
+<tr>
+<td>ReadFile</td>
+<td>读取文件内容</td>
+</tr>
+</tbody>
+</table>
+<h4 id="拆解保护">拆解保护</h4>
+<ol>
+<li>利用文件监视软件找到KeyFile文件名</li>
+<li>利用十六进制编辑器伪造KeyFile</li>
+<li>动态调试，跟踪文件内容</li>
+</ol>
+<p>具体的破解方法与输入序列号类似</p>
+<h3 id="网络验证">网络验证</h3>
+<p>软件必须从服务器中取得一些关键数据才能正确运行</p>
+<p>破解的思路是拦截服务器的数据包，并分析程序对该数据包的处理</p>
+<h4 id="相关api-1">相关API</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">send</span>(
+    SOCKET s,                 <span style="color:#75715e">// 套接字描述符
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> FAR <span style="color:#f92672">*</span>buf,      <span style="color:#75715e">// 缓冲区
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> len,                  <span style="color:#75715e">// 发送数据的字节数
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> flags                 <span style="color:#75715e">// 附加标志，一般为0
+</span><span style="color:#75715e"></span>);
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">recv</span>(
+    SOCKET s,             <span style="color:#75715e">// 套接字描述符
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> FAR <span style="color:#f92672">*</span>buf,        <span style="color:#75715e">// 缓冲区
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> len,              <span style="color:#75715e">// 缓冲区buf的长度
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> flags             <span style="color:#75715e">// 附加标志，一般为0
+</span><span style="color:#75715e"></span>);
+</code></pre></div><p>此外，还有微软扩展函数 <code>WSASend</code> 和 <code>WSARecv</code></p>
+<h4 id="破解思路">破解思路</h4>
+<p>当服务器发送的数据包固定时，可以搭建本地服务器，发送该数据包</p>
+<p>数据包不固定时，需要分析算法</p>
+<h2 id="加密算法">加密算法</h2>
+<p>略</p>
+<h2 id="windows内核基础">Windows内核基础</h2>
+<h3 id="内核理论基础">内核理论基础</h3>
+<h4 id="权限级别">权限级别</h4>
+<p>CPU将权限分为 <code>R0~R3</code> 其中 <code>R0</code> 权限最高，运行内核，<code>R1</code> 和 <code>R2</code> 运行驱动程序，<code>R3</code> 权限最低，运行应用程序</p>
+<p>操作系统（Windows, Linux）为方便，将内核和驱动程序（内核态）运行在了 <code>R0</code> 层，将应用程序（用户态）运行在 <code>R3</code> 层，而没有使用 <code>R1</code> 和 <code>R2</code> ，因此 <code>AMD64</code> 取消了 <code>R1</code> 和 <code>R2</code> 层</p>
+<h4 id="内存空间布局">内存空间布局</h4>
+<p>32位系统虚拟内存：</p>
+<p>2GB内核空间，64KB的NULL空间和非法空间，其余为进程空间</p>
+<p>64位系统虚拟内存：</p>
+<p>Windows实际为44位（16TB），Linux实际为48位（256TB）</p>
+<p>存在大量空洞</p>
+<pre tabindex="0"><code>+-+-+-+-+-+-+-+-+-+-+-+-+ 0x000000
+|                       |
++-+-+-+-+-+-+-+-+-+-+-+-+ 0x400000
+|          text         |
++-+-+-+-+-+-+-+-+-+-+-+-+
+|          data         |
++-+-+-+-+-+-+-+-+-+-+-+-+
+|          BSS          |
++-+-+-+-+-+-+-+-+-+-+-+-+
+|          heap         |
++-+-+-+-+-+-+-+-+-+-+-+-+ 向下增长
+|                       |
+|          hole         |
+|                       |
++-+-+-+-+-+-+-+-+-+-+-+-+ 0x00002AAAAAAAA000
+|      内存映射区域      |
++-+-+-+-+-+-+-+-+-+-+-+-+ 向下增长
+|                       |
+|          hole         |
+|                       |
++-+-+-+-+-+-+-+-+-+-+-+-+ 向上增长
+|         stack         |
++-+-+-+-+-+-+-+-+-+-+-+-+ 0x00007FFFFFFFF000=TASK_SIZE
+|       未定义区域       |
++-+-+-+-+-+-+-+-+-+-+-+-+ 0xFFFF800000000000
+|        内核空间        |
++-+-+-+-+-+-+-+-+-+-+-+-+
+</code></pre><h4 id="windows内核启动过程">Windows内核启动过程</h4>
+<p>BIOS+MBR+Windows</p>
+<h5 id="启动自检">启动自检</h5>
+<p>从BIOS中载入必要指令，进行硬件初始化检查，并显示信息</p>
+<h5 id="初始化启动">初始化启动</h5>
+<p>根据CMOS设置，BIOS加载启动盘，将引导代码载入内存，由MBR执行启动过程。启动代码搜索MBR的分区表，找到活动分区，将第一个扇区的引导代码载入内存，检测系统并查找启动管理器。过去为 <code>ntldr</code> ，Windows7开始使用 <code>Bootmgr</code>作为启动管理。</p>
+<h5 id="boot加载">Boot加载</h5>
+<p>对启动管理器进行设置</p>
+<ul>
+<li>设置内存模式：32位系统+32位CPU，设置为32位内存模式；64位系统+64位CPU，设置为64位内存模式</li>
+<li>启动一个简单的文件系统：定位 <code>boot.ini</code>，<code>ntoskrnl</code>，<code>Hal</code> 等启动文件</li>
+<li>读取 <code>boot.ini</code> 文件</li>
+</ul>
+<h5 id="检测和配置硬件">检测和配置硬件</h5>
+<p>检查和配置硬件设备，如系统固件、总线、适配器、键盘磁盘等等</p>
+<h5 id="内核加载">内核加载</h5>
+<p>启动管理器先加载内核 <code>Ntoskrnl.exe</code> 和硬件抽象层 <code>HAL</code>。<code>HAL</code> 会对硬件底层进行隔离，为操作系统提供统一的API。</p>
+<p>随后根据注册表 <code>HKEY_LOCAL_MACHINE\System\CurrentControlSet</code> 来加载驱动程序</p>
+<p>注册表中的 <code>Start</code> 键表示了启动顺序</p>
+<ol start="0">
+<li><code>SERVICE_BOOT_START</code>， 内核初始化时，与系统核心相关的重要驱动程序</li>
+<li><code>SERVICE_SYSTEM_START</code></li>
+<li><code>SERVICE_AUTO_START</code>，登陆界面开始</li>
+<li><code>SERVICE_DEMAND_START</code>，需要时手动加载</li>
+<li><code>SERVICE_DISABLED</code>，禁止加载</li>
+</ol>
+<h5 id="windows会话管理启动">Windows会话管理启动</h5>
+<p><code>smss.exe</code> 是Windows中第一个创建的用户模式进程，主要用于</p>
+<ul>
+<li>创建系统环境变量</li>
+<li>加载 <code>win32k.sys</code>，Windows子系统的内核模式部分</li>
+<li>启动 <code>csrss.exe</code>，Windows子系统的用户模式部分</li>
+<li>启动 <code>winlogon.exe</code></li>
+<li>创建虚拟内存页面文件</li>
+<li>执行重启前未完成的重命名工作</li>
+</ul>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/reverse/">Reverse</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/buuoj-re-4-pycdc-bugs/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BUUOJ RE (4) &amp;&amp; pycdc bugs</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/buuoj-re-3/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BUUOJ RE (3)</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/2021dfjk-re/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">dfjk 2021 RE</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/ciscn-n-2021-re-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CISCN-N 2021 RE Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/buuoj-re-2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BUUOJ RE (2)</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2021 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#基础知识">基础知识</a>
+      <ul>
+        <li><a href="#分析的一般途径和策略">分析的一般途径和策略</a></li>
+        <li><a href="#文本字符">文本字符</a></li>
+        <li><a href="#windows">Windows</a></li>
+      </ul>
+    </li>
+    <li><a href="#动态分析技术">动态分析技术</a></li>
+    <li><a href="#逆向分析技术">逆向分析技术</a>
+      <ul>
+        <li><a href="#win32">Win32</a></li>
+        <li><a href="#64位">64位</a></li>
+      </ul>
+    </li>
+    <li><a href="#软件保护技术">软件保护技术</a>
+      <ul>
+        <li><a href="#序列号">序列号</a></li>
+        <li><a href="#警告窗口">警告窗口</a></li>
+        <li><a href="#时间限制">时间限制</a></li>
+        <li><a href="#菜单功能限制">菜单功能限制</a></li>
+        <li><a href="#keyfile保护">KeyFile保护</a></li>
+        <li><a href="#网络验证">网络验证</a></li>
+      </ul>
+    </li>
+    <li><a href="#加密算法">加密算法</a></li>
+    <li><a href="#windows内核基础">Windows内核基础</a>
+      <ul>
+        <li><a href="#内核理论基础">内核理论基础</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

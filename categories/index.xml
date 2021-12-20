@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on s0uthwood&#39;s Blog</title>
+    <link>/categories/</link>
+    <description>Recent content in Categories on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 13 Dec 2021 19:37:54 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CTF</title>
+      <link>/categories/ctf/</link>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+      
+      <guid>/categories/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reverse</title>
+      <link>/categories/reverse/</link>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+      
+      <guid>/categories/reverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Crypto</title>
+      <link>/categories/crypto/</link>
+      <pubDate>Thu, 20 May 2021 01:51:42 +0000</pubDate>
+      
+      <guid>/categories/crypto/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>fabric</title>
+      <link>/categories/fabric/</link>
+      <pubDate>Fri, 18 Dec 2020 13:40:28 +0000</pubDate>
+      
+      <guid>/categories/fabric/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AITMC</title>
+      <link>/categories/aitmc/</link>
+      <pubDate>Wed, 09 Dec 2020 23:27:25 +0000</pubDate>
+      
+      <guid>/categories/aitmc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>school</title>
+      <link>/categories/school/</link>
+      <pubDate>Tue, 17 Nov 2020 23:16:05 +0000</pubDate>
+      
+      <guid>/categories/school/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Latex</title>
+      <link>/categories/latex/</link>
+      <pubDate>Sun, 15 Nov 2020 23:45:58 +0000</pubDate>
+      
+      <guid>/categories/latex/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

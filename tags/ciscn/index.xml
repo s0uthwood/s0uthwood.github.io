@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CISCN on s0uthwood&#39;s Blog</title>
+    <link>/tags/ciscn/</link>
+    <description>Recent content in CISCN on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 22 Jun 2021 23:25:43 +0000</lastBuildDate><atom:link href="/tags/ciscn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CISCN-N 2021 RE Writeup</title>
+      <link>/post/ciscn-n-2021-re-writeup/</link>
+      <pubDate>Tue, 22 Jun 2021 23:25:43 +0000</pubDate>
+      
+      <guid>/post/ciscn-n-2021-re-writeup/</guid>
+      <description>imnotavirus 解exe，解密pyc
+利用解密后的pyc，找到注入的shellcode，用ida解smc，最后解密
+比赛的时候还被迫阅读了一下pyinstaller的源码，收获很大
+解exe 看到附件给了个pyinstaller，猜测是python逆向
+先ida看一眼，有upx壳，自动脱壳，再用exeinfo确认了一下是python逆向，pyinstxtractor.py解包（之前V&amp;amp;N2021就吃了这个亏）
+解pyc 解包时提示被加密了
+取struct头作为标准头，用pycdc还原出main.py，发现调用了sign
+去PYZ00文件夹看一下，发现被加密了，看一下目录，发现pyimod和比一般情况多了一些东西，把这些都解开看一下，有一个key文件
+同时发现archive中有一个Cipher类，但是pycdc缺少指令，无法全部还原，考虑看一下pycdas解出来的字节码
+字节码中有个对pyinstaller源码的引用，直接去文件夹里面看，发现能解密出来的部分完全一致
+照着源码中的方法解密sign
+from key import key import tinyaes print (key) f = open(&amp;#39;./PYZ-00.pyz_extracted/sign.pyc.encrypted&amp;#39;, &amp;#39;rb&amp;#39;) data = f.read() cipher = tinyaes.AES(key.encode(), data[:16]) output = cipher.CTR_xcrypt_buffer(data[16:]) f.close() import zlib output = zlib.decompress(output) f = open(&amp;#39;./sign.pyc&amp;#39;, &amp;#39;wb&amp;#39;) f.write(output) 解密 解出sign后看到有三个base64，其中两个是执行的语句，此外大部分语句涉及到了内存
+另外一个base解出来是乱码，用字节码辅助恢复函数（其实特征已经很明显了），发现进行了rc4加密，直接打印出解密结果，将结果写入文件，用ida查看
+发现smc
+mov eax, 41178Bh mov ecx, 411802h sub ecx, eax loc_2A: mov ebx, [rax] xor ebx, 77h mov [rax], ebx loop loc_2A 解出来后尝试恢复了一下函数，结果很丑&amp;hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</description>
+    </item>
+    
+    <item>
+      <title>CISCN2021 RE writeup</title>
+      <link>/post/ciscn2021-re-writeup/</link>
+      <pubDate>Thu, 20 May 2021 01:21:59 +0000</pubDate>
+      
+      <guid>/post/ciscn2021-re-writeup/</guid>
+      <description>glass 安卓逆向，使用jeb打开，发现在java层仅进行了简单的输入，然后进入so层判断
+用ida打开so层，直接搜索java，进入判断函数
+下面的字符串应该是密钥
+qmemcpy(v6, &amp;#34;12345678&amp;#34;, sizeof(v6)); 然后调用了三个函数
+sub_FFC(v7, v6, v4); sub_1088(v7, flag, 39); sub_10D4(flag, 39, v6, v4); 进入查看，第一个是RC4密钥初始化，第二个是RC4加密，第三个是对密文进行简单的运算
+从字符串里拿密文，写脚本进行求解，先对简单运算进行反向运算，然后找个RC4密码的脚本，跑一下就可以找到flag
+cipher = [0xA3, 0x1A, 0xE3, 0x69, 0x2F, 0xBB, 0x1A, 0x84, 0x65, 0xC2, 0xAD, 0xAD, 0x9E, 0x96, 5, 2, 0x1F, 0x8E, 0x36, 0x4F, 0xE1, 0xEB, 0xAF, 0xF0, 0xEA, 0xC4, 0xA8, 0x2D, 0x42, 0xC7, 0x6E, 0x3F, 0xB0, 0xD3, 0xCC, 0x78, 0xF9, 0x98, 0x3F, 0] key = [0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38] def __rc4_init(key): keylength = len(key) S = list(range(256)) j = 0 for i in range(256): j = (j + S[i] + key[i % keylength]) % 256 S[i], S[j] = S[j], S[i] return S def rc4_crypt(key, data): S = __rc4_init(key) i = j = 0 result = b&amp;#39;&amp;#39; for a in data: i = (i + 1) % 256 j = (j + S[i]) % 256 S[i], S[j] = S[j], S[i] k = (a ^ S[(S[i] + S[j]) % 256]).</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>go on s0uthwood&#39;s Blog</title>
+    <link>/tags/go/</link>
+    <description>Recent content in go on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 18 Dec 2020 13:40:28 +0000</lastBuildDate><atom:link href="/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fabric-SystemChaincode</title>
+      <link>/post/fabric-systemchaincode/</link>
+      <pubDate>Fri, 18 Dec 2020 13:40:28 +0000</pubDate>
+      
+      <guid>/post/fabric-systemchaincode/</guid>
+      <description>系统链码 系统链码结构图
+与普通链码对比     系统链码 普通链码     链码源码 无main函数 有main函数   运行空间 背书节点进程 Docker   调用方式 网络+进程内部 网络   启动参数 内置 动态输入   通信方式 Golang的通道机制 网络   数据存取 Golang的通道+本地文件 网络   升级方式 和背书节点一起升级 单独升级   背书策略 无 有    系统链码在Peer节点上的注册与部署 peer节点存在于docker容器中，在启动时通过执行peer node start命令来启动peer节点。
+ /internal/peer/node/start.go
+ start命令的入口函数为serve函数。
+以下源代码中仅保留部署系统链码的部分。
+func serve(args []string) error { // Initialize chaincode service  // deploy system chaincodes 	for _, cc := range []scc.</description>
+    </item>
+    
+  </channel>
+</rss>

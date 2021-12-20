@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='开始学angr
+就是在抄solution
+'><title>angr ctf writeup</title>
+
+<link rel='canonical' href='/post/angr-ctf-writeup/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='angr ctf writeup'>
+<meta property='og:description' content='开始学angr
+就是在抄solution
+'>
+<meta property='og:url' content='/post/angr-ctf-writeup/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='angr' /><meta property='article:published_time' content='2021-09-27T21:03:03&#43;00:00'/><meta property='article:modified_time' content='2021-09-27T21:03:03&#43;00:00'/>
+<meta name="twitter:title" content="angr ctf writeup">
+<meta name="twitter:description" content="开始学angr
+就是在抄solution
+">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/ctf/" >
+                CTF
+            </a>
+        
+            <a href="/categories/reverse/" >
+                Reverse
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/angr-ctf-writeup/">angr ctf writeup</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Sep 27, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    10 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>开始学angr</p>
+<p><del>就是在抄solution</del></p>
+<h2 id="find">find</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./00_angr_find&#39;</span>, load_options<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;auto_load_libs&#39;</span>: <span style="color:#66d9ef">False</span>}, main_opts<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;base_addr&#39;</span>:<span style="color:#ae81ff">0x8048000</span>})
+state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state()
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(state)
+find_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048675</span>
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> find_addr)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    simulations <span style="color:#f92672">=</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]
+    print (simulations<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">0</span>))
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#39;no result&#39;</span>)
+</code></pre></div><p>先用 <code>Project</code> 导入二进制文件</p>
+<p>然后 <code>state</code> 为开始模拟时的状态，<code>entry_state</code> 为从入口点开始模拟</p>
+<p><code>simgr</code> 是为 <code>simulation_manager</code> 导入这个状态，进行模拟执行</p>
+<p><code>explore</code> 为模拟器设定了一个执行的目标，遇到avoid将停止执行，遇到find则会添加到found状态中，这里填写的是输出 <code>Success</code> 字符串的地址</p>
+<p>最后从found中dumps出标准输入的值，就可以拿到flag</p>
+<h2 id="avoid">avoid</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+base_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048000</span>
+find_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80485E0</span>
+avoid_addr <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0x80485A8</span>, <span style="color:#ae81ff">0x80485F2</span>]
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./01_angr_avoid&#39;</span>, main_opts<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;base_addr&#39;</span>: base_addr})
+
+state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state()
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(state)
+
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> find_addr, avoid <span style="color:#f92672">=</span> avoid_addr)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    simulation <span style="color:#f92672">=</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]
+    print (simulation<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">0</span>))
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#34;no result&#34;</span>)
+</code></pre></div><p>没什么区别，就是增加了一个avoid参数</p>
+<h2 id="find-condition">find condition</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./02_angr_find_condition&#39;</span>, main_opts<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;base_addr&#39;</span>: <span style="color:#ae81ff">0x8048000</span>})
+state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state()
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(state)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_condition</span>(cur_state):
+    output <span style="color:#f92672">=</span> cur_state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Good Job.&#39;</span> <span style="color:#f92672">in</span> output
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">avoid_condition</span>(cur_state):
+    output <span style="color:#f92672">=</span> cur_state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Try again.&#39;</span> <span style="color:#f92672">in</span> output
+
+simgr<span style="color:#f92672">.</span>explore(find<span style="color:#f92672">=</span>find_condition, avoid<span style="color:#f92672">=</span>avoid_condition)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    print (simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">0</span>))
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#34;no result&#34;</span>)
+</code></pre></div><p><code>explore</code> 中，可以将find和avoid的参数设置为函数，当各种输出太多的时候，这种方法比较省事，而且可拓展性很强</p>
+<p><code>dumps(1)</code> 则是从状态中获取标准输出</p>
+<h2 id="symbolic-registers">symbolic registers</h2>
+<p>symbolic的几个实验就是往初始状态里注入符号了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./03_angr_symbolic_registers&#39;</span>, main_opts<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;base_addr&#39;</span>:<span style="color:#ae81ff">0x8048000</span>})
+after_input_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048980</span>
+state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>blank_state(addr <span style="color:#f92672">=</span> after_input_addr)
+
+user_input <span style="color:#f92672">=</span> [claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input_</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> i, <span style="color:#ae81ff">32</span>) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">3</span>)]
+
+state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>eax <span style="color:#f92672">=</span> user_input[<span style="color:#ae81ff">0</span>]
+state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>ebx <span style="color:#f92672">=</span> user_input[<span style="color:#ae81ff">1</span>]
+state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>edx <span style="color:#f92672">=</span> user_input[<span style="color:#ae81ff">2</span>]
+
+find_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80489E9</span>
+avoid_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80489D7</span>
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(state)
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> find_addr, avoid <span style="color:#f92672">=</span> avoid_addr)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    <span style="color:#66d9ef">for</span> a <span style="color:#f92672">in</span> user_input:
+        print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%x</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>se<span style="color:#f92672">.</span>eval(a), end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39; &#39;</span>)
+    print ()
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#34;no result&#34;</span>)
+</code></pre></div><p><code>claripy</code> 是 <code>angr</code> 中的约束求解器，<code>z3</code> 好像就是fork出来的</p>
+<p>主要使用 <code>state.regs.eax</code> 之类的将符号注入到寄存器中</p>
+<p>这里用寄存器是因为输入被存储到了寄存器中</p>
+<p><code>main</code> 函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">.text:<span style="color:#960050;background-color:#1e0010">0804897</span><span style="color:#a6e22e">B</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">get_user_input</span>
+.text:<span style="color:#960050;background-color:#1e0010">08048980</span>                 <span style="color:#a6e22e">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_14</span>], <span style="color:#66d9ef">eax</span>    <span style="color:#75715e">; state starts here
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">08048983</span>                 <span style="color:#66d9ef">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_10</span>], <span style="color:#66d9ef">ebx</span>
+.text:<span style="color:#960050;background-color:#1e0010">08048986</span>                 <span style="color:#a6e22e">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_C</span>], <span style="color:#66d9ef">edx</span>
+</code></pre></div><p><code>get_user_input</code> 内部实现</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">.text:<span style="color:#960050;background-color:#1e0010">0804892</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">___isoc99_scanf</span>
+.text:<span style="color:#960050;background-color:#1e0010">08048934</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">10</span><span style="color:#66d9ef">h</span>
+.text:<span style="color:#960050;background-color:#1e0010">08048937</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ecx</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_18</span>]
+.text:<span style="color:#960050;background-color:#1e0010">0804893</span><span style="color:#a6e22e">A</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">eax</span>, <span style="color:#66d9ef">ecx</span>
+.text:<span style="color:#960050;background-color:#1e0010">0804893</span><span style="color:#a6e22e">C</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">ecx</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_14</span>]
+.text:<span style="color:#960050;background-color:#1e0010">0804893</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">mov</span>     <span style="color:#66d9ef">ebx</span>, <span style="color:#66d9ef">ecx</span>
+.text:<span style="color:#960050;background-color:#1e0010">08048941</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">ecx</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_10</span>]
+.text:<span style="color:#960050;background-color:#1e0010">08048944</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">edx</span>, <span style="color:#66d9ef">ecx</span>
+</code></pre></div><blockquote>
+<p>写这题的时候，不小心把 <code>blank_state</code> 打成了 <code>entry_state</code>，但还是可以得到正确结果，不知道为啥</p>
+</blockquote>
+<h2 id="symbolic-stack">symbolic stack</h2>
+<p>这题的输入直接存到了 <code>stack</code> 中，因此需要把符号注入到 <code>stack</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">.text:<span style="color:#960050;background-color:#1e0010">08048682</span>                 <span style="color:#a6e22e">lea</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_10</span>]     <span style="color:#75715e">; 2nd input stores here
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">08048685</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">eax</span>
+.text:<span style="color:#960050;background-color:#1e0010">08048686</span>                 <span style="color:#a6e22e">lea</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_C</span>]      <span style="color:#75715e">; 1st input stores here
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">08048689</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">eax</span>
+.text:<span style="color:#960050;background-color:#1e0010">0804868</span><span style="color:#a6e22e">A</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">aUU</span>      <span style="color:#75715e">; &#34;%u %u&#34;
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">0804868</span><span style="color:#66d9ef">F</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">___isoc99_scanf</span>
+.text:<span style="color:#960050;background-color:#1e0010">08048694</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">10</span><span style="color:#66d9ef">h</span>
+.text:<span style="color:#960050;background-color:#1e0010">08048697</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_C</span>]      <span style="color:#75715e">; state starts here
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">0804869</span><span style="color:#66d9ef">A</span>                 <span style="color:#66d9ef">sub</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">Ch</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./04_angr_symbolic_stack&#39;</span>, main_opts<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;base_addr&#39;</span>:<span style="color:#ae81ff">0x8048000</span>})
+after_input_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048697</span>
+state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state(addr<span style="color:#f92672">=</span>after_input_addr)
+
+user_input <span style="color:#f92672">=</span> [claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;input_</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> i, <span style="color:#ae81ff">32</span>) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">2</span>)]
+
+<span style="color:#75715e"># state.regs.ebp = state.regs.esp</span>
+state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>esp <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>ebp <span style="color:#f92672">-</span> <span style="color:#ae81ff">8</span>
+state<span style="color:#f92672">.</span>stack_push(user_input[<span style="color:#ae81ff">0</span>])
+state<span style="color:#f92672">.</span>stack_push(user_input[<span style="color:#ae81ff">1</span>])
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(state)
+
+find_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80486E4</span>
+avoid_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80486D2</span>
+
+simgr<span style="color:#f92672">.</span>explore(find<span style="color:#f92672">=</span>find_addr, avoid<span style="color:#f92672">=</span>avoid_addr)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    <span style="color:#66d9ef">for</span> a <span style="color:#f92672">in</span> user_input:
+        print (simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>se<span style="color:#f92672">.</span>eval(a), end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39; &#39;</span>)
+    print ()
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#34;no result&#34;</span>)
+</code></pre></div><p>用的方法是 <code>stack_push</code>，所以需要先把 <code>esp</code> 设置好</p>
+<p>剩下的应该没什么变化</p>
+<h2 id="symbolic-memory">symbolic memory</h2>
+<p>这题是输入存到了 <code>.bss</code> 段中</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm">.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">E0</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">unk_A1BA1D8</span>
+.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">E5</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">unk_A1BA1D0</span>
+.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">EA</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">unk_A1BA1C8</span>
+.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">EF</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">user_input</span>
+.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">F4</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">a8s8s8s8s</span> <span style="color:#75715e">; &#34;%8s %8s %8s %8s&#34;
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">080485</span><span style="color:#66d9ef">F9</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">___isoc99_scanf</span>
+.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">FE</span>                 <span style="color:#66d9ef">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">20</span><span style="color:#66d9ef">h</span>
+.text:<span style="color:#960050;background-color:#1e0010">08048601</span>                 <span style="color:#a6e22e">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_C</span>], <span style="color:#ae81ff">0</span>       <span style="color:#75715e">; state starts here
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">08048608</span>                 <span style="color:#66d9ef">jmp</span>     <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_8048637</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./05_angr_symbolic_memory&#39;</span>, main_opts<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#34;base_addr&#34;</span>:<span style="color:#ae81ff">0x8048000</span>})
+
+start_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048601</span>
+state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>blank_state(addr <span style="color:#f92672">=</span> start_addr)
+
+user_input <span style="color:#f92672">=</span> [claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;input_</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> i, <span style="color:#ae81ff">8</span>) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">32</span>)]
+
+<span style="color:#66d9ef">for</span> u <span style="color:#f92672">in</span> user_input:
+    state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>add(u <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0x20</span>)
+    state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>add(u <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0x7f</span>)
+
+mem_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xA1BA1C0</span>
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">32</span>):
+    state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(mem_addr <span style="color:#f92672">+</span> i, user_input[i])
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(state)
+
+find_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048672</span>
+avoid_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804865B</span>
+
+simgr<span style="color:#f92672">.</span>explore(find<span style="color:#f92672">=</span>find_addr, avoid<span style="color:#f92672">=</span>avoid_addr)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">32</span>):
+        <span style="color:#66d9ef">if</span> i <span style="color:#f92672">%</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> i <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+            print (<span style="color:#e6db74">&#39; &#39;</span>, end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>)
+        print (chr(simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>se<span style="color:#f92672">.</span>eval(user_input[i])), end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>)
+    print ()
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#34;no result&#34;</span>)
+</code></pre></div><p>用的是 <code>memory.store(store_addr, store_symbolic)</code> 方法</p>
+<h2 id="symbolic-dynamic-memory">symbolic dynamic memory</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  buffer0 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)malloc(<span style="color:#ae81ff">9u</span>);
+  buffer1 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)malloc(<span style="color:#ae81ff">9u</span>);
+  memset(buffer0, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">9u</span>);
+  memset(buffer1, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">9u</span>);
+  printf(<span style="color:#e6db74">&#34;Enter the password: &#34;</span>);
+  __isoc99_scanf(<span style="color:#e6db74">&#34;%8s %8s&#34;</span>, buffer0, buffer1, v6);
+</code></pre></div><p>这题的输入存储到了 <code>malloc</code> 中，这个地址动态的，如果仅仅使用 <code>memory.store()</code> 无法确定存储的地址</p>
+<p>因此先将 <code>buffer</code> 的地址修改为一个自定义的虚假地址（因为 <code>buffer</code> 在 <code>.bss</code> 段上，地址是固定的），然后往这个地址中写入数据，后续程序的模拟执行会使用这个虚假地址</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./06_angr_symbolic_dynamic_memory&#39;</span>, main_opts<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;base_addr&#39;</span>:<span style="color:#ae81ff">0x8048000</span>})
+
+state_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048699</span>
+state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>blank_state(addr <span style="color:#f92672">=</span> state_addr)
+
+buffer0_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xABCC8A4</span>
+buffer1_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xABCC8AC</span>
+
+fake_heap_addr0 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xDEADBE00</span>
+fake_heap_addr1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xDEADBF00</span>
+
+state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(buffer0_addr, fake_heap_addr0, endness<span style="color:#f92672">=</span>proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(buffer1_addr, fake_heap_addr1, endness<span style="color:#f92672">=</span>proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+
+user_input <span style="color:#f92672">=</span> [claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;input_</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> i, <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">2</span>)]
+state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(fake_heap_addr0, user_input[<span style="color:#ae81ff">0</span>])
+state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(fake_heap_addr1, user_input[<span style="color:#ae81ff">1</span>])
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(state)
+
+find_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048759</span>
+avoid_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048747</span>
+
+simgr<span style="color:#f92672">.</span>explore(find<span style="color:#f92672">=</span>find_addr, avoid<span style="color:#f92672">=</span>avoid_addr)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    print (simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>se<span style="color:#f92672">.</span>eval(user_input[<span style="color:#ae81ff">0</span>], cast_to<span style="color:#f92672">=</span>bytes)<span style="color:#f92672">.</span>decode(), simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>se<span style="color:#f92672">.</span>eval(user_input[<span style="color:#ae81ff">1</span>], cast_to<span style="color:#f92672">=</span>bytes)<span style="color:#f92672">.</span>decode())
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#34;no result&#34;</span>)
+</code></pre></div><h2 id="symbolic-file">symbolic file</h2>
+<p>这题没有用预期做法来做</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  fp <span style="color:#f92672">=</span> fopen(<span style="color:#e6db74">&#34;OJKSQYDP.txt&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>);
+  fread(buffer, <span style="color:#ae81ff">1u</span>, <span style="color:#ae81ff">0x40u</span>, fp);
+  fclose(fp);
+  unlink(<span style="color:#e6db74">&#34;OJKSQYDP.txt&#34;</span>);
+</code></pre></div><p>既然这里有个从文件读取，那么可以直接把初始状态设置到文件读取后面，那么这道题就和之前做过的 <code>symbolic memory</code> 一样了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./07_angr_symbolic_file&#39;</span>, main_opts<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;base_addr&#39;</span>:<span style="color:#ae81ff">0x8048000</span>})
+
+init_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804893C</span>
+state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>blank_state(addr<span style="color:#f92672">=</span>init_addr)
+
+user_input <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input&#39;</span>, <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>)
+mem_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804A0A0</span>
+state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(mem_addr, user_input)
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(state)
+
+find_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80489B0</span>
+avoid_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048996</span>
+
+simgr<span style="color:#f92672">.</span>explore(find<span style="color:#f92672">=</span>find_addr, avoid<span style="color:#f92672">=</span>avoid_addr)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    print (simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>se<span style="color:#f92672">.</span>eval(user_input))
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#39;no result&#39;</span>)
+</code></pre></div><h2 id="constraints">constraints</h2>
+<p>这题的解法是对运算结果手动做约束，不知道为什么用之前的方法做不出来</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./08_angr_constraints&#39;</span>, load_options<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;auto_load_libs&#39;</span>:<span style="color:#66d9ef">False</span>}, main_opts<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;base_addr&#39;</span>:<span style="color:#ae81ff">0x8048000</span>})
+
+start_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048625</span>
+start_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>blank_state(addr <span style="color:#f92672">=</span> start_addr)
+
+flag <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;flag&#39;</span>, <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">16</span>)
+buffer_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804A050</span>
+
+start_state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(buffer_addr, flag)
+
+end_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804866E</span>
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(start_state)
+
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> end_addr)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    end_state <span style="color:#f92672">=</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]
+    calc_res <span style="color:#f92672">=</span> end_state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(buffer_addr, <span style="color:#ae81ff">16</span>)
+    cipher <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;AUPDNNPROEZRJWKB&#34;</span>
+    end_state<span style="color:#f92672">.</span>add_constraints(calc_res <span style="color:#f92672">==</span> cipher)
+    print (end_state<span style="color:#f92672">.</span>se<span style="color:#f92672">.</span>eval(flag, cast_to<span style="color:#f92672">=</span>bytes))
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#39;fail&#39;</span>)
+</code></pre></div><p>仅模拟了for循环（加密部分），运行结束后直接使用 <code>add_constraints</code> 手动添加约束条件</p>
+<h2 id="hook">hook</h2>
+<p>又来了次非预期</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  printf(<span style="color:#e6db74">&#34;Enter the password: &#34;</span>);
+  __isoc99_scanf(<span style="color:#e6db74">&#34;%16s&#34;</span>, buffer);
+  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">15</span>; <span style="color:#f92672">++</span>i )
+    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(i <span style="color:#f92672">+</span> <span style="color:#ae81ff">134520916</span>) <span style="color:#f92672">=</span> complex_function(<span style="color:#f92672">*</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)(i <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x804A054</span>), <span style="color:#ae81ff">18</span> <span style="color:#f92672">-</span> i);
+  equals <span style="color:#f92672">=</span> check_equals_XYMKBKUHNIQYNQXE(buffer, <span style="color:#ae81ff">16</span>);
+  <span style="color:#66d9ef">for</span> ( j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">15</span>; <span style="color:#f92672">++</span>j )
+    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(j <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x804A044</span>) <span style="color:#f92672">=</span> complex_function(<span style="color:#f92672">*</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)(j <span style="color:#f92672">+</span> <span style="color:#ae81ff">134520900</span>), j <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span>);
+  __isoc99_scanf(<span style="color:#e6db74">&#34;%16s&#34;</span>, buffer);
+  v3 <span style="color:#f92672">=</span> equals <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>strncmp(buffer, password, <span style="color:#ae81ff">0x10u</span>);
+</code></pre></div><p>显然，这道题可以拆成两部分来做，第一部分使用 <code>constraints</code> 求解第一次输入；第二部分直接获取 password 的运算结果</p>
+<p>于是相当于写了两次 <code>angr</code>（感觉完全可以合并起来，但稳妥起见，后面再试试）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./09_angr_hooks&#39;</span>)
+
+start_state <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048665</span>
+user_input <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input&#39;</span>, <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">16</span>)
+
+init_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>blank_state(addr <span style="color:#f92672">=</span> start_state)
+buffer_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804A054</span>
+init_state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(buffer_addr, user_input)
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(init_state)
+
+end_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80486AC</span>
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> end_addr)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    solution_state <span style="color:#f92672">=</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]
+    result <span style="color:#f92672">=</span> solution_state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(buffer_addr, <span style="color:#ae81ff">16</span>)
+    solution_state<span style="color:#f92672">.</span>add_constraints(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;XYMKBKUHNIQYNQXE&#34;</span> <span style="color:#f92672">==</span> result)
+    print (solution_state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(user_input, cast_to<span style="color:#f92672">=</span>bytes)<span style="color:#f92672">.</span>decode())
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#34;fail&#34;</span>)
+
+second_start <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80486C0</span>
+second_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>blank_state(addr <span style="color:#f92672">=</span> second_start)
+
+second_state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(<span style="color:#ae81ff">0x804A044</span>, <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;XYMKBKUHNIQYNQXE&#34;</span>)
+
+second_simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(second_state)
+
+second_simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048700</span>)
+
+<span style="color:#66d9ef">if</span> second_simgr<span style="color:#f92672">.</span>found:
+    result <span style="color:#f92672">=</span> second_simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(<span style="color:#ae81ff">0x804A044</span>, <span style="color:#ae81ff">16</span>)
+    print (second_simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(result, cast_to<span style="color:#f92672">=</span>bytes)<span style="color:#f92672">.</span>decode())
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#34;no result&#34;</span>)
+</code></pre></div><p>运行结果</p>
+<pre tabindex="0"><code>Enter the password: ZXIDRXEORJOTFFJN
+WUFAOUBLOGLQCCGK
+Good Job.
+</code></pre><p>补上用hook写的，用了两种hook的写法（看到simprocedures那题才发现第二个是下一题的写法）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./09_angr_hooks&#39;</span>)
+
+start_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state()
+
+check_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80486B3</span>
+instraction_len <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>
+
+choose_hook <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+
+<span style="color:#66d9ef">if</span> choose_hook <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+	<span style="color:#a6e22e">@proj</span><span style="color:#f92672">.</span>hook(check_addr, length <span style="color:#f92672">=</span> instraction_len)
+	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">replace_check_equal</span>(state):
+		target <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;XYMKBKUHNIQYNQXE&#39;</span> <span style="color:#75715e"># claripy will convert it to bytes if it is str.</span>
+		input_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804A054</span>
+		cipher <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(input_addr, <span style="color:#ae81ff">0x10</span>)
+		state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>eax <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>If(cipher <span style="color:#f92672">==</span> target, claripy<span style="color:#f92672">.</span>BVV(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">32</span>), claripy<span style="color:#f92672">.</span>BVV(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">32</span>))
+
+<span style="color:#66d9ef">if</span> choose_hook <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
+	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">replace_check_equal</span>(SimProcedure):
+		<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
+			target <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;XYMKBKUHNIQYNQXE&#39;</span>
+			input_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804A054</span>
+			cipher <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(input_addr, <span style="color:#ae81ff">0x10</span>)
+			<span style="color:#66d9ef">return</span> claripy<span style="color:#f92672">.</span>If(cipher <span style="color:#f92672">==</span> target, claripy<span style="color:#f92672">.</span>BVV(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">32</span>), claripy<span style="color:#f92672">.</span>BVV(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">32</span>))
+
+	check_equal_symbol <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;check_equals_XYMKBKUHNIQYNQXE&#39;</span>
+	proj<span style="color:#f92672">.</span>hook_symbol(check_equal_symbol, replace_check_equal())
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(start_state)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_success</span>(state):
+	output <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Good Job.&#39;</span> <span style="color:#f92672">in</span> output
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">should_avoid</span>(state):
+	output <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Try again.&#39;</span> <span style="color:#f92672">in</span> output
+
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> is_success, avoid <span style="color:#f92672">=</span> should_avoid)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+	print (simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">0</span>))
+<span style="color:#66d9ef">else</span>:
+	print (<span style="color:#e6db74">&#39;no solution&#39;</span>)
+</code></pre></div><h2 id="simprocedures">simprocedures</h2>
+<p>同样先用之前的方法写了一遍</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./10_angr_simprocedures&#39;</span>)
+
+start_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80486C3</span>
+init_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>blank_state(addr <span style="color:#f92672">=</span> start_addr)
+
+init_state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>esp <span style="color:#f92672">=</span> init_state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>ebp <span style="color:#f92672">-</span> <span style="color:#ae81ff">0xD</span>
+
+user_input1 <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input1&#39;</span>, <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>)
+user_input2 <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input2&#39;</span>, <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>)
+user_input3 <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input3&#39;</span>, <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>)
+user_input4 <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input4&#39;</span>, <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>)
+init_state<span style="color:#f92672">.</span>stack_push(user_input4)
+init_state<span style="color:#f92672">.</span>stack_push(user_input3)
+init_state<span style="color:#f92672">.</span>stack_push(user_input2)
+init_state<span style="color:#f92672">.</span>stack_push(user_input1)
+
+init_state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>esp <span style="color:#f92672">=</span> init_state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>ebp <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x28</span>
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(init_state)
+
+check_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80499F1</span>
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> check_addr)
+
+ans <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;ORSDDWXHZURJRBDH&#34;</span>
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    solution_state <span style="color:#f92672">=</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]
+    input_addr <span style="color:#f92672">=</span> solution_state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>ebp <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x1D</span>
+    result1 <span style="color:#f92672">=</span> solution_state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(input_addr, <span style="color:#ae81ff">4</span>)
+    result2 <span style="color:#f92672">=</span> solution_state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(input_addr <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>)
+    result3 <span style="color:#f92672">=</span> solution_state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(input_addr <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">4</span>)
+    result4 <span style="color:#f92672">=</span> solution_state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(input_addr <span style="color:#f92672">+</span> <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">4</span>)
+    solution_state<span style="color:#f92672">.</span>add_constraints(ans[:<span style="color:#ae81ff">4</span>] <span style="color:#f92672">==</span> result1)
+    solution_state<span style="color:#f92672">.</span>add_constraints(ans[<span style="color:#ae81ff">4</span>:<span style="color:#ae81ff">8</span>] <span style="color:#f92672">==</span> result2)
+    solution_state<span style="color:#f92672">.</span>add_constraints(ans[<span style="color:#ae81ff">8</span>:<span style="color:#ae81ff">12</span>] <span style="color:#f92672">==</span> result3)
+    solution_state<span style="color:#f92672">.</span>add_constraints(ans[<span style="color:#ae81ff">12</span>:] <span style="color:#f92672">==</span> result4)
+    print (solution_state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(user_input1, cast_to<span style="color:#f92672">=</span>bytes)<span style="color:#f92672">.</span>decode()[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>], end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>)
+    print (solution_state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(user_input2, cast_to<span style="color:#f92672">=</span>bytes)<span style="color:#f92672">.</span>decode()[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>], end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>)
+    print (solution_state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(user_input3, cast_to<span style="color:#f92672">=</span>bytes)<span style="color:#f92672">.</span>decode()[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>], end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>)
+    print (solution_state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(user_input4, cast_to<span style="color:#f92672">=</span>bytes)<span style="color:#f92672">.</span>decode()[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#34;no result&#34;</span>)
+</code></pre></div><p>然后用 <code>hook_symbol</code> 试试</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./10_angr_simprocedures&#39;</span>)
+
+start_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state()
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">replace_check_equals</span>(SimProcedure):
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self, to_check, length):
+        target <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;ORSDDWXHZURJRBDH&#39;</span>
+        result <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(to_check, length)
+        <span style="color:#66d9ef">return</span> claripy<span style="color:#f92672">.</span>If(result <span style="color:#f92672">==</span> target, claripy<span style="color:#f92672">.</span>BVV(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">32</span>), claripy<span style="color:#f92672">.</span>BVV(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">32</span>))
+
+check_equals_sym <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;check_equals_ORSDDWXHZURJRBDH&#39;</span>
+proj<span style="color:#f92672">.</span>hook_symbol(check_equals_sym, replace_check_equals())
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(start_state)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_successful</span>(state):
+    output <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Good Job.&#39;</span> <span style="color:#f92672">in</span> output
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">should_abort</span>(state):
+    output <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Try again.&#39;</span> <span style="color:#f92672">in</span> output
+
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> is_successful, avoid <span style="color:#f92672">=</span> should_abort)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    print (simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">0</span>))
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#39;no result&#39;</span>)
+</code></pre></div><h2 id="sim_scanf">sim_scanf</h2>
+<p><code>simProcedure</code> 其实是 <code>angr</code> 用于缓解路径爆炸的一个策略，将一些有可能导致路径爆炸的库函数进行了重写，然而 <code>angr</code> 提供的重写可能存在不完善的地方，例如 <code>scanf</code> 无法支持多个参数，因此这道题目中，需要自己重写 <code>scanf</code> 的 <code>SimProcedure</code>，实现接收两个参数</p>
+<p>这道题主要学到的就是利用 <code>globals</code> 存储注入的符号</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./11_angr_sim_scanf&#39;</span>)
+
+start_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state()
+
+start_state<span style="color:#f92672">.</span>globals[<span style="color:#e6db74">&#39;inputs&#39;</span>] <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">replace_scanf</span>(SimProcedure):
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self, fmt, input1, input2):
+        user_input1 <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input1&#39;</span>, <span style="color:#ae81ff">32</span>)
+        user_input2 <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input2&#39;</span>, <span style="color:#ae81ff">32</span>)
+        self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(input1, user_input1, endness <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+        self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(input2, user_input2, endness <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+        self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>globals[<span style="color:#e6db74">&#39;inputs&#39;</span>]<span style="color:#f92672">.</span>append((user_input1, user_input2))
+
+scanf_sym <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;__isoc99_scanf&#34;</span>
+proj<span style="color:#f92672">.</span>hook_symbol(scanf_sym, replace_scanf())
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(start_state)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_success</span>(state):
+    output <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Good Job.&#39;</span> <span style="color:#f92672">in</span> output
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">should_avoid</span>(state):
+    output <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Try again.&#39;</span> <span style="color:#f92672">in</span> output
+
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> is_success, avoid <span style="color:#f92672">=</span> should_avoid)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    solution_state <span style="color:#f92672">=</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]
+    <span style="color:#66d9ef">for</span> res <span style="color:#f92672">in</span> solution_state<span style="color:#f92672">.</span>globals[<span style="color:#e6db74">&#39;inputs&#39;</span>]:
+        print (solution_state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(res[<span style="color:#ae81ff">0</span>]), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39; &#39;</span>)
+        print (solution_state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(res[<span style="color:#ae81ff">1</span>]))
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#39;no result&#39;</span>)
+</code></pre></div><h2 id="veritesting">veritesting</h2>
+<p>设置 <code>simulation_manager</code> 时，启用 <code>veritesting</code> 可以缓解一定程度的路径爆炸</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./12_angr_veritesting&#39;</span>)
+
+start_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state()
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(start_state, veritesting<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_success</span>(state):
+    output <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Good&#39;</span> <span style="color:#f92672">in</span> output
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">should_avoid</span>(state):
+    output <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Try&#39;</span> <span style="color:#f92672">in</span> output
+
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> is_success, avoid <span style="color:#f92672">=</span> should_avoid)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    print (simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">0</span>))
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#39;No result&#39;</span>)
+</code></pre></div><p>简单学习了一下 <code>veritesting</code> 的原理，在本题目的验证环节，代码为</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">32</span>; <span style="color:#f92672">++</span>i) {
+    <span style="color:#66d9ef">if</span> (buffer[i] <span style="color:#f92672">==</span> complex_function(<span style="color:#960050;background-color:#1e0010">$</span>{ write(<span style="color:#e6db74">&#39;\&#39;&#39;</span> <span style="color:#f92672">+</span> letter0 <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;\&#39;&#39;</span> ) }<span style="color:#960050;background-color:#1e0010">$</span>, i <span style="color:#f92672">+</span> <span style="color:#960050;background-color:#1e0010">$</span>{ write(integer) }<span style="color:#960050;background-color:#1e0010">$</span>) ) {
+      counter0<span style="color:#f92672">++</span>;
+    }
+  }
+</code></pre></div><p>如果单纯以分支图来话，总共引入了 $2^{32}$ 种可能，然而事实上只有满足和不满足两种情况</p>
+<p>开启 <code>veritesting</code> 后，angr会在遇到基础代码（无系统调用，间接跳转等语句）时，从动态符号执行（为每一条路径生成一个表达式）切换到静态符号执行（将程序转换为表达式）。因此，在执行这个循环时，先动态恢复控制流图，找到静态符号执行容易分析和难以分析的语句，并推断出易分析节点到难分析节点的影响，最后切换回动态分析来处理不易处理的情况。</p>
+<h2 id="static-binary">static binary</h2>
+<p>在 <code>sim_scanf</code> 中说到，angr 将部分库函数替换为自己实现的 <code>SimProcedures</code> 来避免路径爆炸，但当遇到静态编译的二进制文件时，由于没有调用库函数，这些静态的函数就有可能造成路径爆炸，需要我们手动替换为 <code>SimProcedures</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./13_angr_static_binary&#39;</span>)
+
+start_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state()
+
+proj<span style="color:#f92672">.</span>hook(<span style="color:#ae81ff">0x804ED40</span>, SIM_PROCEDURES[<span style="color:#e6db74">&#39;libc&#39;</span>][<span style="color:#e6db74">&#39;printf&#39;</span>]())
+proj<span style="color:#f92672">.</span>hook(<span style="color:#ae81ff">0x804ED80</span>, SIM_PROCEDURES[<span style="color:#e6db74">&#39;libc&#39;</span>][<span style="color:#e6db74">&#39;scanf&#39;</span>]())
+proj<span style="color:#f92672">.</span>hook(<span style="color:#ae81ff">0x804F350</span>, SIM_PROCEDURES[<span style="color:#e6db74">&#39;libc&#39;</span>][<span style="color:#e6db74">&#39;puts&#39;</span>]())
+proj<span style="color:#f92672">.</span>hook(<span style="color:#ae81ff">0x8048D10</span>, SIM_PROCEDURES[<span style="color:#e6db74">&#39;glibc&#39;</span>][<span style="color:#e6db74">&#39;__libc_start_main&#39;</span>]())
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(start_state, veritesting <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_success</span>(state):
+	output <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Good Job.&#39;</span> <span style="color:#f92672">in</span> output
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">should_avoid</span>(state):
+	output <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">1</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;Try again.&#39;</span> <span style="color:#f92672">in</span> output
+
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> is_success, avoid <span style="color:#f92672">=</span> should_avoid)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+	solution <span style="color:#f92672">=</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]
+	print (solution<span style="color:#f92672">.</span>posix<span style="color:#f92672">.</span>dumps(<span style="color:#ae81ff">0</span>))
+<span style="color:#66d9ef">else</span>:
+	print (<span style="color:#e6db74">&#39;No result&#39;</span>)
+</code></pre></div><h2 id="shared-library">shared library</h2>
+<p>这道题目将加密部分放到了 <code>so</code> 文件中，因此需要执行 <code>so</code> 文件</p>
+<p>在执行时遇到的问题有</p>
+<ul>
+<li>基地址不确定：使用 <code>base_addr</code> 来控制程序的基地址</li>
+<li>符号注入的地址未知：使用 <code>call_state</code> 来控制函数调用时的参数</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+base_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x400000</span>
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./lib14_angr_shared_library.so&#39;</span>, main_opts<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;base_addr&#39;</span>:base_addr})
+
+store_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x300000</span>
+
+init_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>call_state(base_addr <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x6d7</span>, store_addr, claripy<span style="color:#f92672">.</span>BVV(<span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">32</span>))
+
+user_input <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input&#39;</span>, <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>)
+init_state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(store_addr, user_input, endness <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+
+find_addr <span style="color:#f92672">=</span> base_addr <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x775</span>
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(init_state)
+
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> find_addr)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+	solution <span style="color:#f92672">=</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]
+	solution<span style="color:#f92672">.</span>add_constraints(solution<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>eax <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>)
+	print (solution<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(user_input, cast_to<span style="color:#f92672">=</span>bytes))
+<span style="color:#66d9ef">else</span>:
+	print (<span style="color:#e6db74">&#39;no result&#39;</span>)
+</code></pre></div><h2 id="arbitrary-read">arbitrary read</h2>
+<p>这道题有些复杂，由于需要让输入的部分溢出，控制 puts 的输出参数</p>
+<p>同样需要替换 <code>scanf</code>，同时，这道题目为了减小输入的可能性，需要手动添加一下对输入的约束，要求在可见字符范围内</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./15_angr_arbitrary_read&#39;</span>)
+
+init_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state()
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">replace_scanf</span>(SimProcedure):
+	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self, fmt, key_addr, stack_addr):
+		user_input1 <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input1&#39;</span>, <span style="color:#ae81ff">32</span>)
+		user_input2 <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input2&#39;</span>, <span style="color:#ae81ff">20</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>)
+
+		<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> user_input2<span style="color:#f92672">.</span>chop(bits <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>):
+			self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>add_constraints(i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x20</span>)
+			self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>add_constraints(i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x80</span>)
+
+		self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(key_addr, user_input1, endness <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+		self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(stack_addr, user_input2)
+		self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>globals[<span style="color:#e6db74">&#39;solutions&#39;</span>] <span style="color:#f92672">=</span> (user_input1, user_input2)
+
+proj<span style="color:#f92672">.</span>hook_symbol(<span style="color:#e6db74">&#39;__isoc99_scanf&#39;</span>, replace_scanf())
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(init_state)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check_puts</span>(state):
+	output_addr <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>esp <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>, endness <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+	<span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>symbolic(output_addr):
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+	FLAG <span style="color:#f92672">=</span> output_addr <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x484F4A47</span>
+	copy_state <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>copy()
+	copy_state<span style="color:#f92672">.</span>add_constraints(FLAG)
+	<span style="color:#66d9ef">if</span> copy_state<span style="color:#f92672">.</span>satisfiable():
+		state<span style="color:#f92672">.</span>add_constraints(FLAG)
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_success</span>(state):
+	puts_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x8048370</span>
+	<span style="color:#66d9ef">if</span> state<span style="color:#f92672">.</span>addr <span style="color:#f92672">==</span> puts_addr:
+		<span style="color:#66d9ef">return</span> check_puts(state)
+	<span style="color:#66d9ef">else</span>:
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> is_success)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+	solution <span style="color:#f92672">=</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]
+	user_input1, user_input2 <span style="color:#f92672">=</span> solution<span style="color:#f92672">.</span>globals[<span style="color:#e6db74">&#39;solutions&#39;</span>]
+	print (solution<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(user_input1), solution<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(user_input2, cast_to<span style="color:#f92672">=</span>bytes)<span style="color:#f92672">.</span>decode())
+<span style="color:#66d9ef">else</span>:
+	print (<span style="color:#e6db74">&#34;No result&#34;</span>)
+</code></pre></div><p>不是很理解的地方是，为什么要先添加判断这个 <code>constraints</code> 是否满足，然后再添加到 <code>state</code> 中</p>
+<h2 id="arbitrary-write">arbitrary write</h2>
+<p>思路和上一题比较接近，这次使用了 <code>strncpy</code> 函数的参数作为检查</p>
+<p>遇到的一个问题是 <code>BV</code> 数据类型在选择部分数据上的问题</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">import</span> claripy
+
+proj <span style="color:#f92672">=</span> Project(<span style="color:#e6db74">&#39;./16_angr_arbitrary_write&#39;</span>)
+
+start_state <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>entry_state()
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">replace_scanf</span>(SimProcedure):
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self, fmt, key_addr, s_addr):
+        user_input1 <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input1&#39;</span>, <span style="color:#ae81ff">32</span>)
+        user_input2 <span style="color:#f92672">=</span> claripy<span style="color:#f92672">.</span>BVS(<span style="color:#e6db74">&#39;user_input2&#39;</span>, <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">20</span>)
+
+        <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> user_input2<span style="color:#f92672">.</span>chop(bits <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>):
+            self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>add_constraints(c <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x20</span>)
+            self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>add_constraints(c <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x7f</span>)
+        
+        self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(key_addr, user_input1, endness <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+        self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>store(s_addr, user_input2)
+        self<span style="color:#f92672">.</span>state<span style="color:#f92672">.</span>globals[<span style="color:#e6db74">&#39;solutions&#39;</span>] <span style="color:#f92672">=</span> (user_input1, user_input2)
+    
+proj<span style="color:#f92672">.</span>hook_symbol(<span style="color:#e6db74">&#39;__isoc99_scanf&#39;</span>, replace_scanf())
+
+simgr <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>factory<span style="color:#f92672">.</span>simgr(start_state)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check_strncpy</span>(state):
+    dest_addr <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>esp <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">4</span>, endness <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+    src_addr <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>esp <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">4</span>, endness <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+    length <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(state<span style="color:#f92672">.</span>regs<span style="color:#f92672">.</span>esp <span style="color:#f92672">+</span> <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">4</span>, endness <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>arch<span style="color:#f92672">.</span>memory_endness)
+    source <span style="color:#f92672">=</span> state<span style="color:#f92672">.</span>memory<span style="color:#f92672">.</span>load(src_addr, length)
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>symbolic(source) <span style="color:#f92672">or</span> <span style="color:#f92672">not</span> state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>symbolic(dest_addr):
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+    target_string <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;NDYNWEUJ&#39;</span>
+    target_dest <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x57584344</span>
+    <span style="color:#66d9ef">if</span> state<span style="color:#f92672">.</span>satisfiable(extra_constraints <span style="color:#f92672">=</span> (target_dest <span style="color:#f92672">==</span> dest_addr, target_string <span style="color:#f92672">==</span> source[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:<span style="color:#f92672">-</span><span style="color:#ae81ff">64</span>])):
+        state<span style="color:#f92672">.</span>add_constraints(target_dest <span style="color:#f92672">==</span> dest_addr, target_string <span style="color:#f92672">==</span> source[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:<span style="color:#f92672">-</span><span style="color:#ae81ff">64</span>])
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_successful</span>(state):
+    <span style="color:#66d9ef">if</span> state<span style="color:#f92672">.</span>addr <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x8048410</span>:
+        <span style="color:#66d9ef">return</span> check_strncpy(state)
+    <span style="color:#66d9ef">else</span>:
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+
+simgr<span style="color:#f92672">.</span>explore(find <span style="color:#f92672">=</span> is_successful)
+
+<span style="color:#66d9ef">if</span> simgr<span style="color:#f92672">.</span>found:
+    solution_state <span style="color:#f92672">=</span> simgr<span style="color:#f92672">.</span>found[<span style="color:#ae81ff">0</span>]
+    user_input1, user_input2 <span style="color:#f92672">=</span> solution_state<span style="color:#f92672">.</span>globals[<span style="color:#e6db74">&#39;solutions&#39;</span>]
+    print (solution_state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(user_input1), solution_state<span style="color:#f92672">.</span>solver<span style="color:#f92672">.</span>eval(user_input2, cast_to<span style="color:#f92672">=</span>bytes)<span style="color:#f92672">.</span>decode())
+<span style="color:#66d9ef">else</span>:
+    print (<span style="color:#e6db74">&#34;No result&#34;</span>)
+</code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+            <a href="/tags/reverse/">Reverse</a>
+        
+            <a href="/tags/angr/">angr</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/dasctf-2021-09-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DASCTF 2021-09 Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/buuoj-re-4-pycdc-bugs/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BUUOJ RE (4) &amp;&amp; pycdc bugs</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/buuoj-re-3/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BUUOJ RE (3)</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/2021dfjk-re/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">dfjk 2021 RE</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/ciscn-n-2021-re-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CISCN-N 2021 RE Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2021 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#find">find</a></li>
+    <li><a href="#avoid">avoid</a></li>
+    <li><a href="#find-condition">find condition</a></li>
+    <li><a href="#symbolic-registers">symbolic registers</a></li>
+    <li><a href="#symbolic-stack">symbolic stack</a></li>
+    <li><a href="#symbolic-memory">symbolic memory</a></li>
+    <li><a href="#symbolic-dynamic-memory">symbolic dynamic memory</a></li>
+    <li><a href="#symbolic-file">symbolic file</a></li>
+    <li><a href="#constraints">constraints</a></li>
+    <li><a href="#hook">hook</a></li>
+    <li><a href="#simprocedures">simprocedures</a></li>
+    <li><a href="#sim_scanf">sim_scanf</a></li>
+    <li><a href="#veritesting">veritesting</a></li>
+    <li><a href="#static-binary">static binary</a></li>
+    <li><a href="#shared-library">shared library</a></li>
+    <li><a href="#arbitrary-read">arbitrary read</a></li>
+    <li><a href="#arbitrary-write">arbitrary write</a></li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>FlareOn on s0uthwood&#39;s Blog</title>
+    <link>/tags/flareon/</link>
+    <description>Recent content in FlareOn on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 21 Sep 2021 00:39:52 +0000</lastBuildDate><atom:link href="/tags/flareon/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BUUOJ RE (4) &amp;&amp; pycdc bugs</title>
+      <link>/post/buuoj-re-4-pycdc-bugs/</link>
+      <pubDate>Tue, 21 Sep 2021 00:39:52 +0000</pubDate>
+      
+      <guid>/post/buuoj-re-4-pycdc-bugs/</guid>
+      <description>[FlareOn1]5get_it 给的是一个DLL文件（没记错的话），应该是用来钩取键盘输入的，根据不同的输入执行不同的内容，观察到有个函数为 sub_10001240，执行成功就说明通过了
+查找引用
+const char *sub_10009AF0() { if ( dword_100194FC &amp;gt; 0 ) { _cfltcvt_init(); sub_10001240(); } return &amp;#34;m&amp;#34;; } 要求让内存中一个数不为0，根据这个数再向上找
+const char *sub_10009B60() { if ( dword_1001947C &amp;lt;= 0 ) { if ( dword_10019490 &amp;lt;= 0 ) { if ( dword_100194E0 &amp;lt;= 0 ) { if ( dword_100194EC &amp;lt;= 0 ) { if ( dword_100194F8 &amp;lt;= 0 ) { _cfltcvt_init(); } else { dword_100194F8 = 0; dword_100194FC = 1; } } else { dword_100194EC = 0; dword_100194F0 = 1; } } else { dword_100194E0 = 0; dword_100194E4 = 1; } } else { dword_10019490 = 0; dword_10019494 = 1; } } else { dword_1001947C = 0; dword_10019480 = 1; } return &amp;#34;o&amp;#34;; } 看到最里面就是赋值为1，所以最后两位输入就是 om</description>
+    </item>
+    
+    <item>
+      <title>BUUOJ RE (2)</title>
+      <link>/post/buuoj-re-2/</link>
+      <pubDate>Thu, 10 Jun 2021 03:20:33 +0000</pubDate>
+      
+      <guid>/post/buuoj-re-2/</guid>
+      <description>firmware 一道水题，主要学习一下工控逆向
+不难看出，给的附件是squashfs文件，直接进行binwalk
+ 在安装sasquatch时遇到了一些坑，好像必须clone到~/Downloads等文件夹内才行
+ binwalk之后逛一下目录，能够找到一个叫做 backdoor 的二进制文件
+目标是找到连接的ip和端口，进去找一找就能看到
+[FlareOn4]greek_to_me 尝试运行一下，发现不能输入
+逆向，发现127.0.0.1的字样，以及socket等明显的网络通信函数
+直接运行的时候看一下主机端口，发现是 127.0.0.1:2222，用Windows下的nc连上去就可以进行调试了
+SMC还是很明显的
+发现解SMC时仅用了第一个字节，但由于不知道里面有什么，猜测可能是对后面的字节进行验证，所以决定将程序本地复现一下，爆破解SMC的密钥
+#include &amp;lt;stdio.h&amp;gt; unsigned char ida_chars[] = { 0x33, 0xE1, 0xC4, 0x99, 0x11, 0x06, 0x81, 0x16, 0xF0, 0x32, 0x9F, 0xC4, 0x91, 0x17, 0x06, 0x81, 0x14, 0xF0, 0x06, 0x81, 0x15, 0xF1, 0xC4, 0x91, 0x1A, 0x06, 0x81, 0x1B, 0xE2, 0x06, 0x81, 0x18, 0xF2, 0x06, 0x81, 0x19, 0xF1, 0x06, 0x81, 0x1E, 0xF0, 0xC4, 0x99, 0x1F, 0xC4, 0x91, 0x1C, 0x06, 0x81, 0x1D, 0xE6, 0x06, 0x81, 0x62, 0xEF, 0x06, 0x81, 0x63, 0xF2, 0x06, 0x81, 0x60, 0xE3, 0xC4, 0x99, 0x61, 0x06, 0x81, 0x66, 0xBC, 0x06, 0x81, 0x67, 0xE6, 0x06, 0x81, 0x64, 0xE8, 0x06, 0x81, 0x65, 0x9D, 0x06, 0x81, 0x6A, 0xF2, 0xC4, 0x99, 0x6B, 0x06, 0x81, 0x68, 0xA9, 0x06, 0x81, 0x69, 0xEF, 0x06, 0x81, 0x6E, 0xEE, 0x06, 0x81, 0x6F, 0xAE, 0x06, 0x81, 0x6C, 0xE3, 0x06, 0x81, 0x6D, 0xEF, 0x06, 0x81, 0x72, 0xE9, 0x06, 0x81, 0x73, 0x7C }; #define HIBYTE(x) ((x &amp;amp; 0xFF00) &amp;gt;&amp;gt; 8)  int main(){ for (unsigned short buf = 0; buf &amp;lt;= 0xff; buf++){ unsigned char new_char[130]; unsigned char *a1 = new_char; unsigned int i = 0; do { *a1 = (buf ^ ida_chars[i++]) + 34; ++a1; } while ( i &amp;lt; 121 ); unsigned int v2 = 0x79; // 0x79  a1 = new_char; unsigned short v3 = 255; for ( i = 255; v2; v3 = HIBYTE(v3) + (unsigned char)v3 ) { unsigned short v5 = i; int v6 = v2; if ( v2 &amp;gt; 0x14 ) v6 = 0x14; v2 -= v6; do { v5 += *a1; v3 += v5; ++a1; --v6; } while ( v6 ); i = HIBYTE(v5) + (unsigned char)v5; } int ret = (HIBYTE(i) + (unsigned char)i) | ((v3 &amp;lt;&amp;lt; 8) + (v3 &amp;amp; 0xFF00)); // if (buf == &amp;#39;f&amp;#39;)  // printf(&amp;#34;%x\n&amp;#34;, ret); // 0xf51c  // if (buf == &amp;#39;@&amp;#39;)  // printf(&amp;#34;%x\n&amp;#34;, ret); // 0x60ee  if (ret == 0xFB5E) { printf(&amp;#34;%d\n&amp;#34;, buf); break; } // printf(&amp;#34;%c %x\n&amp;#34;, buf, ret);  } } 一开始给的范围小了（以为会是可见字符），一直爆破不出来，反复验证了好多次，后来才发现范围是 0-0xff</description>
+    </item>
+    
+  </channel>
+</rss>

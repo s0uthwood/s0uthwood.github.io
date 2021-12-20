@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='应该是，第一次在做题的时候用Angr吧，发现一个奇怪的问题，记录一下'><title>DragonCTF Runofthemill Writeup</title>
+
+<link rel='canonical' href='/post/dragonctf-runofthemill-writeup/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='DragonCTF Runofthemill Writeup'>
+<meta property='og:description' content='应该是，第一次在做题的时候用Angr吧，发现一个奇怪的问题，记录一下'>
+<meta property='og:url' content='/post/dragonctf-runofthemill-writeup/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='DragonCTF' /><meta property='article:tag' content='Angr' /><meta property='article:published_time' content='2021-12-10T02:01:06&#43;00:00'/><meta property='article:modified_time' content='2021-12-10T02:01:06&#43;00:00'/>
+<meta name="twitter:title" content="DragonCTF Runofthemill Writeup">
+<meta name="twitter:description" content="应该是，第一次在做题的时候用Angr吧，发现一个奇怪的问题，记录一下">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/ctf/" >
+                CTF
+            </a>
+        
+            <a href="/categories/reverse/" >
+                Reverse
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/dragonctf-runofthemill-writeup/">DragonCTF Runofthemill Writeup</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        应该是，第一次在做题的时候用Angr吧，发现一个奇怪的问题，记录一下
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Dec 10, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    2 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="题目分析">题目分析</h2>
+<p>获取输入</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">v1 <span style="color:#f92672">=</span> sys_read(<span style="color:#ae81ff">0</span>, byte_412000, <span style="color:#ae81ff">0x40uLL</span>);
+</code></pre></div><p>中间计算</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">  byte_412000[<span style="color:#ae81ff">42</span>] <span style="color:#f92672">=</span> __ROR1__(byte_412000[<span style="color:#ae81ff">42</span>], <span style="color:#ae81ff">4</span>);
+  <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>byte_412000[<span style="color:#ae81ff">44</span>] <span style="color:#f92672">^=</span> <span style="color:#ae81ff">0x4EC10FC6u</span>;
+  <span style="color:#f92672">*</span>(_WORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>byte_412000[<span style="color:#ae81ff">15</span>] <span style="color:#f92672">^=</span> <span style="color:#ae81ff">0xEBFFu</span>;
+  <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>byte_412000[<span style="color:#ae81ff">38</span>] <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1698263770</span>;
+  <span style="color:#75715e">// 以下省略
+</span></code></pre></div><p>最后的验证</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">  v9 <span style="color:#f92672">=</span> byte_412000;
+  v10 <span style="color:#f92672">=</span> byte_412050;
+  v11 <span style="color:#f92672">=</span> <span style="color:#ae81ff">64LL</span>;
+  v12 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">do</span>
+  {
+    v12 <span style="color:#f92672">|=</span> <span style="color:#f92672">*</span>v10<span style="color:#f92672">++</span> <span style="color:#f92672">^</span> <span style="color:#f92672">*</span>v9<span style="color:#f92672">++</span>;
+    <span style="color:#f92672">--</span>v11;
+  }
+  <span style="color:#66d9ef">while</span> ( v11 );
+</code></pre></div><h2 id="angr求解">Angr求解</h2>
+<p>还是很容易看懂的，主要是如何求解</p>
+<p>一种思路是把汇编反过来，pizza爷用的是这种做法，于是就写了个Angr喝茶去了</p>
+<p>Angr用的是手动往全局变量注入符号，然后在验证前停止，手动添加约束，wp中的写法是直接用程序中的验证，并添加了 <code>LAZY_SOLVES</code> 参数，学到了</p>
+<p>之前用自己脚本跑的适合发现一直是 <code>unsat</code>，以为Angr会有问题，但后来发现有个wp就是用的Angr</p>
+<p>于是掏出了之前写的脚本做了一些尝试</p>
+<pre tabindex="0"><code>from angr import *
+import claripy
+import binascii
+
+input_length = 56
+
+base_addr = 0x400000
+proj = Project('runofthemill', main_opts={&quot;base_addr&quot;: base_addr})
+
+start_addr = 0x401054
+state = proj.factory.blank_state(addr = start_addr, add_options={options.LAZY_SOLVES})
+# state.regs.rdi = 0x412000
+user_input = [claripy.BVS('input_%d' % i, 8) for i in range(input_length)]
+
+mem_addr = 0x412000
+for i in range(input_length):
+    state.memory.store(mem_addr + i, user_input[i])
+state.add_constraints(state.memory.load(mem_addr, 6) == int(binascii.hexlify(b&quot;DrgnS{&quot;), 16))
+simgr = proj.factory.simgr(state)
+
+find_addr = 0x4117FF
+
+simgr.explore(find = find_addr)
+
+ans = [
+    0xB5, 0x9C, 0x9A, 0x08, 0x68, 0x91, 0x29, 0x0F, 0xBD, 0x1E, 
+    0xFB, 0x71, 0xF4, 0x93, 0x5C, 0xDA, 0x0D, 0x94, 0x10, 0x77, 
+    0x6C, 0x41, 0x8D, 0xE2, 0x5E, 0x26, 0xA5, 0x0A, 0x95, 0xE1, 
+    0x14, 0xDB, 0x25, 0x0B, 0x09, 0xE4, 0x7B, 0xE7, 0x07, 0x71, 
+    0x4E, 0xD3, 0xF2, 0xC1, 0x5C, 0xB2, 0xB4, 0x17, 0x30, 0xAA, 
+    0x3D, 0x35, 0x1E, 0x98, 0xC4, 0x92, 0xF4, 0x33, 0x69, 0xCC, 
+    0x11, 0xB0, 0xCE, 0xCC
+]
+
+if simgr.found:
+    print (&quot;end state found&quot;)
+    end_state = simgr.found[0]
+    for i in range(64):
+        end_state.add_constraints(end_state.memory.load(mem_addr + i, 1) == ans[i])
+    for i in range(input_length):
+        print (end_state.solver.eval(user_input[i], cast_to=bytes).decode(), end='')
+    print ()
+else:
+    print (&quot;No result&quot;)
+</code></pre><p>最后发现只要把 <code>input_length</code> 设置为56及以下就可以，其他的都是 <code>unsat</code></p>
+<h2 id="capstone学习">capstone学习</h2>
+<p>TODO</p>
+<p>后续学习一下再来补</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+            <a href="/tags/reverse/">Reverse</a>
+        
+            <a href="/tags/dragonctf/">DragonCTF</a>
+        
+            <a href="/tags/angr/">angr</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/learn-basic-signal-from-dnuictf-easyre/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Learn Basic Signal from DNUICTF easyre</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/resent-re-challenge/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Resent RE Challenge</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/pbctf2021-re-writeups/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">pbctf2021 RE writeups</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/tsgctf2021-re-wp/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">TSGCTF2021 RE WP</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/angr-ctf-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">angr ctf writeup</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2021 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#题目分析">题目分析</a></li>
+    <li><a href="#angr求解">Angr求解</a></li>
+    <li><a href="#capstone学习">capstone学习</a></li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Reverse on s0uthwood&#39;s Blog</title>
+    <link>/tags/reverse/</link>
+    <description>Recent content in Reverse on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 13 Dec 2021 19:37:54 +0000</lastBuildDate><atom:link href="/tags/reverse/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>All Solves During a Weekend</title>
+      <link>/post/all-solves-during-a-weekend/</link>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+      
+      <guid>/post/all-solves-during-a-weekend/</guid>
+      <description>打美团 CTF 的时候才意识到，有一种坐牢叫AK
+ [MTCTF 4th]wow 先进行脱壳，因为脱壳后用的是绝对地址，而加载的时候是动态加载，所有没有办法调试，那就直接静态看吧
+JUMPOUT 那里看一下汇编，发现有一个天堂之门
+push 0x33 call $+5 add [esp+84h+var_84], 5 retf 直接把后面的数据全 dump 出来，然后用 ida64 打开
+void __fastcall sub_0(unsigned int *a1) { unsigned int v1; // er9  int v2; // ebp  unsigned int v3; // esi  unsigned int *v4; // rdi  unsigned int *v5; // r10  unsigned int v6; // ebx  unsigned int i; // er11  unsigned int v8; // er8  int v9; // edx  unsigned int v10; // eax  unsigned int v11; // er9  unsigned int v12; // er8  int v13; // ebx  int v14; // ebx  int v15; // ebx  int v16; // edx  unsigned int v17; // eax  unsigned int v18; // er9  v1 = a1[8]; v2 = 12; v3 = 0; while ( 1 ) { v3 += 1732584193; v4 = a1 + 1; v5 = a1; v6 = v3 &amp;gt;&amp;gt; 2; for ( i = 0; i &amp;lt; 8; ++i ) { v8 = *v4; if ( (((unsigned __int8)i ^ (unsigned __int8)v6) &amp;amp; 3) !</description>
+    </item>
+    
+    <item>
+      <title>DragonCTF Runofthemill Writeup</title>
+      <link>/post/dragonctf-runofthemill-writeup/</link>
+      <pubDate>Fri, 10 Dec 2021 02:01:06 +0000</pubDate>
+      
+      <guid>/post/dragonctf-runofthemill-writeup/</guid>
+      <description>题目分析 获取输入
+v1 = sys_read(0, byte_412000, 0x40uLL); 中间计算
+byte_412000[42] = __ROR1__(byte_412000[42], 4); *(_DWORD *)&amp;amp;byte_412000[44] ^= 0x4EC10FC6u; *(_WORD *)&amp;amp;byte_412000[15] ^= 0xEBFFu; *(_DWORD *)&amp;amp;byte_412000[38] -= 1698263770; // 以下省略 最后的验证
+v9 = byte_412000; v10 = byte_412050; v11 = 64LL; v12 = 0; do { v12 |= *v10++ ^ *v9++; --v11; } while ( v11 ); Angr求解 还是很容易看懂的，主要是如何求解
+一种思路是把汇编反过来，pizza爷用的是这种做法，于是就写了个Angr喝茶去了
+Angr用的是手动往全局变量注入符号，然后在验证前停止，手动添加约束，wp中的写法是直接用程序中的验证，并添加了 LAZY_SOLVES 参数，学到了
+之前用自己脚本跑的适合发现一直是 unsat，以为Angr会有问题，但后来发现有个wp就是用的Angr
+于是掏出了之前写的脚本做了一些尝试
+from angr import * import claripy import binascii input_length = 56 base_addr = 0x400000 proj = Project(&#39;runofthemill&#39;, main_opts={&amp;quot;base_addr&amp;quot;: base_addr}) start_addr = 0x401054 state = proj.</description>
+    </item>
+    
+    <item>
+      <title>Learn Basic Signal from DNUICTF easyre</title>
+      <link>/post/learn-basic-signal-from-dnuictf-easyre/</link>
+      <pubDate>Thu, 09 Dec 2021 15:05:55 +0000</pubDate>
+      
+      <guid>/post/learn-basic-signal-from-dnuictf-easyre/</guid>
+      <description>一些信号量函数的学习 信号量的注册在init函数中
+v2.sa_handler = (__sighandler_t)sub_400E1D; v2.sa_flags = 4; sigaction(34, &amp;amp;v2, &amp;amp;v1); sigaction() 函数定义为
+int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact); sigaction 结构体定义如下
+struct sigaction { void (*sa_handler) (int); sigset_t sa_mask; int sa_flags; // 用来设置信号处理的相关操作  void (*sa_restorer) (void); } 关于 sa_flags 的定义如下 (from linux/include/uapi/asm-generic/signal-defs.h)
+#ifndef SA_NOCLDSTOP #define SA_NOCLDSTOP	0x00000001 #endif #ifndef SA_NOCLDWAIT #define SA_NOCLDWAIT	0x00000002 #endif #ifndef SA_SIGINFO #define SA_SIGINFO	0x00000004 #endif /* 0x00000008 used on alpha, mips, parisc */ /* 0x00000010 used on alpha, parisc */ /* 0x00000020 used on alpha, parisc, sparc */ /* 0x00000040 used on alpha, parisc */ /* 0x00000080 used on parisc */ /* 0x00000100 used on sparc */ /* 0x00000200 used on sparc */ #define SA_UNSUPPORTED	0x00000400 #define SA_EXPOSE_TAGBITS	0x00000800 /* 0x00010000 used on mips */ /* 0x00800000 used for internal SA_IMMUTABLE */ /* 0x01000000 used on x86 */ /* 0x02000000 used on x86 */ /* * New architectures should not define the obsolete *	SA_RESTORER	0x04000000 */ #ifndef SA_ONSTACK #define SA_ONSTACK	0x08000000 #endif #ifndef SA_RESTART #define SA_RESTART	0x10000000 #endif #ifndef SA_NODEFER #define SA_NODEFER	0x40000000 #endif #ifndef SA_RESETHAND #define SA_RESETHAND	0x80000000 #endif 题目中使用的是 SA_SIGINFO，对信号处理程序提供了附加信息：一个指向 siginfo 结构的指针以及一个指向上下文标识符的指针</description>
+    </item>
+    
+    <item>
+      <title>Resent RE Challenge</title>
+      <link>/post/resent-re-challenge/</link>
+      <pubDate>Tue, 23 Nov 2021 14:06:23 +0000</pubDate>
+      
+      <guid>/post/resent-re-challenge/</guid>
+      <description>[N1CTF 2021]babyrust [N1CTF 2021]Py [L3HCTF 2021]double-joy [L3HCTF 2021]Load [hack.lu]pycoin [hack.lu]atareee  TODO:
+ [L3HCTF 2021]idaaaaaaaa  [N1CTF]babyrust 题目直接给了Rust源码，之前没有见过，现查文档学习
+首先main函数里只是调用了一个 check!
+let result = check!(@s /*your answer*/); main 上面就是 check 的实现
+macro_rules! check { (@s n1ctf{$Never:tt}) =&amp;gt; { check!(stringify!($Never)) }; macro_rules! 是个宏定义，里面的 @s，@e 应该是类似字符串匹配的东西
+一开始的 (@s n1ctf{$Never:tt}) 就把flag中去除 n1ctf{} 的部分存到了 $Never 变量中，stringify! 将其转换为字符串常量
+ stringify! 为 Rust 内置宏。其接收一个 Rust 表达式，如 1 + 2 ， 然后在编译时将表达式转换为一个字符串常量，如 &amp;ldquo;1 + 2&amp;rdquo; 。
+ 接下来的宏定义有很多类似这个的：</description>
+    </item>
+    
+    <item>
+      <title>pbctf2021 RE writeups</title>
+      <link>/post/pbctf2021-re-writeups/</link>
+      <pubDate>Mon, 11 Oct 2021 16:07:41 +0000</pubDate>
+      
+      <guid>/post/pbctf2021-re-writeups/</guid>
+      <description>cosmo main函数在 sub_403066
+要求长度是38，简单看了一下加密逻辑，发现是两个字符一起加密并验证，还想用pintools试试，结果发现根本跑不起来
+于是又开始了快乐的手写爆破，不过这个比较简单，动调一下就知道只用了最下面的几行加密逻辑
+#include &amp;lt;stdio.h&amp;gt; long long qword_40C000[20] = { 21233875ll, 69468586ll, 146735755ll, 251265871ll, 379651085ll, 536872170ll, 719455639ll, 924911196ll, 1158088491ll, 1412368333ll, 1695680674ll, 2005272944ll, 2341407284ll, 2698316511ll, 3076262773ll, 3483634782ll, 3913551105ll, 72486322ll, 548474478ll, 0ll }; long long encrypt(char *a, int len, int cur){ int v5 = len; int res = 0; long long v3 = qword_40C000[cur - 1]; int v6 = v3 &amp;gt;&amp;gt; 16; int v7 = v3 &amp;amp; 0xffff; while(v5){ v7 += *a; v6 += v7; --v5; ++a; } if (v7 &amp;gt; 0xFFF0) v7 -= 0xFFF1; return v7 | ((v6 % 0xFFF1) &amp;lt;&amp;lt; 16); } int test_cnt(int cnt){ for (int i = 0x20; i &amp;lt; 0x80; i++){ for (int j = 0x20; j &amp;lt; 0x80; j++){ char a[] = {i, j}; if (encrypt(a, 2, cnt) == qword_40C000[cnt]){ printf(&amp;#34;%c%c&amp;#34;, i, j); return 0; } } } } int main(){ printf(&amp;#34;pbctf{&amp;#34;); for (int i = 3; i &amp;lt; 19; i++) test_cnt(i); printf(&amp;#34;\n&amp;#34;); return 0; } 除了找main函数之外也没有什么特别的</description>
+    </item>
+    
+    <item>
+      <title>TSGCTF2021 RE WP</title>
+      <link>/post/tsgctf2021-re-wp/</link>
+      <pubDate>Sat, 09 Oct 2021 22:22:33 +0000</pubDate>
+      
+      <guid>/post/tsgctf2021-re-wp/</guid>
+      <description>Beginners Rev 用 fork() 遍历了 32 位输入，每个输入都分别进行一次函数运算
+do { ++v2; if ( !fork() ) { v2 = 0; v1 |= 1 &amp;lt;&amp;lt; v3; v7 = open(&amp;#34;/dev/null&amp;#34;, 1); dup2(v7, 1); } ++v3; } while ( v3 != 5 ); 每个函数运算都是将输入迭代好多次
+v4 = (unsigned __int8 *)&amp;amp;key + a2; v5 = v4[2]; v6 = 1; while ( (unsigned int)(-1217102449 * v5 + 1217102449) &amp;gt; 0xB2927C ) { ++v6; v5 += v4[2]; if ( v6 == 367 ) { v6 = -1; break; } } v7 = v4[4]; v8 = v4[3] * ((a1 + *v4) % 367 * v4[1] % 367 * v6 % 367) % 367; 被retaddr坑了一会，后面才反应过来开头那个 if ( retaddr - (_BYTE *)check !</description>
+    </item>
+    
+    <item>
+      <title>angr ctf writeup</title>
+      <link>/post/angr-ctf-writeup/</link>
+      <pubDate>Mon, 27 Sep 2021 21:03:03 +0000</pubDate>
+      
+      <guid>/post/angr-ctf-writeup/</guid>
+      <description>&lt;p&gt;开始学angr&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;就是在抄solution&lt;/del&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>DASCTF 2021-09 Writeup</title>
+      <link>/post/dasctf-2021-09-writeup/</link>
+      <pubDate>Sun, 26 Sep 2021 00:10:18 +0000</pubDate>
+      
+      <guid>/post/dasctf-2021-09-writeup/</guid>
+      <description>[RE]ea5ycpp 一开始还被逻辑绕了一下，结果发现核心部分就是brainfuck
+有一些结构体，可以恢复一下，会比较好看
+brainfuck解析出来就是简单的加减法
+#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt; unsigned char a[9999]; int c; int main(int argc, char **argv) { a[24] += 2; while (a[24]) { ++a[0]; --a[24]; } a[24] += 3; while (a[24]) { ++a[1]; --a[24]; } a[24] += 4; while (a[24]) { ++a[2]; --a[24]; } a[24] += 5; while (a[24]) { ++a[3]; --a[24]; } a[24] += 6; while (a[24]) { ++a[4]; --a[24]; } a[24] += 7; while (a[24]) { ++a[5]; --a[24]; } a[24] += 8; while (a[24]) { ++a[6]; --a[24]; } a[24] += 9; while (a[24]) { ++a[7]; --a[24]; } a[24] += 10; while (a[24]) { ++a[8]; --a[24]; } a[24] += 11; while (a[24]) { ++a[9]; --a[24]; } a[24] += 12; while (a[24]) { ++a[10]; --a[24]; } a[24] += 13; while (a[24]) { ++a[11]; --a[24]; } a[24] += 14; while (a[24]) { ++a[12]; --a[24]; } a[24] += 15; while (a[24]) { ++a[13]; --a[24]; } a[24] += 16; while (a[24]) { ++a[14]; --a[24]; } a[24] += 18; while (a[24]) { ++a[15]; --a[24]; } a[24] += 19; while (a[24]) { ++a[16]; --a[24]; } a[24] += 20; while (a[24]) { ++a[17]; --a[24]; } a[24] += 21; while (a[24]) { ++a[18]; --a[24]; } a[24] += 22; while (a[24]) { ++a[19]; --a[24]; } a[24] += 23; while (a[24]) { ++a[20]; --a[24]; } a[24] += 24; while (a[24]) { ++a[21]; --a[24]; } a[24] += 25; while (a[24]) { ++a[22]; --a[24]; } a[24] += 26; while (a[24]) { ++a[23]; --a[24]; } return 0; } 根据字符串就能看到比较的位置，密文减一下就行</description>
+    </item>
+    
+    <item>
+      <title>加密与解密学习笔记（持续更新ing）</title>
+      <link>/post/note-of-book-encryption-and-decryption/</link>
+      <pubDate>Sat, 25 Sep 2021 02:15:45 +0000</pubDate>
+      
+      <guid>/post/note-of-book-encryption-and-decryption/</guid>
+      <description>&lt;p&gt;suibiankankan&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>BUUOJ RE (4) &amp;&amp; pycdc bugs</title>
+      <link>/post/buuoj-re-4-pycdc-bugs/</link>
+      <pubDate>Tue, 21 Sep 2021 00:39:52 +0000</pubDate>
+      
+      <guid>/post/buuoj-re-4-pycdc-bugs/</guid>
+      <description>[FlareOn1]5get_it 给的是一个DLL文件（没记错的话），应该是用来钩取键盘输入的，根据不同的输入执行不同的内容，观察到有个函数为 sub_10001240，执行成功就说明通过了
+查找引用
+const char *sub_10009AF0() { if ( dword_100194FC &amp;gt; 0 ) { _cfltcvt_init(); sub_10001240(); } return &amp;#34;m&amp;#34;; } 要求让内存中一个数不为0，根据这个数再向上找
+const char *sub_10009B60() { if ( dword_1001947C &amp;lt;= 0 ) { if ( dword_10019490 &amp;lt;= 0 ) { if ( dword_100194E0 &amp;lt;= 0 ) { if ( dword_100194EC &amp;lt;= 0 ) { if ( dword_100194F8 &amp;lt;= 0 ) { _cfltcvt_init(); } else { dword_100194F8 = 0; dword_100194FC = 1; } } else { dword_100194EC = 0; dword_100194F0 = 1; } } else { dword_100194E0 = 0; dword_100194E4 = 1; } } else { dword_10019490 = 0; dword_10019494 = 1; } } else { dword_1001947C = 0; dword_10019480 = 1; } return &amp;#34;o&amp;#34;; } 看到最里面就是赋值为1，所以最后两位输入就是 om</description>
+    </item>
+    
+    <item>
+      <title>BUUOJ RE (3)</title>
+      <link>/post/buuoj-re-3/</link>
+      <pubDate>Thu, 19 Aug 2021 19:11:32 +0000</pubDate>
+      
+      <guid>/post/buuoj-re-3/</guid>
+      <description>[FBCTF]go_get_the_flag 没想到能在第五页见到memequal的题，真正的baby
+[Zer0pts2020]QR Puzzle 文件处理 QR文件是25*25的字符串，每一位都是字符0或1
+key文件每一行格式为 a#(b,c)，最后存储到链表中，末尾在前，具体结构为 int b, int c, int a, 0, *next
+加密算法分析 从加密函数来看，应该是一个vm
+简单整理一下
+void __fastcall sub_400BD0(__int64 a1, int *a2) { int v2; // er8  int v3; // edx  _QWORD *v4; // r9  _QWORD *v5; // rcx  int v6; // er9  __int64 v7; // rax  __int64 v8; // rcx  while ( a2 ) { x = a2[2]; y = a2[0]; z = a2[1]; if ( x == 1 ) { v2 = z; v3 = y + 1; goto LABEL_4; } if ( x == 0 ) { v2 = z; v3 = y - 1; goto LABEL_4; } if ( x == 3 ) { v2 = z + 1; v3 = y; goto LABEL_4; } if ( x == 2 ) { v2 = z - 1; v3 = y; } LABEL_4: v4 = &amp;amp;a1[z]; v5 = &amp;amp;a1[v2]; *(_BYTE *)(v7 + *v4) += *(_BYTE *)(*v5 + v3); *(_BYTE *)(v3 + *v5) = *(_BYTE *)(*v4 + v7) - *(_BYTE *)(v3 + *v5); *(_BYTE *)(*v4 + v7) -= *(_BYTE *)(*v5 + v3); // 经典swap  a2 = (int *)*((_QWORD *)a2 + 2); // a2 = a2-&amp;gt;next  } } 显然加密就是和周围某个位置交换一下</description>
+    </item>
+    
+    <item>
+      <title>dfjk 2021 RE</title>
+      <link>/post/2021dfjk-re/</link>
+      <pubDate>Wed, 04 Aug 2021 13:48:58 +0000</pubDate>
+      
+      <guid>/post/2021dfjk-re/</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;RE1：迷宫&lt;/li&gt;
+&lt;li&gt;RE2：so层&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最后一个好像是php？告辞&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>CISCN-N 2021 RE Writeup</title>
+      <link>/post/ciscn-n-2021-re-writeup/</link>
+      <pubDate>Tue, 22 Jun 2021 23:25:43 +0000</pubDate>
+      
+      <guid>/post/ciscn-n-2021-re-writeup/</guid>
+      <description>imnotavirus 解exe，解密pyc
+利用解密后的pyc，找到注入的shellcode，用ida解smc，最后解密
+比赛的时候还被迫阅读了一下pyinstaller的源码，收获很大
+解exe 看到附件给了个pyinstaller，猜测是python逆向
+先ida看一眼，有upx壳，自动脱壳，再用exeinfo确认了一下是python逆向，pyinstxtractor.py解包（之前V&amp;amp;N2021就吃了这个亏）
+解pyc 解包时提示被加密了
+取struct头作为标准头，用pycdc还原出main.py，发现调用了sign
+去PYZ00文件夹看一下，发现被加密了，看一下目录，发现pyimod和比一般情况多了一些东西，把这些都解开看一下，有一个key文件
+同时发现archive中有一个Cipher类，但是pycdc缺少指令，无法全部还原，考虑看一下pycdas解出来的字节码
+字节码中有个对pyinstaller源码的引用，直接去文件夹里面看，发现能解密出来的部分完全一致
+照着源码中的方法解密sign
+from key import key import tinyaes print (key) f = open(&amp;#39;./PYZ-00.pyz_extracted/sign.pyc.encrypted&amp;#39;, &amp;#39;rb&amp;#39;) data = f.read() cipher = tinyaes.AES(key.encode(), data[:16]) output = cipher.CTR_xcrypt_buffer(data[16:]) f.close() import zlib output = zlib.decompress(output) f = open(&amp;#39;./sign.pyc&amp;#39;, &amp;#39;wb&amp;#39;) f.write(output) 解密 解出sign后看到有三个base64，其中两个是执行的语句，此外大部分语句涉及到了内存
+另外一个base解出来是乱码，用字节码辅助恢复函数（其实特征已经很明显了），发现进行了rc4加密，直接打印出解密结果，将结果写入文件，用ida查看
+发现smc
+mov eax, 41178Bh mov ecx, 411802h sub ecx, eax loc_2A: mov ebx, [rax] xor ebx, 77h mov [rax], ebx loop loc_2A 解出来后尝试恢复了一下函数，结果很丑&amp;hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</description>
+    </item>
+    
+    <item>
+      <title>BUUOJ RE (2)</title>
+      <link>/post/buuoj-re-2/</link>
+      <pubDate>Thu, 10 Jun 2021 03:20:33 +0000</pubDate>
+      
+      <guid>/post/buuoj-re-2/</guid>
+      <description>firmware 一道水题，主要学习一下工控逆向
+不难看出，给的附件是squashfs文件，直接进行binwalk
+ 在安装sasquatch时遇到了一些坑，好像必须clone到~/Downloads等文件夹内才行
+ binwalk之后逛一下目录，能够找到一个叫做 backdoor 的二进制文件
+目标是找到连接的ip和端口，进去找一找就能看到
+[FlareOn4]greek_to_me 尝试运行一下，发现不能输入
+逆向，发现127.0.0.1的字样，以及socket等明显的网络通信函数
+直接运行的时候看一下主机端口，发现是 127.0.0.1:2222，用Windows下的nc连上去就可以进行调试了
+SMC还是很明显的
+发现解SMC时仅用了第一个字节，但由于不知道里面有什么，猜测可能是对后面的字节进行验证，所以决定将程序本地复现一下，爆破解SMC的密钥
+#include &amp;lt;stdio.h&amp;gt; unsigned char ida_chars[] = { 0x33, 0xE1, 0xC4, 0x99, 0x11, 0x06, 0x81, 0x16, 0xF0, 0x32, 0x9F, 0xC4, 0x91, 0x17, 0x06, 0x81, 0x14, 0xF0, 0x06, 0x81, 0x15, 0xF1, 0xC4, 0x91, 0x1A, 0x06, 0x81, 0x1B, 0xE2, 0x06, 0x81, 0x18, 0xF2, 0x06, 0x81, 0x19, 0xF1, 0x06, 0x81, 0x1E, 0xF0, 0xC4, 0x99, 0x1F, 0xC4, 0x91, 0x1C, 0x06, 0x81, 0x1D, 0xE6, 0x06, 0x81, 0x62, 0xEF, 0x06, 0x81, 0x63, 0xF2, 0x06, 0x81, 0x60, 0xE3, 0xC4, 0x99, 0x61, 0x06, 0x81, 0x66, 0xBC, 0x06, 0x81, 0x67, 0xE6, 0x06, 0x81, 0x64, 0xE8, 0x06, 0x81, 0x65, 0x9D, 0x06, 0x81, 0x6A, 0xF2, 0xC4, 0x99, 0x6B, 0x06, 0x81, 0x68, 0xA9, 0x06, 0x81, 0x69, 0xEF, 0x06, 0x81, 0x6E, 0xEE, 0x06, 0x81, 0x6F, 0xAE, 0x06, 0x81, 0x6C, 0xE3, 0x06, 0x81, 0x6D, 0xEF, 0x06, 0x81, 0x72, 0xE9, 0x06, 0x81, 0x73, 0x7C }; #define HIBYTE(x) ((x &amp;amp; 0xFF00) &amp;gt;&amp;gt; 8)  int main(){ for (unsigned short buf = 0; buf &amp;lt;= 0xff; buf++){ unsigned char new_char[130]; unsigned char *a1 = new_char; unsigned int i = 0; do { *a1 = (buf ^ ida_chars[i++]) + 34; ++a1; } while ( i &amp;lt; 121 ); unsigned int v2 = 0x79; // 0x79  a1 = new_char; unsigned short v3 = 255; for ( i = 255; v2; v3 = HIBYTE(v3) + (unsigned char)v3 ) { unsigned short v5 = i; int v6 = v2; if ( v2 &amp;gt; 0x14 ) v6 = 0x14; v2 -= v6; do { v5 += *a1; v3 += v5; ++a1; --v6; } while ( v6 ); i = HIBYTE(v5) + (unsigned char)v5; } int ret = (HIBYTE(i) + (unsigned char)i) | ((v3 &amp;lt;&amp;lt; 8) + (v3 &amp;amp; 0xFF00)); // if (buf == &amp;#39;f&amp;#39;)  // printf(&amp;#34;%x\n&amp;#34;, ret); // 0xf51c  // if (buf == &amp;#39;@&amp;#39;)  // printf(&amp;#34;%x\n&amp;#34;, ret); // 0x60ee  if (ret == 0xFB5E) { printf(&amp;#34;%d\n&amp;#34;, buf); break; } // printf(&amp;#34;%c %x\n&amp;#34;, buf, ret);  } } 一开始给的范围小了（以为会是可见字符），一直爆破不出来，反复验证了好多次，后来才发现范围是 0-0xff</description>
+    </item>
+    
+    <item>
+      <title>BUUOJ RE (1)</title>
+      <link>/post/buuoj-re-1/</link>
+      <pubDate>Wed, 26 May 2021 23:54:09 +0000</pubDate>
+      
+      <guid>/post/buuoj-re-1/</guid>
+      <description>[NPUCTF2020]BasicASM 纯考察汇编的题目，有考虑想办法改成正确的汇编形式然后编译用ida看，但感觉就失去意义了，于是硬啃汇编
+00007FF7A8AC5A50 push rbp 00007FF7A8AC5A52 push rdi 00007FF7A8AC5A53 sub rsp,238h 00007FF7A8AC5A5A lea rbp,[rsp+20h] 00007FF7A8AC5A5F mov rdi,rsp 00007FF7A8AC5A62 mov ecx,8Eh 00007FF7A8AC5A67 mov eax,0CCCCCCCCh 00007FF7A8AC5A6C rep stos dword ptr [rdi] 00007FF7A8AC5A6E mov rax,qword ptr [__security_cookie (07FF7A8AD3018h)] 00007FF7A8AC5A75 xor rax,rbp 00007FF7A8AC5A78 mov qword ptr [rbp+208h],rax 00007FF7A8AC5A7F lea rcx,[__06A15900_ConsoleApplication@cpp (07FF7A8AD902Ah)] 00007FF7A8AC5A86 call __CheckForDebuggerJustMyCode (07FF7A8AC1122h) 00007FF7A8AC5A8B lea rdx,[string &amp;quot;flag{this_is_a_fake_flag}&amp;quot; (07FF7A8ACF450h)] 00007FF7A8AC5A92 lea rcx,[flag] 00007FF7A8AC5A96 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt; (07FF7A8AC15E1h) 00007FF7A8AC5A9B nop 00007FF7A8AC5A9C mov dword ptr [p],0 00007FF7A8AC5AA3 mov i,0 00007FF7A8AC5AAA jmp main+64h (07FF7A8AC5AB4h) 00007FF7A8AC5AAC mov eax,i 00007FF7A8AC5AAF inc eax 00007FF7A8AC5AB1 mov i,eax 00007FF7A8AC5AB4 movsxd rax,i 00007FF7A8AC5AB8 mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5ABF lea rcx,[flag] 00007FF7A8AC5AC3 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::length (07FF7A8AC122Bh) 00007FF7A8AC5AC8 mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5ACF cmp rcx,rax 00007FF7A8AC5AD2 jae main+1B2h (07FF7A8AC5C02h) ; 无符号数比较，大于或等于时跳转 00007FF7A8AC5AD8 mov eax,i 00007FF7A8AC5ADB and eax,1 ; 取最后1位 00007FF7A8AC5ADE cmp eax,1 ; 判断奇偶 00007FF7A8AC5AE1 jne main+126h (07FF7A8AC5B76h) ; 偶数跳转（不相等跳转） 00007FF7A8AC5AE7 movsxd rax,i 00007FF7A8AC5AEB mov rdx,rax 00007FF7A8AC5AEE lea rcx,[flag] 00007FF7A8AC5AF2 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::operator[] (07FF7A8AC1442h) 00007FF7A8AC5AF7 movsx eax,byte ptr [rax] ; 取flag第i位 00007FF7A8AC5AFA xor eax,42h ; 与0x42异或 00007FF7A8AC5AFD mov dword ptr [p],eax ; 异或结果移到内存中 00007FF7A8AC5B00 mov dl,30h 00007FF7A8AC5B02 lea rcx,[rbp+144h] 00007FF7A8AC5B09 call std::setfill&amp;lt;char&amp;gt; (07FF7A8AC1046h) ; 用字符&#39;0&#39;进行填充 00007FF7A8AC5B0E mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5B15 mov edx,2 00007FF7A8AC5B1A lea rcx,[rbp+168h] 00007FF7A8AC5B21 call std::setw (07FF7A8AC10D2h) ; 填充至2位 00007FF7A8AC5B26 mov qword ptr [rbp+200h],rax 00007FF7A8AC5B2D lea rdx,[std::hex (07FF7A8AC1488h)] ; 以十六进制形式输出 00007FF7A8AC5B34 mov rcx,qword ptr [__imp_std::cout (07FF7A8AD71C0h)] 00007FF7A8AC5B3B call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7160h)] 00007FF7A8AC5B41 mov rcx,qword ptr [rbp+200h] 00007FF7A8AC5B48 mov rdx,rcx 00007FF7A8AC5B4B mov rcx,rax 00007FF7A8AC5B4E call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,__int64&amp;gt; (07FF7A8AC12F8h) 00007FF7A8AC5B53 mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5B5A mov rdx,rcx 00007FF7A8AC5B5D mov rcx,rax 00007FF7A8AC5B60 call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,char&amp;gt; (07FF7A8AC11A4h) 00007FF7A8AC5B65 mov edx,dword ptr [p] 00007FF7A8AC5B68 mov rcx,rax 00007FF7A8AC5B6B call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7158h)] 00007FF7A8AC5B71 jmp main+1ADh (07FF7A8AC5BFDh) 00007FF7A8AC5B76 movsxd rax,i ; 偶数时跳转到这里，与奇数唯一的区别为没有异或运算 00007FF7A8AC5B7A mov rdx,rax 00007FF7A8AC5B7D lea rcx,[flag] 00007FF7A8AC5B81 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::operator[] (07FF7A8AC1442h) 00007FF7A8AC5B86 movsx eax,byte ptr [rax] 00007FF7A8AC5B89 mov dword ptr [p],eax 00007FF7A8AC5B8C mov dl,30h 00007FF7A8AC5B8E lea rcx,[rbp+194h] 00007FF7A8AC5B95 call std::setfill&amp;lt;char&amp;gt; (07FF7A8AC1046h) 00007FF7A8AC5B9A mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5BA1 mov edx,2 00007FF7A8AC5BA6 lea rcx,[rbp+1B8h] 00007FF7A8AC5BAD call std::setw (07FF7A8AC10D2h) 00007FF7A8AC5BB2 mov qword ptr [rbp+200h],rax 00007FF7A8AC5BB9 lea rdx,[std::hex (07FF7A8AC1488h)] 00007FF7A8AC5BC0 mov rcx,qword ptr [__imp_std::cout (07FF7A8AD71C0h)] 00007FF7A8AC5BC7 call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7160h)] 00007FF7A8AC5BCD mov rcx,qword ptr [rbp+200h] 00007FF7A8AC5BD4 mov rdx,rcx 00007FF7A8AC5BD7 mov rcx,rax 00007FF7A8AC5BDA call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,__int64&amp;gt; (07FF7A8AC12F8h) 00007FF7A8AC5BDF mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5BE6 mov rdx,rcx 00007FF7A8AC5BE9 mov rcx,rax 00007FF7A8AC5BEC call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,char&amp;gt; (07FF7A8AC11A4h) 00007FF7A8AC5BF1 mov edx,dword ptr [p] 00007FF7A8AC5BF4 mov rcx,rax 00007FF7A8AC5BF7 call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7158h)] 00007FF7A8AC5BFD jmp main+5Ch (07FF7A8AC5AACh) 00007FF7A8AC5C02 mov dword ptr [rbp+1E4h],0 00007FF7A8AC5C0C lea rcx,[flag] 00007FF7A8AC5C10 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::~basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt; (07FF7A8AC1302h) 00007FF7A8AC5C15 mov eax,dword ptr [rbp+1E4h] 00007FF7A8AC5C1B mov edi,eax 00007FF7A8AC5C1D lea rcx,[rbp-20h] 00007FF7A8AC5C21 lea rdx,[__xt_z+540h (07FF7A8ACEFE0h)] 00007FF7A8AC5C28 call _RTC_CheckStackVars (07FF7A8AC1596h) 00007FF7A8AC5C2D mov eax,edi 00007FF7A8AC5C2F mov rcx,qword ptr [rbp+208h] 00007FF7A8AC5C36 xor rcx,rbp 00007FF7A8AC5C39 call __security_check_cookie (07FF7A8AC1190h) 00007FF7A8AC5C3E lea rsp,[rbp+218h] 00007FF7A8AC5C45 pop rdi 00007FF7A8AC5C46 pop rbp 00007FF7A8AC5C47 ret 简单的说，过程就是一个循环，根据 i 的奇偶进行判断，是否与 0x42 进行异或，然后将结果以 2 位十六进制输出，所以只需要进行反向求解即可</description>
+    </item>
+    
+    <item>
+      <title>CISCN2021 RE writeup</title>
+      <link>/post/ciscn2021-re-writeup/</link>
+      <pubDate>Thu, 20 May 2021 01:21:59 +0000</pubDate>
+      
+      <guid>/post/ciscn2021-re-writeup/</guid>
+      <description>glass 安卓逆向，使用jeb打开，发现在java层仅进行了简单的输入，然后进入so层判断
+用ida打开so层，直接搜索java，进入判断函数
+下面的字符串应该是密钥
+qmemcpy(v6, &amp;#34;12345678&amp;#34;, sizeof(v6)); 然后调用了三个函数
+sub_FFC(v7, v6, v4); sub_1088(v7, flag, 39); sub_10D4(flag, 39, v6, v4); 进入查看，第一个是RC4密钥初始化，第二个是RC4加密，第三个是对密文进行简单的运算
+从字符串里拿密文，写脚本进行求解，先对简单运算进行反向运算，然后找个RC4密码的脚本，跑一下就可以找到flag
+cipher = [0xA3, 0x1A, 0xE3, 0x69, 0x2F, 0xBB, 0x1A, 0x84, 0x65, 0xC2, 0xAD, 0xAD, 0x9E, 0x96, 5, 2, 0x1F, 0x8E, 0x36, 0x4F, 0xE1, 0xEB, 0xAF, 0xF0, 0xEA, 0xC4, 0xA8, 0x2D, 0x42, 0xC7, 0x6E, 0x3F, 0xB0, 0xD3, 0xCC, 0x78, 0xF9, 0x98, 0x3F, 0] key = [0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38] def __rc4_init(key): keylength = len(key) S = list(range(256)) j = 0 for i in range(256): j = (j + S[i] + key[i % keylength]) % 256 S[i], S[j] = S[j], S[i] return S def rc4_crypt(key, data): S = __rc4_init(key) i = j = 0 result = b&amp;#39;&amp;#39; for a in data: i = (i + 1) % 256 j = (j + S[i]) % 256 S[i], S[j] = S[j], S[i] k = (a ^ S[(S[i] + S[j]) % 256]).</description>
+    </item>
+    
+    <item>
+      <title>津门杯 GoodRE writeup</title>
+      <link>/post/jinmen-cup-goodre-writeup/</link>
+      <pubDate>Mon, 10 May 2021 02:32:59 +0000</pubDate>
+      
+      <guid>/post/jinmen-cup-goodre-writeup/</guid>
+      <description>&lt;p&gt;和两位学长一起做出来的，总算是能在团队赛中做出来题了，结束了长达一个月的白给生涯，不容易啊&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>BUUOJ RE (0) - FlareOn Challenge</title>
+      <link>/post/buuoj-re0-flareon-challenge/</link>
+      <pubDate>Fri, 09 Apr 2021 01:04:16 +0000</pubDate>
+      
+      <guid>/post/buuoj-re0-flareon-challenge/</guid>
+      <description>Chanllenge1 一个修改了 table 的 Base64
+import base64 import string fake_base = &amp;#39;ZYXABCDEFGHIJKLMNOPQRSTUVWzyxabcdefghijklmnopqrstuvw0123456789+/&amp;#39; true_base = string.ascii_uppercase + string.ascii_lowercase + string.digits + &amp;#39;+/&amp;#39; cipher = &amp;#39;x2dtJEOmyjacxDemx2eczT5cVS9fVUGvWTuZWjuexjRqy24rV29q&amp;#39; good_cipher = &amp;#39;&amp;#39; for c in cipher: good_cipher += true_base[fake_base.index(c)] print (good_cipher) print (base64.b64decode(good_cipher)) Bob Doge 先运行测试一下，发现点击 Decode 之后是乱码
+用 dnSpy 打开，找到 Main 函数
+private static void Main() { Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false); Application.Run(new Form1()); } 发现只新建了一个 Form1
+进入 Form1，找到带有 Click 的函数
+private void btnDecode_Click(object sender, EventArgs e) { this.</description>
+    </item>
+    
+    <item>
+      <title>GWCTF2019 re3 writeup</title>
+      <link>/post/gwctf2019-re3-writeup/</link>
+      <pubDate>Thu, 08 Apr 2021 22:36:12 +0000</pubDate>
+      
+      <guid>/post/gwctf2019-re3-writeup/</guid>
+      <description>静态分析 首先通过关键字符串 Wrong 进入 main 函数
+void __fastcall __noreturn main(int a1, char **a2, char **a3) { int i; // [rsp+8h] [rbp-48h]  char s[40]; // [rsp+20h] [rbp-30h] BYREF  unsigned __int64 v5; // [rsp+48h] [rbp-8h]  v5 = __readfsqword(0x28u); __isoc99_scanf(&amp;#34;%39s&amp;#34;, s); if ( (unsigned int)strlen(s) != 32 ) { puts(&amp;#34;Wrong!&amp;#34;); exit(0); } mprotect(&amp;amp;dword_400000, 0xF000uLL, 7); for ( i = 0; i &amp;lt;= 223; ++i ) *((_BYTE *)sub_402219 + i) ^= 0x99u; sub_40207B((__int64)&amp;amp;unk_603170); sub_402219(); } 阅读一下代码，发现先是输入一个长度为32的字符串</description>
+    </item>
+    
+    <item>
+      <title>高校战役 re writeups</title>
+      <link>/post/gxzy-re-writeups/</link>
+      <pubDate>Wed, 31 Mar 2021 20:33:02 +0000</pubDate>
+      
+      <guid>/post/gxzy-re-writeups/</guid>
+      <description>cycle graph 天津垓 fxck easyparser  cycle graph 逆向代码 根据提示，这是一道纯算法题，拖到 ida 中，根据关键字符串定位到关键函数。查看核心代码
+dword_403370 = 0; v1 = &amp;amp;unk_403384; byte_403374 = 48; v2 = 0; dword_403378 = (int)&amp;amp;unk_403380; do { v3 = dword_402178[v2]; ++v2; *(v1 - 1) = v3; *v1 = (char *)&amp;amp;unk_403380 + 12 * dword_402274[v2]; v1[1] = (char *)&amp;amp;unk_403380 + 12 * dword_4021F4[v2]; v1 += 3; } while ( (signed int)v1 &amp;lt; (signed int)&amp;amp;unk_403504 ); 上面的代码是主函数开头的初始化部分
+sub_401020(&amp;#34;You need a flag to get out of this:\n&amp;#34;, a1); scan(&amp;#34;%s&amp;#34;, &amp;amp;input); v4 = dword_403370; // 0  v5 = byte_403374; // 48  v6 = 5; v7 = dword_403378; do { v11 = *(&amp;amp;input + v6); if ( *(_DWORD *)v7 + v5 == v11 ) { v7 = *(_DWORD *)(v7 + 4); } else { if ( v5 - *(_DWORD *)v7 !</description>
+    </item>
+    
+    <item>
+      <title>VNCTF2021 FilpGame and notsudoku</title>
+      <link>/post/vnctf2021-filpgame-and-notsudoku/</link>
+      <pubDate>Thu, 25 Mar 2021 03:06:10 +0000</pubDate>
+      
+      <guid>/post/vnctf2021-filpgame-and-notsudoku/</guid>
+      <description>notsudoku V&amp;amp;NCTF直接白给了，全程耗在了Crackme2上，辛辛苦苦找到密文和算法后发现需要动态调试？过程中not sudoku这题就扫了一眼，结果还没发现是python逆向，于是就爬爬了。
+正文 好像是第一次做python exe的逆向
+首先使用 exeinfo 差壳，发现有个 UPX
+用 upx.exe -d 脱壳
+比赛的时候没想到这个是python逆向，直接拖到ida里面了，于是直接gg
+再使用 exeinfo 查一下，会发现是 pyinstaller 编译的文件，说明是python逆向
+上网下载一下 pyinstxtractor.py 进行反编译
+$ python3 pyinstxtractor.py notsudoku-noupx.exe 进入文件夹，找没有后缀的文件，发现有一个叫做 2 的，使用 010editor 从 struct 文件复制文件头（第一行），然后添加 .pyc 后缀，进行 pyc 反编译
+$ uncompyle6 -o 2.py 2.pyc 即可得到 python 源码文件
+发现文件里有一些日文，于是边阅读边修改就行
+# uncompyle6 version 3.7.4 # Python bytecode 3.7 (3394) # Decompiled from: Python 3.6.9 (default, Jan 26 2021, 15:33:00)  # [GCC 8.4.0] # Embedded file name: 2.</description>
+    </item>
+    
+    <item>
+      <title>NepCTF2021 re writeups</title>
+      <link>/post/nepctf2021-re-writeups/</link>
+      <pubDate>Mon, 22 Mar 2021 18:30:03 +0000</pubDate>
+      
+      <guid>/post/nepctf2021-re-writeups/</guid>
+      <description>hardsharp (.NET 逆向) 使用exeinfo发现是 C# .NET文件
+直接用 dnSpy 打开
+找到主函数
+private static void Main(string[] args) { AesClass aesClass = new AesClass(); string text = &amp;#34;&amp;#34;; string strB = &amp;#34;1Umgm5LG6lNPyRCd0LktJhJtyBN7ivpq+EKGmTAcXUM+0ikYZL4h4QTHGqH/3Wh0&amp;#34;; byte[] array = new byte[] { 81, 82, 87, 81, 82, 87, 68, 92, 94, 86, 93, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18 }; Console.WriteLine(&amp;#34;Welcome to nepnep csharp test!</description>
+    </item>
+    
+    <item>
+      <title>WUSTCTF2020 re writeups</title>
+      <link>/post/wustctf2020-re-writeups/</link>
+      <pubDate>Sun, 07 Mar 2021 21:35:10 +0000</pubDate>
+      
+      <guid>/post/wustctf2020-re-writeups/</guid>
+      <description>Crossfun 拖入ida，发现有个判断函数，里面对输入的每个字符进行了判断，把所有判断函数整合起来，就得到flag了
+flag: wctf2020{cpp_@nd_r3verse_@re_fun}
+level1 拖入ida
+stream = fopen(&amp;#34;flag&amp;#34;, &amp;#34;r&amp;#34;); fread(ptr, 1uLL, 0x14uLL, stream); fclose(stream); for ( i = 1; i &amp;lt;= 19; ++i ) { if ( i &amp;amp; 1 ) printf(&amp;#34;%ld\n&amp;#34;, (unsigned int)(ptr[i] &amp;lt;&amp;lt; i)); else printf(&amp;#34;%ld\n&amp;#34;, (unsigned int)(i * ptr[i])); } 显然 ptr 里面就是flag
+看到 output.txt 里面正好有19行
+对其进行逆变换（注意0）
+ptr = [0, 198, 232, 816, 200, 1536, 300, 6144, 984, 51200, 570, 92160, 1200, 565248, 756, 1474560, 800, 6291456, 1782, 65536000] flag = &amp;#39;&amp;#39; for i in range(1, 20): if i % 2 == 1: flag += chr(ptr[i] &amp;gt;&amp;gt; i) else: flag += chr(ptr[i] // i) print (flag) 得到flag ctf2020{d9-dE6-20c}</description>
+    </item>
+    
+    <item>
+      <title>MRCTF2020 reverse writeups</title>
+      <link>/post/mrctf2020-reverse-writeups/mrctf2020-reverse-writeups/</link>
+      <pubDate>Thu, 04 Mar 2021 16:38:52 +0000</pubDate>
+      
+      <guid>/post/mrctf2020-reverse-writeups/mrctf2020-reverse-writeups/</guid>
+      <description>Transform dword = [ 9, 0xa, 0xf, 0x17, 0x7, 0x18, 0xc, 0x6, 0x1, 0x10, 0x3, 0x11, 0x20, 0x1D, 0x0b, 0x1e, 0x1b, 0x16, 0x4, 0x0d, 0x13, 0x14, 0x15, 0x2, 0x19, 0x5, 0x1f, 0x8, 0x12, 0x1a, 0x1c, 0xe, 0 ] flag = [ 0x67, 0x79, 0x7b, 0x7f, 0x75, 0x2b, 0x3c, 0x52, 0x53, 0x79, 0x57, 0x5E, 0x5D, 0x42, 0x7B, 0x2D, 0x2A, 0x66, 0x42, 0x7E, 0x4C, 0x57, 0x79, 0x41, 0x6B, 0x7E, 0x65, 0x3C, 0x5C, 0x45, 0x6F, 0x62, 0x4D, 0x3f] print(len(dword), len(flag)) for i in range(len(dword)): flag[i] ^= dword[i] code = [ 0 for i in range(33)] for i in range(len(dword)): code[dword[i]] = flag[i] for i in range(len(code)): print(chr(code[i]), end = &amp;#39;&amp;#39;) print() flag: MRCTF{Tr4nsp0sltiON_Clph3r_1s_3z}</description>
+    </item>
+    
+    <item>
+      <title>GUETCTF2019 re writeups</title>
+      <link>/post/guetctf2019-reverse-writeups/</link>
+      <pubDate>Thu, 04 Mar 2021 16:17:36 +0000</pubDate>
+      
+      <guid>/post/guetctf2019-reverse-writeups/</guid>
+      <description>re 思路 先upx脱壳
+然后拖入ida
+找到关键字符串
+进入函数
+发现是对每一位进行乘法然后判断
+直接扔到python里算一下，发现 a[6] 缺失，以及有一位算不出来，可能出现了溢出
+用c语言把这一位算出来，得到是 a
+对第7位进行暴力破解，发现1可以，得到flag
+flag{e165421110ba03099a1c039337}
+脚本 x = [ 1629056, 6771600, 3682944, 10431000, 3977328, 5138336, 7532250, 5551632, 3409728, 13013670, 6088797, 7884663, 8944053, 5198490, 4544518, 10115280,3645600, 9667504, 5364450, 13464540, 5488432, 14479500, 6451830, 6252576, 7763364, 7327320, 8741520, 8871876, 4086720, 9374400, 5759124 ] a = [ 166163712 , 731332800 , 357245568 , 1074393000, 489211344 , 518971936 , 406741500 , 294236496 , 177305856 , 650683500, 298351053, 386348487, 438258597, 249527520, 445362764, 981182160, 174988800, 493042704, 257493600, 767478780, 312840624, 140451150, 316139670, 619005024, 372641472, 373693320, 498266640, 452465676, 208422720, 515592000, 719890500 ] for i in range(len(x)): if (a[i] % x[i] == 0): print (chr(a[i] // x[i]), end=&amp;#39;&amp;#39;) else: print (&amp;#39;\n&amp;#39;, i) print (&amp;#39;\nfinish&amp;#39;) 输出为</description>
+    </item>
+    
+    <item>
+      <title>Start Reversing</title>
+      <link>/post/start-reversing/</link>
+      <pubDate>Fri, 15 Jan 2021 18:29:48 +0000</pubDate>
+      
+      <guid>/post/start-reversing/</guid>
+      <description>内涵的软件 首先使用file命令，发现exe是32位的，将其拖入ida中
+进入main函数
+点击进入main0函数
+可以看到一串v2字符串
+结合程序运行时出现的文字：”这里本来应该是答案的“
+猜测v2就是答案
+直接提交
+发现不对
+将开头修改为flag
+提交后直接通过
+新年快乐 首先使用file命令查看exe文件信息，发现是32位
+尝试运行发现是要求输入flag
+拖入ida进行静态分析
+发现只有一个start函数，ida各种报错，无法分析
+猜测使用了upx壳
+使用exeinfope软件进行查看，upx壳实锤
+脱壳后再次拖入ida
+发现v4为&amp;quot;HappyNewYear!&amp;quot;
+对于输入v5，直接与v4进行strncmp的比较
+因此只需要与v4相同即可
+尝试后发现没问题
+套上flag提交
+成功
+guessgame 使用软件，发现是一个猜数游戏
+拖入ida分析
+发现整个代码与flag没有任何关系，就是一个猜测随机数的游戏
+于是猜测flag隐藏在字符串常量中
+进入字符串常量最顶部，发现如下字符串：
+BJD{S1mple_ReV3r5e_W1th_0D_0r_IDA}
+即为flag
+helloword 下载后发现是apk文件
+首先将apk后缀更改为zip
+解压后发现文件夹中含有一个classes.dex文件
+使用dex2jar软件将其转换为jar文件
+使用jd-gui.jar对其进行逆向分析
+在源代码中有com.example.helloword文件夹，用过Java的都知道com.example是什么东西，因此进入该目录下，发现有个MainActivity.class文件，查看源代码，发现有个flag字符串并对其使用了一个比较方法(compareTo)，猜测这个就是需要的flag，提交后发现正确
+xor 拖入ida进行静态分析，发现对输入进行了异或处理，处理结果符合某个特定的函数值即可求解
+看到一个for循环，是对每个字符与前面一个字符进行异或
+根据异或的性质可知，只需要再异或一次就能还原
+所以从后往前进行异或
+随便写个脚本计算一下：
+#include &amp;lt;stdio.h&amp;gt; int main(){ char flag[35]; flag[0] = &amp;#39;f&amp;#39;; flag[1] = &amp;#39;\n&amp;#39;; flag[2] = &amp;#39;k&amp;#39;; flag[3] = &amp;#39;\f&amp;#39;; flag[4] = &amp;#39;w&amp;#39;; flag[5] = &amp;#39;&amp;amp;&amp;#39;; flag[6] = &amp;#39;O&amp;#39;; flag[7] = &amp;#39;.</description>
+    </item>
+    
+  </channel>
+</rss>
