@@ -28,34 +28,70 @@
     <item>
       <title>CTF</title>
       <link>/tags/ctf/</link>
-      <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
       
       <guid>/tags/ctf/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>HeavensGate</title>
+      <link>/tags/heavensgate/</link>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
+      
+      <guid>/tags/heavensgate/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>idek</title>
       <link>/tags/idek/</link>
-      <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
       
       <guid>/tags/idek/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>movfuscator</title>
+      <link>/tags/movfuscator/</link>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
+      
+      <guid>/tags/movfuscator/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>MTCTF</title>
       <link>/tags/mtctf/</link>
-      <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
       
       <guid>/tags/mtctf/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>Pintool</title>
+      <link>/tags/pintool/</link>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
+      
+      <guid>/tags/pintool/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>/tags/python/</link>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
+      
+      <guid>/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Reverse</title>
       <link>/tags/reverse/</link>
-      <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
       
       <guid>/tags/reverse/</guid>
       <description></description>
@@ -64,16 +100,25 @@
     <item>
       <title>SECCONCTF</title>
       <link>/tags/secconctf/</link>
-      <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
       
       <guid>/tags/secconctf/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>wasm</title>
+      <link>/tags/wasm/</link>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
+      
+      <guid>/tags/wasm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Writeup</title>
       <link>/tags/writeup/</link>
-      <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+      <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
       
       <guid>/tags/writeup/</guid>
       <description></description>

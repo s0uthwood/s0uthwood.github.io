@@ -201,15 +201,17 @@ menu:
     &lt;/div&gt;
 &lt;/a&gt;
 
-&lt;/code&gt;&lt;/pre&gt;</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;目前的问题&#34;&gt;目前的问题&lt;/h2&gt;
+&lt;p&gt;在迁移博客的时候顺便稍微整合了一下以前的一些文章，但同时也发现了问题，之前用 Hexo 的时候，习惯用 &lt;code&gt;&amp;lt;--!more--&amp;gt;&lt;/code&gt; 来写摘要，所以就使得摘要习惯性地放了目录，目前还没能在 Hugo 中找到对应的解决方案，所以可能以后的博客归纳思路需要改一改，但之前的应该就这样了。&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>All Solves During a Weekend</title>
         <link>/post/all-solves-during-a-weekend/</link>
-        <pubDate>Mon, 13 Dec 2021 19:37:54 +0000</pubDate>
+        <pubDate>Mon, 13 Dec 2021 19:37:54 +0800</pubDate>
         
         <guid>/post/all-solves-during-a-weekend/</guid>
-        <description>&lt;blockquote&gt;
+        <description>&lt;img src="/post/all-solves-during-a-weekend/seccon_logo.png" alt="Featured image of post All Solves During a Weekend" /&gt;&lt;blockquote&gt;
 &lt;p&gt;打美团 CTF 的时候才意识到，有一种坐牢叫AK&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;mtctf-4thwow&#34;&gt;[MTCTF 4th]wow&lt;/h2&gt;
