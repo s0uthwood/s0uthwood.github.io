@@ -12,7 +12,7 @@
         <pubDate>Tue, 21 Dec 2021 23:23:50 +0800</pubDate>
         
         <guid>/post/migrate-to-hugo/</guid>
-        <description>&lt;img src="/post/migrate-to-hugo/68747470733a2f2f692e696d6775722e636f6d2f634369484f47532e6a7067.jpg" alt="Featured image of post Migrate to Hugo" /&gt;&lt;h2 id=&#34;修改主题的想法&#34;&gt;修改主题的想法&lt;/h2&gt;
+        <description>&lt;img src="/post/migrate-to-hugo/hugo-stack-logo.jpg" alt="Featured image of post Migrate to Hugo" /&gt;&lt;h2 id=&#34;修改主题的想法&#34;&gt;修改主题的想法&lt;/h2&gt;
 &lt;p&gt;之前的 Next 用了有一年多了，自己也做了各种修改，比如加个背景、改个字体之类的。但最近发现由于我硬改了一些颜色，导致深色模式下没什么问题，但浅色模式下就有一个模块是黑色的，很难看，又懒得找当时自己写的代码在哪儿了。&lt;/p&gt;
 &lt;p&gt;另一个原因是队友们都跟风用 Next 主题，难免有点审美疲劳。最终就决定给自己换个主题。&lt;/p&gt;
 &lt;h2 id=&#34;本来的选择&#34;&gt;本来的选择&lt;/h2&gt;
