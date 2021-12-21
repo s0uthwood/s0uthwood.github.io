@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='从 Hexo-Next 到 Hugo-Stack'><title>Migrate to Hugo</title>
+
+<link rel='canonical' href='/post/migrate-to-hugo/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Migrate to Hugo'>
+<meta property='og:description' content='从 Hexo-Next 到 Hugo-Stack'>
+<meta property='og:url' content='/post/migrate-to-hugo/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Blog' /><meta property='article:tag' content='Hugo' /><meta property='article:published_time' content='2021-12-21T23:23:50&#43;08:00'/><meta property='article:modified_time' content='2021-12-21T23:23:50&#43;08:00'/><meta property='og:image' content='/post/migrate-to-hugo/68747470733a2f2f692e696d6775722e636f6d2f634369484f47532e6a7067.jpg' />
+<meta name="twitter:title" content="Migrate to Hugo">
+<meta name="twitter:description" content="从 Hexo-Next 到 Hugo-Stack"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='/post/migrate-to-hugo/68747470733a2f2f692e696d6775722e636f6d2f634369484f47532e6a7067.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/post/migrate-to-hugo/">
+                <img src="/post/migrate-to-hugo/_hu68d4500f44eeff3c046abd6af3014f70_562499_6567d8168a1801f1f9c442fe1a421857.jpg"
+                        srcset="/post/migrate-to-hugo/_hu68d4500f44eeff3c046abd6af3014f70_562499_6567d8168a1801f1f9c442fe1a421857.jpg 800w, /post/migrate-to-hugo/_hu68d4500f44eeff3c046abd6af3014f70_562499_21786ae48635b63e0708aaa1af26e6d4.jpg 1600w"
+                        width="800" 
+                        height="267" 
+                        loading="lazy"
+                        alt="Featured image of post Migrate to Hugo" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/blog/" >
+                Blog
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/migrate-to-hugo/">Migrate to Hugo</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        从 Hexo-Next 到 Hugo-Stack
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Dec 21, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    2 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="修改主题的想法">修改主题的想法</h2>
+<p>之前的 Next 用了有一年多了，自己也做了各种修改，比如加个背景、改个字体之类的。但最近发现由于我硬改了一些颜色，导致深色模式下没什么问题，但浅色模式下就有一个模块是黑色的，很难看，又懒得找当时自己写的代码在哪儿了。</p>
+<p>另一个原因是队友们都跟风用 Next 主题，难免有点审美疲劳。最终就决定给自己换个主题。</p>
+<h2 id="本来的选择">本来的选择</h2>
+<p>其实最一开始并没有打算换成 Hugo，毕竟 Hexo 又不是不能用，既然很多东西都配置好了，那换个主题直接生成多好。于是我精挑细选选了个一个 Hexo 主题：https://github.com/Haojen/hexo-theme-Claudia。</p>
+<p>然而配置的时候发现好像因为 npm 的原因，<code>scss</code> 文件一直跑不起来，很多 <code>css</code> 文件无法生成，于是就想干脆迁移到 Hugo，这样还省得配 npm 了。</p>
+<h2 id="结识-hugo-tack">结识 Hugo tack</h2>
+<p>最初看到 Hugo 其实是在帮 web 手收集博客的时候看到了陆队的博客，正好记录了迁移到 Hugo 的过程。博客里讲了 Hugo 的静态网页生成速度很快。联想到自己的博客垃圾文章也越来越多，Hexo 确实有点慢了，Hugo 也许以后会是个不错的选择。</p>
+<p>后来想要帮校队搭个博客，于是决定试试 Hugo。最一开始看中的是 Hugo Bootstrap Theme，想把背景改一下颜色，但是失败了，于是又找了找主题，发现 Stack 更好看，于是干脆就拿 Stack 搭了。</p>
+<p>于是，在 Claudia 配置失败后，我果断转到了 Hugo Stack 主题。</p>
+<h2 id="目前的修改友链">目前的修改——友链</h2>
+<p>Stack 主题本身是不带友链的，作者应该是正在写，但比较忙，也不知道什么时候能写完，于是就看了看别人的方案。直接搜能搜到一个方案，但讲得不是特别清楚，搭建失败了。后来在 pull request 里面发现有人实现了一个，作者没有采纳而已，于是就以这个作为临时方案了。</p>
+<p>主题 <code>assets/scss/style.scss</code> 27行添加：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#66d9ef">@import</span> <span style="color:#e6db74">&#34;partials/layout/links.scss&#34;</span>;
+</code></pre></div><p>新建 <code>assets/scss/partials/layout/links.scss</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#75715e">/* Place your custom SCSS in HUGO_SITE_FOLDER/assets/scss/custom.scss */</span>
+
+<span style="color:#75715e">// 头像边框颜色
+</span><span style="color:#75715e"></span>$avatar-border-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#566a82</span>;
+$avatar-border-color-dark<span style="color:#f92672">:</span> 	<span style="color:#ae81ff">#C0C0C0</span>;
+
+<span style="color:#75715e">// style-card 背景色
+</span><span style="color:#75715e"></span>$friend-link-background-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#51a8ca</span><span style="color:#ae81ff">10</span>;
+$friend-link-background-color-dark<span style="color:#f92672">:</span> <span style="color:#ae81ff">#696971</span><span style="color:#ae81ff">41</span>;
+
+<span style="color:#75715e">// 友链 name 原始色
+</span><span style="color:#75715e"></span>$friend-link-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#11a1a2</span>;
+$friend-link-color-dark<span style="color:#f92672">:</span> <span style="color:#ae81ff">#ffffff</span>;
+
+<span style="color:#75715e">// 友链 name 气泡响应对比色
+</span><span style="color:#75715e"></span>$friend-link-hover-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#ea4e2f</span>;
+$friend-link-hover-color-dark<span style="color:#f92672">:</span>	<span style="color:#a6e22e">rgb</span>(<span style="color:#ae81ff">241</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">213</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">159</span>);
+
+<span style="color:#75715e">// bio 简介上下文
+</span><span style="color:#75715e"></span>$context-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#404040</span>;
+$context-color-dark<span style="color:#f92672">:</span>	<span style="color:#ae81ff">#c0c0c0</span>;
+
+<span style="color:#75715e">// 友链头像及头像边框的样式
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-avatar</span> {
+    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">56</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">56</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">px</span> inset $avatar-border-color;
+    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
+        <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">px</span> inset $avatar-border-color-dark;   
+    }
+}
+
+<span style="color:#a6e22e">.friend-link-div</span> {
+    <span style="color:#75715e">// 实现卡片双栏排列效果
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> auto;
+    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> auto;
+    <span style="color:#a6e22e">margin-inline-start</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">.5</span><span style="color:#66d9ef">%</span>;
+    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">43</span><span style="color:#66d9ef">%</span>;
+    <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> inline-block <span style="color:#66d9ef">!important</span>;
+
+    <span style="color:#75715e">// 控制上下连续排列的卡片之间的行距
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">11</span><span style="color:#66d9ef">px</span>;
+
+    <span style="color:#75715e">// 卡片圆角
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span>;
+
+    <span style="color:#75715e">// 卡片阴影
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">-webkit-box-shadow</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">32</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#a6e22e">rgba</span>(<span style="color:#ae81ff">231</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">224</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">224</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.15</span>);
+    <span style="color:#a6e22e">-moz-box-shadow</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">32</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#a6e22e">rgba</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.15</span>);
+    <span style="color:#a6e22e">box-shadow</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#a6e22e">rgba</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.16</span>);
+
+    <span style="color:#75715e">// 卡片背景色
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">background</span><span style="color:#f92672">:</span> $friend-link-background-color;
+    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
+        <span style="color:#a6e22e">background</span><span style="color:#f92672">:</span> $friend-link-background-color-dark;
+    }
+
+    <span style="color:#75715e">// 卡牌气泡响应动画
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">-webkit-transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.4</span><span style="color:#66d9ef">s</span> ease;
+    <span style="color:#a6e22e">-moz-transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.4</span><span style="color:#66d9ef">s</span> ease;
+    <span style="color:#a6e22e">-o-transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.4</span><span style="color:#66d9ef">s</span> ease;
+    <span style="color:#a6e22e">transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.15</span><span style="color:#66d9ef">s</span> ease;
+    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">:hover</span> {
+        <span style="color:#a6e22e">transform</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">scale</span>(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">.03</span>);
+    }
+}
+
+
+<span style="color:#a6e22e">.friend-link-avatar</span> {
+    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">92</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">float</span><span style="color:#f92672">:</span> left;
+    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">px</span>;
+
+}
+
+<span style="color:#75715e">// name 特效样式， hover 气泡效果,友链 name 变色
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-link-info</span> {
+    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">13</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">18</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-color;
+
+    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
+        <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-color-dark;
+    }
+    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">:hover</span> {
+        <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-hover-color;
+        <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
+            <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-hover-color-dark;
+        }
+    }
+}
+
+<span style="color:#75715e">// name 文字样式
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-name</span> {
+    <span style="color:#a6e22e">text-overflow</span><span style="color:#f92672">:</span> ellipsis;
+    <span style="color:#a6e22e">overflow</span><span style="color:#f92672">:</span> hidden;
+    <span style="color:#a6e22e">white-space</span><span style="color:#f92672">:</span> nowrap;
+    <span style="color:#a6e22e">font-style</span><span style="color:#f92672">:</span> normal;
+    <span style="color:#a6e22e">font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Comic Sans MS&#39;</span><span style="color:#f92672">,</span>cursive;
+    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
+
+}
+
+<span style="color:#75715e">// bio 文字样式
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-bio</span> {
+    <span style="color:#a6e22e">text-overflow</span><span style="color:#f92672">:</span> ellipsis;
+    <span style="color:#a6e22e">overflow</span><span style="color:#f92672">:</span> hidden;
+    <span style="color:#a6e22e">white-space</span><span style="color:#f92672">:</span> nowrap;
+    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> auto;
+
+    <span style="color:#75715e">// font: 12px/1 Tahoma,Helvetica,Arial,&#34;\5b8b\4f53&#34;,sans-serif;
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">font-family</span><span style="color:#f92672">:</span> Helvetica<span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;Hiragino Sans GB&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;Microsoft Yahei&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;微软雅黑&#39;</span><span style="color:#f92672">,</span> Arial<span style="color:#f92672">,</span> sans-serif;
+    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
+
+    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $context-color;
+    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
+        <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $context-color-dark;
+    }
+}
+
+<span style="color:#75715e">// 响应式页面，允许根据不同的尺寸调整样式
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">@media</span> screen <span style="color:#f92672">and</span> (<span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">600</span><span style="color:#66d9ef">px</span>) {
+    <span style="color:#a6e22e">.friend-bio</span> {
+        <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> none;
+
+    }
+    <span style="color:#a6e22e">.friend-link-avatar</span> {
+        <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">84</span><span style="color:#66d9ef">px</span>;
+        <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> auto;
+    }
+    <span style="color:#a6e22e">.friend-link-info</span> {
+        <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+        <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> auto;
+        <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> flex;
+        <span style="color:#a6e22e">align-items</span><span style="color:#f92672">:</span> center;
+        <span style="color:#a6e22e">justify-content</span><span style="color:#f92672">:</span> center;
+    }
+    <span style="color:#a6e22e">.friend-name</span> {
+        <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
+    }
+}
+</code></pre></div><p>接下来只需要在自己的 page 页面下加个 <code>links.md</code> 即可</p>
+<pre tabindex="0"><code class="language-marddown" data-lang="marddown">---
+title: &quot;Links 友情链接&quot;
+date: 2021-10-01T16:45:06+08:00
+slug: &quot;links&quot;
+layout: &quot;links&quot;
+license: false
+toc: false
+menu:
+    main:
+        weight: -80
+        pre: link
+---
+
+## Friends
+
+<a target="_blank" href= title= class="friend-link">
+    <div class="friend-link-div">
+        <div class="friend-link-avatar">
+            <img class="friend-avatar" src= />
+        </div>
+        <div class="friend-link-info">
+            <i class="fa fa-link" aria-hidden="true"></i>
+            <i class="friend-name"></i>
+            <p class="friend-bio"></p>
+        </div>
+    </div>
+</a>
+
+</code></pre>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/blog/">Blog</a>
+        
+            <a href="/tags/hugo/">Hugo</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2021 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#修改主题的想法">修改主题的想法</a></li>
+    <li><a href="#本来的选择">本来的选择</a></li>
+    <li><a href="#结识-hugo-tack">结识 Hugo tack</a></li>
+    <li><a href="#目前的修改友链">目前的修改——友链</a></li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

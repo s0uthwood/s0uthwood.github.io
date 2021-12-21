@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on s0uthwood&#39;s Blog</title>
+    <link>/categories/blog/</link>
+    <description>Recent content in Blog on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 21 Dec 2021 23:23:50 +0800</lastBuildDate><atom:link href="/categories/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Migrate to Hugo</title>
+      <link>/post/migrate-to-hugo/</link>
+      <pubDate>Tue, 21 Dec 2021 23:23:50 +0800</pubDate>
+      
+      <guid>/post/migrate-to-hugo/</guid>
+      <description>修改主题的想法 之前的 Next 用了有一年多了，自己也做了各种修改，比如加个背景、改个字体之类的。但最近发现由于我硬改了一些颜色，导致深色模式下没什么问题，但浅色模式下就有一个模块是黑色的，很难看，又懒得找当时自己写的代码在哪儿了。
+另一个原因是队友们都跟风用 Next 主题，难免有点审美疲劳。最终就决定给自己换个主题。
+本来的选择 其实最一开始并没有打算换成 Hugo，毕竟 Hexo 又不是不能用，既然很多东西都配置好了，那换个主题直接生成多好。于是我精挑细选选了个一个 Hexo 主题：https://github.com/Haojen/hexo-theme-Claudia。
+然而配置的时候发现好像因为 npm 的原因，scss 文件一直跑不起来，很多 css 文件无法生成，于是就想干脆迁移到 Hugo，这样还省得配 npm 了。
+结识 Hugo tack 最初看到 Hugo 其实是在帮 web 手收集博客的时候看到了陆队的博客，正好记录了迁移到 Hugo 的过程。博客里讲了 Hugo 的静态网页生成速度很快。联想到自己的博客垃圾文章也越来越多，Hexo 确实有点慢了，Hugo 也许以后会是个不错的选择。
+后来想要帮校队搭个博客，于是决定试试 Hugo。最一开始看中的是 Hugo Bootstrap Theme，想把背景改一下颜色，但是失败了，于是又找了找主题，发现 Stack 更好看，于是干脆就拿 Stack 搭了。
+于是，在 Claudia 配置失败后，我果断转到了 Hugo Stack 主题。
+目前的修改——友链 Stack 主题本身是不带友链的，作者应该是正在写，但比较忙，也不知道什么时候能写完，于是就看了看别人的方案。直接搜能搜到一个方案，但讲得不是特别清楚，搭建失败了。后来在 pull request 里面发现有人实现了一个，作者没有采纳而已，于是就以这个作为临时方案了。
+主题 assets/scss/style.scss 27行添加：
+@import &amp;#34;partials/layout/links.scss&amp;#34;; 新建 assets/scss/partials/layout/links.scss
+/* Place your custom SCSS in HUGO_SITE_FOLDER/assets/scss/custom.</description>
+    </item>
+    
+  </channel>
+</rss>
