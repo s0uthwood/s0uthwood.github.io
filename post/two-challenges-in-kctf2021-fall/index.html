@@ -142,12 +142,17 @@
 <p>这题还是比较容易的，需要一点点动调的经验</p>
 <p>上张队友的截图吧，懒得自己截了</p>
 <p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 392; 
+			flex-basis: 942px"
 	>
-	<a href="/checkin.jpg" >
-		<img src="/checkin.jpg"
-			
-			
-			
+	<a href="/post/two-challenges-in-kctf2021-fall/checkin.jpg" data-size="660x168">
+		<img src="/post/two-challenges-in-kctf2021-fall/checkin.jpg"
+			width="660"
+			height="168"
+			srcset="/post/two-challenges-in-kctf2021-fall/checkin_hue08618e613484fc15c0d0d318160d905_17847_480x0_resize_q75_box.jpg 480w, /post/two-challenges-in-kctf2021-fall/checkin_hue08618e613484fc15c0d0d318160d905_17847_1024x0_resize_q75_box.jpg 1024w"
 			loading="lazy"
 			>
 	</a>
@@ -168,12 +173,17 @@
 </blockquote>
 <p>很容易定位到程序的输入</p>
 <p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 202; 
+			flex-basis: 486px"
 	>
-	<a href="/image-20211117013038950.png" >
-		<img src="/image-20211117013038950.png"
-			
-			
-			
+	<a href="/post/two-challenges-in-kctf2021-fall/image-20211117013038950.png" data-size="912x450">
+		<img src="/post/two-challenges-in-kctf2021-fall/image-20211117013038950.png"
+			width="912"
+			height="450"
+			srcset="/post/two-challenges-in-kctf2021-fall/image-20211117013038950_hu85d35b97083a4f18efd8b87e222d059e_54919_480x0_resize_box_3.png 480w, /post/two-challenges-in-kctf2021-fall/image-20211117013038950_hu85d35b97083a4f18efd8b87e222d059e_54919_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
 			>
 	</a>
@@ -184,12 +194,17 @@
 <p>随后将输入的前八字节存入 <code>404000</code> 中，剩下的部分传参进 <code>sub_401580</code></p>
 <p>要想让该函数返回1，需要先通过如下的if验证</p>
 <p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 221; 
+			flex-basis: 532px"
 	>
-	<a href="/image-20211117013351047.png" >
-		<img src="/image-20211117013351047.png"
-			
-			
-			
+	<a href="/post/two-challenges-in-kctf2021-fall/image-20211117013351047.png" data-size="1303x587">
+		<img src="/post/two-challenges-in-kctf2021-fall/image-20211117013351047.png"
+			width="1303"
+			height="587"
+			srcset="/post/two-challenges-in-kctf2021-fall/image-20211117013351047_hu892559e3a0661b25bb9d9447f892b5b0_47215_480x0_resize_box_3.png 480w, /post/two-challenges-in-kctf2021-fall/image-20211117013351047_hu892559e3a0661b25bb9d9447f892b5b0_47215_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
 			>
 	</a>
@@ -197,12 +212,17 @@
 </figure></p>
 <p>简单看一下使用的变量，应该是对前八字节的输入进行的验证</p>
 <p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 54; 
+			flex-basis: 130px"
 	>
-	<a href="/image-20211117013516722.png" >
-		<img src="/image-20211117013516722.png"
-			
-			
-			
+	<a href="/post/two-challenges-in-kctf2021-fall/image-20211117013516722.png" data-size="942x1727">
+		<img src="/post/two-challenges-in-kctf2021-fall/image-20211117013516722.png"
+			width="942"
+			height="1727"
+			srcset="/post/two-challenges-in-kctf2021-fall/image-20211117013516722_hu06b52fdfc89a64205e2555f46bb80ce1_122804_480x0_resize_box_3.png 480w, /post/two-challenges-in-kctf2021-fall/image-20211117013516722_hu06b52fdfc89a64205e2555f46bb80ce1_122804_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
 			>
 	</a>
@@ -359,12 +379,17 @@
 </code></pre></div><p>转换一下得到前八字节 <code>B4D682C8BF2DE13A</code></p>
 <p>确定前八字节后，只需要关注和参数（后八字节）有关的部分了，中间全部动调跳过</p>
 <p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 113; 
+			flex-basis: 273px"
 	>
-	<a href="/image-20211117014358505.png" >
-		<img src="/image-20211117014358505.png"
-			
-			
-			
+	<a href="/post/two-challenges-in-kctf2021-fall/image-20211117014358505.png" data-size="1062x933">
+		<img src="/post/two-challenges-in-kctf2021-fall/image-20211117014358505.png"
+			width="1062"
+			height="933"
+			srcset="/post/two-challenges-in-kctf2021-fall/image-20211117014358505_hu9a802c677e724eac88e42ebe00c53717_83085_480x0_resize_box_3.png 480w, /post/two-challenges-in-kctf2021-fall/image-20211117014358505_hu9a802c677e724eac88e42ebe00c53717_83085_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
 			>
 	</a>
@@ -457,12 +482,17 @@
 <p>很多人的 wp 写的是用虚表找到验证函数，但我对虚表不太了解，做题的时候是用的动调下断点的方式做的</p>
 <p>动调的时候搜索字符串，发现能找到输入，然后在输入处下个硬件断点，能够断到 <code>strlen</code>，出来后还能看到 <code>strncpy</code>，但在这里断是不对的，因为没有点击检查，所以无论如何也进不了验证函数，于是朋友在获取消息的地方加了个消息断点，这时候再用硬件断点断下来，然后不断取消当前断点，在 <code>strncpy</code> 到的地方下新的断点，就能够进入到加密函数</p>
 <p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 153; 
+			flex-basis: 368px"
 	>
-	<a href="/base64.png" >
-		<img src="/base64.png"
-			
-			
-			
+	<a href="/post/two-challenges-in-kctf2021-fall/base64.png" data-size="1294x842">
+		<img src="/post/two-challenges-in-kctf2021-fall/base64.png"
+			width="1294"
+			height="842"
+			srcset="/post/two-challenges-in-kctf2021-fall/base64_hufdf4e731bd789e2f7f85777a38453208_106372_480x0_resize_box_3.png 480w, /post/two-challenges-in-kctf2021-fall/base64_hufdf4e731bd789e2f7f85777a38453208_106372_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
 			>
 	</a>
@@ -476,12 +506,17 @@
 <p><code>prvo9CHSJOcPIb6xRVUXQz0qBGDE72LNZduaefYT5K_8-4FAhlimjkngt1yMWs3w!</code></p>
 <p>接下来继续用动调找验证函数</p>
 <p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 334; 
+			flex-basis: 803px"
 	>
-	<a href="/heavens_gate.png" >
-		<img src="/heavens_gate.png"
-			
-			
-			
+	<a href="/post/two-challenges-in-kctf2021-fall/heavens_gate.png" data-size="1551x463">
+		<img src="/post/two-challenges-in-kctf2021-fall/heavens_gate.png"
+			width="1551"
+			height="463"
+			srcset="/post/two-challenges-in-kctf2021-fall/heavens_gate_hudd88a720f3221254d24ba5059a43de09_40181_480x0_resize_box_3.png 480w, /post/two-challenges-in-kctf2021-fall/heavens_gate_hudd88a720f3221254d24ba5059a43de09_40181_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
 			>
 	</a>
@@ -492,12 +527,17 @@
 <p>结合着 32 位程序，猜测是一个天堂之门</p>
 <p>把调用的函数取出来，ida64 反编译一下</p>
 <p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 138; 
+			flex-basis: 331px"
 	>
-	<a href="/check_cipher.png" >
-		<img src="/check_cipher.png"
-			
-			
-			
+	<a href="/post/two-challenges-in-kctf2021-fall/check_cipher.png" data-size="1154x836">
+		<img src="/post/two-challenges-in-kctf2021-fall/check_cipher.png"
+			width="1154"
+			height="836"
+			srcset="/post/two-challenges-in-kctf2021-fall/check_cipher_hu8610347159ac7cb9c9671e29a84bb266_49459_480x0_resize_box_3.png 480w, /post/two-challenges-in-kctf2021-fall/check_cipher_hu8610347159ac7cb9c9671e29a84bb266_49459_1024x0_resize_box_3.png 1024w"
 			loading="lazy"
 			>
 	</a>
