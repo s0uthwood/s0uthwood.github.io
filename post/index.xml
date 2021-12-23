@@ -6,7 +6,38 @@
     <description>Recent content in Posts on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 21 Dec 2021 23:23:50 +0800</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 23 Dec 2021 22:23:17 +0800</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Two Challenges in KCTF2021 Fall</title>
+      <link>/post/two-challenges-in-kctf2021-fall/</link>
+      <pubDate>Thu, 23 Dec 2021 22:23:17 +0800</pubDate>
+      
+      <guid>/post/two-challenges-in-kctf2021-fall/</guid>
+      <description>有些题还是很值得补的，最近没什么时间，假期补吧（
+第一题 签到 这题还是比较容易的，需要一点点动调的经验
+上张队友的截图吧，懒得自己截了
+
+动调看看内存就知道，流程是：
+serial-&amp;gt;十进制-&amp;gt;与name的crc异或-&amp;gt;计算crc
+最后需要是一个固定的值，于是只需要想办法反解就行了
+这里注意到了一个事情，那就是图中看似是对 v6 的 crc 结果做了约束，其实是对 v6 本身进行了约束
+由于题目给了一个实例的 name 和 serial，我们只需要动调拿到这个的 v6，就知道能通过验证的 v6 是多少了
+接下来动调拿一下 KCTF 的 crc，这个的结果再异或一下目标的 v6，就得到serial了
+ 靠记忆写的，希望没错
+ 第二题 迷失丛林  这题就直接放提交的wp了
+ 很容易定位到程序的输入
+
+输入长度为32，需要通过 sub_4014A0, sub_401580 的验证
+4014A0 较为简单，是个经典的hexstr转成char存到 4041F0 这个地址，最后的16是计算转换后的长度，所以输入就是 [0-9A-F]{32}
+随后将输入的前八字节存入 404000 中，剩下的部分传参进 sub_401580
+要想让该函数返回1，需要先通过如下的if验证
+
+简单看一下使用的变量，应该是对前八字节的输入进行的验证
+
+结合动调发现大概就是根据404000数组，构成一个 &amp;lt;value, index&amp;gt; 的结构，两两存放到404420当中
+分析了一下404000数组的作用和特征，发现这个数组应该是构成一个环状的结构（以当前数值作为索引寻找下一个数），猜测不能有重复的数字，否则可能会构成小循环之类的，用脚本验证了一下发现后面248个数字果然没有重复，于是将前八字节的取值可能锁定到了 0x1e, 0x28, 0x4b, 0x6d, 0x8c, 0xa3, 0xd2, 0xfb 中，总共有 $8!</description>
+    </item>
+    
     <item>
       <title>Migrate to Hugo</title>
       <link>/post/migrate-to-hugo/</link>
@@ -17,8 +48,8 @@
 另一个原因是队友们都跟风用 Next 主题，难免有点审美疲劳。最终就决定给自己换个主题。
 本来的选择 其实最一开始并没有打算换成 Hugo，毕竟 Hexo 又不是不能用，既然很多东西都配置好了，那换个主题直接生成多好。于是我精挑细选选了个一个 Hexo 主题：https://github.com/Haojen/hexo-theme-Claudia。
 然而配置的时候发现好像因为 npm 的原因，scss 文件一直跑不起来，很多 css 文件无法生成，于是就想干脆迁移到 Hugo，这样还省得配 npm 了。
-结识 Hugo tack 最初看到 Hugo 其实是在帮 web 手收集博客的时候看到了陆队的博客，正好记录了迁移到 Hugo 的过程。博客里讲了 Hugo 的静态网页生成速度很快。联想到自己的博客垃圾文章也越来越多，Hexo 确实有点慢了，Hugo 也许以后会是个不错的选择。
-后来想要帮校队搭个博客，于是决定试试 Hugo。最一开始看中的是 Hugo Bootstrap Theme，想把背景改一下颜色，但是失败了，于是又找了找主题，发现 Stack 更好看，于是干脆就拿 Stack 搭了。
+结识 Hugo stack 最初看到 Hugo 其实是在帮 web 手收集博客的时候看到了陆队的博客，正好记录了迁移到 Hugo 的过程。博客里讲了 Hugo 的静态网页生成速度很快。联想到自己的博客垃圾文章也越来越多，Hexo 确实有点慢了，Hugo 也许以后会是个不错的选择。
+后来想要帮校队搭个博客，于是决定试试 Hugo。最一开始看中的是 Hugo Bootstrap Theme，想把背景改一下颜色，但是失败了，于是又找了找主题，发现 Stack 更好看，于是干脆就拿 Stack 搭了，而后来才发现，原来陆队的博客也是 stack 主题，看来审美从来没有变过 😂。
 于是，在 Claudia 配置失败后，我果断转到了 Hugo Stack 主题。
 目前的修改——友链 Stack 主题本身是不带友链的，作者应该是正在写，但比较忙，也不知道什么时候能写完，于是就看了看别人的方案。直接搜能搜到一个方案，但讲得不是特别清楚，搭建失败了。后来在 pull request 里面发现有人实现了一个，作者没有采纳而已，于是就以这个作为临时方案了。
 主题 assets/scss/style.scss 27行添加：

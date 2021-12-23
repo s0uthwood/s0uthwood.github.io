@@ -6,7 +6,389 @@
         <description>Recent content on s0uthwood&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Tue, 21 Dec 2021 23:23:50 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 23 Dec 2021 22:23:17 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Two Challenges in KCTF2021 Fall</title>
+        <link>/post/two-challenges-in-kctf2021-fall/</link>
+        <pubDate>Thu, 23 Dec 2021 22:23:17 +0800</pubDate>
+        
+        <guid>/post/two-challenges-in-kctf2021-fall/</guid>
+        <description>&lt;img src="/post/two-challenges-in-kctf2021-fall/cover.jpg" alt="Featured image of post Two Challenges in KCTF2021 Fall" /&gt;&lt;p&gt;有些题还是很值得补的，最近没什么时间，假期补吧（&lt;/p&gt;
+&lt;h2 id=&#34;第一题-签到&#34;&gt;第一题 签到&lt;/h2&gt;
+&lt;p&gt;这题还是比较容易的，需要一点点动调的经验&lt;/p&gt;
+&lt;p&gt;上张队友的截图吧，懒得自己截了&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;/checkin.jpg&#34; &gt;
+		&lt;img src=&#34;/checkin.jpg&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;动调看看内存就知道，流程是：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;serial-&amp;gt;十进制-&amp;gt;与name的crc异或-&amp;gt;计算crc&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;最后需要是一个固定的值，于是只需要想办法反解就行了&lt;/p&gt;
+&lt;p&gt;这里注意到了一个事情，那就是图中看似是对 v6 的 crc 结果做了约束，其实是对 v6 本身进行了约束&lt;/p&gt;
+&lt;p&gt;由于题目给了一个实例的 name 和 serial，我们只需要动调拿到这个的 v6，就知道能通过验证的 v6 是多少了&lt;/p&gt;
+&lt;p&gt;接下来动调拿一下 &lt;code&gt;KCTF&lt;/code&gt; 的 crc，这个的结果再异或一下目标的 v6，就得到serial了&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;靠记忆写的，希望没错&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;第二题-迷失丛林&#34;&gt;第二题 迷失丛林&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这题就直接放提交的wp了&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;很容易定位到程序的输入&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;/image-20211117013038950.png&#34; &gt;
+		&lt;img src=&#34;/image-20211117013038950.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;输入长度为32，需要通过 &lt;code&gt;sub_4014A0&lt;/code&gt;, &lt;code&gt;sub_401580&lt;/code&gt; 的验证&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;4014A0&lt;/code&gt; 较为简单，是个经典的hexstr转成char存到 &lt;code&gt;4041F0&lt;/code&gt; 这个地址，最后的16是计算转换后的长度，所以输入就是 &lt;code&gt;[0-9A-F]{32}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;随后将输入的前八字节存入 &lt;code&gt;404000&lt;/code&gt; 中，剩下的部分传参进 &lt;code&gt;sub_401580&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;要想让该函数返回1，需要先通过如下的if验证&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;/image-20211117013351047.png&#34; &gt;
+		&lt;img src=&#34;/image-20211117013351047.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;简单看一下使用的变量，应该是对前八字节的输入进行的验证&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;/image-20211117013516722.png&#34; &gt;
+		&lt;img src=&#34;/image-20211117013516722.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;结合动调发现大概就是根据404000数组，构成一个 &lt;code&gt;&amp;lt;value, index&amp;gt;&lt;/code&gt; 的结构，两两存放到404420当中&lt;/p&gt;
+&lt;p&gt;分析了一下404000数组的作用和特征，发现这个数组应该是构成一个环状的结构（以当前数值作为索引寻找下一个数），猜测不能有重复的数字，否则可能会构成小循环之类的，用脚本验证了一下发现后面248个数字果然没有重复，于是将前八字节的取值可能锁定到了 &lt;code&gt;0x1e, 0x28, 0x4b, 0x6d, 0x8c, 0xa3, 0xd2, 0xfb&lt;/code&gt; 中，总共有 $8!=40320$ 种可能，完全可以爆破&lt;/p&gt;
+&lt;p&gt;把ida代码复制下来改一改&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdint.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;algorithm&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;cstring&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; byte_404000[] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9B&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x16&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDD&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x73&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x96&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x47&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x26&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x67&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x41&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x82&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x20&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x56&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x92&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x88&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x29&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x71&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x34&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x50&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x59&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x57&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x22&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x30&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x04&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x36&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x68&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x45&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x85&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCC&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x61&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x78&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x32&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x76&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x31&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x80&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x39&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4F&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x72&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x83&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x86&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x60&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x63&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0C&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x44&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x35&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x19&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x69&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x08&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1F&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x11&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x79&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x93&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x42&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x23&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3B&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x77&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x58&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDB&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x97&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7A&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x52&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x15&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x74&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x25&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x62&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x05&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0D&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x98&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x43&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x48&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x87&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x49&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCA&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x09&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x81&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x53&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6F&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x91&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x46&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x54&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEB&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x64&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE4&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x02&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x37&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x13&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xED&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x27&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x99&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x75&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAB&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFE&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x70&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x95&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x40&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x06&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x03&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x10&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x89&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x90&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAE&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x84&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x55&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBB&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0A&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x66&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCB&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x12&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x17&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x94&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x01&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x24&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x14&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x51&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x07&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x65&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x21&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC8&lt;/span&gt;, 
+  &lt;span style=&#34;color:#ae81ff&#34;&gt;0x38&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFC&lt;/span&gt;
+};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; byte_404220[&lt;span style=&#34;color:#ae81ff&#34;&gt;520&lt;/span&gt;];
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; byte_404420[&lt;span style=&#34;color:#ae81ff&#34;&gt;65537&lt;/span&gt;];
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; dword_404100[] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x10&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x20&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x40&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x80&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;using&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;namespace&lt;/span&gt; std;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sub_401580&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;a2) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v2; &lt;span style=&#34;color:#75715e&#34;&gt;// ebp
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v3; &lt;span style=&#34;color:#75715e&#34;&gt;// eax
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v4; &lt;span style=&#34;color:#75715e&#34;&gt;// esi
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v5; &lt;span style=&#34;color:#75715e&#34;&gt;// ecx
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v6; &lt;span style=&#34;color:#75715e&#34;&gt;// edi
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v7; &lt;span style=&#34;color:#75715e&#34;&gt;// ecx
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v8; &lt;span style=&#34;color:#75715e&#34;&gt;// edx
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v9; &lt;span style=&#34;color:#75715e&#34;&gt;// eax
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v10; &lt;span style=&#34;color:#75715e&#34;&gt;// ecx
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v11; &lt;span style=&#34;color:#75715e&#34;&gt;// esi
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v12; &lt;span style=&#34;color:#75715e&#34;&gt;// eax
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; v13; &lt;span style=&#34;color:#75715e&#34;&gt;// dl
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v14; &lt;span style=&#34;color:#75715e&#34;&gt;// edi
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v15; &lt;span style=&#34;color:#75715e&#34;&gt;// eax
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v16; &lt;span style=&#34;color:#75715e&#34;&gt;// ecx
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v17; &lt;span style=&#34;color:#75715e&#34;&gt;// esi
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i; &lt;span style=&#34;color:#75715e&#34;&gt;// eax
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; v19; &lt;span style=&#34;color:#75715e&#34;&gt;// dl
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; v21; &lt;span style=&#34;color:#75715e&#34;&gt;// [esp+10h] [ebp-Ch]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; v22; &lt;span style=&#34;color:#75715e&#34;&gt;// [esp+11h] [ebp-Bh]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; v23; &lt;span style=&#34;color:#75715e&#34;&gt;// [esp+12h] [ebp-Ah]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; v24; &lt;span style=&#34;color:#75715e&#34;&gt;// [esp+13h] [ebp-9h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v25; &lt;span style=&#34;color:#75715e&#34;&gt;// [esp+14h] [ebp-8h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+  v21 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+  v22 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+  v23 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+  v24 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+  v2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+  v25 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; byte_404420;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+    byte_404000[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a2[i];
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+  {
+    byte_404220[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; byte_404000[v2 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;];
+    byte_404220[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v2;
+    v3 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; byte_404220;
+    v4 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; dword_404100;
+    v5 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;byte_404220[dword_404100[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+    {
+      v6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v4;                                 &lt;span style=&#34;color:#75715e&#34;&gt;// 2, 4, 8, 10h, 20h, 40h, 80h
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v4 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; )
+      {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+        {
+          v7 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v5 &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+          &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(v7 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; byte_404000[&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v3];
+          &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v7 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v3 &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+          v5 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v7 &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+          &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v3;
+          &lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;v6;
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( v6 );
+      }
+      &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v4;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( v4 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;(dword_404100[&lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;]) );
+    v8 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+    {
+      &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v25[&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v3&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;];
+      &lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;v8;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( v8 );
+    &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v2;
+    v25 &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt;;
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( v2 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt; );
+  v9 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;byte_404420[&lt;span style=&#34;color:#ae81ff&#34;&gt;0x28&lt;/span&gt;];
+  v10 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+  {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(v9 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt;) )
+      &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v21;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(v9 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;26&lt;/span&gt;) )
+      &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v22;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v9 )
+      &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v23;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( v9[&lt;span style=&#34;color:#ae81ff&#34;&gt;39&lt;/span&gt;] )
+      &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v24;
+    v9 &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt;;
+    &lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;v10;
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( v10 );
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( v21 &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA9&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; v22 &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAC&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; v23 &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA7&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; v24 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC8u&lt;/span&gt; ){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;){
+      printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%hhX&amp;#34;&lt;/span&gt;, a2[i]);
+    }
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+}
+
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(){
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; flag[] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {&lt;span style=&#34;color:#ae81ff&#34;&gt;0x1e&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x28&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4b&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6d&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8c&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xa3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xd2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xfb&lt;/span&gt;};
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;{
+    memset(byte_404420, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;65536&lt;/span&gt;);
+    sub_401580(flag);
+  }&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (next_permutation(flag, flag &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;));
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;转换一下得到前八字节 &lt;code&gt;B4D682C8BF2DE13A&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;确定前八字节后，只需要关注和参数（后八字节）有关的部分了，中间全部动调跳过&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;/image-20211117014358505.png&#34; &gt;
+		&lt;img src=&#34;/image-20211117014358505.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;这一部分程序相较来说就简单了不少，主要是根据404000开头的八个字节作为初始值，每个字节单独与输入的八个字节进行运算，根据末尾bit决定是+1还是找索引，最终目的是凑成 &lt;code&gt;GoodJob~&lt;/code&gt; 这个字符串（&lt;code&gt;sub_4024C0&lt;/code&gt; 是个字符串比较）&lt;/p&gt;
+&lt;p&gt;可以使用搜索之类的，但考虑到每个字节是单独运算的，常规爆破也只需要 &lt;code&gt;0x800&lt;/code&gt; 的运算量，所以还是直接爆破了&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; byte_414420[] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {&lt;span style=&#34;color:#ae81ff&#34;&gt;0xC1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x58&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x64&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x77&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x21&lt;/span&gt;};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; byte_404000[] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x58&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x64&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x77&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x21&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x74&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEB&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x14&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x25&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x37&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x85&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8C&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x26&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x87&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x60&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x99&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x54&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3C&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x95&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x86&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBE&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x67&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x30&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x57&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x62&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x45&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFE&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x80&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x05&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x13&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x22&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2B&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x69&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x42&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4F&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x07&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x36&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x01&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x94&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0B&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x35&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x49&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x53&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x82&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x32&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFF&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x19&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x56&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x15&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x46&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x89&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x43&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x20&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEF&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBB&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCB&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x09&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x93&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x72&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7C&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x27&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x17&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x28&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x00&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE5&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x63&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x23&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x47&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x65&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x08&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x84&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x88&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x12&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x24&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1B&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD7&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x44&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDB&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x51&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xED&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x50&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x11&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x68&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x03&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x40&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x02&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xEC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x83&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x06&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5D&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x97&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x66&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFB&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x55&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAB&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB2&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x04&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFA&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x31&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x71&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x73&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x48&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF9&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x98&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xE4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x34&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x81&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x75&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x90&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x92&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x10&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x29&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x52&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x39&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF4&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x41&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x78&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x16&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x79&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x61&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x70&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xD4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x91&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xDC&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF6&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xF8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xFD&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x59&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x38&lt;/span&gt;, 
+    &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x96&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAE&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x76&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA2&lt;/span&gt;
+};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;calc&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; a2, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i){
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v17; &lt;span style=&#34;color:#75715e&#34;&gt;// esi
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; v19; &lt;span style=&#34;color:#75715e&#34;&gt;// dl
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  v17 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+    {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( v17 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; )
+        {
+          &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;i &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; )
+            &lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;byte_414420[i];
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;
+        {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( (a2 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; )
+                v19 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; byte_414420[i] &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;
+                v19 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; byte_404000[byte_414420[i]];
+            byte_414420[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v19;
+            a2 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+        }
+        &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v17;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( v17 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt; );
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; byte_414420[i];
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; b[] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;GoodJob~&amp;#34;&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; j &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;; j&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;){
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x100&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;){
+            a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xff&lt;/span&gt;;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; k &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; k &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;; k&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;){
+                byte_414420[k] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; byte_404000[k];
+            }
+            calc(a, j);
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (byte_414420[j] &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; b[j])
+                printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%d %x&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;, j, a);
+        }
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;最后得到下半段验证码 &lt;code&gt;D9B6AEF24A80CB22&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;第七题-声名远扬&#34;&gt;第七题 声名远扬&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这题做完后懒了，没有交wp&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;初步分析了一下，看到一些字符串，发现这题用了 duilib 架构&lt;/p&gt;
+&lt;p&gt;很多人的 wp 写的是用虚表找到验证函数，但我对虚表不太了解，做题的时候是用的动调下断点的方式做的&lt;/p&gt;
+&lt;p&gt;动调的时候搜索字符串，发现能找到输入，然后在输入处下个硬件断点，能够断到 &lt;code&gt;strlen&lt;/code&gt;，出来后还能看到 &lt;code&gt;strncpy&lt;/code&gt;，但在这里断是不对的，因为没有点击检查，所以无论如何也进不了验证函数，于是朋友在获取消息的地方加了个消息断点，这时候再用硬件断点断下来，然后不断取消当前断点，在 &lt;code&gt;strncpy&lt;/code&gt; 到的地方下新的断点，就能够进入到加密函数&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;/base64.png&#34; &gt;
+		&lt;img src=&#34;/base64.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;这个 base64 应该还是很容易看出来的，但动调拿结果能发现明显换表了，函数往里跟也不好跟，于是直接用动调拿结果&lt;/p&gt;
+&lt;p&gt;这里构造了一个长度为 50 的输入，能够得到所有的 base64 字符&lt;/p&gt;
+&lt;p&gt;输入：&lt;code&gt;n++j&#39;^aKgJ9*|an@@o$|8)9z#-;&amp;lt;&amp;lt;v789ghistu:/&amp;gt;^c?,/@YZ&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;标准表下的输出：&lt;code&gt;bisraideYUtnSjkqfGFuQEBvJHw4KTl6Iy07PDx2Nzg5Z2hpc3R1Oi8+XmM/LC9AWVo=&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这个输入就可以总结出这个题的 base 表了&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;prvo9CHSJOcPIb6xRVUXQz0qBGDE72LNZduaefYT5K_8-4FAhlimjkngt1yMWs3w!&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;接下来继续用动调找验证函数&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;/heavens_gate.png&#34; &gt;
+		&lt;img src=&#34;/heavens_gate.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;可以看到 &lt;code&gt;v17 = xxx | 0x3300000000&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;而最后的 call 是 &lt;code&gt;MK_FP(WORD2(v17), v17)()&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;结合着 32 位程序，猜测是一个天堂之门&lt;/p&gt;
+&lt;p&gt;把调用的函数取出来，ida64 反编译一下&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	&gt;
+	&lt;a href=&#34;/check_cipher.png&#34; &gt;
+		&lt;img src=&#34;/check_cipher.png&#34;
+			
+			
+			
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;这个函数大致猜测一下，显然是要求 &lt;code&gt;v8 == v9[v28 - a1]&lt;/code&gt; 一直成立&lt;/p&gt;
+&lt;p&gt;一开始的 &lt;code&gt;do while&lt;/code&gt; 循环是对目标密文做了个解密，于是动调到验证的地方看一下内存&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;GYldGg-iIoJlPX9hPXpjPqfdEY21B01TBTzeGqfKNR!!&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;前面已经知道了 &lt;code&gt;!&lt;/code&gt; 就是这里 base64 的填充，于是这个字符串就是密文了&lt;/p&gt;
+&lt;p&gt;换表 base64 的解密&lt;/p&gt;
+&lt;p&gt;把表换回来之后的密文：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ZmxhZ3syMDIxLTEwLTA0LXlhbmd5YW5nYnVkZXlpfQ==&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;明显的 flag 标志 &lt;code&gt;Zmxh&lt;/code&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Migrate to Hugo</title>
         <link>/post/migrate-to-hugo/</link>
         <pubDate>Tue, 21 Dec 2021 23:23:50 +0800</pubDate>
@@ -18,9 +400,9 @@
 &lt;h2 id=&#34;本来的选择&#34;&gt;本来的选择&lt;/h2&gt;
 &lt;p&gt;其实最一开始并没有打算换成 Hugo，毕竟 Hexo 又不是不能用，既然很多东西都配置好了，那换个主题直接生成多好。于是我精挑细选选了个一个 Hexo 主题：https://github.com/Haojen/hexo-theme-Claudia。&lt;/p&gt;
 &lt;p&gt;然而配置的时候发现好像因为 npm 的原因，&lt;code&gt;scss&lt;/code&gt; 文件一直跑不起来，很多 &lt;code&gt;css&lt;/code&gt; 文件无法生成，于是就想干脆迁移到 Hugo，这样还省得配 npm 了。&lt;/p&gt;
-&lt;h2 id=&#34;结识-hugo-tack&#34;&gt;结识 Hugo tack&lt;/h2&gt;
+&lt;h2 id=&#34;结识-hugo-stack&#34;&gt;结识 Hugo stack&lt;/h2&gt;
 &lt;p&gt;最初看到 Hugo 其实是在帮 web 手收集博客的时候看到了陆队的博客，正好记录了迁移到 Hugo 的过程。博客里讲了 Hugo 的静态网页生成速度很快。联想到自己的博客垃圾文章也越来越多，Hexo 确实有点慢了，Hugo 也许以后会是个不错的选择。&lt;/p&gt;
-&lt;p&gt;后来想要帮校队搭个博客，于是决定试试 Hugo。最一开始看中的是 Hugo Bootstrap Theme，想把背景改一下颜色，但是失败了，于是又找了找主题，发现 Stack 更好看，于是干脆就拿 Stack 搭了。&lt;/p&gt;
+&lt;p&gt;后来想要帮校队搭个博客，于是决定试试 Hugo。最一开始看中的是 Hugo Bootstrap Theme，想把背景改一下颜色，但是失败了，于是又找了找主题，发现 Stack 更好看，于是干脆就拿 Stack 搭了，而后来才发现，原来陆队的博客也是 stack 主题，看来审美从来没有变过 😂。&lt;/p&gt;
 &lt;p&gt;于是，在 Claudia 配置失败后，我果断转到了 Hugo Stack 主题。&lt;/p&gt;
 &lt;h2 id=&#34;目前的修改友链&#34;&gt;目前的修改——友链&lt;/h2&gt;
 &lt;p&gt;Stack 主题本身是不带友链的，作者应该是正在写，但比较忙，也不知道什么时候能写完，于是就看了看别人的方案。直接搜能搜到一个方案，但讲得不是特别清楚，搭建失败了。后来在 pull request 里面发现有人实现了一个，作者没有采纳而已，于是就以这个作为临时方案了。&lt;/p&gt;
@@ -188,19 +570,9 @@ menu:
 
 ## Friends
 
-&lt;a target=&#34;_blank&#34; href= title= class=&#34;friend-link&#34;&gt;
-    &lt;div class=&#34;friend-link-div&#34;&gt;
-        &lt;div class=&#34;friend-link-avatar&#34;&gt;
-            &lt;img class=&#34;friend-avatar&#34; src= /&gt;
-        &lt;/div&gt;
-        &lt;div class=&#34;friend-link-info&#34;&gt;
-            &lt;i class=&#34;fa fa-link&#34; aria-hidden=&#34;true&#34;&gt;&lt;/i&gt;
-            &lt;i class=&#34;friend-name&#34;&gt;&lt;/i&gt;
-            &lt;p class=&#34;friend-bio&#34;&gt;&lt;/p&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-&lt;/a&gt;
+{ {&amp;lt; friend name=&amp;quot;&amp;quot; url=&amp;quot;&amp;quot; avatar=&amp;quot;&amp;quot; bio=&amp;quot;&amp;quot; &amp;gt;} }
 
+两个大括号之间的空格需要去掉，我这里不去掉的话会显示友链标签（竟然没有考虑到代码块的问题，可以考虑提 issue 了）
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;目前的问题&#34;&gt;目前的问题&lt;/h2&gt;
 &lt;p&gt;在迁移博客的时候顺便稍微整合了一下以前的一些文章，但同时也发现了问题，之前用 Hexo 的时候，习惯用 &lt;code&gt;&amp;lt;--!more--&amp;gt;&lt;/code&gt; 来写摘要，所以就使得摘要习惯性地放了目录，目前还没能在 Hugo 中找到对应的解决方案，所以可能以后的博客归纳思路需要改一改，但之前的应该就这样了。&lt;/p&gt;
 </description>

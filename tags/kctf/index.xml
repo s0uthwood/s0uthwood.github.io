@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>KCTF on s0uthwood&#39;s Blog</title>
+    <link>/tags/kctf/</link>
+    <description>Recent content in KCTF on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 23 Dec 2021 22:23:17 +0800</lastBuildDate><atom:link href="/tags/kctf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Two Challenges in KCTF2021 Fall</title>
+      <link>/post/two-challenges-in-kctf2021-fall/</link>
+      <pubDate>Thu, 23 Dec 2021 22:23:17 +0800</pubDate>
+      
+      <guid>/post/two-challenges-in-kctf2021-fall/</guid>
+      <description>有些题还是很值得补的，最近没什么时间，假期补吧（
+第一题 签到 这题还是比较容易的，需要一点点动调的经验
+上张队友的截图吧，懒得自己截了
+
+动调看看内存就知道，流程是：
+serial-&amp;gt;十进制-&amp;gt;与name的crc异或-&amp;gt;计算crc
+最后需要是一个固定的值，于是只需要想办法反解就行了
+这里注意到了一个事情，那就是图中看似是对 v6 的 crc 结果做了约束，其实是对 v6 本身进行了约束
+由于题目给了一个实例的 name 和 serial，我们只需要动调拿到这个的 v6，就知道能通过验证的 v6 是多少了
+接下来动调拿一下 KCTF 的 crc，这个的结果再异或一下目标的 v6，就得到serial了
+ 靠记忆写的，希望没错
+ 第二题 迷失丛林  这题就直接放提交的wp了
+ 很容易定位到程序的输入
+
+输入长度为32，需要通过 sub_4014A0, sub_401580 的验证
+4014A0 较为简单，是个经典的hexstr转成char存到 4041F0 这个地址，最后的16是计算转换后的长度，所以输入就是 [0-9A-F]{32}
+随后将输入的前八字节存入 404000 中，剩下的部分传参进 sub_401580
+要想让该函数返回1，需要先通过如下的if验证
+
+简单看一下使用的变量，应该是对前八字节的输入进行的验证
+
+结合动调发现大概就是根据404000数组，构成一个 &amp;lt;value, index&amp;gt; 的结构，两两存放到404420当中
+分析了一下404000数组的作用和特征，发现这个数组应该是构成一个环状的结构（以当前数值作为索引寻找下一个数），猜测不能有重复的数字，否则可能会构成小循环之类的，用脚本验证了一下发现后面248个数字果然没有重复，于是将前八字节的取值可能锁定到了 0x1e, 0x28, 0x4b, 0x6d, 0x8c, 0xa3, 0xd2, 0xfb 中，总共有 $8!</description>
+    </item>
+    
+  </channel>
+</rss>
