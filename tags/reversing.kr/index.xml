@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Reversing.kr on s0uthwood&#39;s Blog</title>
+    <link>/tags/reversing.kr/</link>
+    <description>Recent content in Reversing.kr on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 12 Jan 2022 20:41:50 +0800</lastBuildDate><atom:link href="/tags/reversing.kr/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Reversing.kr writeups</title>
+      <link>/post/reversing-kr-writeups/</link>
+      <pubDate>Wed, 12 Jan 2022 20:41:50 +0800</pubDate>
+      
+      <guid>/post/reversing-kr-writeups/</guid>
+      <description>CSHOP 按一下回车就通关了
+如果要查看逻辑的话，需要先使用 de4dot 脱壳，然后用 dnSpy 打开
+private void Form1_Load(object sender, EventArgs e) { this.lblSu.Text = &amp;#34; &amp;#34;; this.lblGu.Text = &amp;#34; &amp;#34;; this.lblNu.Text = &amp;#34; &amp;#34;; this.lblKu.Text = &amp;#34; &amp;#34;; this.lblZu.Text = &amp;#34; &amp;#34;; this.lblMu.Text = &amp;#34; &amp;#34;; this.lblTu.Text = &amp;#34; &amp;#34;; this.ppppp.Text = &amp;#34; &amp;#34;; this.lblGu.Text = &amp;#34; &amp;#34;; this.lblQu.Text = &amp;#34; &amp;#34;; this.ppppp.Text = &amp;#34; &amp;#34;; this.lblTu.Text = &amp;#34; &amp;#34;; this.lblXu.Text = &amp;#34; &amp;#34;; } // Token: 0x06000004 RID: 4 RVA: 0x000021B0 File Offset: 0x000003B0 	private void btnStart_Click(object sender, EventArgs e) { this.</description>
+    </item>
+    
+  </channel>
+</rss>

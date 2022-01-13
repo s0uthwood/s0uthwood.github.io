@@ -6,13 +6,31 @@
     <description>Recent content in Tags on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Dec 2021 22:23:17 +0800</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Jan 2022 20:41:50 +0800</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CTF</title>
       <link>/tags/ctf/</link>
-      <pubDate>Thu, 23 Dec 2021 22:23:17 +0800</pubDate>
+      <pubDate>Wed, 12 Jan 2022 20:41:50 +0800</pubDate>
       
       <guid>/tags/ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reverse</title>
+      <link>/tags/reverse/</link>
+      <pubDate>Wed, 12 Jan 2022 20:41:50 +0800</pubDate>
+      
+      <guid>/tags/reverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reversing.kr</title>
+      <link>/tags/reversing.kr/</link>
+      <pubDate>Wed, 12 Jan 2022 20:41:50 +0800</pubDate>
+      
+      <guid>/tags/reversing.kr/</guid>
       <description></description>
     </item>
     
@@ -22,15 +40,6 @@
       <pubDate>Thu, 23 Dec 2021 22:23:17 +0800</pubDate>
       
       <guid>/tags/kctf/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Reverse</title>
-      <link>/tags/reverse/</link>
-      <pubDate>Thu, 23 Dec 2021 22:23:17 +0800</pubDate>
-      
-      <guid>/tags/reverse/</guid>
       <description></description>
     </item>
     

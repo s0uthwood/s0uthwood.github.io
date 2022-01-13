@@ -27,7 +27,7 @@
 from key import key import tinyaes print (key) f = open(&amp;#39;./PYZ-00.pyz_extracted/sign.pyc.encrypted&amp;#39;, &amp;#39;rb&amp;#39;) data = f.read() cipher = tinyaes.AES(key.encode(), data[:16]) output = cipher.CTR_xcrypt_buffer(data[16:]) f.close() import zlib output = zlib.decompress(output) f = open(&amp;#39;./sign.pyc&amp;#39;, &amp;#39;wb&amp;#39;) f.write(output) 解密 解出sign后看到有三个base64，其中两个是执行的语句，此外大部分语句涉及到了内存
 另外一个base解出来是乱码，用字节码辅助恢复函数（其实特征已经很明显了），发现进行了rc4加密，直接打印出解密结果，将结果写入文件，用ida查看
 发现smc
-mov eax, 41178Bh mov ecx, 411802h sub ecx, eax loc_2A: mov ebx, [rax] xor ebx, 77h mov [rax], ebx loop loc_2A 解出来后尝试恢复了一下函数，结果很丑&amp;hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</description>
+mov eax, 41178Bhmov ecx, 411802hsub ecx, eaxloc_2A:mov ebx, [rax]xor ebx, 77hmov [rax], ebxloop loc_2A解出来后尝试恢复了一下函数，结果很丑&amp;hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</description>
     </item>
     
     <item>
