@@ -127,7 +127,7 @@
 
 
                 <time class="article-time--reading">
-                    4 minute read
+                    5 minute read
                 </time>
             </div>
         
@@ -349,7 +349,58 @@ p <span style="color:#f92672">=</span> [int(i, <span style="color:#ae81ff">16</s
 	</a>
 	
 </figure></p>
+<h2 id="hateintel">HateIntel</h2>
+<p>根据字符串找到关键函数</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 102; 
+			flex-basis: 246px"
+	>
+	<a href="/post/reversing-kr-writeups/hateintel_decompile.png" data-size="648x631">
+		<img src="/post/reversing-kr-writeups/hateintel_decompile.png"
+			width="648"
+			height="631"
+			srcset="/post/reversing-kr-writeups/hateintel_decompile_hu5e204fba7bea99258860fff327c7bd0f_55519_480x0_resize_box_3.png 480w, /post/reversing-kr-writeups/hateintel_decompile_hu5e204fba7bea99258860fff327c7bd0f_55519_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>查看加密函数</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 185; 
+			flex-basis: 444px"
+	>
+	<a href="/post/reversing-kr-writeups/hateintel_enc.png" data-size="955x516">
+		<img src="/post/reversing-kr-writeups/hateintel_enc.png"
+			width="955"
+			height="516"
+			srcset="/post/reversing-kr-writeups/hateintel_enc_hu9abd18e7e88ccd571343dd2d0ef46a1d_45943_480x0_resize_box_3.png 480w, /post/reversing-kr-writeups/hateintel_enc_hu9abd18e7e88ccd571343dd2d0ef46a1d_45943_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>总共 4 轮，加密是单字节循环左移 4 位</p>
+<p>解密</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">cipher <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">0x44</span>, <span style="color:#ae81ff">0xF6</span>, <span style="color:#ae81ff">0xF5</span>, <span style="color:#ae81ff">0x57</span>, <span style="color:#ae81ff">0xF5</span>, <span style="color:#ae81ff">0xC6</span>, <span style="color:#ae81ff">0x96</span>, <span style="color:#ae81ff">0xB6</span>, <span style="color:#ae81ff">0x56</span>, <span style="color:#ae81ff">0xF5</span>,
+    <span style="color:#ae81ff">0x14</span>, <span style="color:#ae81ff">0x25</span>, <span style="color:#ae81ff">0xD4</span>, <span style="color:#ae81ff">0xF5</span>, <span style="color:#ae81ff">0x96</span>, <span style="color:#ae81ff">0xE6</span>, <span style="color:#ae81ff">0x37</span>, <span style="color:#ae81ff">0x47</span>, <span style="color:#ae81ff">0x27</span>, <span style="color:#ae81ff">0x57</span>,
+    <span style="color:#ae81ff">0x36</span>, <span style="color:#ae81ff">0x47</span>, <span style="color:#ae81ff">0x96</span>, <span style="color:#ae81ff">0x03</span>, <span style="color:#ae81ff">0xE6</span>, <span style="color:#ae81ff">0xF3</span>, <span style="color:#ae81ff">0xA3</span>, <span style="color:#ae81ff">0x92</span>
+]
 
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">dec_byte</span>(a, b):
+    <span style="color:#66d9ef">return</span> ((a <span style="color:#f92672">&gt;&gt;</span> b) <span style="color:#f92672">|</span> (a <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#ae81ff">8</span> <span style="color:#f92672">-</span> b))) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>
+
+<span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> cipher:
+    print (chr(dec_byte(c, <span style="color:#ae81ff">4</span>)), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+<span style="color:#75715e"># Do_u_like_ARM_instructi0n?:)</span>
+</code></pre></div>
 </section>
 
 
@@ -587,6 +638,7 @@ p <span style="color:#f92672">=</span> [int(i, <span style="color:#ae81ff">16</s
     <li><a href="#cshop">CSHOP</a></li>
     <li><a href="#position">Position</a></li>
     <li><a href="#ransomware">Ransomware</a></li>
+    <li><a href="#hateintel">HateIntel</a></li>
   </ul>
 </nav>
                 </div>
