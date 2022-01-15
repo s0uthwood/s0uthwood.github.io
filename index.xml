@@ -6,10 +6,10 @@
         <description>Recent content on s0uthwood&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Wed, 12 Jan 2022 20:41:50 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 13 Jan 2022 20:41:50 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Reversing.kr writeups</title>
         <link>/post/reversing-kr-writeups/</link>
-        <pubDate>Wed, 12 Jan 2022 20:41:50 +0800</pubDate>
+        <pubDate>Thu, 13 Jan 2022 20:41:50 +0800</pubDate>
         
         <guid>/post/reversing-kr-writeups/</guid>
         <description>&lt;img src="/post/reversing-kr-writeups/cover.png" alt="Featured image of post Reversing.kr writeups" /&gt;&lt;h2 id=&#34;cshop&#34;&gt;CSHOP&lt;/h2&gt;
@@ -149,6 +149,81 @@ print ()
         print (chr(v19) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; chr(v20))
 &lt;span style=&#34;color:#75715e&#34;&gt;# mp&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;本题多解，但平台好像只认 &lt;code&gt;bump&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;ransomware&#34;&gt;Ransomware&lt;/h2&gt;
+&lt;p&gt;脱壳，然后发现有大量的无效指令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-asm&#34; data-lang=&#34;asm&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;push&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;eax&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;pop&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;eax&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;push&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;ebx&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;pop&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;ebx&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;pusha&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;popa&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;要查看 main 的逻辑直接把开头几条指令 patch 下来就行&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 212; 
+			flex-basis: 509px&#34;
+	&gt;
+	&lt;a href=&#34;/post/reversing-kr-writeups/ransomware_patch.png&#34; data-size=&#34;1203x567&#34;&gt;
+		&lt;img src=&#34;/post/reversing-kr-writeups/ransomware_patch.png&#34;
+			width=&#34;1203&#34;
+			height=&#34;567&#34;
+			srcset=&#34;/post/reversing-kr-writeups/ransomware_patch_hu0d6fe88e747d3da92c779e049619ff92_85514_480x0_resize_box_3.png 480w, /post/reversing-kr-writeups/ransomware_patch_hu0d6fe88e747d3da92c779e049619ff92_85514_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;重新生成一个函数就能看到反编译结果了&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 144; 
+			flex-basis: 347px&#34;
+	&gt;
+	&lt;a href=&#34;/post/reversing-kr-writeups/ransomware_decompile.png&#34; data-size=&#34;667x461&#34;&gt;
+		&lt;img src=&#34;/post/reversing-kr-writeups/ransomware_decompile.png&#34;
+			width=&#34;667&#34;
+			height=&#34;461&#34;
+			srcset=&#34;/post/reversing-kr-writeups/ransomware_decompile_hu4667ed589b54e6b10827f34f6062550b_49101_480x0_resize_box_3.png 480w, /post/reversing-kr-writeups/ransomware_decompile_hu4667ed589b54e6b10827f34f6062550b_49101_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;根据 readme 可知，被加密的是一个 exe 文件，所以把 &lt;code&gt;file&lt;/code&gt; 的前十六个字节作为明文，&lt;code&gt;run.exe&lt;/code&gt; 的前十六个字节作为密文，算一下密钥&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;DE C0 1B 8C 8C 93 9E 86 98 97 9A 8C 73 6C 9A 8B&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split()
+a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [int(i, &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; a]
+&lt;span style=&#34;color:#75715e&#34;&gt;# a = [222, 192, 27, 140, 140, 147, 158, 134, 152, 151, 154, 140, 115, 108, 154, 139]&lt;/span&gt;
+
+p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split()
+p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [int(i, &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; p]
+&lt;span style=&#34;color:#75715e&#34;&gt;# p = [77, 90, 144, 0, 3, 0, 0, 0, 4, 0, 0, 0, 255, 255, 0, 0]&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i, j &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; zip(a, p):
+    print (chr((&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xff&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; j), end&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#75715e&#34;&gt;# letsplaychesslet&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;显然 Key 是 &lt;code&gt;letsplaychess&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;运行一下得到新的 exe，脱壳反汇编&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 265; 
+			flex-basis: 636px&#34;
+	&gt;
+	&lt;a href=&#34;/post/reversing-kr-writeups/ransomware_flag.png&#34; data-size=&#34;480x181&#34;&gt;
+		&lt;img src=&#34;/post/reversing-kr-writeups/ransomware_flag.png&#34;
+			width=&#34;480&#34;
+			height=&#34;181&#34;
+			srcset=&#34;/post/reversing-kr-writeups/ransomware_flag_hu3471241ca7944adf89b33d06b598ae05_13106_480x0_resize_box_3.png 480w, /post/reversing-kr-writeups/ransomware_flag_hu3471241ca7944adf89b33d06b598ae05_13106_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
 </description>
         </item>
         <item>
