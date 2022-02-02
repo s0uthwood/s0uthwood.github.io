@@ -127,7 +127,7 @@
 
 
                 <time class="article-time--reading">
-                    5 minute read
+                    7 minute read
                 </time>
             </div>
         
@@ -400,7 +400,233 @@ p <span style="color:#f92672">=</span> [int(i, <span style="color:#ae81ff">16</s
 <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> cipher:
     print (chr(dec_byte(c, <span style="color:#ae81ff">4</span>)), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
 <span style="color:#75715e"># Do_u_like_ARM_instructi0n?:)</span>
-</code></pre></div>
+</code></pre></div><h2 id="multiplicative">Multiplicative</h2>
+<p>反编译结果</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">JavaCrackMe</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">strictfp</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> arg6<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Class v1 <span style="color:#f92672">=</span> JavaCrackMe<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">;</span>
+        __monitor_enter<span style="color:#f92672">(</span>v1<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Reversing.Kr CrackMe!!&#34;</span><span style="color:#f92672">);</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;-----------------------------&#34;</span><span style="color:#f92672">);</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;The idea came out of the warsaw\&#39;s crackme&#34;</span><span style="color:#f92672">);</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;-----------------------------\n&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span><span style="color:#f92672">(((</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span>Long<span style="color:#f92672">.</span><span style="color:#a6e22e">decode</span><span style="color:#f92672">(</span>arg6<span style="color:#f92672">[</span>0<span style="color:#f92672">]))</span> <span style="color:#f92672">*</span> 0x6869L <span style="color:#f92672">==</span> <span style="color:#f92672">-</span>1536092243306511225L<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Correct!&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Wrong&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">catch</span><span style="color:#f92672">(</span>Exception v0_1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Please enter a 64bit signed int&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">catch</span><span style="color:#f92672">(</span>Throwable v0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                __monitor_exit<span style="color:#f92672">(</span>v1<span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">throw</span> v0<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">catch</span><span style="color:#f92672">(</span>Throwable v0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            __monitor_exit<span style="color:#f92672">(</span>v1<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">throw</span> v0<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        __monitor_exit<span style="color:#f92672">(</span>v1<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>参数进行乘法后等于某个数字</p>
+<p>由于并不能整除，所以运算有溢出，一个方法是直接求逆元，另一种方法是爆破溢出位</p>
+<p>方法一：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">3</span>]: <span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+In [<span style="color:#ae81ff">5</span>]: tar <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1536092243306511225</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffffffffffff</span>
+
+In [<span style="color:#ae81ff">8</span>]: hex(tar <span style="color:#f92672">*</span> invmod(<span style="color:#ae81ff">0x6869</span>, <span style="color:#ae81ff">0x10000000000000000</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x10000000000000000</span>)
+Out[<span style="color:#ae81ff">8</span>]: <span style="color:#e6db74">&#39;0x83676f67696c676f&#39;</span>
+
+In [<span style="color:#ae81ff">12</span>]: (<span style="color:#f92672">-</span><span style="color:#ae81ff">0x83676f67696c676f</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffffffffffff</span>
+Out[<span style="color:#ae81ff">12</span>]: <span style="color:#ae81ff">8978084842198767761</span>
+
+In [<span style="color:#ae81ff">13</span>]: hex(<span style="color:#ae81ff">8978084842198767761</span>)
+Out[<span style="color:#ae81ff">13</span>]: <span style="color:#e6db74">&#39;0x7c98909896939891&#39;</span>
+
+In [<span style="color:#ae81ff">14</span>]: hex(<span style="color:#f92672">-</span><span style="color:#ae81ff">8978084842198767761</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffffffffffff</span>)
+Out[<span style="color:#ae81ff">14</span>]: <span style="color:#e6db74">&#39;0x83676f67696c676f&#39;</span>
+</code></pre></div><p>方法二：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">23</span>]: i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+
+In [<span style="color:#ae81ff">24</span>]: <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+    <span style="color:#f92672">...</span>:     <span style="color:#66d9ef">if</span> (<span style="color:#ae81ff">0xeaaeb43e477b8487</span> <span style="color:#f92672">+</span> (i <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">64</span>)) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x6869</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+    <span style="color:#f92672">...</span>:         <span style="color:#66d9ef">break</span>
+    <span style="color:#f92672">...</span>:     i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#f92672">...</span>:
+
+In [<span style="color:#ae81ff">25</span>]: i
+Out[<span style="color:#ae81ff">25</span>]: <span style="color:#ae81ff">13719</span>
+
+In [<span style="color:#ae81ff">26</span>]: hex((<span style="color:#ae81ff">0xeaaeb43e477b8487</span> <span style="color:#f92672">+</span> (i <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">64</span>)) <span style="color:#f92672">//</span> <span style="color:#ae81ff">0x6869</span>)
+Out[<span style="color:#ae81ff">26</span>]: <span style="color:#e6db74">&#39;0x83676f67696c676f&#39;</span>
+
+In [<span style="color:#ae81ff">27</span>]: <span style="color:#f92672">-</span>((<span style="color:#ae81ff">0xeaaeb43e477b8487</span> <span style="color:#f92672">+</span> (i <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">64</span>)) <span style="color:#f92672">//</span> <span style="color:#ae81ff">0x6869</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffffffffffffffff</span>
+Out[<span style="color:#ae81ff">27</span>]: <span style="color:#ae81ff">8978084842198767761</span>
+</code></pre></div><p>运行结果</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ java -jar JavaCrackMe.jar -8978084842198767761
+Reversing.Kr CrackMe!!
+-----------------------------
+The idea came out of the warsaw<span style="color:#960050;background-color:#1e0010">&#39;</span>s crackme
+-----------------------------
+
+Correct!
+</code></pre></div><h2 id="lotto">LOTTO</h2>
+<p>输入需要通过的是一个随机数的逻辑</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 134; 
+			flex-basis: 323px"
+	>
+	<a href="/post/reversing-kr-writeups/lotto_pass.png" data-size="835x620">
+		<img src="/post/reversing-kr-writeups/lotto_pass.png"
+			width="835"
+			height="620"
+			srcset="/post/reversing-kr-writeups/lotto_pass_hu20c91c851f34c64c2ef609808df4fe9a_59936_480x0_resize_box_3.png 480w, /post/reversing-kr-writeups/lotto_pass_hu20c91c851f34c64c2ef609808df4fe9a_59936_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>直接修改 <code>ip</code> 跳过即可</p>
+<blockquote>
+<p>夜影还给出了一个有意思的方法：另写了一个程序，将相同 <code>srand(time64(0))</code> 生成的随机数 <code>echo</code> 传入这个程序</p>
+</blockquote>
+<h2 id="imageprc">ImagePrc</h2>
+<p>MFC 逆向</p>
+<p>根据字符串 <code>Wrong</code> 可以定位到关键函数</p>
+<p>注意到</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">      GetObjectA(hbm, <span style="color:#ae81ff">24</span>, pv);
+      memset(<span style="color:#f92672">&amp;</span>bmi, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x28u</span>);
+      bmi.bmiHeader.biHeight <span style="color:#f92672">=</span> cLines;
+      bmi.bmiHeader.biWidth <span style="color:#f92672">=</span> v16;
+      bmi.bmiHeader.biSize <span style="color:#f92672">=</span> <span style="color:#ae81ff">40</span>;
+      bmi.bmiHeader.biPlanes <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+      bmi.bmiHeader.biBitCount <span style="color:#f92672">=</span> <span style="color:#ae81ff">24</span>;
+      bmi.bmiHeader.biCompression <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+      GetDIBits(hdc, (HBITMAP)hbm, <span style="color:#ae81ff">0</span>, cLines, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">&amp;</span>bmi, <span style="color:#ae81ff">0</span>);
+      v8 <span style="color:#f92672">=</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(bmi.bmiHeader.biSizeImage);
+      GetDIBits(hdc, (HBITMAP)hbm, <span style="color:#ae81ff">0</span>, cLines, v8, <span style="color:#f92672">&amp;</span>bmi, <span style="color:#ae81ff">0</span>);
+      v9 <span style="color:#f92672">=</span> FindResourceA(<span style="color:#ae81ff">0</span>, (LPCSTR)<span style="color:#ae81ff">0x65</span>, (LPCSTR)<span style="color:#ae81ff">0x18</span>);
+      v10 <span style="color:#f92672">=</span> LoadResource(<span style="color:#ae81ff">0</span>, v9);
+      v11 <span style="color:#f92672">=</span> LockResource(v10);
+      v12 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+      v13 <span style="color:#f92672">=</span> v8;
+      v14 <span style="color:#f92672">=</span> v11 <span style="color:#f92672">-</span> (_BYTE <span style="color:#f92672">*</span>)v8;
+      <span style="color:#66d9ef">while</span> ( <span style="color:#f92672">*</span>v13 <span style="color:#f92672">==</span> v13[v14] )
+      {
+        <span style="color:#f92672">++</span>v12;
+        <span style="color:#f92672">++</span>v13;
+        <span style="color:#66d9ef">if</span> ( v12 <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">90000</span> )
+        {
+          sub_401500(v8);
+          <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+        }
+      }
+</code></pre></div><p>从资源中加载 90000 字节并比较</p>
+<p>动调或者 <code>Resource Hacker</code> dump 下来</p>
+<p>判断要求绘制的位图需要相同</p>
+<p>PIL 转成图片</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> PIL <span style="color:#f92672">import</span> Image
+
+fp <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;export_results.txt&#39;</span>, <span style="color:#e6db74">&#39;rb&#39;</span>)
+pic <span style="color:#f92672">=</span> fp<span style="color:#f92672">.</span>read()
+
+im <span style="color:#f92672">=</span> Image<span style="color:#f92672">.</span>new(<span style="color:#e6db74">&#34;RGB&#34;</span>, (<span style="color:#ae81ff">0xc8</span>, <span style="color:#ae81ff">0x96</span>))
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(pic), <span style="color:#ae81ff">3</span>):
+    im<span style="color:#f92672">.</span>putpixel(((i <span style="color:#f92672">//</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">0xc8</span>, (i <span style="color:#f92672">//</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">//</span> <span style="color:#ae81ff">0xc8</span>), (pic[i], pic[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>], pic[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>]))
+
+im <span style="color:#f92672">=</span> im<span style="color:#f92672">.</span>transpose(Image<span style="color:#f92672">.</span>FLIP_TOP_BOTTOM)
+im<span style="color:#f92672">.</span>show()
+</code></pre></div><h2 id="flash-encrypt">Flash Encrypt</h2>
+<p>使用 <code>ffdec</code> 反编译</p>
+<p>可以看到每个帧的 AS 脚本，使用自动去混淆即可</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-actionscript" data-lang="actionscript"><span style="color:#75715e">// frame1
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">on</span>(<span style="color:#a6e22e">release</span>){
+   <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">spw</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1456</span>)
+   {
+      <span style="color:#a6e22e">gotoAndPlay</span>(<span style="color:#ae81ff">3</span>);
+   }
+   <span style="color:#66d9ef">else</span>
+   {
+      <span style="color:#a6e22e">_root</span>.<span style="color:#a6e22e">spw</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+   }
+}
+
+<span style="color:#75715e">// frame2
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">on</span>(<span style="color:#a6e22e">release</span>){
+   <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">spwd</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">8</span>)
+   {
+      <span style="color:#a6e22e">spw</span> <span style="color:#f92672">/=</span> <span style="color:#a6e22e">spwd</span><span style="color:#f92672">;</span>
+      <span style="color:#a6e22e">spwd</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+      <span style="color:#a6e22e">gotoAndPlay</span>(<span style="color:#ae81ff">6</span>);
+   }
+}
+
+<span style="color:#75715e">// frame3
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">on</span>(<span style="color:#a6e22e">release</span>){
+   <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">spwd</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">25</span>)
+   {
+      <span style="color:#a6e22e">spw</span> <span style="color:#f92672">*=</span> <span style="color:#a6e22e">spwd</span><span style="color:#f92672">;</span>
+      <span style="color:#a6e22e">spwd</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+      <span style="color:#a6e22e">gotoAndPlay</span>(<span style="color:#ae81ff">4</span>);
+   }
+}
+
+<span style="color:#75715e">// frame4
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">on</span>(<span style="color:#a6e22e">release</span>){
+   <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">spwd</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">44</span>)
+   {
+      <span style="color:#a6e22e">spw</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">spwd</span><span style="color:#f92672">;</span>
+      <span style="color:#a6e22e">spwd</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+      <span style="color:#a6e22e">gotoAndPlay</span>(<span style="color:#ae81ff">2</span>);
+   }
+}
+
+<span style="color:#75715e">// frame5
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">on</span>(<span style="color:#a6e22e">release</span>){
+   <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">spwd</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">20546</span>)
+   {
+      <span style="color:#a6e22e">spw</span> <span style="color:#f92672">%=</span> <span style="color:#a6e22e">spwd</span><span style="color:#f92672">;</span>
+      <span style="color:#a6e22e">spwd</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+      <span style="color:#a6e22e">gotoAndPlay</span>(<span style="color:#ae81ff">7</span>);
+   }
+}
+
+<span style="color:#75715e">// frame6
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">on</span>(<span style="color:#a6e22e">release</span>){
+   <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">spwd</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">88</span>)
+   {
+      <span style="color:#a6e22e">spw</span> <span style="color:#f92672">*=</span> <span style="color:#a6e22e">spwd</span><span style="color:#f92672">;</span>
+      <span style="color:#a6e22e">spwd</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+      <span style="color:#a6e22e">gotoAndPlay</span>(<span style="color:#ae81ff">5</span>);
+   }
+}
+</code></pre></div><p><code>gotoAndPlay</code> 中的数字为帧数</p>
+<p>所以输入的顺序为 1456, 25, 44, 8, 88, 20546</p>
+<p>因为不想装 flash，所以想自己写脚本把这个结果算出来，但是发现怎么算都不对</p>
+<p>最后发现原因是 flash 是用字符串进行的计算，猜测 flash 中 <code>&quot;1&quot; == 1</code>，需要根据运算符猜测是字符串运算还是整数运算还是浮点数运算</p>
+<p>一个能得出正确答案的计算过程（加法为字符串拼接，除法保留小数）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#ae81ff">1456</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">25</span>
+<span style="color:#ae81ff">36400</span>
+<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#ae81ff">3640044</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">8</span>
+<span style="color:#ae81ff">455005.5</span>
+<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#ae81ff">3640044</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">88</span>
+<span style="color:#ae81ff">40040484.0</span>
+<span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#ae81ff">3640044</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">88</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">20546</span>
+<span style="color:#ae81ff">16876.0</span>
+</code></pre></div><p>16876 就是 key</p>
+
 </section>
 
 
@@ -639,6 +865,10 @@ p <span style="color:#f92672">=</span> [int(i, <span style="color:#ae81ff">16</s
     <li><a href="#position">Position</a></li>
     <li><a href="#ransomware">Ransomware</a></li>
     <li><a href="#hateintel">HateIntel</a></li>
+    <li><a href="#multiplicative">Multiplicative</a></li>
+    <li><a href="#lotto">LOTTO</a></li>
+    <li><a href="#imageprc">ImagePrc</a></li>
+    <li><a href="#flash-encrypt">Flash Encrypt</a></li>
   </ul>
 </nav>
                 </div>

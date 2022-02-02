@@ -275,7 +275,233 @@ p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [int(i, &lt;span styl
 &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; c &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; cipher:
     print (chr(dec_byte(c, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;)), end&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
 &lt;span style=&#34;color:#75715e&#34;&gt;# Do_u_like_ARM_instructi0n?:)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;multiplicative&#34;&gt;Multiplicative&lt;/h2&gt;
+&lt;p&gt;反编译结果&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;JavaCrackMe&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;strictfp&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; arg6&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+        Class v1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; JavaCrackMe&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+        __monitor_enter&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;v1&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+            System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Reversing.Kr CrackMe!!&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-----------------------------&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;The idea came out of the warsaw\&amp;#39;s crackme&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-----------------------------\n&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(((&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;Long&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;decode&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;arg6&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;0&lt;span style=&#34;color:#f92672&#34;&gt;]))&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; 0x6869L &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;1536092243306511225L&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Correct!&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Wrong&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Exception v0_1&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                System&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;println&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Please enter a 64bit signed int&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Throwable v0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+                __monitor_exit&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;v1&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;throw&lt;/span&gt; v0&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+            &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Throwable v0&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+            __monitor_exit&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;v1&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;throw&lt;/span&gt; v0&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+        __monitor_exit&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;v1&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;参数进行乘法后等于某个数字&lt;/p&gt;
+&lt;p&gt;由于并不能整除，所以运算有溢出，一个方法是直接求逆元，另一种方法是爆破溢出位&lt;/p&gt;
+&lt;p&gt;方法一：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;In [&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;]: &lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; libnum &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;]: tar &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1536092243306511225&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xffffffffffffffff&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;]: hex(tar &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; invmod(&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6869&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x10000000000000000&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x10000000000000000&lt;/span&gt;)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;]: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;0x83676f67696c676f&amp;#39;&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt;]: (&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x83676f67696c676f&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xffffffffffffffff&lt;/span&gt;
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;8978084842198767761&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;13&lt;/span&gt;]: hex(&lt;span style=&#34;color:#ae81ff&#34;&gt;8978084842198767761&lt;/span&gt;)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;13&lt;/span&gt;]: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;0x7c98909896939891&amp;#39;&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;14&lt;/span&gt;]: hex(&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;8978084842198767761&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xffffffffffffffff&lt;/span&gt;)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;14&lt;/span&gt;]: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;0x83676f67696c676f&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;方法二：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;In [&lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;]: i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;]: &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;:
+    &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;:     &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;0xeaaeb43e477b8487&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6869&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+    &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;:         &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;:     i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+    &lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;:
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;]: i
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;13719&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;26&lt;/span&gt;]: hex((&lt;span style=&#34;color:#ae81ff&#34;&gt;0xeaaeb43e477b8487&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6869&lt;/span&gt;)
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;26&lt;/span&gt;]: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;0x83676f67696c676f&amp;#39;&lt;/span&gt;
+
+In [&lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt;]: &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;((&lt;span style=&#34;color:#ae81ff&#34;&gt;0xeaaeb43e477b8487&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6869&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xffffffffffffffff&lt;/span&gt;
+Out[&lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt;]: &lt;span style=&#34;color:#ae81ff&#34;&gt;8978084842198767761&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;运行结果&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ java -jar JavaCrackMe.jar -8978084842198767761
+Reversing.Kr CrackMe!!
+-----------------------------
+The idea came out of the warsaw&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;#39;&lt;/span&gt;s crackme
+-----------------------------
+
+Correct!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;lotto&#34;&gt;LOTTO&lt;/h2&gt;
+&lt;p&gt;输入需要通过的是一个随机数的逻辑&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 134; 
+			flex-basis: 323px&#34;
+	&gt;
+	&lt;a href=&#34;/post/reversing-kr-writeups/lotto_pass.png&#34; data-size=&#34;835x620&#34;&gt;
+		&lt;img src=&#34;/post/reversing-kr-writeups/lotto_pass.png&#34;
+			width=&#34;835&#34;
+			height=&#34;620&#34;
+			srcset=&#34;/post/reversing-kr-writeups/lotto_pass_hu20c91c851f34c64c2ef609808df4fe9a_59936_480x0_resize_box_3.png 480w, /post/reversing-kr-writeups/lotto_pass_hu20c91c851f34c64c2ef609808df4fe9a_59936_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;直接修改 &lt;code&gt;ip&lt;/code&gt; 跳过即可&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;夜影还给出了一个有意思的方法：另写了一个程序，将相同 &lt;code&gt;srand(time64(0))&lt;/code&gt; 生成的随机数 &lt;code&gt;echo&lt;/code&gt; 传入这个程序&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;imageprc&#34;&gt;ImagePrc&lt;/h2&gt;
+&lt;p&gt;MFC 逆向&lt;/p&gt;
+&lt;p&gt;根据字符串 &lt;code&gt;Wrong&lt;/code&gt; 可以定位到关键函数&lt;/p&gt;
+&lt;p&gt;注意到&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;      GetObjectA(hbm, &lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;, pv);
+      memset(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;bmi, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x28u&lt;/span&gt;);
+      bmi.bmiHeader.biHeight &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cLines;
+      bmi.bmiHeader.biWidth &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v16;
+      bmi.bmiHeader.biSize &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt;;
+      bmi.bmiHeader.biPlanes &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+      bmi.bmiHeader.biBitCount &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;;
+      bmi.bmiHeader.biCompression &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+      GetDIBits(hdc, (HBITMAP)hbm, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, cLines, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;bmi, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+      v8 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt;(bmi.bmiHeader.biSizeImage);
+      GetDIBits(hdc, (HBITMAP)hbm, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, cLines, v8, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;bmi, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+      v9 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; FindResourceA(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, (LPCSTR)&lt;span style=&#34;color:#ae81ff&#34;&gt;0x65&lt;/span&gt;, (LPCSTR)&lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt;);
+      v10 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; LoadResource(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, v9);
+      v11 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; LockResource(v10);
+      v12 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+      v13 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v8;
+      v14 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v11 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; (_BYTE &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)v8;
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v13 &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; v13[v14] )
+      {
+        &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v12;
+        &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v13;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( v12 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;90000&lt;/span&gt; )
+        {
+          sub_401500(v8);
+          &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        }
+      }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;从资源中加载 90000 字节并比较&lt;/p&gt;
+&lt;p&gt;动调或者 &lt;code&gt;Resource Hacker&lt;/code&gt; dump 下来&lt;/p&gt;
+&lt;p&gt;判断要求绘制的位图需要相同&lt;/p&gt;
+&lt;p&gt;PIL 转成图片&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;from&lt;/span&gt; PIL &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; Image
+
+fp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;export_results.txt&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;rb&amp;#39;&lt;/span&gt;)
+pic &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; fp&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;read()
+
+im &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Image&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;new(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RGB&amp;#34;&lt;/span&gt;, (&lt;span style=&#34;color:#ae81ff&#34;&gt;0xc8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x96&lt;/span&gt;))
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, len(pic), &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;):
+    im&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;putpixel(((i &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xc8&lt;/span&gt;, (i &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xc8&lt;/span&gt;), (pic[i], pic[i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;], pic[i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]))
+
+im &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; im&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;transpose(Image&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;FLIP_TOP_BOTTOM)
+im&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;show()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;flash-encrypt&#34;&gt;Flash Encrypt&lt;/h2&gt;
+&lt;p&gt;使用 &lt;code&gt;ffdec&lt;/code&gt; 反编译&lt;/p&gt;
+&lt;p&gt;可以看到每个帧的 AS 脚本，使用自动去混淆即可&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-actionscript&#34; data-lang=&#34;actionscript&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// frame1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;release&lt;/span&gt;){
+   &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;spw&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1456&lt;/span&gt;)
+   {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;gotoAndPlay&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;);
+   }
+   &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;
+   {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;_root&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;spw&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+   }
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;// frame2
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;release&lt;/span&gt;){
+   &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;)
+   {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;spw&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;gotoAndPlay&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;);
+   }
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;// frame3
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;release&lt;/span&gt;){
+   &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;)
+   {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;spw&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;gotoAndPlay&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
+   }
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;// frame4
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;release&lt;/span&gt;){
+   &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;44&lt;/span&gt;)
+   {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;spw&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;gotoAndPlay&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;);
+   }
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;// frame5
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;release&lt;/span&gt;){
+   &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20546&lt;/span&gt;)
+   {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;spw&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;%=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;gotoAndPlay&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;);
+   }
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;// frame6
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;release&lt;/span&gt;){
+   &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;88&lt;/span&gt;)
+   {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;spw&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;spwd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;gotoAndPlay&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;);
+   }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;gotoAndPlay&lt;/code&gt; 中的数字为帧数&lt;/p&gt;
+&lt;p&gt;所以输入的顺序为 1456, 25, 44, 8, 88, 20546&lt;/p&gt;
+&lt;p&gt;因为不想装 flash，所以想自己写脚本把这个结果算出来，但是发现怎么算都不对&lt;/p&gt;
+&lt;p&gt;最后发现原因是 flash 是用字符串进行的计算，猜测 flash 中 &lt;code&gt;&amp;quot;1&amp;quot; == 1&lt;/code&gt;，需要根据运算符猜测是字符串运算还是整数运算还是浮点数运算&lt;/p&gt;
+&lt;p&gt;一个能得出正确答案的计算过程（加法为字符串拼接，除法保留小数）&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1456&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;25&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;36400&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3640044&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;455005.5&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3640044&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;88&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;40040484.0&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3640044&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;88&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20546&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;16876.0&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;16876 就是 key&lt;/p&gt;
+</description>
         </item>
         <item>
         <title>Two Challenges in KCTF2021 Fall</title>
