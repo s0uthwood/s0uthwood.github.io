@@ -6,20 +6,38 @@
     <description>Recent content in Categories on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Jan 2022 20:41:50 +0800</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 04 Feb 2022 13:08:32 +0800</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Crypto</title>
+      <link>/categories/crypto/</link>
+      <pubDate>Fri, 04 Feb 2022 13:08:32 +0800</pubDate>
+      
+      <guid>/categories/crypto/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>CTF</title>
       <link>/categories/ctf/</link>
-      <pubDate>Thu, 13 Jan 2022 20:41:50 +0800</pubDate>
+      <pubDate>Fri, 04 Feb 2022 13:08:32 +0800</pubDate>
       
       <guid>/categories/ctf/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>Pwn</title>
+      <link>/categories/pwn/</link>
+      <pubDate>Fri, 04 Feb 2022 13:08:32 +0800</pubDate>
+      
+      <guid>/categories/pwn/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Reverse</title>
       <link>/categories/reverse/</link>
-      <pubDate>Thu, 13 Jan 2022 20:41:50 +0800</pubDate>
+      <pubDate>Fri, 04 Feb 2022 13:08:32 +0800</pubDate>
       
       <guid>/categories/reverse/</guid>
       <description></description>
@@ -31,15 +49,6 @@
       <pubDate>Tue, 21 Dec 2021 23:23:50 +0800</pubDate>
       
       <guid>/categories/blog/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Crypto</title>
-      <link>/categories/crypto/</link>
-      <pubDate>Thu, 20 May 2021 01:51:42 +0000</pubDate>
-      
-      <guid>/categories/crypto/</guid>
       <description></description>
     </item>
     
