@@ -9,7 +9,7 @@
 <meta property='og:description' content='主要是 RE，其他的题目会挑着记录一下'>
 <meta property='og:url' content='/post/hgame2022-writeups/'>
 <meta property='og:site_name' content='s0uthwood&#39;s Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='Pwn' /><meta property='article:tag' content='Crypto' /><meta property='article:published_time' content='2022-02-04T13:08:32&#43;08:00'/><meta property='article:modified_time' content='2022-02-04T14:09:16&#43;08:00'/><meta property='og:image' content='/post/hgame2022-writeups/cover.png' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='Pwn' /><meta property='article:tag' content='Crypto' /><meta property='article:published_time' content='2022-02-04T13:08:32&#43;08:00'/><meta property='article:modified_time' content='2022-02-13T14:09:16&#43;08:00'/><meta property='og:image' content='/post/hgame2022-writeups/cover.png' />
 <meta name="twitter:title" content="HGAME2022 writeups">
 <meta name="twitter:description" content="主要是 RE，其他的题目会挑着记录一下"><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='/post/hgame2022-writeups/cover.png' />
@@ -135,7 +135,7 @@
 
 
                 <time class="article-time--reading">
-                    8 minute read
+                    11 minute read
                 </time>
             </div>
         
@@ -562,6 +562,325 @@ xs <span style="color:#f92672">=</span> [<span style="color:#ae81ff">26562248751
     print (n2s(y)<span style="color:#f92672">.</span>decode(), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
 <span style="color:#75715e"># hgame{XOr|RoR&amp;rOl|Is+vERY#coMmon*BiTwisE$OPeraTiOn*IT@is%oFten,ENCOUntErED*in.syMMeTRic?encryPtION}</span>
 </code></pre></div><p>据说这个加密方法和求逆多项式还有关系，很神奇</p>
+<h2 id="week3">Week3</h2>
+<h3 id="answers-windows">Answer&rsquo;s windows</h3>
+<p>使用 <code>right.png</code> 字符串能够定位到验证函数</p>
+<p>动调发现使用了 string 的存储方式（好像就是把 string 内联了），只使用了 Base64 编码</p>
+<p>但 base 表和目标对应不上，显然是有反调试，自己做的时候直接猜到了真实表是 ascii 的前 64 个可见字符</p>
+<p>或者根据交叉引用找到 debug，把反调试判断 <code>nop</code> 掉再动调即可</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 283; 
+			flex-basis: 679px"
+	>
+	<a href="/post/hgame2022-writeups/Answers_windows_solve.jpg" data-size="1084x383">
+		<img src="/post/hgame2022-writeups/Answers_windows_solve.jpg"
+			width="1084"
+			height="383"
+			srcset="/post/hgame2022-writeups/Answers_windows_solve_huc3bc26e113c65b72fa0fc4de0f5ee895_47933_480x0_resize_q75_box.jpg 480w, /post/hgame2022-writeups/Answers_windows_solve_huc3bc26e113c65b72fa0fc4de0f5ee895_47933_1024x0_resize_q75_box.jpg 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="creakme_3">creakme_3</h3>
+<p>PPC 架构，用 ghidra 看的</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">undefined4 <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>)
+
+{
+  <span style="color:#66d9ef">int</span> fs;
+  <span style="color:#66d9ef">int</span> randnum;
+  <span style="color:#66d9ef">int</span> j;
+  <span style="color:#66d9ef">int</span> order_cnt;
+  <span style="color:#66d9ef">int</span> i;
+  <span style="color:#66d9ef">int</span> order [<span style="color:#ae81ff">89</span>];
+  <span style="color:#66d9ef">int</span> canary;
+  
+  canary <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>)(fs <span style="color:#f92672">+</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0x7008</span>);
+  memset(order,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0x164</span>);
+  printf(<span style="color:#e6db74">&#34;Welcome my whitegive re task! This is your flag: &#34;</span>);
+  <span style="color:#66d9ef">do</span> {
+    <span style="color:#66d9ef">for</span> (j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x59</span>; j <span style="color:#f92672">=</span> j <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) {
+      randnum <span style="color:#f92672">=</span> rand();
+      order[j] <span style="color:#f92672">=</span> randnum <span style="color:#f92672">%</span> <span style="color:#ae81ff">0x59</span>;
+    }
+    order_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">while</span> ((order_cnt <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x59</span> <span style="color:#f92672">&amp;&amp;</span> (a[order[order_cnt <span style="color:#f92672">+</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;=</span> a[order[order_cnt] <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>])))
+    {
+      order_cnt <span style="color:#f92672">=</span> order_cnt <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+    }
+  } <span style="color:#66d9ef">while</span> (order_cnt <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x59</span>);
+  <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x59</span>; i <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) {
+    putchar(a[order[i] <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>]);
+  }
+  <span style="color:#66d9ef">if</span> (canary <span style="color:#f92672">==</span> <span style="color:#f92672">*</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>)(fs <span style="color:#f92672">+</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0x7008</span>)) {
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+  }
+                    <span style="color:#75715e">/* WARNING: Subroutine does not return */</span>
+  __stack_chk_fail();
+}
+</code></pre></div><p>手动恢复了一下符号，简单的说就是只有满足顺序都是 <code>&lt;=</code> 的时候才能退出第一个循环，所以 <code>rand()</code> 只是个忽悠人并且浪费时间的东西（后来知道这个东西叫猴子加密）</p>
+<p>所以提取一下数字然后排序就行</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">a <span style="color:#f92672">=</span> [
+    (<span style="color:#ae81ff">0x30</span>, <span style="color:#ae81ff">0x4E7D</span>),
+    (<span style="color:#ae81ff">0x30</span>, <span style="color:#ae81ff">0x67BD</span>),
+    (<span style="color:#ae81ff">0x30</span>, <span style="color:#ae81ff">0x7A48</span>),
+    (<span style="color:#ae81ff">0x30</span>, <span style="color:#ae81ff">0x82A2</span>),
+    (<span style="color:#ae81ff">0x30</span>, <span style="color:#ae81ff">0x933E</span>),
+    (<span style="color:#ae81ff">0x31</span>, <span style="color:#ae81ff">0x9C18</span>),
+    (<span style="color:#ae81ff">0x32</span>, <span style="color:#ae81ff">0x5AFF</span>),
+    (<span style="color:#ae81ff">0x32</span>, <span style="color:#ae81ff">0x6CD7</span>),
+    (<span style="color:#ae81ff">0x32</span>, <span style="color:#ae81ff">0xA6CA</span>),
+    (<span style="color:#ae81ff">0x32</span>, <span style="color:#ae81ff">0xBD79</span>),
+    (<span style="color:#ae81ff">0x32</span>, <span style="color:#ae81ff">0xCEBD</span>),
+    (<span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0x324A</span>),
+    (<span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0x3292</span>),
+    (<span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0x3905</span>),
+    (<span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0x4291</span>),
+    (<span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0x5ADE</span>),
+    (<span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0x6E9F</span>),
+    (<span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0xA52A</span>),
+    (<span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0xBE35</span>),
+    (<span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0xCB63</span>),
+    (<span style="color:#ae81ff">0x35</span>, <span style="color:#ae81ff">0x7F3B</span>),
+    (<span style="color:#ae81ff">0x38</span>, <span style="color:#ae81ff">0x3914</span>),
+    (<span style="color:#ae81ff">0x38</span>, <span style="color:#ae81ff">0xB2AD</span>),
+    (<span style="color:#ae81ff">0x39</span>, <span style="color:#ae81ff">0x38DA</span>),
+    (<span style="color:#ae81ff">0x39</span>, <span style="color:#ae81ff">0x4E50</span>),
+    (<span style="color:#ae81ff">0x39</span>, <span style="color:#ae81ff">0x6A02</span>),
+    (<span style="color:#ae81ff">0x39</span>, <span style="color:#ae81ff">0xB10F</span>),
+    (<span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0x78E5</span>),
+    (<span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0x7EF6</span>),
+    (<span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0x89A3</span>),
+    (<span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0x8EBD</span>),
+    (<span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0x95E3</span>),
+    (<span style="color:#ae81ff">0x61</span>, <span style="color:#ae81ff">0x73DA</span>),
+    (<span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0x538C</span>),
+    (<span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0x633B</span>),
+    (<span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0x9E9C</span>),
+    (<span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0xB78B</span>),
+    (<span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0xC866</span>),
+    (<span style="color:#ae81ff">0x65</span>, <span style="color:#ae81ff">0x32AE</span>),
+    (<span style="color:#ae81ff">0x65</span>, <span style="color:#ae81ff">0x7679</span>),
+    (<span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0x2AE7</span>),
+    (<span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0x4D6A</span>),
+    (<span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0x5708</span>),
+    (<span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0x6610</span>),
+    (<span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0xA258</span>),
+    (<span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0xB80C</span>),
+    (<span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0xC885</span>),
+    (<span style="color:#ae81ff">0x67</span>, <span style="color:#ae81ff">0x710A</span>),
+    (<span style="color:#ae81ff">0x67</span>, <span style="color:#ae81ff">0x7CF4</span>),
+    (<span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0x3F76</span>),
+    (<span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0x702B</span>),
+    (<span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0xA3EE</span>),
+    (<span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0xAD50</span>),
+    (<span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0xBAC7</span>),
+    (<span style="color:#ae81ff">0x69</span>, <span style="color:#ae81ff">0x4024</span>),
+    (<span style="color:#ae81ff">0x69</span>, <span style="color:#ae81ff">0x8A22</span>),
+    (<span style="color:#ae81ff">0x69</span>, <span style="color:#ae81ff">0xC055</span>),
+    (<span style="color:#ae81ff">0x6A</span>, <span style="color:#ae81ff">0x2B52</span>),
+    (<span style="color:#ae81ff">0x6A</span>, <span style="color:#ae81ff">0xC687</span>),
+    (<span style="color:#ae81ff">0x6B</span>, <span style="color:#ae81ff">0x5F00</span>),
+    (<span style="color:#ae81ff">0x6B</span>, <span style="color:#ae81ff">0xC417</span>),
+    (<span style="color:#ae81ff">0x6C</span>, <span style="color:#ae81ff">0x6182</span>),
+    (<span style="color:#ae81ff">0x6D</span>, <span style="color:#ae81ff">0x75DB</span>),
+    (<span style="color:#ae81ff">0x6E</span>, <span style="color:#ae81ff">0x3C61</span>),
+    (<span style="color:#ae81ff">0x6E</span>, <span style="color:#ae81ff">0x4996</span>),
+    (<span style="color:#ae81ff">0x6E</span>, <span style="color:#ae81ff">0x5DC1</span>),
+    (<span style="color:#ae81ff">0x6F</span>, <span style="color:#ae81ff">0x2D76</span>),
+    (<span style="color:#ae81ff">0x6F</span>, <span style="color:#ae81ff">0x7D17</span>),
+    (<span style="color:#ae81ff">0x6F</span>, <span style="color:#ae81ff">0xA91B</span>),
+    (<span style="color:#ae81ff">0x70</span>, <span style="color:#ae81ff">0x9AED</span>),
+    (<span style="color:#ae81ff">0x72</span>, <span style="color:#ae81ff">0x45D0</span>),
+    (<span style="color:#ae81ff">0x72</span>, <span style="color:#ae81ff">0x8467</span>),
+    (<span style="color:#ae81ff">0x72</span>, <span style="color:#ae81ff">0xAB5D</span>),
+    (<span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0x5083</span>),
+    (<span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0x6222</span>),
+    (<span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0x8D93</span>),
+    (<span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0x923A</span>),
+    (<span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0x971E</span>),
+    (<span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0xB4BA</span>),
+    (<span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0xC785</span>),
+    (<span style="color:#ae81ff">0x74</span>, <span style="color:#ae81ff">0x3558</span>),
+    (<span style="color:#ae81ff">0x74</span>, <span style="color:#ae81ff">0x86BD</span>),
+    (<span style="color:#ae81ff">0x74</span>, <span style="color:#ae81ff">0x9738</span>),
+    (<span style="color:#ae81ff">0x75</span>, <span style="color:#ae81ff">0x3710</span>),
+    (<span style="color:#ae81ff">0x75</span>, <span style="color:#ae81ff">0x9779</span>),
+    (<span style="color:#ae81ff">0x77</span>, <span style="color:#ae81ff">0x2F3F</span>),
+    (<span style="color:#ae81ff">0x77</span>, <span style="color:#ae81ff">0x44DD</span>),
+    (<span style="color:#ae81ff">0x7B</span>, <span style="color:#ae81ff">0x78E1</span>),
+    (<span style="color:#ae81ff">0x7D</span>, <span style="color:#ae81ff">0x9F42</span>)
+]
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">takeSecond</span>(elem):
+    <span style="color:#66d9ef">return</span> elem[<span style="color:#ae81ff">1</span>]
+
+a<span style="color:#f92672">.</span>sort(key<span style="color:#f92672">=</span>takeSecond)
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> a:
+    print (chr(i[<span style="color:#ae81ff">0</span>]), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+<span style="color:#75715e"># fjow33etu938nhi3wrnf90sdf32nklsdf0923hgame{B0go_50rt_is_s0_stup1d}fh32orh98sdfh23ikjsdf32</span>
+</code></pre></div><h3 id="fishman-writuep">fishman writuep</h3>
+<p>pyd逆向</p>
+<h4 id="定位函数">定位函数</h4>
+<p>搜索字符串，能看到几个函数名</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 210; 
+			flex-basis: 504px"
+	>
+	<a href="/post/hgame2022-writeups/fishman_findfunc.png" data-size="700x333">
+		<img src="/post/hgame2022-writeups/fishman_findfunc.png"
+			width="700"
+			height="333"
+			srcset="/post/hgame2022-writeups/fishman_findfunc_hue684703702c421b42bd3f43ae89c2d7f_34701_480x0_resize_box_3.png 480w, /post/hgame2022-writeups/fishman_findfunc_hue684703702c421b42bd3f43ae89c2d7f_34701_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p>比如 <code>init</code> 函数就是 <code>sub_180002670</code></p>
+<h4 id="密码算法识别求解">密码算法识别+求解</h4>
+<p>查看一下 <code>init</code> 和 <code>check</code> 函数，这题使用的是 <code>blowfish</code> 密码，之前没有遇到过，所以是靠着 <code>findcrypt</code> 脚本识别出来的</p>
+<p>顺便放一下搜到的加密算法源码，来源是 <a class="link" href="https://gitee.com/miao123456miao/blowfish2"  target="_blank" rel="noopener"
+    >https://gitee.com/miao123456miao/blowfish2</a>（github 连不上，呜呜呜）</p>
+<p>这是一个分组密码，主要的特征就是 <code>f</code> 函数</p>
+<p>剩下的也没什么特别的，贴一下求解脚本吧</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;blowfish.h&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(<span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> a, <span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> b) {
+    <span style="color:#66d9ef">uint32_t</span> tmp;
+    
+    tmp <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>a;
+    <span style="color:#f92672">*</span>a <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>b;
+    <span style="color:#f92672">*</span>b <span style="color:#f92672">=</span> tmp;
+}
+
+<span style="color:#66d9ef">uint32_t</span> <span style="color:#a6e22e">blowfish_f</span>(blowfish_t<span style="color:#f92672">*</span> container, <span style="color:#66d9ef">uint32_t</span> input) {
+    <span style="color:#66d9ef">uint8_t</span> a, b, c, d;
+    
+    a <span style="color:#f92672">=</span> input <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">24</span>;
+    b <span style="color:#f92672">=</span> (input <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>;
+    c <span style="color:#f92672">=</span> (input <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>;
+    d <span style="color:#f92672">=</span> input <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>;
+    
+    <span style="color:#66d9ef">return</span> ((container<span style="color:#f92672">-&gt;</span>s[<span style="color:#ae81ff">0</span>][a] <span style="color:#f92672">+</span> container<span style="color:#f92672">-&gt;</span>s[<span style="color:#ae81ff">1</span>][b]) <span style="color:#f92672">^</span> container<span style="color:#f92672">-&gt;</span>s[<span style="color:#ae81ff">2</span>][c]) <span style="color:#f92672">+</span>
+            container<span style="color:#f92672">-&gt;</span>s[<span style="color:#ae81ff">3</span>][d];
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">blowfish_cipher</span>(blowfish_t<span style="color:#f92672">*</span> container, <span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> xl, <span style="color:#66d9ef">uint32_t</span><span style="color:#f92672">*</span> xr, <span style="color:#66d9ef">uint8_t</span> mode) {
+    <span style="color:#66d9ef">int</span> i;
+    <span style="color:#66d9ef">uint32_t</span> loc_xl, loc_xr;
+    
+    loc_xl <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>xl;
+    loc_xr <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>xr;
+    
+    <span style="color:#66d9ef">if</span>(mode <span style="color:#f92672">==</span> BLOWFISH_ENCRYPT) {
+        <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> PASSES; i<span style="color:#f92672">++</span>) {
+            loc_xl <span style="color:#f92672">=</span> loc_xl <span style="color:#f92672">^</span> container<span style="color:#f92672">-&gt;</span>p[i];
+            loc_xr <span style="color:#f92672">=</span> blowfish_f(container, loc_xl) <span style="color:#f92672">^</span> loc_xr;
+        
+            swap(<span style="color:#f92672">&amp;</span>loc_xl, <span style="color:#f92672">&amp;</span>loc_xr);
+        }
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(mode <span style="color:#f92672">==</span> BLOWFISH_DECRYPT) {
+        <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> PASSES<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>; i<span style="color:#f92672">--</span>) {
+            loc_xl <span style="color:#f92672">=</span> loc_xl <span style="color:#f92672">^</span> container<span style="color:#f92672">-&gt;</span>p[i];
+            loc_xr <span style="color:#f92672">=</span> blowfish_f(container, loc_xl) <span style="color:#f92672">^</span> loc_xr;
+        
+            swap(<span style="color:#f92672">&amp;</span>loc_xl, <span style="color:#f92672">&amp;</span>loc_xr);
+        }
+    }
+        
+    swap(<span style="color:#f92672">&amp;</span>loc_xl, <span style="color:#f92672">&amp;</span>loc_xr);
+    
+    <span style="color:#66d9ef">if</span>(mode <span style="color:#f92672">==</span> BLOWFISH_ENCRYPT) { 
+        loc_xr <span style="color:#f92672">=</span> loc_xr <span style="color:#f92672">^</span> container<span style="color:#f92672">-&gt;</span>p[PASSES];
+        loc_xl <span style="color:#f92672">=</span> loc_xl <span style="color:#f92672">^</span> container<span style="color:#f92672">-&gt;</span>p[PASSES<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>];
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(mode <span style="color:#f92672">==</span> BLOWFISH_DECRYPT) {
+        loc_xr <span style="color:#f92672">=</span> loc_xr <span style="color:#f92672">^</span> container<span style="color:#f92672">-&gt;</span>p[<span style="color:#ae81ff">1</span>];
+        loc_xl <span style="color:#f92672">=</span> loc_xl <span style="color:#f92672">^</span> container<span style="color:#f92672">-&gt;</span>p[<span style="color:#ae81ff">0</span>];
+    }
+    
+    <span style="color:#f92672">*</span>xl <span style="color:#f92672">=</span> loc_xl;
+    <span style="color:#f92672">*</span>xr <span style="color:#f92672">=</span> loc_xr;
+}
+
+blowfish_t<span style="color:#f92672">*</span> <span style="color:#a6e22e">blowfish_initialize</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> key, <span style="color:#66d9ef">uint32_t</span> length) {
+    blowfish_t<span style="color:#f92672">*</span> container <span style="color:#f92672">=</span> malloc(<span style="color:#66d9ef">sizeof</span>(blowfish_t));
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> i, ii, j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">uint32_t</span> tmp, tmp_l <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, tmp_r <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;  
+
+    <span style="color:#66d9ef">if</span>(length <span style="color:#f92672">&gt;</span> BLOWFISH_MAX_KEY_BYTES) <span style="color:#66d9ef">return</span> (blowfish_t<span style="color:#f92672">*</span>) NULL;
+
+    <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> PASSES<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>; i<span style="color:#f92672">++</span>) {
+        container<span style="color:#f92672">-&gt;</span>p[i] <span style="color:#f92672">=</span> P[i];
+    }
+    
+    <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> SBOXES; i<span style="color:#f92672">++</span>) {
+        <span style="color:#66d9ef">for</span>(ii <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; ii <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">256</span>; ii<span style="color:#f92672">++</span>) {
+            container<span style="color:#f92672">-&gt;</span>s[i][ii] <span style="color:#f92672">=</span> S[i][ii];
+        }
+    }
+    
+    <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> PASSES<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>; i<span style="color:#f92672">++</span>) {
+        tmp <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">for</span>(ii <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; ii <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">4</span>; ii<span style="color:#f92672">++</span>) {
+            tmp <span style="color:#f92672">=</span> (tmp <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">|</span> key[j];
+            j<span style="color:#f92672">++</span>;
+            <span style="color:#66d9ef">if</span>(j <span style="color:#f92672">==</span> length) 
+                j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        }
+        container<span style="color:#f92672">-&gt;</span>p[i] <span style="color:#f92672">=</span> container<span style="color:#f92672">-&gt;</span>p[i] <span style="color:#f92672">^</span> tmp;
+    }
+
+    <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> PASSES<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>; i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>) {
+        blowfish_cipher(container, <span style="color:#f92672">&amp;</span>tmp_l, <span style="color:#f92672">&amp;</span>tmp_r, BLOWFISH_ENCRYPT);
+        container<span style="color:#f92672">-&gt;</span>p[i] <span style="color:#f92672">=</span> tmp_l;
+        container<span style="color:#f92672">-&gt;</span>p[i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> tmp_r;
+    }
+    
+    <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> SBOXES; i<span style="color:#f92672">++</span>) {  
+        <span style="color:#66d9ef">for</span>(ii <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; ii <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">256</span>; ii <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>) { 
+            blowfish_cipher(container, <span style="color:#f92672">&amp;</span>tmp_l, <span style="color:#f92672">&amp;</span>tmp_r, BLOWFISH_ENCRYPT);
+            container<span style="color:#f92672">-&gt;</span>s[i][ii] <span style="color:#f92672">=</span> tmp_l;
+            container<span style="color:#f92672">-&gt;</span>s[i][ii<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> tmp_r;
+        }
+    }
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span><span style="color:#f92672">**</span> argv) {
+    <span style="color:#66d9ef">uint32_t</span> high, low;
+    blowfish_t<span style="color:#f92672">*</span> container <span style="color:#f92672">=</span> blowfish_initialize(<span style="color:#e6db74">&#34;LET_U_D&#34;</span>, <span style="color:#ae81ff">7</span>);
+    high <span style="color:#f92672">=</span> <span style="color:#ae81ff">1416580799u</span>;
+    low <span style="color:#f92672">=</span> <span style="color:#ae81ff">3035468667u</span>;
+    blowfish_cipher(container, <span style="color:#f92672">&amp;</span>high, <span style="color:#f92672">&amp;</span>low, BLOWFISH_DECRYPT);
+    write(<span style="color:#ae81ff">1</span>, <span style="color:#f92672">&amp;</span>high, <span style="color:#ae81ff">8</span>);
+    high <span style="color:#f92672">=</span> <span style="color:#ae81ff">2194841726u</span>;
+    low <span style="color:#f92672">=</span> <span style="color:#ae81ff">332656605u</span>;
+    blowfish_cipher(container, <span style="color:#f92672">&amp;</span>high, <span style="color:#f92672">&amp;</span>low, BLOWFISH_DECRYPT);
+    write(<span style="color:#ae81ff">1</span>, <span style="color:#f92672">&amp;</span>high, <span style="color:#ae81ff">8</span>);
+    high <span style="color:#f92672">=</span> <span style="color:#ae81ff">571059727u</span>;
+    low <span style="color:#f92672">=</span> <span style="color:#ae81ff">1498341217u</span>;
+    blowfish_cipher(container, <span style="color:#f92672">&amp;</span>high, <span style="color:#f92672">&amp;</span>low, BLOWFISH_DECRYPT);
+    write(<span style="color:#ae81ff">1</span>, <span style="color:#f92672">&amp;</span>high, <span style="color:#ae81ff">8</span>);
+    high <span style="color:#f92672">=</span> <span style="color:#ae81ff">3107158060u</span>;
+    low <span style="color:#f92672">=</span> <span style="color:#ae81ff">470279474u</span>;
+    blowfish_cipher(container, <span style="color:#f92672">&amp;</span>high, <span style="color:#f92672">&amp;</span>low, BLOWFISH_DECRYPT);
+    write(<span style="color:#ae81ff">1</span>, <span style="color:#f92672">&amp;</span>high, <span style="color:#ae81ff">8</span>);
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p><code>blowfish.h</code> 去仓库找就行</p>
+<blockquote>
+<p>试了一下 pycrypto 库，解出来的有问题，可能库的实现和这个有区别，没深入研究</p>
+</blockquote>
 
 </section>
 
@@ -591,7 +910,7 @@ xs <span style="color:#f92672">=</span> [<span style="color:#ae81ff">26562248751
 
 
         <span>
-            Last updated on Feb 04, 2022 14:09 CST
+            Last updated on Feb 13, 2022 14:09 CST
         </span>
     </section></footer>
 
@@ -841,6 +1160,13 @@ xs <span style="color:#f92672">=</span> [<span style="color:#ae81ff">26562248751
         <li><a href="#refake-shell">[Re]fake shell</a></li>
         <li><a href="#recreakme2">[Re]creakme2</a></li>
         <li><a href="#cryptothe-password-plus-pro-max-ultra">[Crypto]The Password Plus Pro Max Ultra</a></li>
+      </ul>
+    </li>
+    <li><a href="#week3">Week3</a>
+      <ul>
+        <li><a href="#answers-windows">Answer&rsquo;s windows</a></li>
+        <li><a href="#creakme_3">creakme_3</a></li>
+        <li><a href="#fishman-writuep">fishman writuep</a></li>
       </ul>
     </li>
   </ul>

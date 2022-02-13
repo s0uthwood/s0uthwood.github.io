@@ -429,6 +429,325 @@ xs &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34
     print (n2s(y)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode(), end&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
 &lt;span style=&#34;color:#75715e&#34;&gt;# hgame{XOr|RoR&amp;amp;rOl|Is+vERY#coMmon*BiTwisE$OPeraTiOn*IT@is%oFten,ENCOUntErED*in.syMMeTRic?encryPtION}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;据说这个加密方法和求逆多项式还有关系，很神奇&lt;/p&gt;
+&lt;h2 id=&#34;week3&#34;&gt;Week3&lt;/h2&gt;
+&lt;h3 id=&#34;answers-windows&#34;&gt;Answer&amp;rsquo;s windows&lt;/h3&gt;
+&lt;p&gt;使用 &lt;code&gt;right.png&lt;/code&gt; 字符串能够定位到验证函数&lt;/p&gt;
+&lt;p&gt;动调发现使用了 string 的存储方式（好像就是把 string 内联了），只使用了 Base64 编码&lt;/p&gt;
+&lt;p&gt;但 base 表和目标对应不上，显然是有反调试，自己做的时候直接猜到了真实表是 ascii 的前 64 个可见字符&lt;/p&gt;
+&lt;p&gt;或者根据交叉引用找到 debug，把反调试判断 &lt;code&gt;nop&lt;/code&gt; 掉再动调即可&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 283; 
+			flex-basis: 679px&#34;
+	&gt;
+	&lt;a href=&#34;/post/hgame2022-writeups/Answers_windows_solve.jpg&#34; data-size=&#34;1084x383&#34;&gt;
+		&lt;img src=&#34;/post/hgame2022-writeups/Answers_windows_solve.jpg&#34;
+			width=&#34;1084&#34;
+			height=&#34;383&#34;
+			srcset=&#34;/post/hgame2022-writeups/Answers_windows_solve_huc3bc26e113c65b72fa0fc4de0f5ee895_47933_480x0_resize_q75_box.jpg 480w, /post/hgame2022-writeups/Answers_windows_solve_huc3bc26e113c65b72fa0fc4de0f5ee895_47933_1024x0_resize_q75_box.jpg 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&#34;creakme_3&#34;&gt;creakme_3&lt;/h3&gt;
+&lt;p&gt;PPC 架构，用 ghidra 看的&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;undefined4 &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;)
+
+{
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; fs;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; randnum;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; j;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; order_cnt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; order [&lt;span style=&#34;color:#ae81ff&#34;&gt;89&lt;/span&gt;];
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; canary;
+  
+  canary &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)(fs &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x7008&lt;/span&gt;);
+  memset(order,&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;0x164&lt;/span&gt;);
+  printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Welcome my whitegive re task! This is your flag: &amp;#34;&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; j &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x59&lt;/span&gt;; j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; j &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) {
+      randnum &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rand();
+      order[j] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; randnum &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x59&lt;/span&gt;;
+    }
+    order_cnt &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ((order_cnt &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x59&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; (a[order[order_cnt &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; a[order[order_cnt] &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;])))
+    {
+      order_cnt &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; order_cnt &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (order_cnt &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x59&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x59&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) {
+    putchar(a[order[i] &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;]);
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (canary &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)(fs &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x7008&lt;/span&gt;)) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+  }
+                    &lt;span style=&#34;color:#75715e&#34;&gt;/* WARNING: Subroutine does not return */&lt;/span&gt;
+  __stack_chk_fail();
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;手动恢复了一下符号，简单的说就是只有满足顺序都是 &lt;code&gt;&amp;lt;=&lt;/code&gt; 的时候才能退出第一个循环，所以 &lt;code&gt;rand()&lt;/code&gt; 只是个忽悠人并且浪费时间的东西（后来知道这个东西叫猴子加密）&lt;/p&gt;
+&lt;p&gt;所以提取一下数字然后排序就行&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x30&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4E7D&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x30&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x67BD&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x30&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7A48&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x30&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x82A2&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x30&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x933E&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x31&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9C18&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x32&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5AFF&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x32&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6CD7&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x32&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA6CA&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x32&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBD79&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x32&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCEBD&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x324A&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3292&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3905&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4291&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5ADE&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6E9F&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA52A&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBE35&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x33&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xCB63&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x35&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7F3B&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x38&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3914&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x38&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB2AD&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x39&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x38DA&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x39&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4E50&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x39&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6A02&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x39&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB10F&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x42&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x78E5&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x5F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7EF6&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x5F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x89A3&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x5F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8EBD&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x5F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x95E3&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x61&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x73DA&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x64&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x538C&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x64&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x633B&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x64&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9E9C&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x64&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB78B&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x64&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC866&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x65&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x32AE&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x65&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7679&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x66&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2AE7&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x66&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4D6A&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x66&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5708&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x66&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6610&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x66&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA258&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x66&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB80C&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x66&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC885&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x67&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x710A&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x67&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7CF4&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x68&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3F76&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x68&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x702B&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x68&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA3EE&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x68&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAD50&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x68&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xBAC7&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x69&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4024&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x69&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8A22&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x69&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC055&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2B52&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6A&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC687&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5F00&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC417&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6C&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6182&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x75DB&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3C61&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x4996&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6E&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5DC1&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2D76&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7D17&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x6F&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xA91B&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x70&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9AED&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x72&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x45D0&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x72&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8467&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x72&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAB5D&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x73&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x5083&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x73&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x6222&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x73&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x8D93&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x73&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x923A&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x73&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x971E&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x73&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xB4BA&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x73&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0xC785&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x74&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3558&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x74&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x86BD&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x74&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9738&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x75&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3710&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x75&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9779&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x77&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x2F3F&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x77&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x44DD&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x7B&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x78E1&lt;/span&gt;),
+    (&lt;span style=&#34;color:#ae81ff&#34;&gt;0x7D&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0x9F42&lt;/span&gt;)
+]
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;takeSecond&lt;/span&gt;(elem):
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; elem[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]
+
+a&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sort(key&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;takeSecond)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; a:
+    print (chr(i[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]), end&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#75715e&#34;&gt;# fjow33etu938nhi3wrnf90sdf32nklsdf0923hgame{B0go_50rt_is_s0_stup1d}fh32orh98sdfh23ikjsdf32&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;fishman-writuep&#34;&gt;fishman writuep&lt;/h3&gt;
+&lt;p&gt;pyd逆向&lt;/p&gt;
+&lt;h4 id=&#34;定位函数&#34;&gt;定位函数&lt;/h4&gt;
+&lt;p&gt;搜索字符串，能看到几个函数名&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 210; 
+			flex-basis: 504px&#34;
+	&gt;
+	&lt;a href=&#34;/post/hgame2022-writeups/fishman_findfunc.png&#34; data-size=&#34;700x333&#34;&gt;
+		&lt;img src=&#34;/post/hgame2022-writeups/fishman_findfunc.png&#34;
+			width=&#34;700&#34;
+			height=&#34;333&#34;
+			srcset=&#34;/post/hgame2022-writeups/fishman_findfunc_hue684703702c421b42bd3f43ae89c2d7f_34701_480x0_resize_box_3.png 480w, /post/hgame2022-writeups/fishman_findfunc_hue684703702c421b42bd3f43ae89c2d7f_34701_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;比如 &lt;code&gt;init&lt;/code&gt; 函数就是 &lt;code&gt;sub_180002670&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id=&#34;密码算法识别求解&#34;&gt;密码算法识别+求解&lt;/h4&gt;
+&lt;p&gt;查看一下 &lt;code&gt;init&lt;/code&gt; 和 &lt;code&gt;check&lt;/code&gt; 函数，这题使用的是 &lt;code&gt;blowfish&lt;/code&gt; 密码，之前没有遇到过，所以是靠着 &lt;code&gt;findcrypt&lt;/code&gt; 脚本识别出来的&lt;/p&gt;
+&lt;p&gt;顺便放一下搜到的加密算法源码，来源是 &lt;a class=&#34;link&#34; href=&#34;https://gitee.com/miao123456miao/blowfish2&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://gitee.com/miao123456miao/blowfish2&lt;/a&gt;（github 连不上，呜呜呜）&lt;/p&gt;
+&lt;p&gt;这是一个分组密码，主要的特征就是 &lt;code&gt;f&lt;/code&gt; 函数&lt;/p&gt;
+&lt;p&gt;剩下的也没什么特别的，贴一下求解脚本吧&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;#34;blowfish.h&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;swap&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; a, &lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; b) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt; tmp;
+    
+    tmp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;a;
+    &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;b;
+    &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tmp;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;blowfish_f&lt;/span&gt;(blowfish_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; container, &lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt; input) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint8_t&lt;/span&gt; a, b, c, d;
+    
+    a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; input &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;;
+    b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (input &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xff&lt;/span&gt;;
+    c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (input &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xff&lt;/span&gt;;
+    d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; input &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xff&lt;/span&gt;;
+    
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ((container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;s[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;][a] &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;s[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;][b]) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;s[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;][c]) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;
+            container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;s[&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;][d];
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;blowfish_cipher&lt;/span&gt;(blowfish_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; container, &lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; xl, &lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; xr, &lt;span style=&#34;color:#66d9ef&#34;&gt;uint8_t&lt;/span&gt; mode) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt; loc_xl, loc_xr;
+    
+    loc_xl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;xl;
+    loc_xr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;xr;
+    
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(mode &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; BLOWFISH_ENCRYPT) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; PASSES; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+            loc_xl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; loc_xl &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[i];
+            loc_xr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; blowfish_f(container, loc_xl) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; loc_xr;
+        
+            swap(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;loc_xl, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;loc_xr);
+        }
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(mode &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; BLOWFISH_DECRYPT) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PASSES&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;) {
+            loc_xl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; loc_xl &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[i];
+            loc_xr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; blowfish_f(container, loc_xl) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; loc_xr;
+        
+            swap(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;loc_xl, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;loc_xr);
+        }
+    }
+        
+    swap(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;loc_xl, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;loc_xr);
+    
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(mode &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; BLOWFISH_ENCRYPT) { 
+        loc_xr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; loc_xr &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[PASSES];
+        loc_xl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; loc_xl &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[PASSES&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;];
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(mode &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; BLOWFISH_DECRYPT) {
+        loc_xr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; loc_xr &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;];
+        loc_xl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; loc_xl &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;];
+    }
+    
+    &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;xl &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; loc_xl;
+    &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;xr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; loc_xr;
+}
+
+blowfish_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;blowfish_initialize&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; key, &lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt; length) {
+    blowfish_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; container &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; malloc(&lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(blowfish_t));
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i, ii, j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt; tmp, tmp_l &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, tmp_r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;  
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(length &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; BLOWFISH_MAX_KEY_BYTES) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (blowfish_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;) NULL;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; PASSES&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+        container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; P[i];
+    }
+    
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; SBOXES; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(ii &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; ii &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt;; ii&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+            container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;s[i][ii] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; S[i][ii];
+        }
+    }
+    
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; PASSES&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+        tmp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(ii &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; ii &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;; ii&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+            tmp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (tmp &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; key[j];
+            j&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(j &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; length) 
+                j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        }
+        container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[i] &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; tmp;
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; PASSES&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) {
+        blowfish_cipher(container, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;tmp_l, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;tmp_r, BLOWFISH_ENCRYPT);
+        container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tmp_l;
+        container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;p[i&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tmp_r;
+    }
+    
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; SBOXES; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {  
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt;(ii &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; ii &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt;; ii &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) { 
+            blowfish_cipher(container, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;tmp_l, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;tmp_r, BLOWFISH_ENCRYPT);
+            container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;s[i][ii] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tmp_l;
+            container&lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;s[i][ii&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tmp_r;
+        }
+    }
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; argc, &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt; argv) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;uint32_t&lt;/span&gt; high, low;
+    blowfish_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; container &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; blowfish_initialize(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;LET_U_D&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;);
+    high &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1416580799u&lt;/span&gt;;
+    low &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3035468667u&lt;/span&gt;;
+    blowfish_cipher(container, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, BLOWFISH_DECRYPT);
+    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;);
+    high &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2194841726u&lt;/span&gt;;
+    low &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;332656605u&lt;/span&gt;;
+    blowfish_cipher(container, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, BLOWFISH_DECRYPT);
+    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;);
+    high &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;571059727u&lt;/span&gt;;
+    low &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1498341217u&lt;/span&gt;;
+    blowfish_cipher(container, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, BLOWFISH_DECRYPT);
+    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;);
+    high &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3107158060u&lt;/span&gt;;
+    low &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;470279474u&lt;/span&gt;;
+    blowfish_cipher(container, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, BLOWFISH_DECRYPT);
+    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;blowfish.h&lt;/code&gt; 去仓库找就行&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;试了一下 pycrypto 库，解出来的有问题，可能库的实现和这个有区别，没深入研究&lt;/p&gt;
+&lt;/blockquote&gt;
 </description>
         </item>
         <item>
