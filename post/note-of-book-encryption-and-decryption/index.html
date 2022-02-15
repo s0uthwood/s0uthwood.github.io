@@ -11,10 +11,11 @@
 '>
 <meta property='og:url' content='/post/note-of-book-encryption-and-decryption/'>
 <meta property='og:site_name' content='s0uthwood&#39;s Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Reverse' /><meta property='article:published_time' content='2021-09-25T02:15:45&#43;00:00'/><meta property='article:modified_time' content='2021-09-25T02:15:45&#43;00:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Reading' /><meta property='article:tag' content='Reverse' /><meta property='article:published_time' content='2021-09-25T02:15:45&#43;08:00'/><meta property='article:modified_time' content='2022-02-15T18:47:00&#43;08:00'/><meta property='og:image' content='/post/note-of-book-encryption-and-decryption/cover.jpg' />
 <meta name="twitter:title" content="加密与解密学习笔记（持续更新ing）">
 <meta name="twitter:description" content="suibiankankan
-">
+"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='/post/note-of-book-encryption-and-decryption/cover.jpg' />
     </head>
     <body class="
     article-page has-toc
@@ -61,15 +62,27 @@
         </div>
     
 <main class="main full-width">
-    <article class="main-article">
+    <article class="has-image main-article">
     <header class="article-header">
+        <div class="article-image">
+            <a href="/post/note-of-book-encryption-and-decryption/">
+                <img src="/post/note-of-book-encryption-and-decryption/cover_huf14a87ae5877971d635f5feb6ec88f93_885732_800x0_resize_q75_box.jpg"
+                        srcset="/post/note-of-book-encryption-and-decryption/cover_huf14a87ae5877971d635f5feb6ec88f93_885732_800x0_resize_q75_box.jpg 800w, /post/note-of-book-encryption-and-decryption/cover_huf14a87ae5877971d635f5feb6ec88f93_885732_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="460" 
+                        loading="lazy"
+                        alt="Featured image of post 加密与解密学习笔记（持续更新ing）" />
+                
+            </a>
+        </div>
+    
 
     <div class="article-details">
     
     <header class="article-category">
         
-            <a href="/categories/ctf/" >
-                CTF
+            <a href="/categories/reading/" >
+                Reading
             </a>
         
             <a href="/categories/reverse/" >
@@ -113,7 +126,7 @@
 
 
                 <time class="article-time--reading">
-                    7 minute read
+                    8 minute read
                 </time>
             </div>
         
@@ -848,8 +861,35 @@ jz (jnz)
 <h4 id="破解思路">破解思路</h4>
 <p>当服务器发送的数据包固定时，可以搭建本地服务器，发送该数据包</p>
 <p>数据包不固定时，需要分析算法</p>
-<h2 id="加密算法">加密算法</h2>
-<p>略</p>
+<h2 id="加密算法常见加密库接口及其识别">加密算法——常见加密库接口及其识别</h2>
+<p>可以使用 <code>Flair</code> 工具制作 IDA sig</p>
+<h3 id="miracl-大数运算库">Miracl 大数运算库</h3>
+<p>大数库，支持 RSA、DH 密钥交换、DSA 以及椭圆曲线等</p>
+<p>存储方式：以 $2^{32}$ 进制表示，低位在前，高位在后</p>
+<p>识别方式：<code>MR_IN()</code> 是错误处理方式，几乎每个函数中都有</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">eax</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">ecx</span>*<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">20</span>], <span style="color:#66d9ef">yy</span>
+</code></pre></div><p>其中，yy 就是 <code>MR_IN()</code> 的参数，一次可以从 <code>miracl.h</code> 中找到对应的函数</p>
+<h3 id="fgint">FGInt</h3>
+<p>用于 Delphi，可实现常见公钥加密系统</p>
+<p>存储方式：以 $2^{31}$ 进制表示</p>
+<p>识别方式：参数个数以及调用前后的数据变化（黑盒）或者使用  PEiD 的 Krypto ANALyzer 插件</p>
+<h3 id="freelip">freeLIP</h3>
+<p>最初用于用于进行 RSA-129 挑战，$2^{30}$ 进制，速度不如 Miracl</p>
+<h3 id="crypto">Crypto++</h3>
+<p>实现了大量的加密算法，常用识别方法为 IDA sig，需要熟练掌握加密算法</p>
+<h3 id="libtomcrypto">LibTomCrypto</h3>
+<p>包括常见的散列算法、对称算法以及公钥加密算法</p>
+<h3 id="gmp">GMP</h3>
+<p>核心采用了汇编语言实现，速度非常快，通常用于实现大整数分解</p>
+<h3 id="openssl">OpenSSL</h3>
+<p>用于网安领域，包括一些加密算法的实现，例如 BlowFish、IDEA、DES、CAST，RSA、DSA，MD5、RIPEMD、SHA 等</p>
+<p>可以到 OpenSSL 的 crypto 目录下的加密算法源码中寻找符合条件的函数</p>
+<h3 id="microsoft-crypto-api">Microsoft Crypto API</h3>
+<p>可参考 MSDN，IDA、OllyDbg 等软件均可识别</p>
+<h3 id="ntl">NTL</h3>
+<p>数论相关，实现有符号的、算术整数的运算，以及向量、矩阵、基于有限域和整数的多项式运算</p>
+<h3 id="dcp-和-dec">DCP 和 DEC</h3>
+<p>Delphi 的加密算法库</p>
 <h2 id="windows内核基础">Windows内核基础</h2>
 <h3 id="内核理论基础">内核理论基础</h3>
 <h4 id="权限级别">权限级别</h4>
@@ -931,12 +971,26 @@ jz (jnz)
     
     <section class="article-tags">
         
+            <a href="/tags/reading/">Reading</a>
+        
             <a href="/tags/reverse/">Reverse</a>
         
     </section>
 
 
-    </footer>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            Last updated on Feb 15, 2022 18:47 CST
+        </span>
+    </section></footer>
 
 
     
@@ -1156,7 +1210,20 @@ jz (jnz)
         <li><a href="#网络验证">网络验证</a></li>
       </ul>
     </li>
-    <li><a href="#加密算法">加密算法</a></li>
+    <li><a href="#加密算法常见加密库接口及其识别">加密算法——常见加密库接口及其识别</a>
+      <ul>
+        <li><a href="#miracl-大数运算库">Miracl 大数运算库</a></li>
+        <li><a href="#fgint">FGInt</a></li>
+        <li><a href="#freelip">freeLIP</a></li>
+        <li><a href="#crypto">Crypto++</a></li>
+        <li><a href="#libtomcrypto">LibTomCrypto</a></li>
+        <li><a href="#gmp">GMP</a></li>
+        <li><a href="#openssl">OpenSSL</a></li>
+        <li><a href="#microsoft-crypto-api">Microsoft Crypto API</a></li>
+        <li><a href="#ntl">NTL</a></li>
+        <li><a href="#dcp-和-dec">DCP 和 DEC</a></li>
+      </ul>
+    </li>
     <li><a href="#windows内核基础">Windows内核基础</a>
       <ul>
         <li><a href="#内核理论基础">内核理论基础</a></li>

@@ -6,7 +6,17 @@
     <description>Recent content in Reverse on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 04 Feb 2022 13:08:32 +0800</lastBuildDate><atom:link href="/categories/reverse/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Feb 2022 23:08:32 +0800</lastBuildDate><atom:link href="/categories/reverse/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DefCamp2022 can-you-crack-this Writeup</title>
+      <link>/post/defcamp2022-can-you-crack-this-wp/</link>
+      <pubDate>Mon, 14 Feb 2022 23:08:32 +0800</pubDate>
+      
+      <guid>/post/defcamp2022-can-you-crack-this-wp/</guid>
+      <description>can-you-crack-this The main function reads the input and constrains the length.
+v11 = std::operator&amp;lt;&amp;lt;&amp;lt;std::char_traits&amp;lt;char&amp;gt;&amp;gt;(&amp;amp;std::cout, &amp;#34;Enter your public key: &amp;#34;); std::ostream::operator&amp;lt;&amp;lt;(v11, std::endl&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;&amp;gt;); std::operator&amp;gt;&amp;gt;&amp;lt;char&amp;gt;(&amp;amp;std::cin, public_key); if ( (unsigned __int64)std::string::length(public_key) &amp;gt;= 20 ) { v9 = std::operator&amp;lt;&amp;lt;&amp;lt;std::char_traits&amp;lt;char&amp;gt;&amp;gt;(&amp;amp;std::cout, &amp;#34;Enter serial key:&amp;#34;); std::ostream::operator&amp;lt;&amp;lt;(v9, std::endl&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;&amp;gt;); std::operator&amp;gt;&amp;gt;&amp;lt;char&amp;gt;(&amp;amp;std::cin, serial_key); v8 = 4 * std::string::length(public_key) - 1; if ( v8 == std::string::length(serial_key) ) { std::string::basic_string(str_public_key, public_key); std::string::basic_string(str_serial_key, serial_key); v6 = verify_serial((__int64)str_public_key, (__int64)str_serial_key); std::string::~string(str_serial_key); std::string::~string(str_public_key); if ( v6 ) { v5 = std::operator&amp;lt;&amp;lt;&amp;lt;std::char_traits&amp;lt;char&amp;gt;&amp;gt;(&amp;amp;std::cout, &amp;#34;Serial accepted.</description>
+    </item>
+    
     <item>
       <title>HGAME2022 writeups</title>
       <link>/post/hgame2022-writeups/</link>
@@ -155,7 +165,7 @@ v4 = (unsigned __int8 *)&amp;amp;key + a2; v5 = v4[2]; v6 = 1; while ( (unsigned
     <item>
       <title>加密与解密学习笔记（持续更新ing）</title>
       <link>/post/note-of-book-encryption-and-decryption/</link>
-      <pubDate>Sat, 25 Sep 2021 02:15:45 +0000</pubDate>
+      <pubDate>Sat, 25 Sep 2021 02:15:45 +0800</pubDate>
       
       <guid>/post/note-of-book-encryption-and-decryption/</guid>
       <description>&lt;p&gt;suibiankankan&lt;/p&gt;</description>

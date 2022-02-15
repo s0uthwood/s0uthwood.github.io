@@ -6,7 +6,223 @@
         <description>Recent content on s0uthwood&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 04 Feb 2022 13:08:32 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 14 Feb 2022 23:08:32 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>DefCamp2022 can-you-crack-this Writeup</title>
+        <link>/post/defcamp2022-can-you-crack-this-wp/</link>
+        <pubDate>Mon, 14 Feb 2022 23:08:32 +0800</pubDate>
+        
+        <guid>/post/defcamp2022-can-you-crack-this-wp/</guid>
+        <description>&lt;img src="/post/defcamp2022-can-you-crack-this-wp/cover.jpg" alt="Featured image of post DefCamp2022 can-you-crack-this Writeup" /&gt;&lt;h2 id=&#34;can-you-crack-this&#34;&gt;can-you-crack-this&lt;/h2&gt;
+&lt;p&gt;The main function reads the input and constrains the length.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;  v11 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;cout, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Enter your public key: &amp;#34;&lt;/span&gt;);
+  std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;ostream&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;(v11, std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;endl&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;,std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;);
+  std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;cin, public_key);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( (&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt;)std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;length(public_key) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt; ) {
+    v9 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;cout, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Enter serial key:&amp;#34;&lt;/span&gt;);
+    std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;ostream&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;(v9, std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;endl&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;,std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;);
+    std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;cin, serial_key);
+    v8 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;length(public_key) &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( v8 &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;length(serial_key) ) {
+      std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;basic_string(str_public_key, public_key);
+      std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;basic_string(str_serial_key, serial_key);
+      v6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; verify_serial((&lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt;)str_public_key, (&lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt;)str_serial_key);
+      std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::~&lt;/span&gt;string(str_serial_key);
+      std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::~&lt;/span&gt;string(str_public_key);
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( v6 ) {
+        v5 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;cout, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Serial accepted.&amp;#34;&lt;/span&gt;);
+        std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;ostream&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;(v5, std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;endl&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;,std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;);
+      }
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+        v4 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;cout, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Try harder.&amp;#34;&lt;/span&gt;);
+        std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;ostream&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;(v4, std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;endl&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;,std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;);
+      }
+      v17 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+      v14 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+      v7 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;cout, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Invalid serial length.&amp;#34;&lt;/span&gt;);
+      std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;ostream&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;(v7, std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;endl&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;,std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;);
+      v17 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+      v14 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+    v10 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;cout, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Invalid length.&amp;#34;&lt;/span&gt;);
+    std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;ostream&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt;(v10, std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;endl&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;,std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;char_traits&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt;);
+    v17 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    v14 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+  }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It requires that the two input strings satisfy the constraint &lt;code&gt;len(serial) = len(publik_key) * 4 - 1&lt;/code&gt; and passes the two strings into the &lt;code&gt;verify_serial()&lt;/code&gt; function.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;_BOOL8 &lt;span style=&#34;color:#66d9ef&#34;&gt;__fastcall&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;verify_serial&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; a1, &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; a2) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; v2; &lt;span style=&#34;color:#75715e&#34;&gt;// rsi
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; v3; &lt;span style=&#34;color:#75715e&#34;&gt;// rax
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v4; &lt;span style=&#34;color:#75715e&#34;&gt;// rax
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; v6; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+10h] [rbp-C0h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; v7; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+1Bh] [rbp-B5h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;char_from_pb_key; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+20h] [rbp-B0h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; v10[&lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;]; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+38h] [rbp-98h] BYREF
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; sub_serial[&lt;span style=&#34;color:#ae81ff&#34;&gt;28&lt;/span&gt;]; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+50h] [rbp-80h] BYREF
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v12; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+6Ch] [rbp-64h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; count; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+70h] [rbp-60h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; sub_serial_v12[&lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;]; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+88h] [rbp-48h] BYREF
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; pos_v13; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+A0h] [rbp-30h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; v16; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+A8h] [rbp-28h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; v17[&lt;span style=&#34;color:#ae81ff&#34;&gt;28&lt;/span&gt;]; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+B0h] [rbp-20h] BYREF
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  _BOOL4 v18; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+CCh] [rbp-4h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+  std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;basic_string&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;nullptr_t&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;(v17, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-&amp;#34;&lt;/span&gt;);
+  v16 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0LL&lt;/span&gt;;
+  pos_v13 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0LL&lt;/span&gt;;
+  std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;basic_string((&lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt;)sub_serial_v12);
+  count &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0LL&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; ) {
+    pos_v13 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;find(a2, v17, &lt;span style=&#34;color:#ae81ff&#34;&gt;0LL&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( pos_v13 &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; )
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+    &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;count;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( pos_v13 &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; ) {
+      v18 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+      v12 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;goto&lt;/span&gt; L_EXIT;
+    }
+    std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;substr(sub_serial, a2, &lt;span style=&#34;color:#ae81ff&#34;&gt;0LL&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;3LL&lt;/span&gt;);
+    std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;operator&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;((&lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt;)sub_serial_v12, (&lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt;)sub_serial);
+    std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::~&lt;/span&gt;string(sub_serial);
+    std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;basic_string(v10, sub_serial_v12);
+    v2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v16&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+    char_from_pb_key &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;at(a1, v2);
+    v7 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;verify_char(v10, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;char_from_pb_key);
+    std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::~&lt;/span&gt;string(v10);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( v7 ) {
+      v18 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+      v12 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;goto&lt;/span&gt; L_EXIT;
+    }
+    v6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pos_v13;
+    v3 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;length(v17);
+    std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;erase(a2, &lt;span style=&#34;color:#ae81ff&#34;&gt;0LL&lt;/span&gt;, v3 &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; v6);
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( count &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;19&lt;/span&gt; ) {
+    v4 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;c_str(a2);
+    v18 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; strncmp(v4, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;bss&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;3uLL&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+    v18 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+  }
+  v12 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+L_EXIT:
+  std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::~&lt;/span&gt;string(sub_serial_v12);
+  std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::~&lt;/span&gt;string(v17);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; v18;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This function splits the Serial Key into 20 parts by &lt;code&gt;-&lt;/code&gt; and requires each part to be 3 in length, ending with &lt;code&gt;bss&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The three characters of each Serial Key part and one Public Key character in the corresponding position are passed to the &lt;code&gt;verify_char()&lt;/code&gt; function.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;_BOOL8 &lt;span style=&#34;color:#66d9ef&#34;&gt;__fastcall&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;verify_char&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;a1, &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; a2) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v2; &lt;span style=&#34;color:#75715e&#34;&gt;// rax
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v3; &lt;span style=&#34;color:#75715e&#34;&gt;// eax
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; v5; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+0h] [rbp-20h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; v6; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+8h] [rbp-18h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; v7; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+10h] [rbp-10h]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+  v2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)std&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;string&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;c_str(a1);
+  v7 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; strtol(v2, &lt;span style=&#34;color:#ae81ff&#34;&gt;0LL&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;);
+  v6 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; fib(v7);                                 &lt;span style=&#34;color:#75715e&#34;&gt;// fib / 100
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  v5 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v6;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;v5;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;check_arm(v5) );
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( (&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;)notused(v5) &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; v5 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x10E47F4C575565LL&lt;/span&gt; );
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( v7 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt; ) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ( (&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt;)isprint(a2) ) {
+      v3 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; UN&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+      used[v3] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v5;
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; v5 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; v6 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; v5 &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; v6 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; (v6 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; v5) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; a2;
+    }
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This function first converts the hex string (format of input) to int, then uses &lt;code&gt;fib()&lt;/code&gt; to calculate the value of that index in the Fibonacci series and divides it by 100 to return &lt;code&gt;v6&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;check_arm()&lt;/code&gt; function is as follows&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;_BOOL8 &lt;span style=&#34;color:#66d9ef&#34;&gt;__fastcall&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;check_arm&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; a1) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (countSetBits(a1) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;__fastcall&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;countSetBits&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;__int64&lt;/span&gt; a1) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v2; &lt;span style=&#34;color:#75715e&#34;&gt;// [rsp+0h] [rbp-Ch]
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+  v2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ( a1 ) {
+    a1 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;=&lt;/span&gt; a1 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;v2;
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; v2;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;countSetBits()&lt;/code&gt; is used to calculate the number of 1 in the binary form of the argument, so the number of 1 is odd to exit the inner &lt;code&gt;do while&lt;/code&gt; loop. For the outer loop, the number &lt;code&gt;v5&lt;/code&gt; must be less than 0x10E47F4C575565, and &lt;code&gt;notused()&lt;/code&gt; will record the previous &lt;code&gt;v5&lt;/code&gt; and cannot be reused.&lt;/p&gt;
+&lt;p&gt;In addition, since &lt;code&gt;v6 - v5 &amp;gt; 0x20&lt;/code&gt; (&lt;code&gt;isprint(a2)&lt;/code&gt; and &lt;code&gt;(v6 - v5) % 100 == a2&lt;/code&gt;) is required, it is obvious that the upper limit of &lt;code&gt;v5&lt;/code&gt; needs to be used in the construction. So that the value of &lt;code&gt;v5&lt;/code&gt; in 20 calculations can be determined, and the Serial Key and Public Key can be constructed by finding &lt;code&gt;(v6, a2)&lt;/code&gt; that match the condition.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fib&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; x) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; v5[&lt;span style=&#34;color:#ae81ff&#34;&gt;4096&lt;/span&gt;];
+    v5[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    v5[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; x; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+        v5[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v5[i &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; v5[i &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; v5[x] &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;100uLL&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;countSetBits&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; x) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; v2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (x) {
+        x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;=&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+        v2&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; v2;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;check_arm&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; x) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (countSetBits(x) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;next&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v5) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt; {
+        &lt;span style=&#34;color:#f92672&#34;&gt;--*&lt;/span&gt;v5;
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;check_arm(&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;v5));
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; v7;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; v5 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x10E47F4C575565LL&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; serial[&lt;span style=&#34;color:#ae81ff&#34;&gt;105&lt;/span&gt;];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; public[&lt;span style=&#34;color:#ae81ff&#34;&gt;105&lt;/span&gt;];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;){
+        next(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;v5);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;; j &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1000&lt;/span&gt;; j&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;){
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; tmp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (fib(j) &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; v5) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;;
+            &lt;span style=&#34;color:#75715e&#34;&gt;// add constraints of fib(j) &amp;gt; 0x10E47F4C575565LL is better
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (tmp &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x20&lt;/span&gt;){
+                serial[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; j;
+                public[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tmp;
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+            }
+        }
+    }
+    printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Public Key: &amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+        printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%c&amp;#34;&lt;/span&gt;, public[i]);
+    printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;);
+    printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Serial Key: &amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;19&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+        printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%03x-&amp;#34;&lt;/span&gt;, serial[i]);
+    printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;bss&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+}
+&lt;span style=&#34;color:#75715e&#34;&gt;// Public Key: ;=&amp;gt;ABDGH#%&amp;amp;(+-.12479
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// Serial Key: 066-066-066-066-066-066-066-066-064-064-064-064-064-064-064-064-064-064-064-bss
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
         <title>HGAME2022 writeups</title>
         <link>/post/hgame2022-writeups/</link>
         <pubDate>Fri, 04 Feb 2022 13:08:32 +0800</pubDate>
@@ -5572,10 +5788,10 @@ print (spend)
         <item>
         <title>加密与解密学习笔记（持续更新ing）</title>
         <link>/post/note-of-book-encryption-and-decryption/</link>
-        <pubDate>Sat, 25 Sep 2021 02:15:45 +0000</pubDate>
+        <pubDate>Sat, 25 Sep 2021 02:15:45 +0800</pubDate>
         
         <guid>/post/note-of-book-encryption-and-decryption/</guid>
-        <description>&lt;p&gt;suibiankankan&lt;/p&gt;
+        <description>&lt;img src="/post/note-of-book-encryption-and-decryption/cover.jpg" alt="Featured image of post 加密与解密学习笔记（持续更新ing）" /&gt;&lt;p&gt;suibiankankan&lt;/p&gt;
 &lt;h2 id=&#34;基础知识&#34;&gt;基础知识&lt;/h2&gt;
 &lt;h3 id=&#34;分析的一般途径和策略&#34;&gt;分析的一般途径和策略&lt;/h3&gt;
 &lt;ol&gt;
@@ -6300,8 +6516,35 @@ jz (jnz)
 &lt;h4 id=&#34;破解思路&#34;&gt;破解思路&lt;/h4&gt;
 &lt;p&gt;当服务器发送的数据包固定时，可以搭建本地服务器，发送该数据包&lt;/p&gt;
 &lt;p&gt;数据包不固定时，需要分析算法&lt;/p&gt;
-&lt;h2 id=&#34;加密算法&#34;&gt;加密算法&lt;/h2&gt;
-&lt;p&gt;略&lt;/p&gt;
+&lt;h2 id=&#34;加密算法常见加密库接口及其识别&#34;&gt;加密算法——常见加密库接口及其识别&lt;/h2&gt;
+&lt;p&gt;可以使用 &lt;code&gt;Flair&lt;/code&gt; 工具制作 IDA sig&lt;/p&gt;
+&lt;h3 id=&#34;miracl-大数运算库&#34;&gt;Miracl 大数运算库&lt;/h3&gt;
+&lt;p&gt;大数库，支持 RSA、DH 密钥交换、DSA 以及椭圆曲线等&lt;/p&gt;
+&lt;p&gt;存储方式：以 $2^{32}$ 进制表示，低位在前，高位在后&lt;/p&gt;
+&lt;p&gt;识别方式：&lt;code&gt;MR_IN()&lt;/code&gt; 是错误处理方式，几乎每个函数中都有&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-asm&#34; data-lang=&#34;asm&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;mov&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;dword&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;ptr&lt;/span&gt; [&lt;span style=&#34;color:#66d9ef&#34;&gt;eax&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;ecx&lt;/span&gt;*&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;], &lt;span style=&#34;color:#66d9ef&#34;&gt;yy&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其中，yy 就是 &lt;code&gt;MR_IN()&lt;/code&gt; 的参数，一次可以从 &lt;code&gt;miracl.h&lt;/code&gt; 中找到对应的函数&lt;/p&gt;
+&lt;h3 id=&#34;fgint&#34;&gt;FGInt&lt;/h3&gt;
+&lt;p&gt;用于 Delphi，可实现常见公钥加密系统&lt;/p&gt;
+&lt;p&gt;存储方式：以 $2^{31}$ 进制表示&lt;/p&gt;
+&lt;p&gt;识别方式：参数个数以及调用前后的数据变化（黑盒）或者使用  PEiD 的 Krypto ANALyzer 插件&lt;/p&gt;
+&lt;h3 id=&#34;freelip&#34;&gt;freeLIP&lt;/h3&gt;
+&lt;p&gt;最初用于用于进行 RSA-129 挑战，$2^{30}$ 进制，速度不如 Miracl&lt;/p&gt;
+&lt;h3 id=&#34;crypto&#34;&gt;Crypto++&lt;/h3&gt;
+&lt;p&gt;实现了大量的加密算法，常用识别方法为 IDA sig，需要熟练掌握加密算法&lt;/p&gt;
+&lt;h3 id=&#34;libtomcrypto&#34;&gt;LibTomCrypto&lt;/h3&gt;
+&lt;p&gt;包括常见的散列算法、对称算法以及公钥加密算法&lt;/p&gt;
+&lt;h3 id=&#34;gmp&#34;&gt;GMP&lt;/h3&gt;
+&lt;p&gt;核心采用了汇编语言实现，速度非常快，通常用于实现大整数分解&lt;/p&gt;
+&lt;h3 id=&#34;openssl&#34;&gt;OpenSSL&lt;/h3&gt;
+&lt;p&gt;用于网安领域，包括一些加密算法的实现，例如 BlowFish、IDEA、DES、CAST，RSA、DSA，MD5、RIPEMD、SHA 等&lt;/p&gt;
+&lt;p&gt;可以到 OpenSSL 的 crypto 目录下的加密算法源码中寻找符合条件的函数&lt;/p&gt;
+&lt;h3 id=&#34;microsoft-crypto-api&#34;&gt;Microsoft Crypto API&lt;/h3&gt;
+&lt;p&gt;可参考 MSDN，IDA、OllyDbg 等软件均可识别&lt;/p&gt;
+&lt;h3 id=&#34;ntl&#34;&gt;NTL&lt;/h3&gt;
+&lt;p&gt;数论相关，实现有符号的、算术整数的运算，以及向量、矩阵、基于有限域和整数的多项式运算&lt;/p&gt;
+&lt;h3 id=&#34;dcp-和-dec&#34;&gt;DCP 和 DEC&lt;/h3&gt;
+&lt;p&gt;Delphi 的加密算法库&lt;/p&gt;
 &lt;h2 id=&#34;windows内核基础&#34;&gt;Windows内核基础&lt;/h2&gt;
 &lt;h3 id=&#34;内核理论基础&#34;&gt;内核理论基础&lt;/h3&gt;
 &lt;h4 id=&#34;权限级别&#34;&gt;权限级别&lt;/h4&gt;
