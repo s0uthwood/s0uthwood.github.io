@@ -806,7 +806,7 @@ a&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sort(key&lt;span style=
 &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; a:
     print (chr(i[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]), end&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;)
 &lt;span style=&#34;color:#75715e&#34;&gt;# fjow33etu938nhi3wrnf90sdf32nklsdf0923hgame{B0go_50rt_is_s0_stup1d}fh32orh98sdfh23ikjsdf32&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;fishman-writuep&#34;&gt;fishman writuep&lt;/h3&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;fishman&#34;&gt;fishman&lt;/h3&gt;
 &lt;p&gt;pyd逆向&lt;/p&gt;
 &lt;h4 id=&#34;定位函数&#34;&gt;定位函数&lt;/h4&gt;
 &lt;p&gt;搜索字符串，能看到几个函数名&lt;/p&gt;
@@ -834,8 +834,12 @@ a&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;sort(key&lt;span style=
     &gt;https://gitee.com/miao123456miao/blowfish2&lt;/a&gt;（github 连不上，呜呜呜）&lt;/p&gt;
 &lt;p&gt;这是一个分组密码，主要的特征就是 &lt;code&gt;f&lt;/code&gt; 函数&lt;/p&gt;
 &lt;p&gt;剩下的也没什么特别的，贴一下求解脚本吧&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ddl 师傅发现这个在 kali 上编译后会出现乱码，主要原因在于 kali 上编译后会把 low 放在低地址而 Ubuntu 会放在高地址，所以直接 &lt;code&gt;write(1, &amp;amp;high, 8)&lt;/code&gt; 就无法打印到 low，修改为 &lt;code&gt;write(1, &amp;amp;high, 4); write(1, &amp;amp;low, 4);&lt;/code&gt; 就能解决这个问题。&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;unistd.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
 &lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;#34;blowfish.h&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
@@ -945,19 +949,27 @@ blowfish_t&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span styl
     high &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1416580799u&lt;/span&gt;;
     low &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3035468667u&lt;/span&gt;;
     blowfish_cipher(container, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, BLOWFISH_DECRYPT);
-    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;);
+    &lt;span style=&#34;color:#75715e&#34;&gt;// write(1, &amp;amp;high, 8);
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
+    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
     high &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2194841726u&lt;/span&gt;;
     low &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;332656605u&lt;/span&gt;;
     blowfish_cipher(container, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, BLOWFISH_DECRYPT);
-    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;);
+    &lt;span style=&#34;color:#75715e&#34;&gt;// write(1, &amp;amp;high, 8);
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
+    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
     high &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;571059727u&lt;/span&gt;;
     low &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1498341217u&lt;/span&gt;;
     blowfish_cipher(container, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, BLOWFISH_DECRYPT);
-    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;);
+    &lt;span style=&#34;color:#75715e&#34;&gt;// write(1, &amp;amp;high, 8);
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
+    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
     high &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3107158060u&lt;/span&gt;;
     low &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;470279474u&lt;/span&gt;;
     blowfish_cipher(container, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, BLOWFISH_DECRYPT);
-    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;);
+    &lt;span style=&#34;color:#75715e&#34;&gt;// write(1, &amp;amp;high, 8);
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;high, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
+    write(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;low, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
     &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;blowfish.h&lt;/code&gt; 去仓库找就行&lt;/p&gt;
