@@ -206,15 +206,6 @@
     </item>
     
     <item>
-      <title>WP</title>
-      <link>/tags/wp/</link>
-      <pubDate>Sat, 09 Oct 2021 22:22:33 +0000</pubDate>
-      
-      <guid>/tags/wp/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>BUUOJ</title>
       <link>/tags/buuoj/</link>
       <pubDate>Sun, 26 Sep 2021 00:10:18 +0000</pubDate>
@@ -278,9 +269,18 @@
     </item>
     
     <item>
+      <title>AITMC</title>
+      <link>/tags/aitmc/</link>
+      <pubDate>Wed, 09 Dec 2020 23:27:25 +0000</pubDate>
+      
+      <guid>/tags/aitmc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>fabric</title>
       <link>/tags/fabric/</link>
-      <pubDate>Fri, 18 Dec 2020 13:40:28 +0000</pubDate>
+      <pubDate>Tue, 08 Dec 2020 01:33:07 +0000</pubDate>
       
       <guid>/tags/fabric/</guid>
       <description></description>
@@ -289,27 +289,9 @@
     <item>
       <title>go</title>
       <link>/tags/go/</link>
-      <pubDate>Fri, 18 Dec 2020 13:40:28 +0000</pubDate>
+      <pubDate>Tue, 08 Dec 2020 01:33:07 +0000</pubDate>
       
       <guid>/tags/go/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>rpc</title>
-      <link>/tags/rpc/</link>
-      <pubDate>Fri, 11 Dec 2020 02:12:29 +0000</pubDate>
-      
-      <guid>/tags/rpc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AITMC</title>
-      <link>/tags/aitmc/</link>
-      <pubDate>Wed, 09 Dec 2020 23:27:25 +0000</pubDate>
-      
-      <guid>/tags/aitmc/</guid>
       <description></description>
     </item>
     

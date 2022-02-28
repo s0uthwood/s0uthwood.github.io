@@ -55,18 +55,9 @@
     <item>
       <title>Crypto</title>
       <link>/categories/crypto/</link>
-      <pubDate>Thu, 20 May 2021 01:51:42 +0000</pubDate>
+      <pubDate>Tue, 13 Apr 2021 21:39:43 +0000</pubDate>
       
       <guid>/categories/crypto/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>fabric</title>
-      <link>/categories/fabric/</link>
-      <pubDate>Fri, 18 Dec 2020 13:40:28 +0000</pubDate>
-      
-      <guid>/categories/fabric/</guid>
       <description></description>
     </item>
     
@@ -76,6 +67,15 @@
       <pubDate>Wed, 09 Dec 2020 23:27:25 +0000</pubDate>
       
       <guid>/categories/aitmc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>fabric</title>
+      <link>/categories/fabric/</link>
+      <pubDate>Tue, 08 Dec 2020 01:33:07 +0000</pubDate>
+      
+      <guid>/categories/fabric/</guid>
       <description></description>
     </item>
     

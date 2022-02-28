@@ -6,42 +6,13 @@
     <description>Recent content in fabric on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 18 Dec 2020 13:40:28 +0000</lastBuildDate><atom:link href="/categories/fabric/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 08 Dec 2020 01:33:07 +0000</lastBuildDate><atom:link href="/categories/fabric/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Fabric-SystemChaincode</title>
-      <link>/post/fabric-systemchaincode/</link>
-      <pubDate>Fri, 18 Dec 2020 13:40:28 +0000</pubDate>
-      
-      <guid>/post/fabric-systemchaincode/</guid>
-      <description>系统链码 系统链码结构图
-与普通链码对比     系统链码 普通链码     链码源码 无main函数 有main函数   运行空间 背书节点进程 Docker   调用方式 网络+进程内部 网络   启动参数 内置 动态输入   通信方式 Golang的通道机制 网络   数据存取 Golang的通道+本地文件 网络   升级方式 和背书节点一起升级 单独升级   背书策略 无 有    系统链码在Peer节点上的注册与部署 peer节点存在于docker容器中，在启动时通过执行peer node start命令来启动peer节点。
- /internal/peer/node/start.go
- start命令的入口函数为serve函数。
-以下源代码中仅保留部署系统链码的部分。
-func serve(args []string) error { // Initialize chaincode service  // deploy system chaincodes 	for _, cc := range []scc.</description>
-    </item>
-    
-    <item>
-      <title>gRPC basic</title>
-      <link>/post/grpc-basic/</link>
-      <pubDate>Fri, 11 Dec 2020 02:12:29 +0000</pubDate>
-      
-      <guid>/post/grpc-basic/</guid>
-      <description>简介  A high-performance, open-source universal RPC framework
- gRPC框架具有高性能，开源，跨语言的特点，使用了RPC框架，基于HTTP/2设计。
- RPC(remote procedure call，远程过程调用)框架提供了一套机制，使得应用程序之间可以进行通信，遵从server/client模型。 RPC将一个服务调用封装在一个本地方法中，让调用者像使用本地方法一样调用服务，对其屏蔽实现细节。具体的实现则通过调用方和服务方的协议，基于TCP连接进行数据交互达成。
-  在本地调用过程中，通常需要通过接口，调用具体实现，最终获取相应的数据。 而在RPC中，本地获取到接口，随后通过网络，调用远程的实现。在使用网络时，需要通过数据序列化来传输数据。
- 在gRPC中，支持多个语言的应用程序的远程调用，数据交换格式则采用了Protocol Buffer。
-gRPC-basic
-如上图所示，左侧为c++语言编写的客户端，其中包含了接口的具体实现。右侧为Ruby和Java客户端，其中对接口进行了调用。客户端获取接口后，将数据通过Protocol Buffer的序列化处理后交给服务端，服务端调用具体实现，并把数据同样以序列化的形式返回给客户端。</description>
-    </item>
-    
-    <item>
-      <title>Fabric-Architecture</title>
-      <link>/post/fabric-architecture/</link>
+      <title>Fabric-Architecture-and-SystemChaincode</title>
+      <link>/post/fabric-architecture-and-systemchaincode/</link>
       <pubDate>Tue, 08 Dec 2020 01:33:07 +0000</pubDate>
       
-      <guid>/post/fabric-architecture/</guid>
+      <guid>/post/fabric-architecture-and-systemchaincode/</guid>
       <description>参考文献：Hyperledger Fabric: A Distributed Operation System for Permissioned Blockchains
 架构 整体结构 Fabric是一个许可区块链的分布式操作系统，可以执行多种编程语言编写的分布式应用。它能够在一个只能追加的数据结构中安全地跟踪执行历史，并且没有内置的加密账本。
 Fabric使用了“执行-order-验证”的区块链架构，而没有遵顼标准的“order-执行”设计。其整体的分布式应用可以分为两个部分

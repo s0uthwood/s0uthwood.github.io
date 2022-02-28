@@ -6,17 +6,7 @@
     <description>Recent content in Crypto on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 20 May 2021 01:51:42 +0000</lastBuildDate><atom:link href="/categories/crypto/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>cryptohack</title>
-      <link>/post/cryptohack/</link>
-      <pubDate>Thu, 20 May 2021 01:51:42 +0000</pubDate>
-      
-      <guid>/post/cryptohack/</guid>
-      <description>Encoding Challenge Pwntools的简单使用
-from pwn import * import json r = remote(&amp;#39;socket.cryptohack.org&amp;#39;, 13377) def json_recv(): line = r.recvline() return json.loads(line.decode()) def json_send(hsh): request = json.dumps(hsh).encode() r.sendline(request) ENCODINGS = [ &amp;#34;base64&amp;#34;, &amp;#34;hex&amp;#34;, &amp;#34;rot13&amp;#34;, &amp;#34;bigint&amp;#34;, &amp;#34;utf-8&amp;#34;, ] from base64 import b64decode import codecs from libnum import n2s for _ in range(100): received = json_recv() print(&amp;#34;Received type: &amp;#34;) print(received[&amp;#34;type&amp;#34;]) print(&amp;#34;Received encoded value: &amp;#34;) print(received[&amp;#34;encoded&amp;#34;]) i = ENCODINGS.index(received[&amp;#39;type&amp;#39;]) decoded = received[&amp;#39;encoded&amp;#39;] if i == 0: decoded = b64decode(decoded) decoded = str(decoded)[2:-1] elif i == 1: decoded = n2s(int(decoded, 16)) decoded = str(decoded)[2:-1] elif i == 2: decoded = codecs.</description>
-    </item>
-    
+    <lastBuildDate>Tue, 13 Apr 2021 21:39:43 +0000</lastBuildDate><atom:link href="/categories/crypto/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>hmg2021 RSA Attack writeup</title>
       <link>/post/hmg2021-rsa-attack-writeup/</link>

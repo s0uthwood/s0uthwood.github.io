@@ -128,14 +128,8 @@
     <loc>/post/resent-re-challenge/</loc>
     <lastmod>2021-11-23T14:06:23+00:00</lastmod>
   </url><url>
-    <loc>/post/pbctf2021-re-writeups/</loc>
+    <loc>/post/tsgctf2021-and-pbctf2021-re-writeups/</loc>
     <lastmod>2021-10-11T16:07:41+00:00</lastmod>
-  </url><url>
-    <loc>/post/tsgctf2021-re-wp/</loc>
-    <lastmod>2021-10-09T22:22:33+00:00</lastmod>
-  </url><url>
-    <loc>/tags/wp/</loc>
-    <lastmod>2021-10-09T22:22:33+00:00</lastmod>
   </url><url>
     <loc>/post/angr-ctf-writeup/</loc>
     <lastmod>2021-09-27T21:03:03+00:00</lastmod>
@@ -185,17 +179,14 @@
     <loc>/post/buuoj-re-1/</loc>
     <lastmod>2021-05-26T23:54:09+00:00</lastmod>
   </url><url>
-    <loc>/categories/crypto/</loc>
-    <lastmod>2021-05-20T01:51:42+00:00</lastmod>
-  </url><url>
-    <loc>/post/cryptohack/</loc>
-    <lastmod>2021-05-20T01:51:42+00:00</lastmod>
-  </url><url>
     <loc>/post/ciscn2021-re-writeup/</loc>
     <lastmod>2021-05-20T01:21:59+00:00</lastmod>
   </url><url>
     <loc>/post/jinmen-cup-goodre-writeup/</loc>
     <lastmod>2021-05-10T02:32:59+00:00</lastmod>
+  </url><url>
+    <loc>/categories/crypto/</loc>
+    <lastmod>2021-04-13T21:39:43+00:00</lastmod>
   </url><url>
     <loc>/post/hmg2021-rsa-attack-writeup/</loc>
     <lastmod>2021-04-13T21:39:43+00:00</lastmod>
@@ -221,35 +212,8 @@
     <loc>/post/hgame2021-vernam-and-fake/</loc>
     <lastmod>2021-03-17T20:06:09+00:00</lastmod>
   </url><url>
-    <loc>/post/wustctf2020-re-writeups/</loc>
-    <lastmod>2021-03-07T21:35:10+00:00</lastmod>
-  </url><url>
-    <loc>/post/mrctf2020-reverse-writeups/mrctf2020-reverse-writeups/</loc>
-    <lastmod>2021-03-04T16:38:52+00:00</lastmod>
-  </url><url>
-    <loc>/post/guetctf2019-reverse-writeups/</loc>
-    <lastmod>2021-03-04T16:17:36+00:00</lastmod>
-  </url><url>
     <loc>/post/start-reversing/</loc>
-    <lastmod>2021-01-15T18:29:48+00:00</lastmod>
-  </url><url>
-    <loc>/tags/fabric/</loc>
-    <lastmod>2020-12-18T13:40:28+00:00</lastmod>
-  </url><url>
-    <loc>/categories/fabric/</loc>
-    <lastmod>2020-12-18T13:40:28+00:00</lastmod>
-  </url><url>
-    <loc>/post/fabric-systemchaincode/</loc>
-    <lastmod>2020-12-18T13:40:28+00:00</lastmod>
-  </url><url>
-    <loc>/tags/go/</loc>
-    <lastmod>2020-12-18T13:40:28+00:00</lastmod>
-  </url><url>
-    <loc>/post/grpc-basic/</loc>
-    <lastmod>2020-12-11T02:12:29+00:00</lastmod>
-  </url><url>
-    <loc>/tags/rpc/</loc>
-    <lastmod>2020-12-11T02:12:29+00:00</lastmod>
+    <lastmod>2021-03-07T21:35:10+00:00</lastmod>
   </url><url>
     <loc>/tags/aitmc/</loc>
     <lastmod>2020-12-09T23:27:25+00:00</lastmod>
@@ -260,8 +224,17 @@
     <loc>/post/aitmc-challenge/</loc>
     <lastmod>2020-12-09T23:27:25+00:00</lastmod>
   </url><url>
-    <loc>/post/fabric-architecture/</loc>
-    <lastmod>2020-12-08T01:33:07+00:00</lastmod>
+    <loc>/tags/fabric/</loc>
+    <lastmod>2020-12-18T13:40:28+00:00</lastmod>
+  </url><url>
+    <loc>/categories/fabric/</loc>
+    <lastmod>2020-12-18T13:40:28+00:00</lastmod>
+  </url><url>
+    <loc>/post/fabric-architecture-and-systemchaincode/</loc>
+    <lastmod>2020-12-18T13:40:28+00:00</lastmod>
+  </url><url>
+    <loc>/tags/go/</loc>
+    <lastmod>2020-12-18T13:40:28+00:00</lastmod>
   </url><url>
     <loc>/categories/school/</loc>
     <lastmod>2020-11-17T23:16:05+00:00</lastmod>

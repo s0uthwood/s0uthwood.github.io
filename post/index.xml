@@ -98,7 +98,7 @@ serial-&amp;gt;十进制-&amp;gt;与name的crc异或-&amp;gt;计算crc
       <description>打美团 CTF 的时候才意识到，有一种坐牢叫AK
  [MTCTF 4th]wow 先进行脱壳，因为脱壳后用的是绝对地址，而加载的时候是动态加载，所有没有办法调试，那就直接静态看吧
 JUMPOUT 那里看一下汇编，发现有一个天堂之门
-push 0x33call $+5add [esp+84h+var_84], 5retf直接把后面的数据全 dump 出来，然后用 ida64 打开
+push 0x33 call $+5 add [esp+84h+var_84], 5 retf 直接把后面的数据全 dump 出来，然后用 ida64 打开
 void __fastcall sub_0(unsigned int *a1) { unsigned int v1; // er9  int v2; // ebp  unsigned int v3; // esi  unsigned int *v4; // rdi  unsigned int *v5; // r10  unsigned int v6; // ebx  unsigned int i; // er11  unsigned int v8; // er8  int v9; // edx  unsigned int v10; // eax  unsigned int v11; // er9  unsigned int v12; // er8  int v13; // ebx  int v14; // ebx  int v15; // ebx  int v16; // edx  unsigned int v17; // eax  unsigned int v18; // er9  v1 = a1[8]; v2 = 12; v3 = 0; while ( 1 ) { v3 += 1732584193; v4 = a1 + 1; v5 = a1; v6 = v3 &amp;gt;&amp;gt; 2; for ( i = 0; i &amp;lt; 8; ++i ) { v8 = *v4; if ( (((unsigned __int8)i ^ (unsigned __int8)v6) &amp;amp; 3) !</description>
     </item>
     
@@ -116,7 +116,7 @@ v9 = byte_412000; v10 = byte_412050; v11 = 64LL; v12 = 0; do { v12 |= *v10++ ^ *
 Angr用的是手动往全局变量注入符号，然后在验证前停止，手动添加约束，wp中的写法是直接用程序中的验证，并添加了 LAZY_SOLVES 参数，学到了
 之前用自己脚本跑的适合发现一直是 unsat，以为Angr会有问题，但后来发现有个wp就是用的Angr
 于是掏出了之前写的脚本做了一些尝试
-from angr import *import claripyimport binasciiinput_length = 56base_addr = 0x400000proj = Project(&#39;runofthemill&#39;, main_opts={&amp;quot;base_addr&amp;quot;: base_addr})start_addr = 0x401054state = proj.</description>
+from angr import * import claripy import binascii input_length = 56 base_addr = 0x400000 proj = Project(&#39;runofthemill&#39;, main_opts={&amp;quot;base_addr&amp;quot;: base_addr}) start_addr = 0x401054 state = proj.</description>
     </item>
     
     <item>
@@ -149,24 +149,12 @@ macro_rules! check { (@s n1ctf{$Never:tt}) =&amp;gt; { check!(stringify!($Never)
     </item>
     
     <item>
-      <title>pbctf2021 RE writeups</title>
-      <link>/post/pbctf2021-re-writeups/</link>
-      <pubDate>Mon, 11 Oct 2021 16:07:41 +0000</pubDate>
-      
-      <guid>/post/pbctf2021-re-writeups/</guid>
-      <description>cosmo main函数在 sub_403066
-要求长度是38，简单看了一下加密逻辑，发现是两个字符一起加密并验证，还想用pintools试试，结果发现根本跑不起来
-于是又开始了快乐的手写爆破，不过这个比较简单，动调一下就知道只用了最下面的几行加密逻辑
-#include &amp;lt;stdio.h&amp;gt; long long qword_40C000[20] = { 21233875ll, 69468586ll, 146735755ll, 251265871ll, 379651085ll, 536872170ll, 719455639ll, 924911196ll, 1158088491ll, 1412368333ll, 1695680674ll, 2005272944ll, 2341407284ll, 2698316511ll, 3076262773ll, 3483634782ll, 3913551105ll, 72486322ll, 548474478ll, 0ll }; long long encrypt(char *a, int len, int cur){ int v5 = len; int res = 0; long long v3 = qword_40C000[cur - 1]; int v6 = v3 &amp;gt;&amp;gt; 16; int v7 = v3 &amp;amp; 0xffff; while(v5){ v7 += *a; v6 += v7; --v5; ++a; } if (v7 &amp;gt; 0xFFF0) v7 -= 0xFFF1; return v7 | ((v6 % 0xFFF1) &amp;lt;&amp;lt; 16); } int test_cnt(int cnt){ for (int i = 0x20; i &amp;lt; 0x80; i++){ for (int j = 0x20; j &amp;lt; 0x80; j++){ char a[] = {i, j}; if (encrypt(a, 2, cnt) == qword_40C000[cnt]){ printf(&amp;#34;%c%c&amp;#34;, i, j); return 0; } } } } int main(){ printf(&amp;#34;pbctf{&amp;#34;); for (int i = 3; i &amp;lt; 19; i++) test_cnt(i); printf(&amp;#34;\n&amp;#34;); return 0; } 除了找main函数之外也没有什么特别的</description>
-    </item>
-    
-    <item>
-      <title>TSGCTF2021 RE WP</title>
-      <link>/post/tsgctf2021-re-wp/</link>
+      <title>TSGCTF2021 and pbctf2021 RE writeups</title>
+      <link>/post/tsgctf2021-and-pbctf2021-re-writeups/</link>
       <pubDate>Sat, 09 Oct 2021 22:22:33 +0000</pubDate>
       
-      <guid>/post/tsgctf2021-re-wp/</guid>
-      <description>Beginners Rev 用 fork() 遍历了 32 位输入，每个输入都分别进行一次函数运算
+      <guid>/post/tsgctf2021-and-pbctf2021-re-writeups/</guid>
+      <description>TSGCTF2021 Beginners Rev 用 fork() 遍历了 32 位输入，每个输入都分别进行一次函数运算
 do { ++v2; if ( !fork() ) { v2 = 0; v1 |= 1 &amp;lt;&amp;lt; v3; v7 = open(&amp;#34;/dev/null&amp;#34;, 1); dup2(v7, 1); } ++v3; } while ( v3 != 5 ); 每个函数运算都是将输入迭代好多次
 v4 = (unsigned __int8 *)&amp;amp;key + a2; v5 = v4[2]; v6 = 1; while ( (unsigned int)(-1217102449 * v5 + 1217102449) &amp;gt; 0xB2927C ) { ++v6; v5 += v4[2]; if ( v6 == 367 ) { v6 = -1; break; } } v7 = v4[4]; v8 = v4[3] * ((a1 + *v4) % 367 * v4[1] % 367 * v6 % 367) % 367; 被retaddr坑了一会，后面才反应过来开头那个 if ( retaddr - (_BYTE *)check !</description>
     </item>
@@ -261,7 +249,7 @@ void __fastcall sub_400BD0(__int64 a1, int *a2) { int v2; // er8  int v3; // edx
 from key import key import tinyaes print (key) f = open(&amp;#39;./PYZ-00.pyz_extracted/sign.pyc.encrypted&amp;#39;, &amp;#39;rb&amp;#39;) data = f.read() cipher = tinyaes.AES(key.encode(), data[:16]) output = cipher.CTR_xcrypt_buffer(data[16:]) f.close() import zlib output = zlib.decompress(output) f = open(&amp;#39;./sign.pyc&amp;#39;, &amp;#39;wb&amp;#39;) f.write(output) 解密 解出sign后看到有三个base64，其中两个是执行的语句，此外大部分语句涉及到了内存
 另外一个base解出来是乱码，用字节码辅助恢复函数（其实特征已经很明显了），发现进行了rc4加密，直接打印出解密结果，将结果写入文件，用ida查看
 发现smc
-mov eax, 41178Bhmov ecx, 411802hsub ecx, eaxloc_2A:mov ebx, [rax]xor ebx, 77hmov [rax], ebxloop loc_2A解出来后尝试恢复了一下函数，结果很丑&amp;hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</description>
+mov eax, 41178Bh mov ecx, 411802h sub ecx, eax loc_2A: mov ebx, [rax] xor ebx, 77h mov [rax], ebx loop loc_2A 解出来后尝试恢复了一下函数，结果很丑&amp;hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</description>
     </item>
     
     <item>
@@ -290,17 +278,7 @@ SMC还是很明显的
       
       <guid>/post/buuoj-re-1/</guid>
       <description>[NPUCTF2020]BasicASM 纯考察汇编的题目，有考虑想办法改成正确的汇编形式然后编译用ida看，但感觉就失去意义了，于是硬啃汇编
-00007FF7A8AC5A50 push rbp 00007FF7A8AC5A52 push rdi 00007FF7A8AC5A53 sub rsp,238h 00007FF7A8AC5A5A lea rbp,[rsp+20h] 00007FF7A8AC5A5F mov rdi,rsp 00007FF7A8AC5A62 mov ecx,8Eh 00007FF7A8AC5A67 mov eax,0CCCCCCCCh 00007FF7A8AC5A6C rep stos dword ptr [rdi] 00007FF7A8AC5A6E mov rax,qword ptr [__security_cookie (07FF7A8AD3018h)] 00007FF7A8AC5A75 xor rax,rbp 00007FF7A8AC5A78 mov qword ptr [rbp+208h],rax 00007FF7A8AC5A7F lea rcx,[__06A15900_ConsoleApplication@cpp (07FF7A8AD902Ah)] 00007FF7A8AC5A86 call __CheckForDebuggerJustMyCode (07FF7A8AC1122h) 00007FF7A8AC5A8B lea rdx,[string &amp;quot;flag{this_is_a_fake_flag}&amp;quot; (07FF7A8ACF450h)] 00007FF7A8AC5A92 lea rcx,[flag] 00007FF7A8AC5A96 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt; (07FF7A8AC15E1h) 00007FF7A8AC5A9B nop 00007FF7A8AC5A9C mov dword ptr [p],0 00007FF7A8AC5AA3 mov i,0 00007FF7A8AC5AAA jmp main+64h (07FF7A8AC5AB4h) 00007FF7A8AC5AAC mov eax,i 00007FF7A8AC5AAF inc eax 00007FF7A8AC5AB1 mov i,eax 00007FF7A8AC5AB4 movsxd rax,i 00007FF7A8AC5AB8 mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5ABF lea rcx,[flag] 00007FF7A8AC5AC3 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::length (07FF7A8AC122Bh) 00007FF7A8AC5AC8 mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5ACF cmp rcx,rax 00007FF7A8AC5AD2 jae main+1B2h (07FF7A8AC5C02h) ; 无符号数比较，大于或等于时跳转00007FF7A8AC5AD8 mov eax,i 00007FF7A8AC5ADB and eax,1 ; 取最后1位00007FF7A8AC5ADE cmp eax,1 ; 判断奇偶00007FF7A8AC5AE1 jne main+126h (07FF7A8AC5B76h) ; 偶数跳转（不相等跳转）00007FF7A8AC5AE7 movsxd rax,i 00007FF7A8AC5AEB mov rdx,rax 00007FF7A8AC5AEE lea rcx,[flag] 00007FF7A8AC5AF2 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::operator[] (07FF7A8AC1442h) 00007FF7A8AC5AF7 movsx eax,byte ptr [rax] ; 取flag第i位00007FF7A8AC5AFA xor eax,42h ; 与0x42异或00007FF7A8AC5AFD mov dword ptr [p],eax ; 异或结果移到内存中00007FF7A8AC5B00 mov dl,30h 00007FF7A8AC5B02 lea rcx,[rbp+144h] 00007FF7A8AC5B09 call std::setfill&amp;lt;char&amp;gt; (07FF7A8AC1046h) ; 用字符&#39;0&#39;进行填充00007FF7A8AC5B0E mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5B15 mov edx,2 00007FF7A8AC5B1A lea rcx,[rbp+168h] 00007FF7A8AC5B21 call std::setw (07FF7A8AC10D2h) ; 填充至2位00007FF7A8AC5B26 mov qword ptr [rbp+200h],rax 00007FF7A8AC5B2D lea rdx,[std::hex (07FF7A8AC1488h)] ; 以十六进制形式输出00007FF7A8AC5B34 mov rcx,qword ptr [__imp_std::cout (07FF7A8AD71C0h)] 00007FF7A8AC5B3B call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7160h)] 00007FF7A8AC5B41 mov rcx,qword ptr [rbp+200h] 00007FF7A8AC5B48 mov rdx,rcx 00007FF7A8AC5B4B mov rcx,rax 00007FF7A8AC5B4E call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,__int64&amp;gt; (07FF7A8AC12F8h) 00007FF7A8AC5B53 mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5B5A mov rdx,rcx 00007FF7A8AC5B5D mov rcx,rax 00007FF7A8AC5B60 call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,char&amp;gt; (07FF7A8AC11A4h) 00007FF7A8AC5B65 mov edx,dword ptr [p] 00007FF7A8AC5B68 mov rcx,rax 00007FF7A8AC5B6B call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7158h)] 00007FF7A8AC5B71 jmp main+1ADh (07FF7A8AC5BFDh) 00007FF7A8AC5B76 movsxd rax,i ; 偶数时跳转到这里，与奇数唯一的区别为没有异或运算00007FF7A8AC5B7A mov rdx,rax 00007FF7A8AC5B7D lea rcx,[flag] 00007FF7A8AC5B81 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::operator[] (07FF7A8AC1442h) 00007FF7A8AC5B86 movsx eax,byte ptr [rax] 00007FF7A8AC5B89 mov dword ptr [p],eax 00007FF7A8AC5B8C mov dl,30h 00007FF7A8AC5B8E lea rcx,[rbp+194h] 00007FF7A8AC5B95 call std::setfill&amp;lt;char&amp;gt; (07FF7A8AC1046h) 00007FF7A8AC5B9A mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5BA1 mov edx,2 00007FF7A8AC5BA6 lea rcx,[rbp+1B8h] 00007FF7A8AC5BAD call std::setw (07FF7A8AC10D2h) 00007FF7A8AC5BB2 mov qword ptr [rbp+200h],rax 00007FF7A8AC5BB9 lea rdx,[std::hex (07FF7A8AC1488h)] 00007FF7A8AC5BC0 mov rcx,qword ptr [__imp_std::cout (07FF7A8AD71C0h)] 00007FF7A8AC5BC7 call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7160h)] 00007FF7A8AC5BCD mov rcx,qword ptr [rbp+200h] 00007FF7A8AC5BD4 mov rdx,rcx 00007FF7A8AC5BD7 mov rcx,rax 00007FF7A8AC5BDA call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,__int64&amp;gt; (07FF7A8AC12F8h) 00007FF7A8AC5BDF mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5BE6 mov rdx,rcx 00007FF7A8AC5BE9 mov rcx,rax 00007FF7A8AC5BEC call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,char&amp;gt; (07FF7A8AC11A4h) 00007FF7A8AC5BF1 mov edx,dword ptr [p] 00007FF7A8AC5BF4 mov rcx,rax 00007FF7A8AC5BF7 call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7158h)] 00007FF7A8AC5BFD jmp main+5Ch (07FF7A8AC5AACh) 00007FF7A8AC5C02 mov dword ptr [rbp+1E4h],0 00007FF7A8AC5C0C lea rcx,[flag] 00007FF7A8AC5C10 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::~basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt; (07FF7A8AC1302h) 00007FF7A8AC5C15 mov eax,dword ptr [rbp+1E4h] 00007FF7A8AC5C1B mov edi,eax 00007FF7A8AC5C1D lea rcx,[rbp-20h] 00007FF7A8AC5C21 lea rdx,[__xt_z+540h (07FF7A8ACEFE0h)] 00007FF7A8AC5C28 call _RTC_CheckStackVars (07FF7A8AC1596h) 00007FF7A8AC5C2D mov eax,edi 00007FF7A8AC5C2F mov rcx,qword ptr [rbp+208h] 00007FF7A8AC5C36 xor rcx,rbp 00007FF7A8AC5C39 call __security_check_cookie (07FF7A8AC1190h) 00007FF7A8AC5C3E lea rsp,[rbp+218h] 00007FF7A8AC5C45 pop rdi 00007FF7A8AC5C46 pop rbp 00007FF7A8AC5C47 ret 简单的说，过程就是一个循环，根据 i 的奇偶进行判断，是否与 0x42 进行异或，然后将结果以 2 位十六进制输出，所以只需要进行反向求解即可</description>
-    </item>
-    
-    <item>
-      <title>cryptohack</title>
-      <link>/post/cryptohack/</link>
-      <pubDate>Thu, 20 May 2021 01:51:42 +0000</pubDate>
-      
-      <guid>/post/cryptohack/</guid>
-      <description>Encoding Challenge Pwntools的简单使用
-from pwn import * import json r = remote(&amp;#39;socket.cryptohack.org&amp;#39;, 13377) def json_recv(): line = r.recvline() return json.loads(line.decode()) def json_send(hsh): request = json.dumps(hsh).encode() r.sendline(request) ENCODINGS = [ &amp;#34;base64&amp;#34;, &amp;#34;hex&amp;#34;, &amp;#34;rot13&amp;#34;, &amp;#34;bigint&amp;#34;, &amp;#34;utf-8&amp;#34;, ] from base64 import b64decode import codecs from libnum import n2s for _ in range(100): received = json_recv() print(&amp;#34;Received type: &amp;#34;) print(received[&amp;#34;type&amp;#34;]) print(&amp;#34;Received encoded value: &amp;#34;) print(received[&amp;#34;encoded&amp;#34;]) i = ENCODINGS.index(received[&amp;#39;type&amp;#39;]) decoded = received[&amp;#39;encoded&amp;#39;] if i == 0: decoded = b64decode(decoded) decoded = str(decoded)[2:-1] elif i == 1: decoded = n2s(int(decoded, 16)) decoded = str(decoded)[2:-1] elif i == 2: decoded = codecs.</description>
+00007FF7A8AC5A50 push rbp 00007FF7A8AC5A52 push rdi 00007FF7A8AC5A53 sub rsp,238h 00007FF7A8AC5A5A lea rbp,[rsp+20h] 00007FF7A8AC5A5F mov rdi,rsp 00007FF7A8AC5A62 mov ecx,8Eh 00007FF7A8AC5A67 mov eax,0CCCCCCCCh 00007FF7A8AC5A6C rep stos dword ptr [rdi] 00007FF7A8AC5A6E mov rax,qword ptr [__security_cookie (07FF7A8AD3018h)] 00007FF7A8AC5A75 xor rax,rbp 00007FF7A8AC5A78 mov qword ptr [rbp+208h],rax 00007FF7A8AC5A7F lea rcx,[__06A15900_ConsoleApplication@cpp (07FF7A8AD902Ah)] 00007FF7A8AC5A86 call __CheckForDebuggerJustMyCode (07FF7A8AC1122h) 00007FF7A8AC5A8B lea rdx,[string &amp;quot;flag{this_is_a_fake_flag}&amp;quot; (07FF7A8ACF450h)] 00007FF7A8AC5A92 lea rcx,[flag] 00007FF7A8AC5A96 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt; (07FF7A8AC15E1h) 00007FF7A8AC5A9B nop 00007FF7A8AC5A9C mov dword ptr [p],0 00007FF7A8AC5AA3 mov i,0 00007FF7A8AC5AAA jmp main+64h (07FF7A8AC5AB4h) 00007FF7A8AC5AAC mov eax,i 00007FF7A8AC5AAF inc eax 00007FF7A8AC5AB1 mov i,eax 00007FF7A8AC5AB4 movsxd rax,i 00007FF7A8AC5AB8 mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5ABF lea rcx,[flag] 00007FF7A8AC5AC3 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::length (07FF7A8AC122Bh) 00007FF7A8AC5AC8 mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5ACF cmp rcx,rax 00007FF7A8AC5AD2 jae main+1B2h (07FF7A8AC5C02h) ; 无符号数比较，大于或等于时跳转 00007FF7A8AC5AD8 mov eax,i 00007FF7A8AC5ADB and eax,1 ; 取最后1位 00007FF7A8AC5ADE cmp eax,1 ; 判断奇偶 00007FF7A8AC5AE1 jne main+126h (07FF7A8AC5B76h) ; 偶数跳转（不相等跳转） 00007FF7A8AC5AE7 movsxd rax,i 00007FF7A8AC5AEB mov rdx,rax 00007FF7A8AC5AEE lea rcx,[flag] 00007FF7A8AC5AF2 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::operator[] (07FF7A8AC1442h) 00007FF7A8AC5AF7 movsx eax,byte ptr [rax] ; 取flag第i位 00007FF7A8AC5AFA xor eax,42h ; 与0x42异或 00007FF7A8AC5AFD mov dword ptr [p],eax ; 异或结果移到内存中 00007FF7A8AC5B00 mov dl,30h 00007FF7A8AC5B02 lea rcx,[rbp+144h] 00007FF7A8AC5B09 call std::setfill&amp;lt;char&amp;gt; (07FF7A8AC1046h) ; 用字符&#39;0&#39;进行填充 00007FF7A8AC5B0E mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5B15 mov edx,2 00007FF7A8AC5B1A lea rcx,[rbp+168h] 00007FF7A8AC5B21 call std::setw (07FF7A8AC10D2h) ; 填充至2位 00007FF7A8AC5B26 mov qword ptr [rbp+200h],rax 00007FF7A8AC5B2D lea rdx,[std::hex (07FF7A8AC1488h)] ; 以十六进制形式输出 00007FF7A8AC5B34 mov rcx,qword ptr [__imp_std::cout (07FF7A8AD71C0h)] 00007FF7A8AC5B3B call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7160h)] 00007FF7A8AC5B41 mov rcx,qword ptr [rbp+200h] 00007FF7A8AC5B48 mov rdx,rcx 00007FF7A8AC5B4B mov rcx,rax 00007FF7A8AC5B4E call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,__int64&amp;gt; (07FF7A8AC12F8h) 00007FF7A8AC5B53 mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5B5A mov rdx,rcx 00007FF7A8AC5B5D mov rcx,rax 00007FF7A8AC5B60 call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,char&amp;gt; (07FF7A8AC11A4h) 00007FF7A8AC5B65 mov edx,dword ptr [p] 00007FF7A8AC5B68 mov rcx,rax 00007FF7A8AC5B6B call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7158h)] 00007FF7A8AC5B71 jmp main+1ADh (07FF7A8AC5BFDh) 00007FF7A8AC5B76 movsxd rax,i ; 偶数时跳转到这里，与奇数唯一的区别为没有异或运算 00007FF7A8AC5B7A mov rdx,rax 00007FF7A8AC5B7D lea rcx,[flag] 00007FF7A8AC5B81 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::operator[] (07FF7A8AC1442h) 00007FF7A8AC5B86 movsx eax,byte ptr [rax] 00007FF7A8AC5B89 mov dword ptr [p],eax 00007FF7A8AC5B8C mov dl,30h 00007FF7A8AC5B8E lea rcx,[rbp+194h] 00007FF7A8AC5B95 call std::setfill&amp;lt;char&amp;gt; (07FF7A8AC1046h) 00007FF7A8AC5B9A mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5BA1 mov edx,2 00007FF7A8AC5BA6 lea rcx,[rbp+1B8h] 00007FF7A8AC5BAD call std::setw (07FF7A8AC10D2h) 00007FF7A8AC5BB2 mov qword ptr [rbp+200h],rax 00007FF7A8AC5BB9 lea rdx,[std::hex (07FF7A8AC1488h)] 00007FF7A8AC5BC0 mov rcx,qword ptr [__imp_std::cout (07FF7A8AD71C0h)] 00007FF7A8AC5BC7 call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7160h)] 00007FF7A8AC5BCD mov rcx,qword ptr [rbp+200h] 00007FF7A8AC5BD4 mov rdx,rcx 00007FF7A8AC5BD7 mov rcx,rax 00007FF7A8AC5BDA call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,__int64&amp;gt; (07FF7A8AC12F8h) 00007FF7A8AC5BDF mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5BE6 mov rdx,rcx 00007FF7A8AC5BE9 mov rcx,rax 00007FF7A8AC5BEC call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,char&amp;gt; (07FF7A8AC11A4h) 00007FF7A8AC5BF1 mov edx,dword ptr [p] 00007FF7A8AC5BF4 mov rcx,rax 00007FF7A8AC5BF7 call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7158h)] 00007FF7A8AC5BFD jmp main+5Ch (07FF7A8AC5AACh) 00007FF7A8AC5C02 mov dword ptr [rbp+1E4h],0 00007FF7A8AC5C0C lea rcx,[flag] 00007FF7A8AC5C10 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::~basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt; (07FF7A8AC1302h) 00007FF7A8AC5C15 mov eax,dword ptr [rbp+1E4h] 00007FF7A8AC5C1B mov edi,eax 00007FF7A8AC5C1D lea rcx,[rbp-20h] 00007FF7A8AC5C21 lea rdx,[__xt_z+540h (07FF7A8ACEFE0h)] 00007FF7A8AC5C28 call _RTC_CheckStackVars (07FF7A8AC1596h) 00007FF7A8AC5C2D mov eax,edi 00007FF7A8AC5C2F mov rcx,qword ptr [rbp+208h] 00007FF7A8AC5C36 xor rcx,rbp 00007FF7A8AC5C39 call __security_check_cookie (07FF7A8AC1190h) 00007FF7A8AC5C3E lea rsp,[rbp+218h] 00007FF7A8AC5C45 pop rdi 00007FF7A8AC5C46 pop rbp 00007FF7A8AC5C47 ret 简单的说，过程就是一个循环，根据 i 的奇偶进行判断，是否与 0x42 进行异或，然后将结果以 2 位十六进制输出，所以只需要进行反向求解即可</description>
     </item>
     
     <item>
@@ -418,49 +396,7 @@ import random import string import itertools from secret import FLAG key = &amp;
     </item>
     
     <item>
-      <title>WUSTCTF2020 re writeups</title>
-      <link>/post/wustctf2020-re-writeups/</link>
-      <pubDate>Sun, 07 Mar 2021 21:35:10 +0000</pubDate>
-      
-      <guid>/post/wustctf2020-re-writeups/</guid>
-      <description>Crossfun 拖入ida，发现有个判断函数，里面对输入的每个字符进行了判断，把所有判断函数整合起来，就得到flag了
-flag: wctf2020{cpp_@nd_r3verse_@re_fun}
-level1 拖入ida
-stream = fopen(&amp;#34;flag&amp;#34;, &amp;#34;r&amp;#34;); fread(ptr, 1uLL, 0x14uLL, stream); fclose(stream); for ( i = 1; i &amp;lt;= 19; ++i ) { if ( i &amp;amp; 1 ) printf(&amp;#34;%ld\n&amp;#34;, (unsigned int)(ptr[i] &amp;lt;&amp;lt; i)); else printf(&amp;#34;%ld\n&amp;#34;, (unsigned int)(i * ptr[i])); } 显然 ptr 里面就是flag
-看到 output.txt 里面正好有19行
-对其进行逆变换（注意0）
-ptr = [0, 198, 232, 816, 200, 1536, 300, 6144, 984, 51200, 570, 92160, 1200, 565248, 756, 1474560, 800, 6291456, 1782, 65536000] flag = &amp;#39;&amp;#39; for i in range(1, 20): if i % 2 == 1: flag += chr(ptr[i] &amp;gt;&amp;gt; i) else: flag += chr(ptr[i] // i) print (flag) 得到flag ctf2020{d9-dE6-20c}</description>
-    </item>
-    
-    <item>
-      <title>MRCTF2020 reverse writeups</title>
-      <link>/post/mrctf2020-reverse-writeups/mrctf2020-reverse-writeups/</link>
-      <pubDate>Thu, 04 Mar 2021 16:38:52 +0000</pubDate>
-      
-      <guid>/post/mrctf2020-reverse-writeups/mrctf2020-reverse-writeups/</guid>
-      <description>Transform dword = [ 9, 0xa, 0xf, 0x17, 0x7, 0x18, 0xc, 0x6, 0x1, 0x10, 0x3, 0x11, 0x20, 0x1D, 0x0b, 0x1e, 0x1b, 0x16, 0x4, 0x0d, 0x13, 0x14, 0x15, 0x2, 0x19, 0x5, 0x1f, 0x8, 0x12, 0x1a, 0x1c, 0xe, 0 ] flag = [ 0x67, 0x79, 0x7b, 0x7f, 0x75, 0x2b, 0x3c, 0x52, 0x53, 0x79, 0x57, 0x5E, 0x5D, 0x42, 0x7B, 0x2D, 0x2A, 0x66, 0x42, 0x7E, 0x4C, 0x57, 0x79, 0x41, 0x6B, 0x7E, 0x65, 0x3C, 0x5C, 0x45, 0x6F, 0x62, 0x4D, 0x3f] print(len(dword), len(flag)) for i in range(len(dword)): flag[i] ^= dword[i] code = [ 0 for i in range(33)] for i in range(len(dword)): code[dword[i]] = flag[i] for i in range(len(code)): print(chr(code[i]), end = &amp;#39;&amp;#39;) print() flag: MRCTF{Tr4nsp0sltiON_Clph3r_1s_3z}</description>
-    </item>
-    
-    <item>
-      <title>GUETCTF2019 re writeups</title>
-      <link>/post/guetctf2019-reverse-writeups/</link>
-      <pubDate>Thu, 04 Mar 2021 16:17:36 +0000</pubDate>
-      
-      <guid>/post/guetctf2019-reverse-writeups/</guid>
-      <description>re 思路 先upx脱壳
-然后拖入ida
-找到关键字符串
-进入函数
-发现是对每一位进行乘法然后判断
-直接扔到python里算一下，发现 a[6] 缺失，以及有一位算不出来，可能出现了溢出
-用c语言把这一位算出来，得到是 a
-对第7位进行暴力破解，发现1可以，得到flag
-flag{e165421110ba03099a1c039337}
-脚本 x = [ 1629056, 6771600, 3682944, 10431000, 3977328, 5138336, 7532250, 5551632, 3409728, 13013670, 6088797, 7884663, 8944053, 5198490, 4544518, 10115280,3645600, 9667504, 5364450, 13464540, 5488432, 14479500, 6451830, 6252576, 7763364, 7327320, 8741520, 8871876, 4086720, 9374400, 5759124 ] a = [ 166163712 , 731332800 , 357245568 , 1074393000, 489211344 , 518971936 , 406741500 , 294236496 , 177305856 , 650683500, 298351053, 386348487, 438258597, 249527520, 445362764, 981182160, 174988800, 493042704, 257493600, 767478780, 312840624, 140451150, 316139670, 619005024, 372641472, 373693320, 498266640, 452465676, 208422720, 515592000, 719890500 ] for i in range(len(x)): if (a[i] % x[i] == 0): print (chr(a[i] // x[i]), end=&amp;#39;&amp;#39;) else: print (&amp;#39;\n&amp;#39;, i) print (&amp;#39;\nfinish&amp;#39;) 输出为</description>
-    </item>
-    
-    <item>
-      <title>Start Reversing</title>
+      <title>Start Reversing From BUUOJ</title>
       <link>/post/start-reversing/</link>
       <pubDate>Fri, 15 Jan 2021 18:29:48 +0000</pubDate>
       
@@ -510,35 +446,6 @@ xor 拖入ida进行静态分析，发现对输入进行了异或处理，处理�
     </item>
     
     <item>
-      <title>Fabric-SystemChaincode</title>
-      <link>/post/fabric-systemchaincode/</link>
-      <pubDate>Fri, 18 Dec 2020 13:40:28 +0000</pubDate>
-      
-      <guid>/post/fabric-systemchaincode/</guid>
-      <description>系统链码 系统链码结构图
-与普通链码对比     系统链码 普通链码     链码源码 无main函数 有main函数   运行空间 背书节点进程 Docker   调用方式 网络+进程内部 网络   启动参数 内置 动态输入   通信方式 Golang的通道机制 网络   数据存取 Golang的通道+本地文件 网络   升级方式 和背书节点一起升级 单独升级   背书策略 无 有    系统链码在Peer节点上的注册与部署 peer节点存在于docker容器中，在启动时通过执行peer node start命令来启动peer节点。
- /internal/peer/node/start.go
- start命令的入口函数为serve函数。
-以下源代码中仅保留部署系统链码的部分。
-func serve(args []string) error { // Initialize chaincode service  // deploy system chaincodes 	for _, cc := range []scc.</description>
-    </item>
-    
-    <item>
-      <title>gRPC basic</title>
-      <link>/post/grpc-basic/</link>
-      <pubDate>Fri, 11 Dec 2020 02:12:29 +0000</pubDate>
-      
-      <guid>/post/grpc-basic/</guid>
-      <description>简介  A high-performance, open-source universal RPC framework
- gRPC框架具有高性能，开源，跨语言的特点，使用了RPC框架，基于HTTP/2设计。
- RPC(remote procedure call，远程过程调用)框架提供了一套机制，使得应用程序之间可以进行通信，遵从server/client模型。 RPC将一个服务调用封装在一个本地方法中，让调用者像使用本地方法一样调用服务，对其屏蔽实现细节。具体的实现则通过调用方和服务方的协议，基于TCP连接进行数据交互达成。
-  在本地调用过程中，通常需要通过接口，调用具体实现，最终获取相应的数据。 而在RPC中，本地获取到接口，随后通过网络，调用远程的实现。在使用网络时，需要通过数据序列化来传输数据。
- 在gRPC中，支持多个语言的应用程序的远程调用，数据交换格式则采用了Protocol Buffer。
-gRPC-basic
-如上图所示，左侧为c++语言编写的客户端，其中包含了接口的具体实现。右侧为Ruby和Java客户端，其中对接口进行了调用。客户端获取接口后，将数据通过Protocol Buffer的序列化处理后交给服务端，服务端调用具体实现，并把数据同样以序列化的形式返回给客户端。</description>
-    </item>
-    
-    <item>
       <title>AITMC-challenge</title>
       <link>/post/aitmc-challenge/</link>
       <pubDate>Wed, 09 Dec 2020 23:27:25 +0000</pubDate>
@@ -550,11 +457,11 @@ import math from AITMCLab.Crypto.Util.number import long_to_bytes from AITMCLab.
     </item>
     
     <item>
-      <title>Fabric-Architecture</title>
-      <link>/post/fabric-architecture/</link>
+      <title>Fabric-Architecture-and-SystemChaincode</title>
+      <link>/post/fabric-architecture-and-systemchaincode/</link>
       <pubDate>Tue, 08 Dec 2020 01:33:07 +0000</pubDate>
       
-      <guid>/post/fabric-architecture/</guid>
+      <guid>/post/fabric-architecture-and-systemchaincode/</guid>
       <description>参考文献：Hyperledger Fabric: A Distributed Operation System for Permissioned Blockchains
 架构 整体结构 Fabric是一个许可区块链的分布式操作系统，可以执行多种编程语言编写的分布式应用。它能够在一个只能追加的数据结构中安全地跟踪执行历史，并且没有内置的加密账本。
 Fabric使用了“执行-order-验证”的区块链架构，而没有遵顼标准的“order-执行”设计。其整体的分布式应用可以分为两个部分
