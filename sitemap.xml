@@ -155,15 +155,6 @@
     <loc>/post/note-of-book-encryption-and-decryption/</loc>
     <lastmod>2022-02-15T18:47:00+08:00</lastmod>
   </url><url>
-    <loc>/post/buuoj-re-4-pycdc-bugs/</loc>
-    <lastmod>2021-09-21T00:39:52+00:00</lastmod>
-  </url><url>
-    <loc>/tags/flareon/</loc>
-    <lastmod>2021-09-21T00:39:52+00:00</lastmod>
-  </url><url>
-    <loc>/post/buuoj-re-3/</loc>
-    <lastmod>2021-08-19T19:11:32+00:00</lastmod>
-  </url><url>
     <loc>/post/2021dfjk-re/</loc>
     <lastmod>2021-08-04T13:48:58+00:00</lastmod>
   </url><url>
@@ -173,11 +164,8 @@
     <loc>/post/ciscn-n-2021-re-writeup/</loc>
     <lastmod>2021-06-22T23:25:43+00:00</lastmod>
   </url><url>
-    <loc>/post/buuoj-re-2/</loc>
-    <lastmod>2021-06-10T03:20:33+00:00</lastmod>
-  </url><url>
-    <loc>/post/buuoj-re-1/</loc>
-    <lastmod>2021-05-26T23:54:09+00:00</lastmod>
+    <loc>/post/reverse-from-1-to-2/</loc>
+    <lastmod>2021-09-21T00:39:52+00:00</lastmod>
   </url><url>
     <loc>/post/ciscn2021-re-writeup/</loc>
     <lastmod>2021-05-20T01:21:59+00:00</lastmod>
@@ -191,8 +179,11 @@
     <loc>/post/hmg2021-rsa-attack-writeup/</loc>
     <lastmod>2021-04-13T21:39:43+00:00</lastmod>
   </url><url>
-    <loc>/post/buuoj-re0-flareon-challenge/</loc>
-    <lastmod>2021-04-09T01:04:16+00:00</lastmod>
+    <loc>/post/buuoj-flareon-challenge/</loc>
+    <lastmod>2021-09-21T00:39:52+00:00</lastmod>
+  </url><url>
+    <loc>/tags/flareon/</loc>
+    <lastmod>2021-09-21T00:39:52+00:00</lastmod>
   </url><url>
     <loc>/post/gwctf2019-re3-writeup/</loc>
     <lastmod>2021-04-08T22:36:12+00:00</lastmod>
@@ -212,7 +203,7 @@
     <loc>/post/hgame2021-vernam-and-fake/</loc>
     <lastmod>2021-03-17T20:06:09+00:00</lastmod>
   </url><url>
-    <loc>/post/start-reversing/</loc>
+    <loc>/post/reverse-from-0-to-1/</loc>
     <lastmod>2021-03-07T21:35:10+00:00</lastmod>
   </url><url>
     <loc>/tags/aitmc/</loc>
