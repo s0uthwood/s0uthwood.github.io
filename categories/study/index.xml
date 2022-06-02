@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Study on s0uthwood&#39;s Blog</title>
+    <link>/categories/study/</link>
+    <description>Recent content in Study on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 03 Jun 2022 00:38:33 +0800</lastBuildDate><atom:link href="/categories/study/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to build peach fuzzer on Ubuntu18.04</title>
+      <link>/post/how-to-build-peach-fuzzer-on-ubuntu/how-to-build-peach-fuzzer-on-ubuntu/</link>
+      <pubDate>Fri, 03 Jun 2022 00:38:33 +0800</pubDate>
+      
+      <guid>/post/how-to-build-peach-fuzzer-on-ubuntu/how-to-build-peach-fuzzer-on-ubuntu/</guid>
+      <description>Repository:
+https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce
+Modify from a dockerfile based on DEBIAN: https://raw.githubusercontent.com/vanhauser-thc/peachpro/main/Dockerfile
+shell sudo apt update sudo apt install -y \  coreutils apt-utils wget curl openssl ca-certificates bash-completion \  joe vim nano \  unzip p7zip \  hping3 httping thc-ipv6 gdb \  tcpdump wireshark-common \  locales-all \  git build-essential joe vim strace tcpdump python python-pip python-is-python2\  ruby doxygen libxml2-utils less openjdk-8-jre xsltproc asciidoctor \  nodejs node-typescript wget \  apt-transport-https dirmngr gnupg libtool-bin \  cmake dos2unix g++-multilib --fix-missing cd ~/Downloads git clone https://gitlab.</description>
+    </item>
+    
+  </channel>
+</rss>
