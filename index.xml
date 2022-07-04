@@ -6,7 +6,527 @@
         <description>Recent content on s0uthwood&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 03 Jun 2022 00:38:33 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 04 Jul 2022 16:01:21 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Google CTF 2022 MIXED Writeup</title>
+        <link>/post/google-ctf-2022-mixed-writeup/</link>
+        <pubDate>Mon, 04 Jul 2022 16:01:21 +0800</pubDate>
+        
+        <guid>/post/google-ctf-2022-mixed-writeup/</guid>
+        <description>&lt;img src="/post/google-ctf-2022-mixed-writeup/cover.jpg" alt="Featured image of post Google CTF 2022 MIXED Writeup" /&gt;&lt;p&gt;This challenge gives a .pyc file and a Python 3.11 alpha7 based patch file.&lt;/p&gt;
+&lt;h2 id=&#34;patch&#34;&gt;Patch&lt;/h2&gt;
+&lt;p&gt;This patch file mainly patches the &lt;code&gt;opcode.py&lt;/code&gt; file. After the patch, &lt;code&gt;opcode.py&lt;/code&gt; file first generated two random lists and modifies the opcode according to the values of the lists. Finally, it will output the new opcode to a tmp file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; sys
+&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;generate_opcode_h&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; sys&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;argv[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]:
+&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;  random &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; __import__(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;random&amp;#34;&lt;/span&gt;)
+&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;  random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;shuffle(perm)
+&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;  random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;shuffle(perm2)
+
+&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;def_op(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;CACHE&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;def_op(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;POP_TOP&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;def_op(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;PUSH_NULL&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;)
+
+&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;def_op(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;CACHE&amp;#39;&lt;/span&gt;, perm[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;])
+&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;def_op(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;POP_TOP&amp;#39;&lt;/span&gt;, perm[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;])
+&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;def_op(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;PUSH_NULL&amp;#39;&lt;/span&gt;, perm[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;])
+
+&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;with&lt;/span&gt; open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/tmp/opcode_map&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;w&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; f:
+&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; x, y &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; enumerate(opname):
+&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;    f&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;write(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%s&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; (x, y))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The patch file also modifies the &lt;code&gt;ceval.c&lt;/code&gt; file, but I don&amp;rsquo;t understand what this does.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;diff --git a/Python/ceval.c b/Python/ceval.c
+index 1d2c6432d0..e275158d9d 100644
+--- a/Python/ceval.c
++++ b/Python/ceval.c
+@@ -1344,6 +1344,8 @@ eval_frame_handle_pending(PyThreadState *tstate)
+ #define OR_DTRACE_LINE
+ #endif
+ 
++#define USE_COMPUTED_GOTOS 0
++
+ #ifdef HAVE_COMPUTED_GOTOS
+     #ifndef USE_COMPUTED_GOTOS
+     #define USE_COMPUTED_GOTOS 1
+@@ -1705,6 +1707,7 @@ _PyEval_EvalFrameDefault(PyThreadState *tstate, _PyInterpreterFrame *frame, int
+ #if USE_COMPUTED_GOTOS
+ /* Import the static jump table */
+ #include &amp;quot;opcode_targets.h&amp;quot;
++    asdasdasd, break the compilation...
+ #endif
+ 
+ #ifdef Py_STATS
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;opcode&#34;&gt;Opcode&lt;/h2&gt;
+&lt;p&gt;Based on the information in the patch file, we came up with two ideas. One is to solve it by cracking the random number generator, and the other is to recover all opcodes manually.&lt;/p&gt;
+&lt;h3 id=&#34;cracking-the-random-number-generator&#34;&gt;Cracking the random number generator&lt;/h3&gt;
+&lt;p&gt;Since randon.shuffle is based on mt19937, cracking this requires providing 624 32bit numbers which is impossible. So we spent a lot of time on cracking the seed of the random number generator. For example, I found the file generation date of the patch file very suspicious, so I tried to use that time as random seed. We also used the sleeping hours to run the explosion program. Until we find:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;random.seed(a=None, version=2)
+    Initialize the random number generator.
+    If a is omitted or None, the current system time is used. If randomness sources are provided by the operating system, they are used instead of the system time (see the os.urandom() function for details on availability).
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We do not think there is any way to guess os.urandom(), so we focused on the second method.&lt;/p&gt;
+&lt;h3 id=&#34;recover-opcodes-by-hand&#34;&gt;Recover opcodes by hand&lt;/h3&gt;
+&lt;p&gt;It&amp;rsquo;s difficult to disasm python 3.11 .pyc files, for the marshal and opcodes changes a lot. The newist tools I know is pycdc which still support python 3.10 only.&lt;/p&gt;
+&lt;p&gt;I started with some easy functions. For example, it is obvious that &lt;code&gt;__main__&lt;/code&gt; start with &lt;code&gt;import sys&lt;/code&gt; and followd with functions defination.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;0    RESUME        0
+2    LOAD_CONST    0
+4    LOAD_CONST    1
+6    IMPORT_NAME   0 (sys)
+8    STORE_NAME    0             
+
+26   LOAD_CONST    2
+28   MAKE_FUNCTION 0
+30   STORE_NAME    3 (ks)
+
+68   LOAD_CONST    1
+70   RETURN_VALUE  0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Therefore we got:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;code&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x61&lt;/td&gt;
+&lt;td&gt;RESUME&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x60&lt;/td&gt;
+&lt;td&gt;LOAD_CONST&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0xab&lt;/td&gt;
+&lt;td&gt;IMPORT_NAME&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x96&lt;/td&gt;
+&lt;td&gt;STORE_NAME&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x31&lt;/td&gt;
+&lt;td&gt;RETURN&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x63&lt;/td&gt;
+&lt;td&gt;MAKE_FUNCTION&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;I also find there were lots of &lt;code&gt;20 00&lt;/code&gt; in .pyc file. Which is &lt;code&gt;CACHE&lt;/code&gt;, and we can ignore it.&lt;/p&gt;
+&lt;p&gt;Since there were bugs in &lt;code&gt;dis&lt;/code&gt; module after I change the opcode.py, I gave it up. But we can still use &lt;code&gt;dis.show_code()&lt;/code&gt; to unserialize marshal.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; marshal&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; dis
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; fd &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; open(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;x.pyc&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;rb&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; fd&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;seek(&lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;)
+&lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; marshal&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;load(fd)
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; dis&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;show_code(a)
+Name:              &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;module&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+Filename:          &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;usr&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;local&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;google&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;home&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;xxxxxxxxx&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;yyyy&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;zzzzzzzzzzzzzzzz&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;xxxxxxxxxxx&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;py
+Argument count:    &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+Positional&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;only arguments: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+Kw&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;only arguments: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+Number of locals:  &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+Stack size:        &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;
+Flags:             &lt;span style=&#34;color:#ae81ff&#34;&gt;0x0&lt;/span&gt;
+Constants:
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;None&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;code object ks at &lt;span style=&#34;color:#ae81ff&#34;&gt;0x101419470&lt;/span&gt;, file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&amp;#34;&lt;/span&gt;, line &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;code object cry at &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1016003f0&lt;/span&gt;, file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&amp;#34;&lt;/span&gt;, line &lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;code object fail at &lt;span style=&#34;color:#ae81ff&#34;&gt;0x101553000&lt;/span&gt;, file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&amp;#34;&lt;/span&gt;, line &lt;span style=&#34;color:#ae81ff&#34;&gt;18&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;code object game1 at &lt;span style=&#34;color:#ae81ff&#34;&gt;0x12c704920&lt;/span&gt;, file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&amp;#34;&lt;/span&gt;, line &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;code object game2 at &lt;span style=&#34;color:#ae81ff&#34;&gt;0x12c704cc0&lt;/span&gt;, file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&amp;#34;&lt;/span&gt;, line &lt;span style=&#34;color:#ae81ff&#34;&gt;68&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;code object game3 at &lt;span style=&#34;color:#ae81ff&#34;&gt;0x12c7051f0&lt;/span&gt;, file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&amp;#34;&lt;/span&gt;, line &lt;span style=&#34;color:#ae81ff&#34;&gt;96&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;: &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;code object main at &lt;span style=&#34;color:#ae81ff&#34;&gt;0x12c704f20&lt;/span&gt;, file &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&amp;#34;&lt;/span&gt;, line &lt;span style=&#34;color:#ae81ff&#34;&gt;123&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+Names:
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;: sys
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;: random
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;: time
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;: ks
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;: cry
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;: fail
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;: game1
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;: game2
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;: game3
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;: main
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; dis&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;show_code(a&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;co_consts[&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;])
+Name:              ks
+Filename:          &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;usr&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;local&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;google&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;home&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;xxxxxxxxx&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;yyyy&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;zzzzzzzzzzzzzzzz&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;xxxxxxxxxxx&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;py
+Argument count:    &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+Positional&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;only arguments: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+Kw&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;only arguments: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+Number of locals:  &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+Stack size:        &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;
+Flags:             OPTIMIZED, NEWLOCALS, GENERATOR
+Constants:
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;None&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;True&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;13&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;17&lt;/span&gt;
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt;
+Names:
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;: random
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;: seed
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;: randint
+Variable names:
+   &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;: seed
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Start with the short function will be easier. For example, it is easy to recognize &lt;code&gt;BINARY_OP&lt;/code&gt; and &lt;code&gt;LOAD_FAST&lt;/code&gt; in function &lt;code&gt;w()&lt;/code&gt; which defined in function &lt;code&gt;game1()&lt;/code&gt;.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Name:              w
+Filename:          /usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py
+Argument count:    3
+Positional-only arguments: 0
+Kw-only arguments: 0
+Number of locals:  3
+Stack size:        3
+Flags:             OPTIMIZED, NEWLOCALS, NESTED
+Constants:
+   0: None
+   1: 10
+   2: 1
+Variable names:
+   0: m
+   1: i
+   2: j
+
+0x7a2 0x7c0
+0    RESUME       0
+2    LOAD_FAST    0 (m)
+4    LOAD_FAST    1 (i)
+6    LOAD_CONST   1 (10)
+8    BINARY_OP    5 (*)
+12   LOAD_FAST    2 (j)
+14   BINARY_OP    0 (+)
+18   BINARY_OP    9 (&amp;gt;&amp;gt;)
+22   LOAD_CONST   2 (1)
+24   BINARY_OP    1 (&amp;amp;)
+28   RETURN_VALUE 0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Some important information of &lt;code&gt;LOAD_*&lt;/code&gt; from docs:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LOAD_CONST(&lt;em&gt;consti&lt;/em&gt;)&lt;/p&gt;
+&lt;p&gt;Pushes &lt;code&gt;co_consts[consti]&lt;/code&gt; onto the stack.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LOAD_NAME(&lt;em&gt;namei&lt;/em&gt;)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;LOAD_NAME [namei]&lt;/code&gt; Pushes &lt;code&gt;co_names[x // 2]&lt;/code&gt; onto the stack.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LOAD_FAST(&lt;em&gt;var_num&lt;/em&gt;)&lt;/p&gt;
+&lt;p&gt;Pushes a reference to the local &lt;code&gt;co_varnames[var_num]&lt;/code&gt; onto the stack.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LOAD_METHOD(&lt;em&gt;namei&lt;/em&gt;)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;LOAD_METHOD x&lt;/code&gt; Pushes &lt;code&gt;co_names[x]&lt;/code&gt; onto the stack.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;By recognize &lt;code&gt;print ()&lt;/code&gt; in &lt;code&gt;main()&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;0    RESUME        0
+2    PUSH_NULL
+4    LOAD_NAME     0 (print)
+16   LOAD_CONST    1 (&#39;Pass 3 tests to prove your worth!&#39;)
+18   PRECALL       1
+22   CALL          1
+32   POP_TOP       0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We got:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;code&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0xB9&lt;/td&gt;
+&lt;td&gt;LOAD_NAME&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0xBF&lt;/td&gt;
+&lt;td&gt;PRECALL&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x8E&lt;/td&gt;
+&lt;td&gt;CALL&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x01&lt;/td&gt;
+&lt;td&gt;POP_TOP&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x50&lt;/td&gt;
+&lt;td&gt;PUSH_NULL&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;After recover all functions, we got:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;code&lt;/th&gt;
+&lt;th&gt;op&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x7b&lt;/td&gt;
+&lt;td&gt;JUMP_BACKWARD&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0xb6&lt;/td&gt;
+&lt;td&gt;FOR_ITER&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x1f&lt;/td&gt;
+&lt;td&gt;GET_ITER&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x8d&lt;/td&gt;
+&lt;td&gt;STORE_FAST&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x8f&lt;/td&gt;
+&lt;td&gt;UNPACK_SEQUENCE&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x62&lt;/td&gt;
+&lt;td&gt;LOAD_FAST&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0xc6&lt;/td&gt;
+&lt;td&gt;BINARY_OP&lt;/td&gt;
+&lt;td&gt;(+, &amp;amp;, //, &amp;laquo;, @, *, %, |, **, &amp;raquo;, -, /, ^, +=)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x74&lt;/td&gt;
+&lt;td&gt;BUILD_LIST&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x68&lt;/td&gt;
+&lt;td&gt;COMPARE_OP&lt;/td&gt;
+&lt;td&gt;(&#39;&amp;lt;&#39;, &amp;lsquo;&amp;lt;=&amp;rsquo;, &amp;lsquo;==&amp;rsquo;, &amp;lsquo;!=&amp;rsquo;, &amp;lsquo;&amp;gt;&amp;rsquo;, &amp;lsquo;&amp;gt;=&#39;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0xba&lt;/td&gt;
+&lt;td&gt;POP_JUMP_FORWARD_IF_FALSE&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x5d&lt;/td&gt;
+&lt;td&gt;JUMP_FORWARD&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x92&lt;/td&gt;
+&lt;td&gt;LOAD_METHOD&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x88&lt;/td&gt;
+&lt;td&gt;BUILD_SLICE&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0xaf&lt;/td&gt;
+&lt;td&gt;POP_JUMP_BACKWARD_IF_TRUE&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x82&lt;/td&gt;
+&lt;td&gt;BUILD_TUPLE&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0x75&lt;/td&gt;
+&lt;td&gt;CONTAINS_OP&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;0xb1&lt;/td&gt;
+&lt;td&gt;BUILD_CONST_KEY_MAP&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;There&amp;rsquo;s still some opcode I didn&amp;rsquo;t recognize, but that doesn&amp;rsquo;t affect our decompilation anymore.&lt;/p&gt;
+&lt;p&gt;The decompilation result (by hand) was:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; sys
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; time
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; random
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ks&lt;/span&gt;(seed):
+    random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;seed(seed)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;yield&lt;/span&gt; (random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randint(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;13&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;17&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cry&lt;/span&gt;(s, seed):
+    r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; []
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; x, y &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; zip(ks(seed), s):
+        r&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;append(x &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; y)
+    bytes(r)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fail&lt;/span&gt;(s):
+    print (s)
+    print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Thanks for playing!&amp;#34;&lt;/span&gt;)
+    sys&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;exit(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;game1&lt;/span&gt;():
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;w&lt;/span&gt;(m, i, j):
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (m &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; j)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+    m &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1267034045110727999721745963007&lt;/span&gt;
+    fuel &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;
+    x, y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+    stops &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; set([(&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;), (&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;)])
+    log &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+    print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Fuels:&amp;#34;&lt;/span&gt;, fuel)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;):
+        s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; j &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; range(&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;):
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; w(m, i, j):
+                s &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;🧱&amp;#39;&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;elif&lt;/span&gt; (j, i) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; (x, y):
+                s &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;🚓&amp;#39;&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;elif&lt;/span&gt; (j, i) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;):
+                s &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;🏁&amp;#39;&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;elif&lt;/span&gt; (j, i) &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; stops:
+                s &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;⛽️&amp;#39;&lt;/span&gt;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+                s &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;  &amp;#39;&lt;/span&gt;
+        print (s)
+    inp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; input()&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;strip()
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; c &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; inp:
+        log &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; c
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; c &lt;span style=&#34;color:#f92672&#34;&gt;not&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;wasd&amp;#39;&lt;/span&gt;:
+            fail(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Nope!&amp;#39;&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;elif&lt;/span&gt; fuel &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;:
+            fail(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Empty...&amp;#39;&lt;/span&gt;)
+        dx, dy &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;w&amp;#39;&lt;/span&gt;:(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;), &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s&amp;#39;&lt;/span&gt;:(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;), &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;a&amp;#39;&lt;/span&gt;:(&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;), &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;d&amp;#39;&lt;/span&gt;:(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)}[c]
+        x &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; dx
+        y &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; dy
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; w(m, y, x):
+            fail(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Crash!&amp;#39;&lt;/span&gt;)
+        fuel &lt;span style=&#34;color:#f92672&#34;&gt;-=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (x, y) &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; stops:
+            stops&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;remove((x, y))
+            fuel &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;elif&lt;/span&gt; (x, y) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;):
+            print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Nice!&amp;#39;&lt;/span&gt;)
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; log
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;game2&lt;/span&gt;():
+    print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Math quiz time!&amp;#39;&lt;/span&gt;)
+    qs &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ((&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;sum&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;), (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;difference&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;45&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;14&lt;/span&gt;), (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;product&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;9&lt;/span&gt;), (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ratio&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;18&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;), (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;remainder from division&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;))
+    log &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;_&amp;#39;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; q &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; qs: 
+        print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;What is the &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%s&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; of &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%d&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; and &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%d&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;?&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; q)
+        x, a, b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; q
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;sum&amp;#39;&lt;/span&gt;:
+            r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; b
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;elif&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;difference&amp;#39;&lt;/span&gt;:
+            r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; b
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;elif&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;product&amp;#39;&lt;/span&gt;:
+            r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; b
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;elif&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ratio&amp;#39;&lt;/span&gt;:
+            r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a &lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt; b
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;elif&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;remainder from division&amp;#39;&lt;/span&gt;:
+            r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; b
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+            print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;What?&amp;#39;&lt;/span&gt;)
+        inp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; int(input())
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; inp &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; r:
+            print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Correct!&amp;#39;&lt;/span&gt;)
+            log &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; str(inp) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;_&amp;#39;&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+            print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Wrong!&amp;#39;&lt;/span&gt;)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; log
+    &lt;span style=&#34;color:#75715e&#34;&gt;#_17_31_72_3_2_&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;game3&lt;/span&gt;():
+    print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Speed typing game.&amp;#39;&lt;/span&gt;)
+    t &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; time&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;time()
+    text &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&amp;#39;&amp;#39;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;  Text: Because of its performance advantage, today many language implementations
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;  execute a program in two phases, first compiling the source code into bytecode,
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;  and then passing the bytecode to the virtual machine.
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;  &amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+    words &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; text&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split()
+    it &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+    log &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;_&amp;#39;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; it &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; len(words):
+        print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;%0.2f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; seconds left.&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; (time&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;time() &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; t)))
+        print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x1b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;[32m&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;join(words[:it]), &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x1b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;[39m &amp;#39;&lt;/span&gt;, words[it])
+        inp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; input()
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; time&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;time() &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; t &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;:
+            fail(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Too slow!&amp;#39;&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; inp &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; words[it]:
+            log &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; words[it]&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;upper() &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;_&amp;#39;&lt;/span&gt;
+            it &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;:
+            fail(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;You made a mistake!&amp;#39;&lt;/span&gt;)
+    print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Nice!&amp;#39;&lt;/span&gt;)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; log
+&lt;span style=&#34;color:#75715e&#34;&gt;#_BECAUSE_OF_ITS_PERFORMANCE_ADVANTAGE,_TODAY_MANY_LANGUAGE_IMPLEMENTATIONS_EXECUTE_A_PROGRAM_IN_TWO_PHASES,_FIRST_COMPILING_THE_SOURCE_CODE_INTO_BYTECODE,_AND_THEN_PASSING_THE_BYTECODE_TO_THE_VIRTUAL_MACHINE._&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;():
+    print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Pass 3 tests to prove your worth!&amp;#39;&lt;/span&gt;)
+    seed &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;seed:&amp;#39;&lt;/span&gt;
+    seed &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; game1() &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;
+    print (seed)
+    seed &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; game2() &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt;
+    print (seed)
+    seed &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; game3()
+    print (seed)
+    print ()
+    print (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;You can drive to work, know some maths and can type fast. You&amp;#39;re hired!&amp;#34;&lt;/span&gt;)
+    print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Your sign-on bonus:&amp;#39;&lt;/span&gt;, cry(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xa0&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;?n&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xa5\x7f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x1f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;6Jvh&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x95\xcc&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x1e\x95\x99&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;6a&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x11\xf6&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;OV&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x88\xc1\x9f\xde\xb5&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x9d\xae\x14\xde\x18&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;YHI&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xd8\xd5\x90\x8a\x18&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1l&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xb0\x16&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;^O;]&amp;#39;&lt;/span&gt;, seed)&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;decode())
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;solve&#34;&gt;SOLVE!&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; random
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ks&lt;/span&gt;(seed):
+    random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;seed(seed)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;:
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;yield&lt;/span&gt; (random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randint(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;13&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;17&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cry&lt;/span&gt;(s, seed):
+    r &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; []
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; x, y &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; zip(ks(seed), s):
+        r&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;append(x &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; y)
+        bytes(r)
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; r
+
+seed &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;seed:sssddwwddwddsssdssaaawwssaaaassddddddd:_17_31_72_3_2_:_BECAUSE_OF_ITS_PERFORMANCE_ADVANTAGE,_TODAY_MANY_LANGUAGE_IMPLEMENTATIONS_EXECUTE_A_PROGRAM_IN_TWO_PHASES,_FIRST_COMPILING_THE_SOURCE_CODE_INTO_BYTECODE,_AND_THEN_PASSING_THE_BYTECODE_TO_THE_VIRTUAL_MACHINE._&amp;#39;&lt;/span&gt;
+print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Your sign-on bonus:&amp;#39;&lt;/span&gt;, cry(&lt;span style=&#34;color:#e6db74&#34;&gt;b&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xa0&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;?n&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xa5\x7f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x1f&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;6Jvh&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x95\xcc&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x1e\x95\x99&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;6a&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x11\xf6&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;OV&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x88\xc1\x9f\xde\xb5&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\x9d\xae\x14\xde\x18&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;YHI&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xd8\xd5\x90\x8a\x18&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1l&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\xb0\x16&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;^O;]&amp;#39;&lt;/span&gt;, seed))
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;afterword&#34;&gt;Afterword&lt;/h2&gt;
+&lt;p&gt;After failed to solve adamd in DEFCON 30 QUALS, I finally solved a Python 3.11 challenge :D&lt;/p&gt;
+&lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 614; 
+			flex-basis: 1474px&#34;
+	&gt;
+	&lt;a href=&#34;/post/google-ctf-2022-mixed-writeup/lol.png&#34; data-size=&#34;430x70&#34;&gt;
+		&lt;img src=&#34;/post/google-ctf-2022-mixed-writeup/lol.png&#34;
+			width=&#34;430&#34;
+			height=&#34;70&#34;
+			srcset=&#34;/post/google-ctf-2022-mixed-writeup/lol_hubf7043f79e505ba19f42c321a52a8ee8_12045_480x0_resize_box_3.png 480w, /post/google-ctf-2022-mixed-writeup/lol_hubf7043f79e505ba19f42c321a52a8ee8_12045_1024x0_resize_box_3.png 1024w&#34;
+			loading=&#34;lazy&#34;
+			&gt;
+	&lt;/a&gt;
+	
+&lt;/figure&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>How to build peach fuzzer on Ubuntu18.04</title>
         <link>/post/how-to-build-peach-fuzzer-on-ubuntu1804/</link>
         <pubDate>Fri, 03 Jun 2022 00:38:33 +0800</pubDate>

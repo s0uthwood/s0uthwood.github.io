@@ -6,7 +6,18 @@
     <description>Recent content in Reverse on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 14 Feb 2022 23:08:32 +0800</lastBuildDate><atom:link href="/categories/reverse/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Jul 2022 16:01:21 +0800</lastBuildDate><atom:link href="/categories/reverse/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Google CTF 2022 MIXED Writeup</title>
+      <link>/post/google-ctf-2022-mixed-writeup/</link>
+      <pubDate>Mon, 04 Jul 2022 16:01:21 +0800</pubDate>
+      
+      <guid>/post/google-ctf-2022-mixed-writeup/</guid>
+      <description>This challenge gives a .pyc file and a Python 3.11 alpha7 based patch file.
+Patch This patch file mainly patches the opcode.py file. After the patch, opcode.py file first generated two random lists and modifies the opcode according to the values of the lists. Finally, it will output the new opcode to a tmp file.
++import sys +if &amp;#34;generate_opcode_h&amp;#34; in sys.argv[0]: + random = __import__(&amp;#34;random&amp;#34;) + random.shuffle(perm) + random.shuffle(perm2) -def_op(&amp;#39;CACHE&amp;#39;, 0) -def_op(&amp;#39;POP_TOP&amp;#39;, 1) -def_op(&amp;#39;PUSH_NULL&amp;#39;, 2) +def_op(&amp;#39;CACHE&amp;#39;, perm[0]) +def_op(&amp;#39;POP_TOP&amp;#39;, perm[1]) +def_op(&amp;#39;PUSH_NULL&amp;#39;, perm[2]) +with open(&amp;#34;/tmp/opcode_map&amp;#34;, &amp;#34;w&amp;#34;) as f: + for x, y in enumerate(opname): + f.</description>
+    </item>
+    
     <item>
       <title>DefCamp2022 can-you-crack-this Writeup</title>
       <link>/post/defcamp2022-can-you-crack-this-wp/</link>
@@ -68,7 +79,7 @@ serial-&amp;gt;十进制-&amp;gt;与name的crc异或-&amp;gt;计算crc
       <description>打美团 CTF 的时候才意识到，有一种坐牢叫AK
  [MTCTF 4th]wow 先进行脱壳，因为脱壳后用的是绝对地址，而加载的时候是动态加载，所有没有办法调试，那就直接静态看吧
 JUMPOUT 那里看一下汇编，发现有一个天堂之门
-push 0x33 call $+5 add [esp+84h+var_84], 5 retf 直接把后面的数据全 dump 出来，然后用 ida64 打开
+push 0x33call $+5add [esp+84h+var_84], 5retf直接把后面的数据全 dump 出来，然后用 ida64 打开
 void __fastcall sub_0(unsigned int *a1) { unsigned int v1; // er9  int v2; // ebp  unsigned int v3; // esi  unsigned int *v4; // rdi  unsigned int *v5; // r10  unsigned int v6; // ebx  unsigned int i; // er11  unsigned int v8; // er8  int v9; // edx  unsigned int v10; // eax  unsigned int v11; // er9  unsigned int v12; // er8  int v13; // ebx  int v14; // ebx  int v15; // ebx  int v16; // edx  unsigned int v17; // eax  unsigned int v18; // er9  v1 = a1[8]; v2 = 12; v3 = 0; while ( 1 ) { v3 += 1732584193; v4 = a1 + 1; v5 = a1; v6 = v3 &amp;gt;&amp;gt; 2; for ( i = 0; i &amp;lt; 8; ++i ) { v8 = *v4; if ( (((unsigned __int8)i ^ (unsigned __int8)v6) &amp;amp; 3) !</description>
     </item>
     
@@ -86,7 +97,7 @@ v9 = byte_412000; v10 = byte_412050; v11 = 64LL; v12 = 0; do { v12 |= *v10++ ^ *
 Angr用的是手动往全局变量注入符号，然后在验证前停止，手动添加约束，wp中的写法是直接用程序中的验证，并添加了 LAZY_SOLVES 参数，学到了
 之前用自己脚本跑的适合发现一直是 unsat，以为Angr会有问题，但后来发现有个wp就是用的Angr
 于是掏出了之前写的脚本做了一些尝试
-from angr import * import claripy import binascii input_length = 56 base_addr = 0x400000 proj = Project(&#39;runofthemill&#39;, main_opts={&amp;quot;base_addr&amp;quot;: base_addr}) start_addr = 0x401054 state = proj.</description>
+from angr import *import claripyimport binasciiinput_length = 56base_addr = 0x400000proj = Project(&#39;runofthemill&#39;, main_opts={&amp;quot;base_addr&amp;quot;: base_addr})start_addr = 0x401054state = proj.</description>
     </item>
     
     <item>
@@ -170,7 +181,7 @@ macro_rules! check { (@s n1ctf{$Never:tt}) =&amp;gt; { check!(stringify!($Never)
 from key import key import tinyaes print (key) f = open(&amp;#39;./PYZ-00.pyz_extracted/sign.pyc.encrypted&amp;#39;, &amp;#39;rb&amp;#39;) data = f.read() cipher = tinyaes.AES(key.encode(), data[:16]) output = cipher.CTR_xcrypt_buffer(data[16:]) f.close() import zlib output = zlib.decompress(output) f = open(&amp;#39;./sign.pyc&amp;#39;, &amp;#39;wb&amp;#39;) f.write(output) 解密 解出sign后看到有三个base64，其中两个是执行的语句，此外大部分语句涉及到了内存
 另外一个base解出来是乱码，用字节码辅助恢复函数（其实特征已经很明显了），发现进行了rc4加密，直接打印出解密结果，将结果写入文件，用ida查看
 发现smc
-mov eax, 41178Bh mov ecx, 411802h sub ecx, eax loc_2A: mov ebx, [rax] xor ebx, 77h mov [rax], ebx loop loc_2A 解出来后尝试恢复了一下函数，结果很丑&amp;hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</description>
+mov eax, 41178Bhmov ecx, 411802hsub ecx, eaxloc_2A:mov ebx, [rax]xor ebx, 77hmov [rax], ebxloop loc_2A解出来后尝试恢复了一下函数，结果很丑&amp;hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</description>
     </item>
     
     <item>
