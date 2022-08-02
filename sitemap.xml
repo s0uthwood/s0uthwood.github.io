@@ -3,33 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/categories/</loc>
-    <lastmod>2022-07-04T16:01:21+08:00</lastmod>
+    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
   </url><url>
     <loc>/tags/ctf/</loc>
-    <lastmod>2022-07-04T16:01:21+08:00</lastmod>
+    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
   </url><url>
     <loc>/categories/ctf/</loc>
-    <lastmod>2022-07-04T16:01:21+08:00</lastmod>
-  </url><url>
-    <loc>/post/google-ctf-2022-mixed-writeup/</loc>
-    <lastmod>2022-07-04T16:01:21+08:00</lastmod>
+    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
   </url><url>
     <loc>/post/</loc>
-    <lastmod>2022-07-04T16:01:21+08:00</lastmod>
+    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
+  </url><url>
+    <loc>/post/qwb2022-rev-writeups/</loc>
+    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
   </url><url>
     <loc>/tags/reverse/</loc>
-    <lastmod>2022-07-04T16:01:21+08:00</lastmod>
+    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
   </url><url>
     <loc>/categories/reverse/</loc>
-    <lastmod>2022-07-04T16:01:21+08:00</lastmod>
+    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
   </url><url>
     <loc>/</loc>
-    <lastmod>2022-07-04T16:01:21+08:00</lastmod>
+    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
   </url><url>
     <loc>/tags/</loc>
-    <lastmod>2022-07-04T16:01:21+08:00</lastmod>
+    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
   </url><url>
     <loc>/categories/writeup/</loc>
+    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
+  </url><url>
+    <loc>/post/google-ctf-2022-mixed-writeup/</loc>
     <lastmod>2022-07-04T16:01:21+08:00</lastmod>
   </url><url>
     <loc>/tags/fuzz/</loc>

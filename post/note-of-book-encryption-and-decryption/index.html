@@ -196,43 +196,43 @@
 <p>常用的函数如下：</p>
 <h5 id="sendmessage">SendMessage</h5>
 <p>调用一个窗口的窗口函数，将一条消息发送给那个窗口。除非消息处理完毕，否则不会返回</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">LRESULT <span style="color:#a6e22e">SendMessage</span>(
-	HWND hwnd,			<span style="color:#75715e">// 目的窗口的句柄
-</span><span style="color:#75715e"></span>	UINT Msg,			<span style="color:#75715e">// 消息标识符
-</span><span style="color:#75715e"></span>	WPARAM wParam,		<span style="color:#75715e">// 消息的WPARAM域
-</span><span style="color:#75715e"></span>	LPARAM lParam		<span style="color:#75715e">// 消息的LPARAM域
-</span><span style="color:#75715e"></span>);
-</code></pre></div><p><strong>返回值</strong>：消息投递成功，返回非零</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>LRESULT <span style="color:#a6e22e">SendMessage</span>(
+</span></span><span style="display:flex;"><span>	HWND hwnd,			<span style="color:#75715e">// 目的窗口的句柄
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	UINT Msg,			<span style="color:#75715e">// 消息标识符
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	WPARAM wParam,		<span style="color:#75715e">// 消息的WPARAM域
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	LPARAM lParam		<span style="color:#75715e">// 消息的LPARAM域
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>);
+</span></span></code></pre></div><p><strong>返回值</strong>：消息投递成功，返回非零</p>
 <h5 id="wm_command">WM_COMMAND</h5>
 <p>当用户从菜单或按钮中选择一条命令或者一个控件时该消息被发送给它的父窗口，或者当一个快捷键被释放时发送该消息。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">WM_COMMAND
-	wNotifyCode <span style="color:#f92672">=</span> HIWORD(wParam);		 <span style="color:#75715e">// 通告函数
-</span><span style="color:#75715e"></span>	wID <span style="color:#f92672">=</span> LOWORD(wParam);				<span style="color:#75715e">// 菜单条目、控件或快捷键的标识符
-</span><span style="color:#75715e"></span>	hwndCtl <span style="color:#f92672">=</span> (HWND) lParam;			<span style="color:#75715e">// 控件句柄
-</span></code></pre></div><p><strong>返回值</strong>：如果应用程序处理这条消息，则返回值为零</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>WM_COMMAND
+</span></span><span style="display:flex;"><span>	wNotifyCode <span style="color:#f92672">=</span> HIWORD(wParam);		 <span style="color:#75715e">// 通告函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	wID <span style="color:#f92672">=</span> LOWORD(wParam);				<span style="color:#75715e">// 菜单条目、控件或快捷键的标识符
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	hwndCtl <span style="color:#f92672">=</span> (HWND) lParam;			<span style="color:#75715e">// 控件句柄
+</span></span></span></code></pre></div><p><strong>返回值</strong>：如果应用程序处理这条消息，则返回值为零</p>
 <h5 id="wm_destory">WM_DESTORY</h5>
 <p>当一个窗口被销毁时发送该消息。该消息对应 <code>0x02</code>，没有参数</p>
 <p><strong>返回值</strong>：如果应用程序处理这条消息，则返回值为零</p>
 <h5 id="wm_gettext">WM_GETTEXT</h5>
 <p>当需要将一个窗口的文本复制到一个由呼叫程序提供的缓冲区中时，发送该消息。该消息对应 <code>0x0D</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">WM_GETTEXT
-	wParam <span style="color:#f92672">=</span> (WPARAM) cchTextMax;	<span style="color:#75715e">// 需要复制的字符数
-</span><span style="color:#75715e"></span>	lParam <span style="color:#f92672">=</span> (LPARAM) lpszText;		<span style="color:#75715e">// 接收文本的缓冲区地址
-</span></code></pre></div><p><strong>返回值</strong>：被复制的字符数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>WM_GETTEXT
+</span></span><span style="display:flex;"><span>	wParam <span style="color:#f92672">=</span> (WPARAM) cchTextMax;	<span style="color:#75715e">// 需要复制的字符数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	lParam <span style="color:#f92672">=</span> (LPARAM) lpszText;		<span style="color:#75715e">// 接收文本的缓冲区地址
+</span></span></span></code></pre></div><p><strong>返回值</strong>：被复制的字符数</p>
 <h5 id="wm_quit">WM_QUIT</h5>
 <p>当应用程序调用 <code>PostQuitMessage</code> 时，生成 <code>WM_QUIT</code>消息，对应 <code>0x12</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">WM_QUIT
-	nExitCode <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>) wParam;		<span style="color:#75715e">// 退出代码
-</span></code></pre></div><p>无<strong>返回值</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>WM_QUIT
+</span></span><span style="display:flex;"><span>	nExitCode <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>) wParam;		<span style="color:#75715e">// 退出代码
+</span></span></span></code></pre></div><p>无<strong>返回值</strong></p>
 <h5 id="wm_lbuttondown">WM_LBUTTONDOWN</h5>
 <p>光标停在窗口客户区且点击左键时，发送此消息</p>
 <p>如果鼠标未捕捉，将下发给光标下的窗口，否则发送给捕获鼠标动作的窗口</p>
 <p>对应 <code>0x201</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">WM_LBUTTONDOWN
-	fwkeys <span style="color:#f92672">=</span> wParam;			<span style="color:#75715e">// key旗帜
-</span><span style="color:#75715e"></span>	xPos <span style="color:#f92672">=</span> LOWORD(lParam);		<span style="color:#75715e">// 光标的水平位置
-</span><span style="color:#75715e"></span>	yPos <span style="color:#f92672">=</span> HIWORD(lParam);		<span style="color:#75715e">// 光标的垂直位置
-</span></code></pre></div><p><strong>返回值</strong>：如果应用程序处理了这条消息，返回值为零</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>WM_LBUTTONDOWN
+</span></span><span style="display:flex;"><span>	fwkeys <span style="color:#f92672">=</span> wParam;			<span style="color:#75715e">// key旗帜
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	xPos <span style="color:#f92672">=</span> LOWORD(lParam);		<span style="color:#75715e">// 光标的水平位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	yPos <span style="color:#f92672">=</span> HIWORD(lParam);		<span style="color:#75715e">// 光标的垂直位置
+</span></span></span></code></pre></div><p><strong>返回值</strong>：如果应用程序处理了这条消息，返回值为零</p>
 <h4 id="虚拟内存">虚拟内存</h4>
 <ul>
 <li>应用程序不会直接访问物理地址</li>
@@ -400,8 +400,8 @@ ret
 <p>call指令5字节</p>
 <h5 id="条件设置指令">条件设置指令</h5>
 <p>对于语句</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">c <span style="color:#f92672">=</span> (a <span style="color:#f92672">&lt;</span> b) <span style="color:#f92672">?</span> c1 : c2;
-</code></pre></div><p>条件分支语句为</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>c <span style="color:#f92672">=</span> (a <span style="color:#f92672">&lt;</span> b) <span style="color:#f92672">?</span> c1 : c2;
+</span></span></code></pre></div><p>条件分支语句为</p>
 <pre tabindex="0"><code class="language-assembly" data-lang="assembly">  cmp a, b  mov eax, c1  jl  L1  mov eax, c2L1:
 </code></pre><p>使用条件设置语句可以不包含条件分支</p>
 <pre tabindex="0"><code class="language-assembly" data-lang="assembly">xor   eax, eaxcmp   a, bsetge al       ; if a &gt;= b, al = 1, else al = 0dec   eaxand   eax, (c1 - c2)add   eax, c2
@@ -413,8 +413,8 @@ ret
 </code></pre><p>优化后的循环实例</p>
 <pre tabindex="0"><code class="language-assembly" data-lang="assembly">    xor ecx, ecx    xor eax, eax:L1    add ecx, eax    inc eax    cmp eax, 64h    jle L1    xor eax, eax
 </code></pre><p>对应的源码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">100</span>; i<span style="color:#f92672">++</span>)    sum <span style="color:#f92672">+=</span> i;
-</code></pre></div><h4 id="数学运算">数学运算</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">100</span>; i<span style="color:#f92672">++</span>)    sum <span style="color:#f92672">+=</span> i;
+</span></span></code></pre></div><h4 id="数学运算">数学运算</h4>
 <h5 id="加减法">加减法</h5>
 <p><code>add</code> 和 <code>sub</code> 指令，有时候可以使用 <code>lea</code> 进行优化</p>
 <p>lea 允许一个时钟内计算 <code>lea edx, [eax+ecx+78h]</code> 级别的运算</p>
@@ -757,13 +757,13 @@ jz (jnz)
 <h4 id="计时器">计时器</h4>
 <h5 id="settimer-函数">setTimer() 函数</h5>
 <p>程序运行时会申请一个计时器，并指定间隔，并获得一个处理计时器超时的回调函数</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">UINT <span style="color:#a6e22e">SetTimer</span>(
-    HWND hWnd,             <span style="color:#75715e">// 窗口句柄，计时器到时后，将向这个窗口发送WM_TIMER消息
-</span><span style="color:#75715e"></span>    UINT nIDEvent,         <span style="color:#75715e">// 计时器标识
-</span><span style="color:#75715e"></span>    UINT uElapse,          <span style="color:#75715e">// 指定计时器时间间隔（单位为毫秒）
-</span><span style="color:#75715e"></span>    TIMERPROC lpTimerFunc  <span style="color:#75715e">// 回调函数，超时后将调用
-</span><span style="color:#75715e"></span>);
-</code></pre></div><h5 id="高精度计时器">高精度计时器</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>UINT <span style="color:#a6e22e">SetTimer</span>(
+</span></span><span style="display:flex;"><span>    HWND hWnd,             <span style="color:#75715e">// 窗口句柄，计时器到时后，将向这个窗口发送WM_TIMER消息
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    UINT nIDEvent,         <span style="color:#75715e">// 计时器标识
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    UINT uElapse,          <span style="color:#75715e">// 指定计时器时间间隔（单位为毫秒）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    TIMERPROC lpTimerFunc  <span style="color:#75715e">// 回调函数，超时后将调用
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>);
+</span></span></code></pre></div><h5 id="高精度计时器">高精度计时器</h5>
 <p>通过调用 <code>timeSecEvent()</code> 函数启动</p>
 <h5 id="gettickcount-函数及-timegettime-函数">GetTickCount() 函数及 timeGetTime() 函数</h5>
 <p>该函数返回系统自成功启动以来所经过的时间，将两次返回值相减，即可得到当前运行时间</p>
@@ -783,17 +783,17 @@ jz (jnz)
 <p>当注册版和正式版文件相同，只是部分功能被限制无法使用时，可以恢复正式版的功能</p>
 <h4 id="相关函数">相关函数</h4>
 <h5 id="enablemenuitem">EnableMenuItem()</h5>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">BOOL EnableMenuItem(
-    HMENU hMenu,        <span style="color:#75715e">// 菜单句柄
-</span><span style="color:#75715e"></span>    UINT uIDEnableItem, <span style="color:#75715e">// 欲允许或禁止的一个菜单条目的标识符
-</span><span style="color:#75715e"></span>    UINT uEnable,       <span style="color:#75715e">// 控制标志，包括允许、灰化、禁止等
-</span><span style="color:#75715e"></span>)
-</code></pre></div><h5 id="enablewindow">EnableWindow()</h5>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">BOOL EnableWindow(
-    HWND hWnd,    <span style="color:#75715e">// 窗口句柄
-</span><span style="color:#75715e"></span>    BOOL bEnable  <span style="color:#75715e">// True为允许，False为禁止
-</span><span style="color:#75715e"></span>)
-</code></pre></div><h4 id="拆解菜单限制保护">拆解菜单限制保护</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>BOOL EnableMenuItem(
+</span></span><span style="display:flex;"><span>    HMENU hMenu,        <span style="color:#75715e">// 菜单句柄
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    UINT uIDEnableItem, <span style="color:#75715e">// 欲允许或禁止的一个菜单条目的标识符
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    UINT uEnable,       <span style="color:#75715e">// 控制标志，包括允许、灰化、禁止等
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>)
+</span></span></code></pre></div><h5 id="enablewindow">EnableWindow()</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>BOOL EnableWindow(
+</span></span><span style="display:flex;"><span>    HWND hWnd,    <span style="color:#75715e">// 窗口句柄
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    BOOL bEnable  <span style="color:#75715e">// True为允许，False为禁止
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>)
+</span></span></code></pre></div><h4 id="拆解菜单限制保护">拆解菜单限制保护</h4>
 <p>找到关键函数，把函数的参数patch一下即可</p>
 <h3 id="keyfile保护">KeyFile保护</h3>
 <p>KeyFile通常是一个小文件，可能是可见字符，也可能是二进制文件，由软件开发者定义</p>
@@ -845,19 +845,19 @@ jz (jnz)
 <p>软件必须从服务器中取得一些关键数据才能正确运行</p>
 <p>破解的思路是拦截服务器的数据包，并分析程序对该数据包的处理</p>
 <h4 id="相关api-1">相关API</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">send</span>(
-    SOCKET s,                 <span style="color:#75715e">// 套接字描述符
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> FAR <span style="color:#f92672">*</span>buf,      <span style="color:#75715e">// 缓冲区
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> len,                  <span style="color:#75715e">// 发送数据的字节数
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> flags                 <span style="color:#75715e">// 附加标志，一般为0
-</span><span style="color:#75715e"></span>);
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">recv</span>(
-    SOCKET s,             <span style="color:#75715e">// 套接字描述符
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> FAR <span style="color:#f92672">*</span>buf,        <span style="color:#75715e">// 缓冲区
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> len,              <span style="color:#75715e">// 缓冲区buf的长度
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> flags             <span style="color:#75715e">// 附加标志，一般为0
-</span><span style="color:#75715e"></span>);
-</code></pre></div><p>此外，还有微软扩展函数 <code>WSASend</code> 和 <code>WSARecv</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">send</span>(
+</span></span><span style="display:flex;"><span>    SOCKET s,                 <span style="color:#75715e">// 套接字描述符
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> FAR <span style="color:#f92672">*</span>buf,      <span style="color:#75715e">// 缓冲区
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> len,                  <span style="color:#75715e">// 发送数据的字节数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> flags                 <span style="color:#75715e">// 附加标志，一般为0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">recv</span>(
+</span></span><span style="display:flex;"><span>    SOCKET s,             <span style="color:#75715e">// 套接字描述符
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> FAR <span style="color:#f92672">*</span>buf,        <span style="color:#75715e">// 缓冲区
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> len,              <span style="color:#75715e">// 缓冲区buf的长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> flags             <span style="color:#75715e">// 附加标志，一般为0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>);
+</span></span></code></pre></div><p>此外，还有微软扩展函数 <code>WSASend</code> 和 <code>WSARecv</code></p>
 <h4 id="破解思路">破解思路</h4>
 <p>当服务器发送的数据包固定时，可以搭建本地服务器，发送该数据包</p>
 <p>数据包不固定时，需要分析算法</p>
@@ -867,8 +867,8 @@ jz (jnz)
 <p>大数库，支持 RSA、DH 密钥交换、DSA 以及椭圆曲线等</p>
 <p>存储方式：以 $2^{32}$ 进制表示，低位在前，高位在后</p>
 <p>识别方式：<code>MR_IN()</code> 是错误处理方式，几乎每个函数中都有</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-asm" data-lang="asm"><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">eax</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">ecx</span>*<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">20</span>], <span style="color:#66d9ef">yy</span>
-</code></pre></div><p>其中，yy 就是 <code>MR_IN()</code> 的参数，一次可以从 <code>miracl.h</code> 中找到对应的函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span><span style="color:#a6e22e">mov</span> <span style="color:#66d9ef">dword</span> <span style="color:#66d9ef">ptr</span> [<span style="color:#66d9ef">eax</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">ecx</span>*<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#ae81ff">20</span>], <span style="color:#66d9ef">yy</span>
+</span></span></code></pre></div><p>其中，yy 就是 <code>MR_IN()</code> 的参数，一次可以从 <code>miracl.h</code> 中找到对应的函数</p>
 <h3 id="fgint">FGInt</h3>
 <p>用于 Delphi，可实现常见公钥加密系统</p>
 <p>存储方式：以 $2^{31}$ 进制表示</p>

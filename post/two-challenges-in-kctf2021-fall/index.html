@@ -231,152 +231,152 @@
 <p>结合动调发现大概就是根据404000数组，构成一个 <code>&lt;value, index&gt;</code> 的结构，两两存放到404420当中</p>
 <p>分析了一下404000数组的作用和特征，发现这个数组应该是构成一个环状的结构（以当前数值作为索引寻找下一个数），猜测不能有重复的数字，否则可能会构成小循环之类的，用脚本验证了一下发现后面248个数字果然没有重复，于是将前八字节的取值可能锁定到了 <code>0x1e, 0x28, 0x4b, 0x6d, 0x8c, 0xa3, 0xd2, 0xfb</code> 中，总共有 $8!=40320$ 种可能，完全可以爆破</p>
 <p>把ida代码复制下来改一改</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdint.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;algorithm&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstring&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> byte_404000[] <span style="color:#f92672">=</span> {
-  <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0xA2</span>, <span style="color:#ae81ff">0x9B</span>, 
-  <span style="color:#ae81ff">0xF4</span>, <span style="color:#ae81ff">0xDF</span>, <span style="color:#ae81ff">0xAC</span>, <span style="color:#ae81ff">0x7C</span>, <span style="color:#ae81ff">0xA1</span>, <span style="color:#ae81ff">0xC6</span>, <span style="color:#ae81ff">0x16</span>, <span style="color:#ae81ff">0xD0</span>, <span style="color:#ae81ff">0x0F</span>, <span style="color:#ae81ff">0xDD</span>, 
-  <span style="color:#ae81ff">0xDC</span>, <span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0xC5</span>, <span style="color:#ae81ff">0x6B</span>, <span style="color:#ae81ff">0xD1</span>, <span style="color:#ae81ff">0x96</span>, <span style="color:#ae81ff">0x47</span>, <span style="color:#ae81ff">0xC2</span>, <span style="color:#ae81ff">0x26</span>, <span style="color:#ae81ff">0x67</span>, 
-  <span style="color:#ae81ff">0x4E</span>, <span style="color:#ae81ff">0x41</span>, <span style="color:#ae81ff">0x82</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0x56</span>, <span style="color:#ae81ff">0x9A</span>, <span style="color:#ae81ff">0x6E</span>, <span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0x92</span>, <span style="color:#ae81ff">0x88</span>, 
-  <span style="color:#ae81ff">0x29</span>, <span style="color:#ae81ff">0xB5</span>, <span style="color:#ae81ff">0xB4</span>, <span style="color:#ae81ff">0x71</span>, <span style="color:#ae81ff">0xA9</span>, <span style="color:#ae81ff">0xCE</span>, <span style="color:#ae81ff">0xC3</span>, <span style="color:#ae81ff">0x34</span>, <span style="color:#ae81ff">0x50</span>, <span style="color:#ae81ff">0x59</span>, 
-  <span style="color:#ae81ff">0xBF</span>, <span style="color:#ae81ff">0x2D</span>, <span style="color:#ae81ff">0x57</span>, <span style="color:#ae81ff">0x22</span>, <span style="color:#ae81ff">0xA6</span>, <span style="color:#ae81ff">0x30</span>, <span style="color:#ae81ff">0x04</span>, <span style="color:#ae81ff">0xB2</span>, <span style="color:#ae81ff">0xCD</span>, <span style="color:#ae81ff">0x36</span>, 
-  <span style="color:#ae81ff">0xD5</span>, <span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0x4D</span>, <span style="color:#ae81ff">0x5B</span>, <span style="color:#ae81ff">0x45</span>, <span style="color:#ae81ff">0x9E</span>, <span style="color:#ae81ff">0x85</span>, <span style="color:#ae81ff">0xCF</span>, <span style="color:#ae81ff">0x9D</span>, <span style="color:#ae81ff">0xCC</span>, 
-  <span style="color:#ae81ff">0x61</span>, <span style="color:#ae81ff">0x78</span>, <span style="color:#ae81ff">0x32</span>, <span style="color:#ae81ff">0x76</span>, <span style="color:#ae81ff">0x31</span>, <span style="color:#ae81ff">0xE3</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0xAD</span>, <span style="color:#ae81ff">0x39</span>, <span style="color:#ae81ff">0x4F</span>, 
-  <span style="color:#ae81ff">0xFA</span>, <span style="color:#ae81ff">0x72</span>, <span style="color:#ae81ff">0x83</span>, <span style="color:#ae81ff">0x4C</span>, <span style="color:#ae81ff">0x86</span>, <span style="color:#ae81ff">0x60</span>, <span style="color:#ae81ff">0xB7</span>, <span style="color:#ae81ff">0xD7</span>, <span style="color:#ae81ff">0x63</span>, <span style="color:#ae81ff">0x0C</span>, 
-  <span style="color:#ae81ff">0x44</span>, <span style="color:#ae81ff">0x35</span>, <span style="color:#ae81ff">0xB3</span>, <span style="color:#ae81ff">0x7B</span>, <span style="color:#ae81ff">0x19</span>, <span style="color:#ae81ff">0xD4</span>, <span style="color:#ae81ff">0x69</span>, <span style="color:#ae81ff">0x08</span>, <span style="color:#ae81ff">0x0B</span>, <span style="color:#ae81ff">0x1F</span>, 
-  <span style="color:#ae81ff">0x3D</span>, <span style="color:#ae81ff">0x11</span>, <span style="color:#ae81ff">0x79</span>, <span style="color:#ae81ff">0xD3</span>, <span style="color:#ae81ff">0xEE</span>, <span style="color:#ae81ff">0x93</span>, <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0xDE</span>, <span style="color:#ae81ff">0x23</span>, <span style="color:#ae81ff">0x3B</span>, 
-  <span style="color:#ae81ff">0x5D</span>, <span style="color:#ae81ff">0x8D</span>, <span style="color:#ae81ff">0xA5</span>, <span style="color:#ae81ff">0x77</span>, <span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0xDB</span>, <span style="color:#ae81ff">0x97</span>, <span style="color:#ae81ff">0xF6</span>, <span style="color:#ae81ff">0x7A</span>, 
-  <span style="color:#ae81ff">0x18</span>, <span style="color:#ae81ff">0x52</span>, <span style="color:#ae81ff">0x15</span>, <span style="color:#ae81ff">0x74</span>, <span style="color:#ae81ff">0x25</span>, <span style="color:#ae81ff">0x62</span>, <span style="color:#ae81ff">0x2C</span>, <span style="color:#ae81ff">0x05</span>, <span style="color:#ae81ff">0xE8</span>, <span style="color:#ae81ff">0x0D</span>, 
-  <span style="color:#ae81ff">0x98</span>, <span style="color:#ae81ff">0x2A</span>, <span style="color:#ae81ff">0x43</span>, <span style="color:#ae81ff">0xE2</span>, <span style="color:#ae81ff">0xEF</span>, <span style="color:#ae81ff">0x48</span>, <span style="color:#ae81ff">0x87</span>, <span style="color:#ae81ff">0x49</span>, <span style="color:#ae81ff">0x1C</span>, <span style="color:#ae81ff">0xCA</span>, 
-  <span style="color:#ae81ff">0x2B</span>, <span style="color:#ae81ff">0xA7</span>, <span style="color:#ae81ff">0x8A</span>, <span style="color:#ae81ff">0x09</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0xE7</span>, <span style="color:#ae81ff">0x53</span>, <span style="color:#ae81ff">0xAA</span>, <span style="color:#ae81ff">0xFF</span>, <span style="color:#ae81ff">0x6F</span>, 
-  <span style="color:#ae81ff">0x8E</span>, <span style="color:#ae81ff">0x91</span>, <span style="color:#ae81ff">0xF1</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0xA4</span>, <span style="color:#ae81ff">0x46</span>, <span style="color:#ae81ff">0x3A</span>, <span style="color:#ae81ff">0x7D</span>, <span style="color:#ae81ff">0x54</span>, <span style="color:#ae81ff">0xEB</span>, 
-  <span style="color:#ae81ff">0x2F</span>, <span style="color:#ae81ff">0xC1</span>, <span style="color:#ae81ff">0xC0</span>, <span style="color:#ae81ff">0x0E</span>, <span style="color:#ae81ff">0xBD</span>, <span style="color:#ae81ff">0xE1</span>, <span style="color:#ae81ff">0x6C</span>, <span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0xBE</span>, <span style="color:#ae81ff">0xE4</span>, 
-  <span style="color:#ae81ff">0x02</span>, <span style="color:#ae81ff">0x3C</span>, <span style="color:#ae81ff">0x5A</span>, <span style="color:#ae81ff">0xA8</span>, <span style="color:#ae81ff">0x9F</span>, <span style="color:#ae81ff">0x37</span>, <span style="color:#ae81ff">0xAF</span>, <span style="color:#ae81ff">0xA0</span>, <span style="color:#ae81ff">0x13</span>, <span style="color:#ae81ff">0xED</span>, 
-  <span style="color:#ae81ff">0x1B</span>, <span style="color:#ae81ff">0xEC</span>, <span style="color:#ae81ff">0x8B</span>, <span style="color:#ae81ff">0x3E</span>, <span style="color:#ae81ff">0x7E</span>, <span style="color:#ae81ff">0x27</span>, <span style="color:#ae81ff">0x99</span>, <span style="color:#ae81ff">0x75</span>, <span style="color:#ae81ff">0xAB</span>, <span style="color:#ae81ff">0xFE</span>, 
-  <span style="color:#ae81ff">0xD9</span>, <span style="color:#ae81ff">0x3F</span>, <span style="color:#ae81ff">0xF3</span>, <span style="color:#ae81ff">0xEA</span>, <span style="color:#ae81ff">0x70</span>, <span style="color:#ae81ff">0xF7</span>, <span style="color:#ae81ff">0x95</span>, <span style="color:#ae81ff">0xBA</span>, <span style="color:#ae81ff">0x1D</span>, <span style="color:#ae81ff">0x40</span>, 
-  <span style="color:#ae81ff">0xB0</span>, <span style="color:#ae81ff">0xF9</span>, <span style="color:#ae81ff">0xE5</span>, <span style="color:#ae81ff">0xF8</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0xBC</span>, <span style="color:#ae81ff">0xB6</span>, <span style="color:#ae81ff">0x03</span>, <span style="color:#ae81ff">0xC9</span>, <span style="color:#ae81ff">0x10</span>, 
-  <span style="color:#ae81ff">0x9C</span>, <span style="color:#ae81ff">0x2E</span>, <span style="color:#ae81ff">0x89</span>, <span style="color:#ae81ff">0x5C</span>, <span style="color:#ae81ff">0x7F</span>, <span style="color:#ae81ff">0xB1</span>, <span style="color:#ae81ff">0x1A</span>, <span style="color:#ae81ff">0xD6</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xAE</span>, 
-  <span style="color:#ae81ff">0xDA</span>, <span style="color:#ae81ff">0xE6</span>, <span style="color:#ae81ff">0x5E</span>, <span style="color:#ae81ff">0xB9</span>, <span style="color:#ae81ff">0x84</span>, <span style="color:#ae81ff">0xE9</span>, <span style="color:#ae81ff">0x55</span>, <span style="color:#ae81ff">0xBB</span>, <span style="color:#ae81ff">0xC7</span>, <span style="color:#ae81ff">0x0A</span>, 
-  <span style="color:#ae81ff">0xE0</span>, <span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0xF2</span>, <span style="color:#ae81ff">0xD8</span>, <span style="color:#ae81ff">0xCB</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x12</span>, <span style="color:#ae81ff">0xB8</span>, <span style="color:#ae81ff">0x17</span>, <span style="color:#ae81ff">0x94</span>, 
-  <span style="color:#ae81ff">0x6A</span>, <span style="color:#ae81ff">0x4A</span>, <span style="color:#ae81ff">0x01</span>, <span style="color:#ae81ff">0x24</span>, <span style="color:#ae81ff">0x14</span>, <span style="color:#ae81ff">0x51</span>, <span style="color:#ae81ff">0x07</span>, <span style="color:#ae81ff">0x65</span>, <span style="color:#ae81ff">0x21</span>, <span style="color:#ae81ff">0xC8</span>, 
-  <span style="color:#ae81ff">0x38</span>, <span style="color:#ae81ff">0xFD</span>, <span style="color:#ae81ff">0x8F</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0xF5</span>, <span style="color:#ae81ff">0xFC</span>
-};
-
-<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> byte_404220[<span style="color:#ae81ff">520</span>];
-
-<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> byte_404420[<span style="color:#ae81ff">65537</span>];
-
-<span style="color:#66d9ef">int</span> dword_404100[] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0x40</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0</span>};
-
-<span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
-
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sub_401580</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>a2) {
-  <span style="color:#66d9ef">int</span> v2; <span style="color:#75715e">// ebp
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v3; <span style="color:#75715e">// eax
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>v4; <span style="color:#75715e">// esi
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v5; <span style="color:#75715e">// ecx
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v6; <span style="color:#75715e">// edi
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v7; <span style="color:#75715e">// ecx
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v8; <span style="color:#75715e">// edx
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v9; <span style="color:#75715e">// eax
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v10; <span style="color:#75715e">// ecx
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v11; <span style="color:#75715e">// esi
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v12; <span style="color:#75715e">// eax
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> v13; <span style="color:#75715e">// dl
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v14; <span style="color:#75715e">// edi
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v15; <span style="color:#75715e">// eax
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v16; <span style="color:#75715e">// ecx
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v17; <span style="color:#75715e">// esi
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> i; <span style="color:#75715e">// eax
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> v19; <span style="color:#75715e">// dl
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> v21; <span style="color:#75715e">// [esp+10h] [ebp-Ch]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> v22; <span style="color:#75715e">// [esp+11h] [ebp-Bh]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> v23; <span style="color:#75715e">// [esp+12h] [ebp-Ah]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> v24; <span style="color:#75715e">// [esp+13h] [ebp-9h]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v25; <span style="color:#75715e">// [esp+14h] [ebp-8h]
-</span><span style="color:#75715e"></span>
-  v21 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-  v22 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-  v23 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-  v24 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-  v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-  v25 <span style="color:#f92672">=</span> byte_404420;
-  <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">8</span>; i<span style="color:#f92672">++</span>)
-    byte_404000[i] <span style="color:#f92672">=</span> a2[i];
-  <span style="color:#66d9ef">do</span>
-  {
-    byte_404220[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> byte_404000[v2 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>];
-    byte_404220[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> v2;
-    v3 <span style="color:#f92672">=</span> byte_404220;
-    v4 <span style="color:#f92672">=</span> dword_404100;
-    v5 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>byte_404220[dword_404100[<span style="color:#ae81ff">0</span>]];
-    <span style="color:#66d9ef">do</span>
-    {
-      v6 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>v4;                                 <span style="color:#75715e">// 2, 4, 8, 10h, 20h, 40h, 80h
-</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>v4 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> )
-      {
-        <span style="color:#66d9ef">do</span>
-        {
-          v7 <span style="color:#f92672">=</span> v5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-          <span style="color:#f92672">*</span>(v7 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">=</span> byte_404000[<span style="color:#f92672">*</span>v3];
-          <span style="color:#f92672">*</span>v7 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>v3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-          v5 <span style="color:#f92672">=</span> v7 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-          <span style="color:#f92672">++</span>v3;
-          <span style="color:#f92672">--</span>v6;
-        }
-        <span style="color:#66d9ef">while</span> ( v6 );
-      }
-      <span style="color:#f92672">++</span>v4;
-    }
-    <span style="color:#66d9ef">while</span> ( v4 <span style="color:#f92672">&lt;</span> <span style="color:#f92672">&amp;</span>(dword_404100[<span style="color:#ae81ff">7</span>]) );
-    v8 <span style="color:#f92672">=</span> <span style="color:#ae81ff">256</span>;
-    <span style="color:#66d9ef">do</span>
-    {
-      <span style="color:#f92672">++</span>v25[<span style="color:#f92672">*</span>v3<span style="color:#f92672">++</span>];
-      <span style="color:#f92672">--</span>v8;
-    }
-    <span style="color:#66d9ef">while</span> ( v8 );
-    <span style="color:#f92672">++</span>v2;
-    v25 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">256</span>;
-  }
-  <span style="color:#66d9ef">while</span> ( v2 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">256</span> );
-  v9 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>byte_404420[<span style="color:#ae81ff">0x28</span>];
-  v10 <span style="color:#f92672">=</span> <span style="color:#ae81ff">256</span>;
-  <span style="color:#66d9ef">do</span>
-  {
-    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>(v9 <span style="color:#f92672">-</span> <span style="color:#ae81ff">40</span>) )
-      <span style="color:#f92672">++</span>v21;
-    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>(v9 <span style="color:#f92672">-</span> <span style="color:#ae81ff">26</span>) )
-      <span style="color:#f92672">++</span>v22;
-    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>v9 )
-      <span style="color:#f92672">++</span>v23;
-    <span style="color:#66d9ef">if</span> ( v9[<span style="color:#ae81ff">39</span>] )
-      <span style="color:#f92672">++</span>v24;
-    v9 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">256</span>;
-    <span style="color:#f92672">--</span>v10;
-  }
-  <span style="color:#66d9ef">while</span> ( v10 );
-  <span style="color:#66d9ef">if</span> ( v21 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xA9</span> <span style="color:#f92672">&amp;&amp;</span> v22 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xAC</span> <span style="color:#f92672">&amp;&amp;</span> v23 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xA7</span> <span style="color:#f92672">&amp;&amp;</span> v24 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0xC8u</span> ){
-    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">8</span>; i<span style="color:#f92672">++</span>){
-      printf(<span style="color:#e6db74">&#34;%hhX&#34;</span>, a2[i]);
-    }
-  }
-  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-}
-
-
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
-  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> flag[] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0x1e</span>, <span style="color:#ae81ff">0x28</span>, <span style="color:#ae81ff">0x4b</span>, <span style="color:#ae81ff">0x6d</span>, <span style="color:#ae81ff">0x8c</span>, <span style="color:#ae81ff">0xa3</span>, <span style="color:#ae81ff">0xd2</span>, <span style="color:#ae81ff">0xfb</span>};
-  <span style="color:#66d9ef">do</span>{
-    memset(byte_404420, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">65536</span>);
-    sub_401580(flag);
-  }<span style="color:#66d9ef">while</span> (next_permutation(flag, flag <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>));
-  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-}
-</code></pre></div><p>转换一下得到前八字节 <code>B4D682C8BF2DE13A</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdint.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;algorithm&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstring&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> byte_404000[] <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0xA2</span>, <span style="color:#ae81ff">0x9B</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xF4</span>, <span style="color:#ae81ff">0xDF</span>, <span style="color:#ae81ff">0xAC</span>, <span style="color:#ae81ff">0x7C</span>, <span style="color:#ae81ff">0xA1</span>, <span style="color:#ae81ff">0xC6</span>, <span style="color:#ae81ff">0x16</span>, <span style="color:#ae81ff">0xD0</span>, <span style="color:#ae81ff">0x0F</span>, <span style="color:#ae81ff">0xDD</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xDC</span>, <span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0xC5</span>, <span style="color:#ae81ff">0x6B</span>, <span style="color:#ae81ff">0xD1</span>, <span style="color:#ae81ff">0x96</span>, <span style="color:#ae81ff">0x47</span>, <span style="color:#ae81ff">0xC2</span>, <span style="color:#ae81ff">0x26</span>, <span style="color:#ae81ff">0x67</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x4E</span>, <span style="color:#ae81ff">0x41</span>, <span style="color:#ae81ff">0x82</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0x56</span>, <span style="color:#ae81ff">0x9A</span>, <span style="color:#ae81ff">0x6E</span>, <span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0x92</span>, <span style="color:#ae81ff">0x88</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x29</span>, <span style="color:#ae81ff">0xB5</span>, <span style="color:#ae81ff">0xB4</span>, <span style="color:#ae81ff">0x71</span>, <span style="color:#ae81ff">0xA9</span>, <span style="color:#ae81ff">0xCE</span>, <span style="color:#ae81ff">0xC3</span>, <span style="color:#ae81ff">0x34</span>, <span style="color:#ae81ff">0x50</span>, <span style="color:#ae81ff">0x59</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xBF</span>, <span style="color:#ae81ff">0x2D</span>, <span style="color:#ae81ff">0x57</span>, <span style="color:#ae81ff">0x22</span>, <span style="color:#ae81ff">0xA6</span>, <span style="color:#ae81ff">0x30</span>, <span style="color:#ae81ff">0x04</span>, <span style="color:#ae81ff">0xB2</span>, <span style="color:#ae81ff">0xCD</span>, <span style="color:#ae81ff">0x36</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xD5</span>, <span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0x4D</span>, <span style="color:#ae81ff">0x5B</span>, <span style="color:#ae81ff">0x45</span>, <span style="color:#ae81ff">0x9E</span>, <span style="color:#ae81ff">0x85</span>, <span style="color:#ae81ff">0xCF</span>, <span style="color:#ae81ff">0x9D</span>, <span style="color:#ae81ff">0xCC</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x61</span>, <span style="color:#ae81ff">0x78</span>, <span style="color:#ae81ff">0x32</span>, <span style="color:#ae81ff">0x76</span>, <span style="color:#ae81ff">0x31</span>, <span style="color:#ae81ff">0xE3</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0xAD</span>, <span style="color:#ae81ff">0x39</span>, <span style="color:#ae81ff">0x4F</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xFA</span>, <span style="color:#ae81ff">0x72</span>, <span style="color:#ae81ff">0x83</span>, <span style="color:#ae81ff">0x4C</span>, <span style="color:#ae81ff">0x86</span>, <span style="color:#ae81ff">0x60</span>, <span style="color:#ae81ff">0xB7</span>, <span style="color:#ae81ff">0xD7</span>, <span style="color:#ae81ff">0x63</span>, <span style="color:#ae81ff">0x0C</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x44</span>, <span style="color:#ae81ff">0x35</span>, <span style="color:#ae81ff">0xB3</span>, <span style="color:#ae81ff">0x7B</span>, <span style="color:#ae81ff">0x19</span>, <span style="color:#ae81ff">0xD4</span>, <span style="color:#ae81ff">0x69</span>, <span style="color:#ae81ff">0x08</span>, <span style="color:#ae81ff">0x0B</span>, <span style="color:#ae81ff">0x1F</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x3D</span>, <span style="color:#ae81ff">0x11</span>, <span style="color:#ae81ff">0x79</span>, <span style="color:#ae81ff">0xD3</span>, <span style="color:#ae81ff">0xEE</span>, <span style="color:#ae81ff">0x93</span>, <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0xDE</span>, <span style="color:#ae81ff">0x23</span>, <span style="color:#ae81ff">0x3B</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x5D</span>, <span style="color:#ae81ff">0x8D</span>, <span style="color:#ae81ff">0xA5</span>, <span style="color:#ae81ff">0x77</span>, <span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0xDB</span>, <span style="color:#ae81ff">0x97</span>, <span style="color:#ae81ff">0xF6</span>, <span style="color:#ae81ff">0x7A</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x18</span>, <span style="color:#ae81ff">0x52</span>, <span style="color:#ae81ff">0x15</span>, <span style="color:#ae81ff">0x74</span>, <span style="color:#ae81ff">0x25</span>, <span style="color:#ae81ff">0x62</span>, <span style="color:#ae81ff">0x2C</span>, <span style="color:#ae81ff">0x05</span>, <span style="color:#ae81ff">0xE8</span>, <span style="color:#ae81ff">0x0D</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x98</span>, <span style="color:#ae81ff">0x2A</span>, <span style="color:#ae81ff">0x43</span>, <span style="color:#ae81ff">0xE2</span>, <span style="color:#ae81ff">0xEF</span>, <span style="color:#ae81ff">0x48</span>, <span style="color:#ae81ff">0x87</span>, <span style="color:#ae81ff">0x49</span>, <span style="color:#ae81ff">0x1C</span>, <span style="color:#ae81ff">0xCA</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x2B</span>, <span style="color:#ae81ff">0xA7</span>, <span style="color:#ae81ff">0x8A</span>, <span style="color:#ae81ff">0x09</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0xE7</span>, <span style="color:#ae81ff">0x53</span>, <span style="color:#ae81ff">0xAA</span>, <span style="color:#ae81ff">0xFF</span>, <span style="color:#ae81ff">0x6F</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x8E</span>, <span style="color:#ae81ff">0x91</span>, <span style="color:#ae81ff">0xF1</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0xA4</span>, <span style="color:#ae81ff">0x46</span>, <span style="color:#ae81ff">0x3A</span>, <span style="color:#ae81ff">0x7D</span>, <span style="color:#ae81ff">0x54</span>, <span style="color:#ae81ff">0xEB</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x2F</span>, <span style="color:#ae81ff">0xC1</span>, <span style="color:#ae81ff">0xC0</span>, <span style="color:#ae81ff">0x0E</span>, <span style="color:#ae81ff">0xBD</span>, <span style="color:#ae81ff">0xE1</span>, <span style="color:#ae81ff">0x6C</span>, <span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0xBE</span>, <span style="color:#ae81ff">0xE4</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x02</span>, <span style="color:#ae81ff">0x3C</span>, <span style="color:#ae81ff">0x5A</span>, <span style="color:#ae81ff">0xA8</span>, <span style="color:#ae81ff">0x9F</span>, <span style="color:#ae81ff">0x37</span>, <span style="color:#ae81ff">0xAF</span>, <span style="color:#ae81ff">0xA0</span>, <span style="color:#ae81ff">0x13</span>, <span style="color:#ae81ff">0xED</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x1B</span>, <span style="color:#ae81ff">0xEC</span>, <span style="color:#ae81ff">0x8B</span>, <span style="color:#ae81ff">0x3E</span>, <span style="color:#ae81ff">0x7E</span>, <span style="color:#ae81ff">0x27</span>, <span style="color:#ae81ff">0x99</span>, <span style="color:#ae81ff">0x75</span>, <span style="color:#ae81ff">0xAB</span>, <span style="color:#ae81ff">0xFE</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xD9</span>, <span style="color:#ae81ff">0x3F</span>, <span style="color:#ae81ff">0xF3</span>, <span style="color:#ae81ff">0xEA</span>, <span style="color:#ae81ff">0x70</span>, <span style="color:#ae81ff">0xF7</span>, <span style="color:#ae81ff">0x95</span>, <span style="color:#ae81ff">0xBA</span>, <span style="color:#ae81ff">0x1D</span>, <span style="color:#ae81ff">0x40</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xB0</span>, <span style="color:#ae81ff">0xF9</span>, <span style="color:#ae81ff">0xE5</span>, <span style="color:#ae81ff">0xF8</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0xBC</span>, <span style="color:#ae81ff">0xB6</span>, <span style="color:#ae81ff">0x03</span>, <span style="color:#ae81ff">0xC9</span>, <span style="color:#ae81ff">0x10</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x9C</span>, <span style="color:#ae81ff">0x2E</span>, <span style="color:#ae81ff">0x89</span>, <span style="color:#ae81ff">0x5C</span>, <span style="color:#ae81ff">0x7F</span>, <span style="color:#ae81ff">0xB1</span>, <span style="color:#ae81ff">0x1A</span>, <span style="color:#ae81ff">0xD6</span>, <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0xAE</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xDA</span>, <span style="color:#ae81ff">0xE6</span>, <span style="color:#ae81ff">0x5E</span>, <span style="color:#ae81ff">0xB9</span>, <span style="color:#ae81ff">0x84</span>, <span style="color:#ae81ff">0xE9</span>, <span style="color:#ae81ff">0x55</span>, <span style="color:#ae81ff">0xBB</span>, <span style="color:#ae81ff">0xC7</span>, <span style="color:#ae81ff">0x0A</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0xE0</span>, <span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0xF2</span>, <span style="color:#ae81ff">0xD8</span>, <span style="color:#ae81ff">0xCB</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x12</span>, <span style="color:#ae81ff">0xB8</span>, <span style="color:#ae81ff">0x17</span>, <span style="color:#ae81ff">0x94</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x6A</span>, <span style="color:#ae81ff">0x4A</span>, <span style="color:#ae81ff">0x01</span>, <span style="color:#ae81ff">0x24</span>, <span style="color:#ae81ff">0x14</span>, <span style="color:#ae81ff">0x51</span>, <span style="color:#ae81ff">0x07</span>, <span style="color:#ae81ff">0x65</span>, <span style="color:#ae81ff">0x21</span>, <span style="color:#ae81ff">0xC8</span>, 
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">0x38</span>, <span style="color:#ae81ff">0xFD</span>, <span style="color:#ae81ff">0x8F</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0xF5</span>, <span style="color:#ae81ff">0xFC</span>
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> byte_404220[<span style="color:#ae81ff">520</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> byte_404420[<span style="color:#ae81ff">65537</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> dword_404100[] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0x40</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sub_401580</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>a2) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> v2; <span style="color:#75715e">// ebp
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v3; <span style="color:#75715e">// eax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>v4; <span style="color:#75715e">// esi
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v5; <span style="color:#75715e">// ecx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v6; <span style="color:#75715e">// edi
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v7; <span style="color:#75715e">// ecx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v8; <span style="color:#75715e">// edx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v9; <span style="color:#75715e">// eax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v10; <span style="color:#75715e">// ecx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v11; <span style="color:#75715e">// esi
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v12; <span style="color:#75715e">// eax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> v13; <span style="color:#75715e">// dl
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v14; <span style="color:#75715e">// edi
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v15; <span style="color:#75715e">// eax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v16; <span style="color:#75715e">// ecx
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v17; <span style="color:#75715e">// esi
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> i; <span style="color:#75715e">// eax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> v19; <span style="color:#75715e">// dl
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> v21; <span style="color:#75715e">// [esp+10h] [ebp-Ch]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> v22; <span style="color:#75715e">// [esp+11h] [ebp-Bh]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> v23; <span style="color:#75715e">// [esp+12h] [ebp-Ah]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> v24; <span style="color:#75715e">// [esp+13h] [ebp-9h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v25; <span style="color:#75715e">// [esp+14h] [ebp-8h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  v21 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v22 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v23 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v24 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>  v25 <span style="color:#f92672">=</span> byte_404420;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">8</span>; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>    byte_404000[i] <span style="color:#f92672">=</span> a2[i];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    byte_404220[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> byte_404000[v2 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>];
+</span></span><span style="display:flex;"><span>    byte_404220[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> v2;
+</span></span><span style="display:flex;"><span>    v3 <span style="color:#f92672">=</span> byte_404220;
+</span></span><span style="display:flex;"><span>    v4 <span style="color:#f92672">=</span> dword_404100;
+</span></span><span style="display:flex;"><span>    v5 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>byte_404220[dword_404100[<span style="color:#ae81ff">0</span>]];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      v6 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>v4;                                 <span style="color:#75715e">// 2, 4, 8, 10h, 20h, 40h, 80h
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>v4 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> )
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          v7 <span style="color:#f92672">=</span> v5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">*</span>(v7 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">=</span> byte_404000[<span style="color:#f92672">*</span>v3];
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">*</span>v7 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>v3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>          v5 <span style="color:#f92672">=</span> v7 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">++</span>v3;
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">--</span>v6;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> ( v6 );
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">++</span>v4;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ( v4 <span style="color:#f92672">&lt;</span> <span style="color:#f92672">&amp;</span>(dword_404100[<span style="color:#ae81ff">7</span>]) );
+</span></span><span style="display:flex;"><span>    v8 <span style="color:#f92672">=</span> <span style="color:#ae81ff">256</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">++</span>v25[<span style="color:#f92672">*</span>v3<span style="color:#f92672">++</span>];
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">--</span>v8;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ( v8 );
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">++</span>v2;
+</span></span><span style="display:flex;"><span>    v25 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">256</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( v2 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">256</span> );
+</span></span><span style="display:flex;"><span>  v9 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>byte_404420[<span style="color:#ae81ff">0x28</span>];
+</span></span><span style="display:flex;"><span>  v10 <span style="color:#f92672">=</span> <span style="color:#ae81ff">256</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>(v9 <span style="color:#f92672">-</span> <span style="color:#ae81ff">40</span>) )
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">++</span>v21;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>(v9 <span style="color:#f92672">-</span> <span style="color:#ae81ff">26</span>) )
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">++</span>v22;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>v9 )
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">++</span>v23;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( v9[<span style="color:#ae81ff">39</span>] )
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">++</span>v24;
+</span></span><span style="display:flex;"><span>    v9 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">256</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">--</span>v10;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( v10 );
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v21 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xA9</span> <span style="color:#f92672">&amp;&amp;</span> v22 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xAC</span> <span style="color:#f92672">&amp;&amp;</span> v23 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xA7</span> <span style="color:#f92672">&amp;&amp;</span> v24 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0xC8u</span> ){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">8</span>; i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>      printf(<span style="color:#e6db74">&#34;%hhX&#34;</span>, a2[i]);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> flag[] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0x1e</span>, <span style="color:#ae81ff">0x28</span>, <span style="color:#ae81ff">0x4b</span>, <span style="color:#ae81ff">0x6d</span>, <span style="color:#ae81ff">0x8c</span>, <span style="color:#ae81ff">0xa3</span>, <span style="color:#ae81ff">0xd2</span>, <span style="color:#ae81ff">0xfb</span>};
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span>{
+</span></span><span style="display:flex;"><span>    memset(byte_404420, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">65536</span>);
+</span></span><span style="display:flex;"><span>    sub_401580(flag);
+</span></span><span style="display:flex;"><span>  }<span style="color:#66d9ef">while</span> (next_permutation(flag, flag <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>));
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>转换一下得到前八字节 <code>B4D682C8BF2DE13A</code></p>
 <p>确定前八字节后，只需要关注和参数（后八字节）有关的部分了，中间全部动调跳过</p>
 <p><figure 
 	
@@ -397,83 +397,83 @@
 </figure></p>
 <p>这一部分程序相较来说就简单了不少，主要是根据404000开头的八个字节作为初始值，每个字节单独与输入的八个字节进行运算，根据末尾bit决定是+1还是找索引，最终目的是凑成 <code>GoodJob~</code> 这个字符串（<code>sub_4024C0</code> 是个字符串比较）</p>
 <p>可以使用搜索之类的，但考虑到每个字节是单独运算的，常规爆破也只需要 <code>0x800</code> 的运算量，所以还是直接爆破了</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> byte_414420[] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0xC1</span>, <span style="color:#ae81ff">0x9B</span>, <span style="color:#ae81ff">0x7F</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0xD5</span>, <span style="color:#ae81ff">0x77</span>, <span style="color:#ae81ff">0x21</span>};
-
-<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> byte_404000[] <span style="color:#f92672">=</span> {
-    <span style="color:#ae81ff">0xC1</span>, <span style="color:#ae81ff">0x9B</span>, <span style="color:#ae81ff">0x7F</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0xD5</span>, <span style="color:#ae81ff">0x77</span>, <span style="color:#ae81ff">0x21</span>, <span style="color:#ae81ff">0x74</span>, <span style="color:#ae81ff">0xEB</span>, 
-    <span style="color:#ae81ff">0x14</span>, <span style="color:#ae81ff">0xBF</span>, <span style="color:#ae81ff">0xDF</span>, <span style="color:#ae81ff">0x25</span>, <span style="color:#ae81ff">0x5A</span>, <span style="color:#ae81ff">0x37</span>, <span style="color:#ae81ff">0x85</span>, <span style="color:#ae81ff">0x2C</span>, <span style="color:#ae81ff">0xAF</span>, <span style="color:#ae81ff">0x8C</span>, 
-    <span style="color:#ae81ff">0xDA</span>, <span style="color:#ae81ff">0x26</span>, <span style="color:#ae81ff">0xE2</span>, <span style="color:#ae81ff">0x7A</span>, <span style="color:#ae81ff">0x87</span>, <span style="color:#ae81ff">0x4C</span>, <span style="color:#ae81ff">0x60</span>, <span style="color:#ae81ff">0x99</span>, <span style="color:#ae81ff">0x54</span>, <span style="color:#ae81ff">0x3C</span>, 
-    <span style="color:#ae81ff">0x95</span>, <span style="color:#ae81ff">0xC0</span>, <span style="color:#ae81ff">0xB9</span>, <span style="color:#ae81ff">0x0C</span>, <span style="color:#ae81ff">0xBC</span>, <span style="color:#ae81ff">0x0E</span>, <span style="color:#ae81ff">0xE7</span>, <span style="color:#ae81ff">0x2D</span>, <span style="color:#ae81ff">0x86</span>, <span style="color:#ae81ff">0xBE</span>, 
-    <span style="color:#ae81ff">0x67</span>, <span style="color:#ae81ff">0xD3</span>, <span style="color:#ae81ff">0xD8</span>, <span style="color:#ae81ff">0xFC</span>, <span style="color:#ae81ff">0x30</span>, <span style="color:#ae81ff">0xB6</span>, <span style="color:#ae81ff">0xC8</span>, <span style="color:#ae81ff">0x57</span>, <span style="color:#ae81ff">0x1E</span>, <span style="color:#ae81ff">0x62</span>, 
-    <span style="color:#ae81ff">0x3E</span>, <span style="color:#ae81ff">0xCE</span>, <span style="color:#ae81ff">0xA0</span>, <span style="color:#ae81ff">0xCD</span>, <span style="color:#ae81ff">0xF5</span>, <span style="color:#ae81ff">0xEE</span>, <span style="color:#ae81ff">0xA7</span>, <span style="color:#ae81ff">0xCF</span>, <span style="color:#ae81ff">0x45</span>, <span style="color:#ae81ff">0xFE</span>, 
-    <span style="color:#ae81ff">0xD0</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0x05</span>, <span style="color:#ae81ff">0xAD</span>, <span style="color:#ae81ff">0x13</span>, <span style="color:#ae81ff">0xF3</span>, <span style="color:#ae81ff">0xB7</span>, <span style="color:#ae81ff">0x6B</span>, <span style="color:#ae81ff">0x22</span>, <span style="color:#ae81ff">0x2B</span>, 
-    <span style="color:#ae81ff">0xBD</span>, <span style="color:#ae81ff">0x69</span>, <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0x4B</span>, <span style="color:#ae81ff">0xA5</span>, <span style="color:#ae81ff">0xEA</span>, <span style="color:#ae81ff">0xA6</span>, <span style="color:#ae81ff">0xD2</span>, <span style="color:#ae81ff">0x6F</span>, <span style="color:#ae81ff">0x4F</span>, 
-    <span style="color:#ae81ff">0x4E</span>, <span style="color:#ae81ff">0x07</span>, <span style="color:#ae81ff">0xE1</span>, <span style="color:#ae81ff">0x36</span>, <span style="color:#ae81ff">0x01</span>, <span style="color:#ae81ff">0xB5</span>, <span style="color:#ae81ff">0xAA</span>, <span style="color:#ae81ff">0xB1</span>, <span style="color:#ae81ff">0x94</span>, <span style="color:#ae81ff">0x0B</span>, 
-    <span style="color:#ae81ff">0x35</span>, <span style="color:#ae81ff">0x3A</span>, <span style="color:#ae81ff">0xC7</span>, <span style="color:#ae81ff">0x49</span>, <span style="color:#ae81ff">0x53</span>, <span style="color:#ae81ff">0x82</span>, <span style="color:#ae81ff">0xC3</span>, <span style="color:#ae81ff">0x7B</span>, <span style="color:#ae81ff">0x32</span>, <span style="color:#ae81ff">0xFF</span>, 
-    <span style="color:#ae81ff">0x19</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0xF1</span>, <span style="color:#ae81ff">0xC9</span>, <span style="color:#ae81ff">0xE8</span>, <span style="color:#ae81ff">0xF7</span>, <span style="color:#ae81ff">0x56</span>, <span style="color:#ae81ff">0x15</span>, <span style="color:#ae81ff">0xA3</span>, <span style="color:#ae81ff">0x46</span>, 
-    <span style="color:#ae81ff">0x89</span>, <span style="color:#ae81ff">0x43</span>, <span style="color:#ae81ff">0x9D</span>, <span style="color:#ae81ff">0x8F</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0xEF</span>, <span style="color:#ae81ff">0xBB</span>, <span style="color:#ae81ff">0x2A</span>, <span style="color:#ae81ff">0xCB</span>, <span style="color:#ae81ff">0x09</span>, 
-    <span style="color:#ae81ff">0x93</span>, <span style="color:#ae81ff">0x4A</span>, <span style="color:#ae81ff">0x1C</span>, <span style="color:#ae81ff">0xE3</span>, <span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0xD1</span>, <span style="color:#ae81ff">0xE0</span>, <span style="color:#ae81ff">0x1D</span>, <span style="color:#ae81ff">0x72</span>, <span style="color:#ae81ff">0x7C</span>, 
-    <span style="color:#ae81ff">0x27</span>, <span style="color:#ae81ff">0xE9</span>, <span style="color:#ae81ff">0x17</span>, <span style="color:#ae81ff">0x28</span>, <span style="color:#ae81ff">0x6D</span>, <span style="color:#ae81ff">0x6A</span>, <span style="color:#ae81ff">0xD9</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x9A</span>, <span style="color:#ae81ff">0xE5</span>, 
-    <span style="color:#ae81ff">0x63</span>, <span style="color:#ae81ff">0xDE</span>, <span style="color:#ae81ff">0x23</span>, <span style="color:#ae81ff">0x9F</span>, <span style="color:#ae81ff">0x0D</span>, <span style="color:#ae81ff">0x47</span>, <span style="color:#ae81ff">0x3B</span>, <span style="color:#ae81ff">0x65</span>, <span style="color:#ae81ff">0x08</span>, <span style="color:#ae81ff">0x84</span>, 
-    <span style="color:#ae81ff">0x6C</span>, <span style="color:#ae81ff">0x1A</span>, <span style="color:#ae81ff">0x88</span>, <span style="color:#ae81ff">0x12</span>, <span style="color:#ae81ff">0xA1</span>, <span style="color:#ae81ff">0xA4</span>, <span style="color:#ae81ff">0xB3</span>, <span style="color:#ae81ff">0x18</span>, <span style="color:#ae81ff">0x24</span>, <span style="color:#ae81ff">0x1B</span>, 
-    <span style="color:#ae81ff">0xD7</span>, <span style="color:#ae81ff">0x44</span>, <span style="color:#ae81ff">0xDB</span>, <span style="color:#ae81ff">0xAC</span>, <span style="color:#ae81ff">0x6E</span>, <span style="color:#ae81ff">0x7D</span>, <span style="color:#ae81ff">0x51</span>, <span style="color:#ae81ff">0x5E</span>, <span style="color:#ae81ff">0xED</span>, <span style="color:#ae81ff">0x50</span>, 
-    <span style="color:#ae81ff">0xD6</span>, <span style="color:#ae81ff">0x11</span>, <span style="color:#ae81ff">0x5B</span>, <span style="color:#ae81ff">0x9C</span>, <span style="color:#ae81ff">0xB4</span>, <span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0x3D</span>, <span style="color:#ae81ff">0x2F</span>, <span style="color:#ae81ff">0x03</span>, <span style="color:#ae81ff">0x40</span>, 
-    <span style="color:#ae81ff">0xBA</span>, <span style="color:#ae81ff">0x2E</span>, <span style="color:#ae81ff">0xCA</span>, <span style="color:#ae81ff">0x02</span>, <span style="color:#ae81ff">0xE6</span>, <span style="color:#ae81ff">0xA8</span>, <span style="color:#ae81ff">0xEC</span>, <span style="color:#ae81ff">0x83</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x5D</span>, 
-    <span style="color:#ae81ff">0xB8</span>, <span style="color:#ae81ff">0x4D</span>, <span style="color:#ae81ff">0x97</span>, <span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0xFB</span>, <span style="color:#ae81ff">0x8A</span>, <span style="color:#ae81ff">0x55</span>, <span style="color:#ae81ff">0xAB</span>, <span style="color:#ae81ff">0xB2</span>, 
-    <span style="color:#ae81ff">0x04</span>, <span style="color:#ae81ff">0xFA</span>, <span style="color:#ae81ff">0x0A</span>, <span style="color:#ae81ff">0x31</span>, <span style="color:#ae81ff">0x71</span>, <span style="color:#ae81ff">0xCC</span>, <span style="color:#ae81ff">0x8B</span>, <span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0xA9</span>, <span style="color:#ae81ff">0x48</span>, 
-    <span style="color:#ae81ff">0x5C</span>, <span style="color:#ae81ff">0xF9</span>, <span style="color:#ae81ff">0x98</span>, <span style="color:#ae81ff">0xE4</span>, <span style="color:#ae81ff">0xC6</span>, <span style="color:#ae81ff">0x34</span>, <span style="color:#ae81ff">0xC5</span>, <span style="color:#ae81ff">0x7E</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x75</span>, 
-    <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0x1F</span>, <span style="color:#ae81ff">0x92</span>, <span style="color:#ae81ff">0x3F</span>, <span style="color:#ae81ff">0x9E</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0x29</span>, <span style="color:#ae81ff">0x52</span>, <span style="color:#ae81ff">0x39</span>, <span style="color:#ae81ff">0xF4</span>, 
-    <span style="color:#ae81ff">0x41</span>, <span style="color:#ae81ff">0x78</span>, <span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0x16</span>, <span style="color:#ae81ff">0x79</span>, <span style="color:#ae81ff">0xC2</span>, <span style="color:#ae81ff">0xB0</span>, <span style="color:#ae81ff">0xDD</span>, <span style="color:#ae81ff">0xF2</span>, <span style="color:#ae81ff">0x61</span>, 
-    <span style="color:#ae81ff">0x0F</span>, <span style="color:#ae81ff">0x70</span>, <span style="color:#ae81ff">0xD4</span>, <span style="color:#ae81ff">0x91</span>, <span style="color:#ae81ff">0xDC</span>, <span style="color:#ae81ff">0xF6</span>, <span style="color:#ae81ff">0xF8</span>, <span style="color:#ae81ff">0xFD</span>, <span style="color:#ae81ff">0x59</span>, <span style="color:#ae81ff">0x38</span>, 
-    <span style="color:#ae81ff">0x8D</span>, <span style="color:#ae81ff">0x96</span>, <span style="color:#ae81ff">0xAE</span>, <span style="color:#ae81ff">0x8E</span>, <span style="color:#ae81ff">0x76</span>, <span style="color:#ae81ff">0xA2</span>
-};
-
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">calc</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> a2, <span style="color:#66d9ef">int</span> i){
-  <span style="color:#66d9ef">int</span> v17; <span style="color:#75715e">// esi
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> v19; <span style="color:#75715e">// dl
-</span><span style="color:#75715e"></span>  v17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">do</span>
-    {
-        <span style="color:#66d9ef">if</span> ( v17 <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">8</span> )
-        {
-          <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>i <span style="color:#f92672">||</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">7</span> )
-            <span style="color:#f92672">--</span>byte_414420[i];
-        }
-        <span style="color:#66d9ef">else</span>
-        {
-            <span style="color:#66d9ef">if</span> ( (a2 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> )
-                v19 <span style="color:#f92672">=</span> byte_414420[i] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-            <span style="color:#66d9ef">else</span>
-                v19 <span style="color:#f92672">=</span> byte_404000[byte_414420[i]];
-            byte_414420[i] <span style="color:#f92672">=</span> v19;
-            a2 <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#ae81ff">1</span>;
-        }
-        <span style="color:#f92672">++</span>v17;
-    }
-    <span style="color:#66d9ef">while</span> ( v17 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">9</span> );
-    <span style="color:#66d9ef">return</span> byte_414420[i];
-}
-
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
-    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> a <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> b[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;GoodJob~&#34;</span>;
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">8</span>; j<span style="color:#f92672">++</span>){
-        <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x100</span>; i<span style="color:#f92672">++</span>){
-            a <span style="color:#f92672">=</span> i <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>;
-            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; k <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">8</span>; k<span style="color:#f92672">++</span>){
-                byte_414420[k] <span style="color:#f92672">=</span> byte_404000[k];
-            }
-            calc(a, j);
-            <span style="color:#66d9ef">if</span> (byte_414420[j] <span style="color:#f92672">==</span> b[j])
-                printf(<span style="color:#e6db74">&#34;%d %x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, j, a);
-        }
-    }
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-}
-</code></pre></div><p>最后得到下半段验证码 <code>D9B6AEF24A80CB22</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> byte_414420[] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0xC1</span>, <span style="color:#ae81ff">0x9B</span>, <span style="color:#ae81ff">0x7F</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0xD5</span>, <span style="color:#ae81ff">0x77</span>, <span style="color:#ae81ff">0x21</span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> byte_404000[] <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xC1</span>, <span style="color:#ae81ff">0x9B</span>, <span style="color:#ae81ff">0x7F</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0x64</span>, <span style="color:#ae81ff">0xD5</span>, <span style="color:#ae81ff">0x77</span>, <span style="color:#ae81ff">0x21</span>, <span style="color:#ae81ff">0x74</span>, <span style="color:#ae81ff">0xEB</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x14</span>, <span style="color:#ae81ff">0xBF</span>, <span style="color:#ae81ff">0xDF</span>, <span style="color:#ae81ff">0x25</span>, <span style="color:#ae81ff">0x5A</span>, <span style="color:#ae81ff">0x37</span>, <span style="color:#ae81ff">0x85</span>, <span style="color:#ae81ff">0x2C</span>, <span style="color:#ae81ff">0xAF</span>, <span style="color:#ae81ff">0x8C</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xDA</span>, <span style="color:#ae81ff">0x26</span>, <span style="color:#ae81ff">0xE2</span>, <span style="color:#ae81ff">0x7A</span>, <span style="color:#ae81ff">0x87</span>, <span style="color:#ae81ff">0x4C</span>, <span style="color:#ae81ff">0x60</span>, <span style="color:#ae81ff">0x99</span>, <span style="color:#ae81ff">0x54</span>, <span style="color:#ae81ff">0x3C</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x95</span>, <span style="color:#ae81ff">0xC0</span>, <span style="color:#ae81ff">0xB9</span>, <span style="color:#ae81ff">0x0C</span>, <span style="color:#ae81ff">0xBC</span>, <span style="color:#ae81ff">0x0E</span>, <span style="color:#ae81ff">0xE7</span>, <span style="color:#ae81ff">0x2D</span>, <span style="color:#ae81ff">0x86</span>, <span style="color:#ae81ff">0xBE</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x67</span>, <span style="color:#ae81ff">0xD3</span>, <span style="color:#ae81ff">0xD8</span>, <span style="color:#ae81ff">0xFC</span>, <span style="color:#ae81ff">0x30</span>, <span style="color:#ae81ff">0xB6</span>, <span style="color:#ae81ff">0xC8</span>, <span style="color:#ae81ff">0x57</span>, <span style="color:#ae81ff">0x1E</span>, <span style="color:#ae81ff">0x62</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x3E</span>, <span style="color:#ae81ff">0xCE</span>, <span style="color:#ae81ff">0xA0</span>, <span style="color:#ae81ff">0xCD</span>, <span style="color:#ae81ff">0xF5</span>, <span style="color:#ae81ff">0xEE</span>, <span style="color:#ae81ff">0xA7</span>, <span style="color:#ae81ff">0xCF</span>, <span style="color:#ae81ff">0x45</span>, <span style="color:#ae81ff">0xFE</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xD0</span>, <span style="color:#ae81ff">0x80</span>, <span style="color:#ae81ff">0x05</span>, <span style="color:#ae81ff">0xAD</span>, <span style="color:#ae81ff">0x13</span>, <span style="color:#ae81ff">0xF3</span>, <span style="color:#ae81ff">0xB7</span>, <span style="color:#ae81ff">0x6B</span>, <span style="color:#ae81ff">0x22</span>, <span style="color:#ae81ff">0x2B</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xBD</span>, <span style="color:#ae81ff">0x69</span>, <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0x4B</span>, <span style="color:#ae81ff">0xA5</span>, <span style="color:#ae81ff">0xEA</span>, <span style="color:#ae81ff">0xA6</span>, <span style="color:#ae81ff">0xD2</span>, <span style="color:#ae81ff">0x6F</span>, <span style="color:#ae81ff">0x4F</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x4E</span>, <span style="color:#ae81ff">0x07</span>, <span style="color:#ae81ff">0xE1</span>, <span style="color:#ae81ff">0x36</span>, <span style="color:#ae81ff">0x01</span>, <span style="color:#ae81ff">0xB5</span>, <span style="color:#ae81ff">0xAA</span>, <span style="color:#ae81ff">0xB1</span>, <span style="color:#ae81ff">0x94</span>, <span style="color:#ae81ff">0x0B</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x35</span>, <span style="color:#ae81ff">0x3A</span>, <span style="color:#ae81ff">0xC7</span>, <span style="color:#ae81ff">0x49</span>, <span style="color:#ae81ff">0x53</span>, <span style="color:#ae81ff">0x82</span>, <span style="color:#ae81ff">0xC3</span>, <span style="color:#ae81ff">0x7B</span>, <span style="color:#ae81ff">0x32</span>, <span style="color:#ae81ff">0xFF</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x19</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0xF1</span>, <span style="color:#ae81ff">0xC9</span>, <span style="color:#ae81ff">0xE8</span>, <span style="color:#ae81ff">0xF7</span>, <span style="color:#ae81ff">0x56</span>, <span style="color:#ae81ff">0x15</span>, <span style="color:#ae81ff">0xA3</span>, <span style="color:#ae81ff">0x46</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x89</span>, <span style="color:#ae81ff">0x43</span>, <span style="color:#ae81ff">0x9D</span>, <span style="color:#ae81ff">0x8F</span>, <span style="color:#ae81ff">0x20</span>, <span style="color:#ae81ff">0xEF</span>, <span style="color:#ae81ff">0xBB</span>, <span style="color:#ae81ff">0x2A</span>, <span style="color:#ae81ff">0xCB</span>, <span style="color:#ae81ff">0x09</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x93</span>, <span style="color:#ae81ff">0x4A</span>, <span style="color:#ae81ff">0x1C</span>, <span style="color:#ae81ff">0xE3</span>, <span style="color:#ae81ff">0x33</span>, <span style="color:#ae81ff">0xD1</span>, <span style="color:#ae81ff">0xE0</span>, <span style="color:#ae81ff">0x1D</span>, <span style="color:#ae81ff">0x72</span>, <span style="color:#ae81ff">0x7C</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x27</span>, <span style="color:#ae81ff">0xE9</span>, <span style="color:#ae81ff">0x17</span>, <span style="color:#ae81ff">0x28</span>, <span style="color:#ae81ff">0x6D</span>, <span style="color:#ae81ff">0x6A</span>, <span style="color:#ae81ff">0xD9</span>, <span style="color:#ae81ff">0x00</span>, <span style="color:#ae81ff">0x9A</span>, <span style="color:#ae81ff">0xE5</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x63</span>, <span style="color:#ae81ff">0xDE</span>, <span style="color:#ae81ff">0x23</span>, <span style="color:#ae81ff">0x9F</span>, <span style="color:#ae81ff">0x0D</span>, <span style="color:#ae81ff">0x47</span>, <span style="color:#ae81ff">0x3B</span>, <span style="color:#ae81ff">0x65</span>, <span style="color:#ae81ff">0x08</span>, <span style="color:#ae81ff">0x84</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x6C</span>, <span style="color:#ae81ff">0x1A</span>, <span style="color:#ae81ff">0x88</span>, <span style="color:#ae81ff">0x12</span>, <span style="color:#ae81ff">0xA1</span>, <span style="color:#ae81ff">0xA4</span>, <span style="color:#ae81ff">0xB3</span>, <span style="color:#ae81ff">0x18</span>, <span style="color:#ae81ff">0x24</span>, <span style="color:#ae81ff">0x1B</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xD7</span>, <span style="color:#ae81ff">0x44</span>, <span style="color:#ae81ff">0xDB</span>, <span style="color:#ae81ff">0xAC</span>, <span style="color:#ae81ff">0x6E</span>, <span style="color:#ae81ff">0x7D</span>, <span style="color:#ae81ff">0x51</span>, <span style="color:#ae81ff">0x5E</span>, <span style="color:#ae81ff">0xED</span>, <span style="color:#ae81ff">0x50</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xD6</span>, <span style="color:#ae81ff">0x11</span>, <span style="color:#ae81ff">0x5B</span>, <span style="color:#ae81ff">0x9C</span>, <span style="color:#ae81ff">0xB4</span>, <span style="color:#ae81ff">0x68</span>, <span style="color:#ae81ff">0x3D</span>, <span style="color:#ae81ff">0x2F</span>, <span style="color:#ae81ff">0x03</span>, <span style="color:#ae81ff">0x40</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xBA</span>, <span style="color:#ae81ff">0x2E</span>, <span style="color:#ae81ff">0xCA</span>, <span style="color:#ae81ff">0x02</span>, <span style="color:#ae81ff">0xE6</span>, <span style="color:#ae81ff">0xA8</span>, <span style="color:#ae81ff">0xEC</span>, <span style="color:#ae81ff">0x83</span>, <span style="color:#ae81ff">0x06</span>, <span style="color:#ae81ff">0x5D</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xB8</span>, <span style="color:#ae81ff">0x4D</span>, <span style="color:#ae81ff">0x97</span>, <span style="color:#ae81ff">0x66</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0xFB</span>, <span style="color:#ae81ff">0x8A</span>, <span style="color:#ae81ff">0x55</span>, <span style="color:#ae81ff">0xAB</span>, <span style="color:#ae81ff">0xB2</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x04</span>, <span style="color:#ae81ff">0xFA</span>, <span style="color:#ae81ff">0x0A</span>, <span style="color:#ae81ff">0x31</span>, <span style="color:#ae81ff">0x71</span>, <span style="color:#ae81ff">0xCC</span>, <span style="color:#ae81ff">0x8B</span>, <span style="color:#ae81ff">0x73</span>, <span style="color:#ae81ff">0xA9</span>, <span style="color:#ae81ff">0x48</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x5C</span>, <span style="color:#ae81ff">0xF9</span>, <span style="color:#ae81ff">0x98</span>, <span style="color:#ae81ff">0xE4</span>, <span style="color:#ae81ff">0xC6</span>, <span style="color:#ae81ff">0x34</span>, <span style="color:#ae81ff">0xC5</span>, <span style="color:#ae81ff">0x7E</span>, <span style="color:#ae81ff">0x81</span>, <span style="color:#ae81ff">0x75</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x90</span>, <span style="color:#ae81ff">0x1F</span>, <span style="color:#ae81ff">0x92</span>, <span style="color:#ae81ff">0x3F</span>, <span style="color:#ae81ff">0x9E</span>, <span style="color:#ae81ff">0x10</span>, <span style="color:#ae81ff">0x29</span>, <span style="color:#ae81ff">0x52</span>, <span style="color:#ae81ff">0x39</span>, <span style="color:#ae81ff">0xF4</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x41</span>, <span style="color:#ae81ff">0x78</span>, <span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0x16</span>, <span style="color:#ae81ff">0x79</span>, <span style="color:#ae81ff">0xC2</span>, <span style="color:#ae81ff">0xB0</span>, <span style="color:#ae81ff">0xDD</span>, <span style="color:#ae81ff">0xF2</span>, <span style="color:#ae81ff">0x61</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x0F</span>, <span style="color:#ae81ff">0x70</span>, <span style="color:#ae81ff">0xD4</span>, <span style="color:#ae81ff">0x91</span>, <span style="color:#ae81ff">0xDC</span>, <span style="color:#ae81ff">0xF6</span>, <span style="color:#ae81ff">0xF8</span>, <span style="color:#ae81ff">0xFD</span>, <span style="color:#ae81ff">0x59</span>, <span style="color:#ae81ff">0x38</span>, 
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x8D</span>, <span style="color:#ae81ff">0x96</span>, <span style="color:#ae81ff">0xAE</span>, <span style="color:#ae81ff">0x8E</span>, <span style="color:#ae81ff">0x76</span>, <span style="color:#ae81ff">0xA2</span>
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">calc</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> a2, <span style="color:#66d9ef">int</span> i){
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> v17; <span style="color:#75715e">// esi
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> v19; <span style="color:#75715e">// dl
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  v17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( v17 <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">8</span> )
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>i <span style="color:#f92672">||</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">7</span> )
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">--</span>byte_414420[i];
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> ( (a2 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> )
+</span></span><span style="display:flex;"><span>                v19 <span style="color:#f92672">=</span> byte_414420[i] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>                v19 <span style="color:#f92672">=</span> byte_404000[byte_414420[i]];
+</span></span><span style="display:flex;"><span>            byte_414420[i] <span style="color:#f92672">=</span> v19;
+</span></span><span style="display:flex;"><span>            a2 <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">++</span>v17;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ( v17 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">9</span> );
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> byte_414420[i];
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> a <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> b[] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;GoodJob~&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">8</span>; j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x100</span>; i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            a <span style="color:#f92672">=</span> i <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; k <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">8</span>; k<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>                byte_414420[k] <span style="color:#f92672">=</span> byte_404000[k];
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            calc(a, j);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (byte_414420[j] <span style="color:#f92672">==</span> b[j])
+</span></span><span style="display:flex;"><span>                printf(<span style="color:#e6db74">&#34;%d %x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, j, a);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最后得到下半段验证码 <code>D9B6AEF24A80CB22</code></p>
 <h2 id="第七题-声名远扬">第七题 声名远扬</h2>
 <blockquote>
 <p>这题做完后懒了，没有交wp</p>

@@ -146,159 +146,159 @@
 <h2 id="目前的修改友链">目前的修改——友链</h2>
 <p>Stack 主题本身是不带友链的，作者应该是正在写，但比较忙，也不知道什么时候能写完，于是就看了看别人的方案。直接搜能搜到一个方案，但讲得不是特别清楚，搭建失败了。后来在 pull request 里面发现有人实现了一个，作者没有采纳而已，于是就以这个作为临时方案了。</p>
 <p>主题 <code>assets/scss/style.scss</code> 27行添加：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#66d9ef">@import</span> <span style="color:#e6db74">&#34;partials/layout/links.scss&#34;</span>;
-</code></pre></div><p>新建 <code>assets/scss/partials/layout/links.scss</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#75715e">/* Place your custom SCSS in HUGO_SITE_FOLDER/assets/scss/custom.scss */</span>
-
-<span style="color:#75715e">// 头像边框颜色
-</span><span style="color:#75715e"></span>$avatar-border-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#566a82</span>;
-$avatar-border-color-dark<span style="color:#f92672">:</span> 	<span style="color:#ae81ff">#C0C0C0</span>;
-
-<span style="color:#75715e">// style-card 背景色
-</span><span style="color:#75715e"></span>$friend-link-background-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#51a8ca</span><span style="color:#ae81ff">10</span>;
-$friend-link-background-color-dark<span style="color:#f92672">:</span> <span style="color:#ae81ff">#696971</span><span style="color:#ae81ff">41</span>;
-
-<span style="color:#75715e">// 友链 name 原始色
-</span><span style="color:#75715e"></span>$friend-link-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#11a1a2</span>;
-$friend-link-color-dark<span style="color:#f92672">:</span> <span style="color:#ae81ff">#ffffff</span>;
-
-<span style="color:#75715e">// 友链 name 气泡响应对比色
-</span><span style="color:#75715e"></span>$friend-link-hover-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#ea4e2f</span>;
-$friend-link-hover-color-dark<span style="color:#f92672">:</span>	<span style="color:#a6e22e">rgb</span>(<span style="color:#ae81ff">241</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">213</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">159</span>);
-
-<span style="color:#75715e">// bio 简介上下文
-</span><span style="color:#75715e"></span>$context-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#404040</span>;
-$context-color-dark<span style="color:#f92672">:</span>	<span style="color:#ae81ff">#c0c0c0</span>;
-
-<span style="color:#75715e">// 友链头像及头像边框的样式
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-avatar</span> {
-    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">56</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">56</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">px</span> inset $avatar-border-color;
-    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
-        <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">px</span> inset $avatar-border-color-dark;   
-    }
-}
-
-<span style="color:#a6e22e">.friend-link-div</span> {
-    <span style="color:#75715e">// 实现卡片双栏排列效果
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> auto;
-    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> auto;
-    <span style="color:#a6e22e">margin-inline-start</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">.5</span><span style="color:#66d9ef">%</span>;
-    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">43</span><span style="color:#66d9ef">%</span>;
-    <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> inline-block <span style="color:#66d9ef">!important</span>;
-
-    <span style="color:#75715e">// 控制上下连续排列的卡片之间的行距
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">11</span><span style="color:#66d9ef">px</span>;
-
-    <span style="color:#75715e">// 卡片圆角
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span>;
-
-    <span style="color:#75715e">// 卡片阴影
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">-webkit-box-shadow</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">32</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#a6e22e">rgba</span>(<span style="color:#ae81ff">231</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">224</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">224</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.15</span>);
-    <span style="color:#a6e22e">-moz-box-shadow</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">32</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#a6e22e">rgba</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.15</span>);
-    <span style="color:#a6e22e">box-shadow</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#a6e22e">rgba</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.16</span>);
-
-    <span style="color:#75715e">// 卡片背景色
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">background</span><span style="color:#f92672">:</span> $friend-link-background-color;
-    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
-        <span style="color:#a6e22e">background</span><span style="color:#f92672">:</span> $friend-link-background-color-dark;
-    }
-
-    <span style="color:#75715e">// 卡牌气泡响应动画
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">-webkit-transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.4</span><span style="color:#66d9ef">s</span> ease;
-    <span style="color:#a6e22e">-moz-transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.4</span><span style="color:#66d9ef">s</span> ease;
-    <span style="color:#a6e22e">-o-transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.4</span><span style="color:#66d9ef">s</span> ease;
-    <span style="color:#a6e22e">transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.15</span><span style="color:#66d9ef">s</span> ease;
-    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">:hover</span> {
-        <span style="color:#a6e22e">transform</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">scale</span>(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">.03</span>);
-    }
-}
-
-
-<span style="color:#a6e22e">.friend-link-avatar</span> {
-    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">92</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">float</span><span style="color:#f92672">:</span> left;
-    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">px</span>;
-
-}
-
-<span style="color:#75715e">// name 特效样式， hover 气泡效果,友链 name 变色
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-link-info</span> {
-    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">13</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">18</span><span style="color:#66d9ef">px</span>;
-    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-color;
-
-    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
-        <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-color-dark;
-    }
-    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">:hover</span> {
-        <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-hover-color;
-        <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
-            <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-hover-color-dark;
-        }
-    }
-}
-
-<span style="color:#75715e">// name 文字样式
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-name</span> {
-    <span style="color:#a6e22e">text-overflow</span><span style="color:#f92672">:</span> ellipsis;
-    <span style="color:#a6e22e">overflow</span><span style="color:#f92672">:</span> hidden;
-    <span style="color:#a6e22e">white-space</span><span style="color:#f92672">:</span> nowrap;
-    <span style="color:#a6e22e">font-style</span><span style="color:#f92672">:</span> normal;
-    <span style="color:#a6e22e">font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Comic Sans MS&#39;</span><span style="color:#f92672">,</span>cursive;
-    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
-
-}
-
-<span style="color:#75715e">// bio 文字样式
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-bio</span> {
-    <span style="color:#a6e22e">text-overflow</span><span style="color:#f92672">:</span> ellipsis;
-    <span style="color:#a6e22e">overflow</span><span style="color:#f92672">:</span> hidden;
-    <span style="color:#a6e22e">white-space</span><span style="color:#f92672">:</span> nowrap;
-    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> auto;
-
-    <span style="color:#75715e">// font: 12px/1 Tahoma,Helvetica,Arial,&#34;\5b8b\4f53&#34;,sans-serif;
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">font-family</span><span style="color:#f92672">:</span> Helvetica<span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;Hiragino Sans GB&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;Microsoft Yahei&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;微软雅黑&#39;</span><span style="color:#f92672">,</span> Arial<span style="color:#f92672">,</span> sans-serif;
-    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
-
-    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $context-color;
-    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
-        <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $context-color-dark;
-    }
-}
-
-<span style="color:#75715e">// 响应式页面，允许根据不同的尺寸调整样式
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">@media</span> screen <span style="color:#f92672">and</span> (<span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">600</span><span style="color:#66d9ef">px</span>) {
-    <span style="color:#a6e22e">.friend-bio</span> {
-        <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> none;
-
-    }
-    <span style="color:#a6e22e">.friend-link-avatar</span> {
-        <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">84</span><span style="color:#66d9ef">px</span>;
-        <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> auto;
-    }
-    <span style="color:#a6e22e">.friend-link-info</span> {
-        <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
-        <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> auto;
-        <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> flex;
-        <span style="color:#a6e22e">align-items</span><span style="color:#f92672">:</span> center;
-        <span style="color:#a6e22e">justify-content</span><span style="color:#f92672">:</span> center;
-    }
-    <span style="color:#a6e22e">.friend-name</span> {
-        <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
-    }
-}
-</code></pre></div><p>接下来只需要在自己的 page 页面下加个 <code>links.md</code> 即可</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#66d9ef">@import</span> <span style="color:#e6db74">&#34;partials/layout/links.scss&#34;</span>;
+</span></span></code></pre></div><p>新建 <code>assets/scss/partials/layout/links.scss</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scss" data-lang="scss"><span style="display:flex;"><span><span style="color:#75715e">/* Place your custom SCSS in HUGO_SITE_FOLDER/assets/scss/custom.scss */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 头像边框颜色
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$avatar-border-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#566a82</span>;
+</span></span><span style="display:flex;"><span>$avatar-border-color-dark<span style="color:#f92672">:</span> 	<span style="color:#ae81ff">#C0C0C0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// style-card 背景色
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$friend-link-background-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#51a8ca</span><span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span>$friend-link-background-color-dark<span style="color:#f92672">:</span> <span style="color:#ae81ff">#696971</span><span style="color:#ae81ff">41</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 友链 name 原始色
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$friend-link-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#11a1a2</span>;
+</span></span><span style="display:flex;"><span>$friend-link-color-dark<span style="color:#f92672">:</span> <span style="color:#ae81ff">#ffffff</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 友链 name 气泡响应对比色
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$friend-link-hover-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#ea4e2f</span>;
+</span></span><span style="display:flex;"><span>$friend-link-hover-color-dark<span style="color:#f92672">:</span>	<span style="color:#a6e22e">rgb</span>(<span style="color:#ae81ff">241</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">213</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">159</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// bio 简介上下文
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>$context-color<span style="color:#f92672">:</span> <span style="color:#ae81ff">#404040</span>;
+</span></span><span style="display:flex;"><span>$context-color-dark<span style="color:#f92672">:</span>	<span style="color:#ae81ff">#c0c0c0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 友链头像及头像边框的样式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-avatar</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">56</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">56</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">padding</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-left</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">15</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">px</span> inset $avatar-border-color;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">border</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span><span style="color:#ae81ff">.6</span><span style="color:#66d9ef">px</span> inset $avatar-border-color-dark;   
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">.friend-link-div</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 实现卡片双栏排列效果
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-inline-start</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">4</span><span style="color:#ae81ff">.5</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">43</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> inline-block <span style="color:#66d9ef">!important</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 控制上下连续排列的卡片之间的行距
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">margin-bottom</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">11</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 卡片圆角
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">border-radius</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">7</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 卡片阴影
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">-webkit-box-shadow</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">32</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#a6e22e">rgba</span>(<span style="color:#ae81ff">231</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">224</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">224</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.15</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">-moz-box-shadow</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">32</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#a6e22e">rgba</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.15</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">box-shadow</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.7</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span> <span style="color:#a6e22e">rgba</span>(<span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.16</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 卡片背景色
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">background</span><span style="color:#f92672">:</span> $friend-link-background-color;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">background</span><span style="color:#f92672">:</span> $friend-link-background-color-dark;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 卡牌气泡响应动画
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">-webkit-transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.4</span><span style="color:#66d9ef">s</span> ease;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">-moz-transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.4</span><span style="color:#66d9ef">s</span> ease;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">-o-transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.4</span><span style="color:#66d9ef">s</span> ease;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">transition</span><span style="color:#f92672">:</span> transform <span style="color:#ae81ff">0</span><span style="color:#ae81ff">.15</span><span style="color:#66d9ef">s</span> ease;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">:hover</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">transform</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">scale</span>(<span style="color:#ae81ff">1</span><span style="color:#ae81ff">.03</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">.friend-link-avatar</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">92</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">float</span><span style="color:#f92672">:</span> left;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// name 特效样式， hover 气泡效果,友链 name 变色
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-link-info</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">13</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-right</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">18</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-color;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-color-dark;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">:hover</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-hover-color;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $friend-link-hover-color-dark;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// name 文字样式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-name</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">text-overflow</span><span style="color:#f92672">:</span> ellipsis;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">overflow</span><span style="color:#f92672">:</span> hidden;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">white-space</span><span style="color:#f92672">:</span> nowrap;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">font-style</span><span style="color:#f92672">:</span> normal;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Comic Sans MS&#39;</span><span style="color:#f92672">,</span>cursive;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// bio 文字样式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">.friend-bio</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">text-overflow</span><span style="color:#f92672">:</span> ellipsis;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">overflow</span><span style="color:#f92672">:</span> hidden;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">white-space</span><span style="color:#f92672">:</span> nowrap;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">margin-top</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// font: 12px/1 Tahoma,Helvetica,Arial,&#34;\5b8b\4f53&#34;,sans-serif;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">font-family</span><span style="color:#f92672">:</span> Helvetica<span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;Hiragino Sans GB&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;Microsoft Yahei&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;微软雅黑&#39;</span><span style="color:#f92672">,</span> Arial<span style="color:#f92672">,</span> sans-serif;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $context-color;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span><span style="color:#f92672">data-scheme</span><span style="color:#f92672">=</span><span style="color:#f92672">dark</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">&amp;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">color</span><span style="color:#f92672">:</span> $context-color-dark;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 响应式页面，允许根据不同的尺寸调整样式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">@media</span> screen <span style="color:#f92672">and</span> (<span style="color:#a6e22e">max-width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">600</span><span style="color:#66d9ef">px</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">.friend-bio</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> none;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">.friend-link-avatar</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">84</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">.friend-link-info</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">margin</span><span style="color:#f92672">:</span> auto;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">display</span><span style="color:#f92672">:</span> flex;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">align-items</span><span style="color:#f92672">:</span> center;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">justify-content</span><span style="color:#f92672">:</span> center;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">.friend-name</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">font-size</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">14</span><span style="color:#66d9ef">px</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>接下来只需要在自己的 page 页面下加个 <code>links.md</code> 即可</p>
 <pre tabindex="0"><code class="language-marddown" data-lang="marddown">---
-title: &quot;Links 友情链接&quot;
+title: &#34;Links 友情链接&#34;
 date: 2021-10-01T16:45:06+08:00
-slug: &quot;links&quot;
-layout: &quot;links&quot;
+slug: &#34;links&#34;
+layout: &#34;links&#34;
 license: false
 toc: false
 menu:
@@ -309,7 +309,7 @@ menu:
 
 ## Friends
 
-{ {&lt; friend name=&quot;&quot; url=&quot;&quot; avatar=&quot;&quot; bio=&quot;&quot; &gt;} }
+{ {&lt; friend name=&#34;&#34; url=&#34;&#34; avatar=&#34;&#34; bio=&#34;&#34; &gt;} }
 
 两个大括号之间的空格需要去掉，我这里不去掉的话会显示友链标签（竟然没有考虑到代码块的问题，可以考虑提 issue 了）
 </code></pre><h2 id="目前的问题">目前的问题</h2>

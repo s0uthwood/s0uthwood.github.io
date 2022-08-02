@@ -294,39 +294,39 @@
     <section class="article-content">
     <p>已知一个 $1024$ 位的 $p1$，$p2$ 比 $p1$ 稍小，根据代码知道 $p3\equiv p2!\pmod{p1}$</p>
 <p>根据 Wilson 定理，$n$ 为质数时有 $(n-1)!\equiv -1\pmod{n}$，所以 $p2! \prod\limits_{i=p2+1}^{p1-2}i\equiv 1\pmod{p1}$，所以可以计算出 $p2+1$ 乘到 $p1-1$ 的结果，然后取模拟并调用 <code>sympy</code> 库即可得到 $p3$</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> sympy
-<span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> invmod
-p1<span style="color:#f92672">=</span><span style="color:#ae81ff">172071201093945294154292240631809733545154559633386758234063824053438835958515543354911249971174172649606257936857627547311760174511316984409767738981247877005802155796623587461774104951797122995266217334158736848307655543970322950339988489801672160058805422153816950022590644650247595501280192205506649936031</span>
-p2<span style="color:#f92672">=</span><span style="color:#ae81ff">172071201093945294154292240631809733545154559633386758234063824053438835958515543354911249971174172649606257936857627547311760174511316984409767738981247877005802155796623587461774104951797122995266217334158736848307655543970322950339988489801672160058805422153816950022590644650247595501280192205506649902034</span>
-
-res <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(p2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, p1 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>):
-    res <span style="color:#f92672">=</span> res <span style="color:#f92672">*</span> i <span style="color:#f92672">%</span> p1
-res <span style="color:#f92672">=</span> invmod(res, p1)
-p3 <span style="color:#f92672">=</span> sympy<span style="color:#f92672">.</span>nextprime(res)
-p <span style="color:#f92672">=</span> p3 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">50</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">50</span>
-</code></pre></div><p>得到的 $p$ 是最终 RSA 加密用的 $P$ 的高位，因此可以使用 Factoring with High Bits Known 攻击，用 sage 构造如下攻击脚本（网上找的）</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">p <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xe53f2ea1ce33f589db34b4c25cc9ce4b47cf2cad37e8bb39df1bf014b3f9982cb89d845eff02d167a9a5e979a1fa8f53803cca71aee02f65275b75129e589c6150b6105cdcd7452d6852b1337ad25c9487e944d28e1fcdbf3a655ec56ee15769d08de7c7b3b0d9e410b6155081062cbd679290ab22f838f8722c000000000000</span>
-N <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xe27e847b1cece6ad3d8a35c27022d94cc14016f9550d41b87b85f946edf0a1c01d8c79a663244143550cfce88038bf29d65070d021991455e4570ea57ea1effc1cf380d572473dc6ea0dc150c431761181e66c578eaeebf156c445d3b6141dda961aa467f4d2c811859534027e5b9e67eb4db051c82602208cfe92674013aafa5b437ae404876ececc2f453bb16734adccc5fb87b16e980e52484f6b9f4bdeb99f2e7dc606bb65628e3f62c7df11abd553ffc6b95d3dda592fa81df5e584687864de702d10669e3aac75ad9c6284b98b44140f347307243b2485f59fa5c3f0eaeaf0addade803f2f09cd4c77f27d672756b9cc62a6325247d8608390e761dc91</span>
-pbits <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>nbits()
-kbits <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>
-PR<span style="color:#f92672">.&lt;</span>x<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> PolynomialRing(Zmod(N))
-f <span style="color:#f92672">=</span> x <span style="color:#f92672">+</span> p
-x0 <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>small_roots(X<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span><span style="color:#f92672">^</span>kbits, beta<span style="color:#f92672">=</span><span style="color:#ae81ff">0.4</span>)[<span style="color:#ae81ff">0</span>]
-print( <span style="color:#e6db74">&#34;x: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span>hex(int(x0)))
-p <span style="color:#f92672">=</span> p<span style="color:#f92672">+</span>x0
-print (<span style="color:#e6db74">&#34;p: &#34;</span>, hex(int(p)))
-<span style="color:#66d9ef">assert</span> N <span style="color:#f92672">%</span> p <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
-q <span style="color:#f92672">=</span> N<span style="color:#f92672">/</span>int(p)
-print (<span style="color:#e6db74">&#34;q: &#34;</span>, hex(int(q)))
-</code></pre></div><p>得到 RSA 的 $P$ 和 $Q$，最终构建解密脚本</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> invmod, n2s
-p <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xe53f2ea1ce33f589db34b4c25cc9ce4b47cf2cad37e8bb39df1bf014b3f9982cb89d845eff02d167a9a5e979a1fa8f53803cca71aee02f65275b75129e589c6150b6105cdcd7452d6852b1337ad25c9487e944d28e1fcdbf3a655ec56ee15769d08de7c7b3b0d9e410b6155081062cbd679290ab22f838f8722fbcdcffc1a2ef</span>
-q <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xfced19c7532be88658aaa5e9566f5274b9aefa4c5d21582a24cc48c70b5e3c05c17eb6f85b4732d57bdc0288d1f548b92f4f13a6f7b07d07a01173cefb06fb8f2e3591e5d518d1584a8e27331a4e769eae98537fe1fb380ee804574d98188a4c327c8a1d180ee44b9148d63a07216b40e711970c9f1ea097bfbecfc3b52e787f</span>
-phi_n <span style="color:#f92672">=</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> (q <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
-print (n2s(c, invmod(e, phi_n), N))
-<span style="color:#75715e"># flag{w0_x1hu1n_y0u_b5st}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> sympy
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> invmod
+</span></span><span style="display:flex;"><span>p1<span style="color:#f92672">=</span><span style="color:#ae81ff">172071201093945294154292240631809733545154559633386758234063824053438835958515543354911249971174172649606257936857627547311760174511316984409767738981247877005802155796623587461774104951797122995266217334158736848307655543970322950339988489801672160058805422153816950022590644650247595501280192205506649936031</span>
+</span></span><span style="display:flex;"><span>p2<span style="color:#f92672">=</span><span style="color:#ae81ff">172071201093945294154292240631809733545154559633386758234063824053438835958515543354911249971174172649606257936857627547311760174511316984409767738981247877005802155796623587461774104951797122995266217334158736848307655543970322950339988489801672160058805422153816950022590644650247595501280192205506649902034</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(p2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, p1 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">=</span> res <span style="color:#f92672">*</span> i <span style="color:#f92672">%</span> p1
+</span></span><span style="display:flex;"><span>res <span style="color:#f92672">=</span> invmod(res, p1)
+</span></span><span style="display:flex;"><span>p3 <span style="color:#f92672">=</span> sympy<span style="color:#f92672">.</span>nextprime(res)
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> p3 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">50</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">50</span>
+</span></span></code></pre></div><p>得到的 $p$ 是最终 RSA 加密用的 $P$ 的高位，因此可以使用 Factoring with High Bits Known 攻击，用 sage 构造如下攻击脚本（网上找的）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xe53f2ea1ce33f589db34b4c25cc9ce4b47cf2cad37e8bb39df1bf014b3f9982cb89d845eff02d167a9a5e979a1fa8f53803cca71aee02f65275b75129e589c6150b6105cdcd7452d6852b1337ad25c9487e944d28e1fcdbf3a655ec56ee15769d08de7c7b3b0d9e410b6155081062cbd679290ab22f838f8722c000000000000</span>
+</span></span><span style="display:flex;"><span>N <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xe27e847b1cece6ad3d8a35c27022d94cc14016f9550d41b87b85f946edf0a1c01d8c79a663244143550cfce88038bf29d65070d021991455e4570ea57ea1effc1cf380d572473dc6ea0dc150c431761181e66c578eaeebf156c445d3b6141dda961aa467f4d2c811859534027e5b9e67eb4db051c82602208cfe92674013aafa5b437ae404876ececc2f453bb16734adccc5fb87b16e980e52484f6b9f4bdeb99f2e7dc606bb65628e3f62c7df11abd553ffc6b95d3dda592fa81df5e584687864de702d10669e3aac75ad9c6284b98b44140f347307243b2485f59fa5c3f0eaeaf0addade803f2f09cd4c77f27d672756b9cc62a6325247d8608390e761dc91</span>
+</span></span><span style="display:flex;"><span>pbits <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>nbits()
+</span></span><span style="display:flex;"><span>kbits <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>PR<span style="color:#f92672">.&lt;</span>x<span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> PolynomialRing(Zmod(N))
+</span></span><span style="display:flex;"><span>f <span style="color:#f92672">=</span> x <span style="color:#f92672">+</span> p
+</span></span><span style="display:flex;"><span>x0 <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>small_roots(X<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span><span style="color:#f92672">^</span>kbits, beta<span style="color:#f92672">=</span><span style="color:#ae81ff">0.4</span>)[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>print( <span style="color:#e6db74">&#34;x: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span>hex(int(x0)))
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> p<span style="color:#f92672">+</span>x0
+</span></span><span style="display:flex;"><span>print (<span style="color:#e6db74">&#34;p: &#34;</span>, hex(int(p)))
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span> N <span style="color:#f92672">%</span> p <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>q <span style="color:#f92672">=</span> N<span style="color:#f92672">/</span>int(p)
+</span></span><span style="display:flex;"><span>print (<span style="color:#e6db74">&#34;q: &#34;</span>, hex(int(q)))
+</span></span></code></pre></div><p>得到 RSA 的 $P$ 和 $Q$，最终构建解密脚本</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> libnum <span style="color:#f92672">import</span> invmod, n2s
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xe53f2ea1ce33f589db34b4c25cc9ce4b47cf2cad37e8bb39df1bf014b3f9982cb89d845eff02d167a9a5e979a1fa8f53803cca71aee02f65275b75129e589c6150b6105cdcd7452d6852b1337ad25c9487e944d28e1fcdbf3a655ec56ee15769d08de7c7b3b0d9e410b6155081062cbd679290ab22f838f8722fbcdcffc1a2ef</span>
+</span></span><span style="display:flex;"><span>q <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xfced19c7532be88658aaa5e9566f5274b9aefa4c5d21582a24cc48c70b5e3c05c17eb6f85b4732d57bdc0288d1f548b92f4f13a6f7b07d07a01173cefb06fb8f2e3591e5d518d1584a8e27331a4e769eae98537fe1fb380ee804574d98188a4c327c8a1d180ee44b9148d63a07216b40e711970c9f1ea097bfbecfc3b52e787f</span>
+</span></span><span style="display:flex;"><span>phi_n <span style="color:#f92672">=</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> (q <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>print (n2s(c, invmod(e, phi_n), N))
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># flag{w0_x1hu1n_y0u_b5st}</span>
+</span></span></code></pre></div>
 </section>
 
 

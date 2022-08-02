@@ -144,24 +144,24 @@
     <p>This challenge gives a .pyc file and a Python 3.11 alpha7 based patch file.</p>
 <h2 id="patch">Patch</h2>
 <p>This patch file mainly patches the <code>opcode.py</code> file. After the patch, <code>opcode.py</code> file first generated two random lists and modifies the opcode according to the values of the lists. Finally, it will output the new opcode to a tmp file.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">+</span><span style="color:#f92672">import</span> sys
-<span style="color:#f92672">+</span><span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;generate_opcode_h&#34;</span> <span style="color:#f92672">in</span> sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">0</span>]:
-<span style="color:#f92672">+</span>  random <span style="color:#f92672">=</span> __import__(<span style="color:#e6db74">&#34;random&#34;</span>)
-<span style="color:#f92672">+</span>  random<span style="color:#f92672">.</span>shuffle(perm)
-<span style="color:#f92672">+</span>  random<span style="color:#f92672">.</span>shuffle(perm2)
-
-<span style="color:#f92672">-</span>def_op(<span style="color:#e6db74">&#39;CACHE&#39;</span>, <span style="color:#ae81ff">0</span>)
-<span style="color:#f92672">-</span>def_op(<span style="color:#e6db74">&#39;POP_TOP&#39;</span>, <span style="color:#ae81ff">1</span>)
-<span style="color:#f92672">-</span>def_op(<span style="color:#e6db74">&#39;PUSH_NULL&#39;</span>, <span style="color:#ae81ff">2</span>)
-
-<span style="color:#f92672">+</span>def_op(<span style="color:#e6db74">&#39;CACHE&#39;</span>, perm[<span style="color:#ae81ff">0</span>])
-<span style="color:#f92672">+</span>def_op(<span style="color:#e6db74">&#39;POP_TOP&#39;</span>, perm[<span style="color:#ae81ff">1</span>])
-<span style="color:#f92672">+</span>def_op(<span style="color:#e6db74">&#39;PUSH_NULL&#39;</span>, perm[<span style="color:#ae81ff">2</span>])
-
-<span style="color:#f92672">+</span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;/tmp/opcode_map&#34;</span>, <span style="color:#e6db74">&#34;w&#34;</span>) <span style="color:#66d9ef">as</span> f:
-<span style="color:#f92672">+</span>  <span style="color:#66d9ef">for</span> x, y <span style="color:#f92672">in</span> enumerate(opname):
-<span style="color:#f92672">+</span>    f<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (x, y))
-</code></pre></div><p>The patch file also modifies the <code>ceval.c</code> file, but I don&rsquo;t understand what this does.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;generate_opcode_h&#34;</span> <span style="color:#f92672">in</span> sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">0</span>]:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span>  random <span style="color:#f92672">=</span> __import__(<span style="color:#e6db74">&#34;random&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span>  random<span style="color:#f92672">.</span>shuffle(perm)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span>  random<span style="color:#f92672">.</span>shuffle(perm2)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span>def_op(<span style="color:#e6db74">&#39;CACHE&#39;</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span>def_op(<span style="color:#e6db74">&#39;POP_TOP&#39;</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span>def_op(<span style="color:#e6db74">&#39;PUSH_NULL&#39;</span>, <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span>def_op(<span style="color:#e6db74">&#39;CACHE&#39;</span>, perm[<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span>def_op(<span style="color:#e6db74">&#39;POP_TOP&#39;</span>, perm[<span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span>def_op(<span style="color:#e6db74">&#39;PUSH_NULL&#39;</span>, perm[<span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;/tmp/opcode_map&#34;</span>, <span style="color:#e6db74">&#34;w&#34;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span>  <span style="color:#66d9ef">for</span> x, y <span style="color:#f92672">in</span> enumerate(opname):
+</span></span><span style="display:flex;"><span><span style="color:#f92672">+</span>    f<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> </span><span style="color:#e6db74">%s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (x, y))
+</span></span></code></pre></div><p>The patch file also modifies the <code>ceval.c</code> file, but I don&rsquo;t understand what this does.</p>
 <pre tabindex="0"><code>diff --git a/Python/ceval.c b/Python/ceval.c
 index 1d2c6432d0..e275158d9d 100644
 --- a/Python/ceval.c
@@ -178,7 +178,7 @@ index 1d2c6432d0..e275158d9d 100644
 @@ -1705,6 +1707,7 @@ _PyEval_EvalFrameDefault(PyThreadState *tstate, _PyInterpreterFrame *frame, int
  #if USE_COMPUTED_GOTOS
  /* Import the static jump table */
- #include &quot;opcode_targets.h&quot;
+ #include &#34;opcode_targets.h&#34;
 +    asdasdasd, break the compilation...
  #endif
  
@@ -243,66 +243,66 @@ index 1d2c6432d0..e275158d9d 100644
 </table>
 <p>I also find there were lots of <code>20 00</code> in .pyc file. Which is <code>CACHE</code>, and we can ignore it.</p>
 <p>Since there were bugs in <code>dis</code> module after I change the opcode.py, I gave it up. But we can still use <code>dis.show_code()</code> to unserialize marshal.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> marshal<span style="color:#f92672">,</span> dis
-<span style="color:#f92672">&gt;&gt;&gt;</span> fd <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;x.pyc&#39;</span>, <span style="color:#e6db74">&#39;rb&#39;</span>)
-<span style="color:#f92672">&gt;&gt;&gt;</span> fd<span style="color:#f92672">.</span>seek(<span style="color:#ae81ff">16</span>)
-<span style="color:#ae81ff">16</span>
-<span style="color:#f92672">&gt;&gt;&gt;</span> a <span style="color:#f92672">=</span> marshal<span style="color:#f92672">.</span>load(fd)
-<span style="color:#f92672">&gt;&gt;&gt;</span> dis<span style="color:#f92672">.</span>show_code(a)
-Name:              <span style="color:#f92672">&lt;</span>module<span style="color:#f92672">&gt;</span>
-Filename:          <span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>local<span style="color:#f92672">/</span>google<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>xxxxxxxxx<span style="color:#f92672">/</span>yyyy<span style="color:#f92672">/</span>zzzzzzzzzzzzzzzz<span style="color:#f92672">/</span>xxxxxxxxxxx<span style="color:#f92672">.</span>py
-Argument count:    <span style="color:#ae81ff">0</span>
-Positional<span style="color:#f92672">-</span>only arguments: <span style="color:#ae81ff">0</span>
-Kw<span style="color:#f92672">-</span>only arguments: <span style="color:#ae81ff">0</span>
-Number of locals:  <span style="color:#ae81ff">0</span>
-Stack size:        <span style="color:#ae81ff">2</span>
-Flags:             <span style="color:#ae81ff">0x0</span>
-Constants:
-   <span style="color:#ae81ff">0</span>: <span style="color:#ae81ff">0</span>
-   <span style="color:#ae81ff">1</span>: <span style="color:#66d9ef">None</span>
-   <span style="color:#ae81ff">2</span>: <span style="color:#f92672">&lt;</span>code object ks at <span style="color:#ae81ff">0x101419470</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">5</span><span style="color:#f92672">&gt;</span>
-   <span style="color:#ae81ff">3</span>: <span style="color:#f92672">&lt;</span>code object cry at <span style="color:#ae81ff">0x1016003f0</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">11</span><span style="color:#f92672">&gt;</span>
-   <span style="color:#ae81ff">4</span>: <span style="color:#f92672">&lt;</span>code object fail at <span style="color:#ae81ff">0x101553000</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">18</span><span style="color:#f92672">&gt;</span>
-   <span style="color:#ae81ff">5</span>: <span style="color:#f92672">&lt;</span>code object game1 at <span style="color:#ae81ff">0x12c704920</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">23</span><span style="color:#f92672">&gt;</span>
-   <span style="color:#ae81ff">6</span>: <span style="color:#f92672">&lt;</span>code object game2 at <span style="color:#ae81ff">0x12c704cc0</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">68</span><span style="color:#f92672">&gt;</span>
-   <span style="color:#ae81ff">7</span>: <span style="color:#f92672">&lt;</span>code object game3 at <span style="color:#ae81ff">0x12c7051f0</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">96</span><span style="color:#f92672">&gt;</span>
-   <span style="color:#ae81ff">8</span>: <span style="color:#f92672">&lt;</span>code object main at <span style="color:#ae81ff">0x12c704f20</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">123</span><span style="color:#f92672">&gt;</span>
-Names:
-   <span style="color:#ae81ff">0</span>: sys
-   <span style="color:#ae81ff">1</span>: random
-   <span style="color:#ae81ff">2</span>: time
-   <span style="color:#ae81ff">3</span>: ks
-   <span style="color:#ae81ff">4</span>: cry
-   <span style="color:#ae81ff">5</span>: fail
-   <span style="color:#ae81ff">6</span>: game1
-   <span style="color:#ae81ff">7</span>: game2
-   <span style="color:#ae81ff">8</span>: game3
-   <span style="color:#ae81ff">9</span>: main
-<span style="color:#f92672">&gt;&gt;&gt;</span> dis<span style="color:#f92672">.</span>show_code(a<span style="color:#f92672">.</span>co_consts[<span style="color:#ae81ff">2</span>])
-Name:              ks
-Filename:          <span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>local<span style="color:#f92672">/</span>google<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>xxxxxxxxx<span style="color:#f92672">/</span>yyyy<span style="color:#f92672">/</span>zzzzzzzzzzzzzzzz<span style="color:#f92672">/</span>xxxxxxxxxxx<span style="color:#f92672">.</span>py
-Argument count:    <span style="color:#ae81ff">1</span>
-Positional<span style="color:#f92672">-</span>only arguments: <span style="color:#ae81ff">0</span>
-Kw<span style="color:#f92672">-</span>only arguments: <span style="color:#ae81ff">0</span>
-Number of locals:  <span style="color:#ae81ff">1</span>
-Stack size:        <span style="color:#ae81ff">4</span>
-Flags:             OPTIMIZED, NEWLOCALS, GENERATOR
-Constants:
-   <span style="color:#ae81ff">0</span>: <span style="color:#66d9ef">None</span>
-   <span style="color:#ae81ff">1</span>: <span style="color:#66d9ef">True</span>
-   <span style="color:#ae81ff">2</span>: <span style="color:#ae81ff">0</span>
-   <span style="color:#ae81ff">3</span>: <span style="color:#ae81ff">255</span>
-   <span style="color:#ae81ff">4</span>: <span style="color:#ae81ff">13</span>
-   <span style="color:#ae81ff">5</span>: <span style="color:#ae81ff">17</span>
-   <span style="color:#ae81ff">6</span>: <span style="color:#ae81ff">256</span>
-Names:
-   <span style="color:#ae81ff">0</span>: random
-   <span style="color:#ae81ff">1</span>: seed
-   <span style="color:#ae81ff">2</span>: randint
-Variable names:
-   <span style="color:#ae81ff">0</span>: seed
-<span style="color:#f92672">&gt;&gt;&gt;</span>
-</code></pre></div><p>Start with the short function will be easier. For example, it is easy to recognize <code>BINARY_OP</code> and <code>LOAD_FAST</code> in function <code>w()</code> which defined in function <code>game1()</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> marshal<span style="color:#f92672">,</span> dis
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> fd <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;x.pyc&#39;</span>, <span style="color:#e6db74">&#39;rb&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> fd<span style="color:#f92672">.</span>seek(<span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> a <span style="color:#f92672">=</span> marshal<span style="color:#f92672">.</span>load(fd)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> dis<span style="color:#f92672">.</span>show_code(a)
+</span></span><span style="display:flex;"><span>Name:              <span style="color:#f92672">&lt;</span>module<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>Filename:          <span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>local<span style="color:#f92672">/</span>google<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>xxxxxxxxx<span style="color:#f92672">/</span>yyyy<span style="color:#f92672">/</span>zzzzzzzzzzzzzzzz<span style="color:#f92672">/</span>xxxxxxxxxxx<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span>Argument count:    <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>Positional<span style="color:#f92672">-</span>only arguments: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>Kw<span style="color:#f92672">-</span>only arguments: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>Number of locals:  <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>Stack size:        <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>Flags:             <span style="color:#ae81ff">0x0</span>
+</span></span><span style="display:flex;"><span>Constants:
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">0</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">1</span>: <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">2</span>: <span style="color:#f92672">&lt;</span>code object ks at <span style="color:#ae81ff">0x101419470</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">5</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">3</span>: <span style="color:#f92672">&lt;</span>code object cry at <span style="color:#ae81ff">0x1016003f0</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">11</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">4</span>: <span style="color:#f92672">&lt;</span>code object fail at <span style="color:#ae81ff">0x101553000</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">18</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">5</span>: <span style="color:#f92672">&lt;</span>code object game1 at <span style="color:#ae81ff">0x12c704920</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">23</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">6</span>: <span style="color:#f92672">&lt;</span>code object game2 at <span style="color:#ae81ff">0x12c704cc0</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">68</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">7</span>: <span style="color:#f92672">&lt;</span>code object game3 at <span style="color:#ae81ff">0x12c7051f0</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">96</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">8</span>: <span style="color:#f92672">&lt;</span>code object main at <span style="color:#ae81ff">0x12c704f20</span>, file <span style="color:#e6db74">&#34;/usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py&#34;</span>, line <span style="color:#ae81ff">123</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>Names:
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">0</span>: sys
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">1</span>: random
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">2</span>: time
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">3</span>: ks
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">4</span>: cry
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">5</span>: fail
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">6</span>: game1
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">7</span>: game2
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">8</span>: game3
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">9</span>: main
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> dis<span style="color:#f92672">.</span>show_code(a<span style="color:#f92672">.</span>co_consts[<span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>Name:              ks
+</span></span><span style="display:flex;"><span>Filename:          <span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>local<span style="color:#f92672">/</span>google<span style="color:#f92672">/</span>home<span style="color:#f92672">/</span>xxxxxxxxx<span style="color:#f92672">/</span>yyyy<span style="color:#f92672">/</span>zzzzzzzzzzzzzzzz<span style="color:#f92672">/</span>xxxxxxxxxxx<span style="color:#f92672">.</span>py
+</span></span><span style="display:flex;"><span>Argument count:    <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>Positional<span style="color:#f92672">-</span>only arguments: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>Kw<span style="color:#f92672">-</span>only arguments: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>Number of locals:  <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>Stack size:        <span style="color:#ae81ff">4</span>
+</span></span><span style="display:flex;"><span>Flags:             OPTIMIZED, NEWLOCALS, GENERATOR
+</span></span><span style="display:flex;"><span>Constants:
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">0</span>: <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">1</span>: <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">2</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">3</span>: <span style="color:#ae81ff">255</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">4</span>: <span style="color:#ae81ff">13</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">5</span>: <span style="color:#ae81ff">17</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">6</span>: <span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span>Names:
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">0</span>: random
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">1</span>: seed
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">2</span>: randint
+</span></span><span style="display:flex;"><span>Variable names:
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">0</span>: seed
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span>
+</span></span></code></pre></div><p>Start with the short function will be easier. For example, it is easy to recognize <code>BINARY_OP</code> and <code>LOAD_FAST</code> in function <code>w()</code> which defined in function <code>game1()</code>.</p>
 <pre tabindex="0"><code>Name:              w
 Filename:          /usr/local/google/home/xxxxxxxxx/yyyy/zzzzzzzzzzzzzzzz/xxxxxxxxxxx.py
 Argument count:    3
@@ -353,7 +353,7 @@ Variable names:
 <pre tabindex="0"><code>0    RESUME        0
 2    PUSH_NULL
 4    LOAD_NAME     0 (print)
-16   LOAD_CONST    1 ('Pass 3 tests to prove your worth!')
+16   LOAD_CONST    1 (&#39;Pass 3 tests to prove your worth!&#39;)
 18   PRECALL       1
 22   CALL          1
 32   POP_TOP       0
@@ -441,7 +441,7 @@ Variable names:
 <tr>
 <td style="text-align:center">0x68</td>
 <td>COMPARE_OP</td>
-<td>('&lt;', &lsquo;&lt;=&rsquo;, &lsquo;==&rsquo;, &lsquo;!=&rsquo;, &lsquo;&gt;&rsquo;, &lsquo;&gt;=')</td>
+<td>(&rsquo;&lt;&rsquo;, &lsquo;&lt;=&rsquo;, &lsquo;==&rsquo;, &lsquo;!=&rsquo;, &lsquo;&gt;&rsquo;, &lsquo;&gt;=&rsquo;)</td>
 </tr>
 <tr>
 <td style="text-align:center">0xba</td>
@@ -487,154 +487,152 @@ Variable names:
 </table>
 <p>There&rsquo;s still some opcode I didn&rsquo;t recognize, but that doesn&rsquo;t affect our decompilation anymore.</p>
 <p>The decompilation result (by hand) was:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> sys
-<span style="color:#f92672">import</span> time
-<span style="color:#f92672">import</span> random
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ks</span>(seed):
-    random<span style="color:#f92672">.</span>seed(seed)
-    <span style="color:#66d9ef">while</span> <span style="color:#ae81ff">1</span>:
-        <span style="color:#66d9ef">yield</span> (random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">255</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">13</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">17</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">cry</span>(s, seed):
-    r <span style="color:#f92672">=</span> []
-    <span style="color:#66d9ef">for</span> x, y <span style="color:#f92672">in</span> zip(ks(seed), s):
-        r<span style="color:#f92672">.</span>append(x <span style="color:#f92672">^</span> y)
-    bytes(r)
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fail</span>(s):
-    print (s)
-    print (<span style="color:#e6db74">&#34;Thanks for playing!&#34;</span>)
-    sys<span style="color:#f92672">.</span>exit(<span style="color:#ae81ff">0</span>)
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">game1</span>():
-    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">w</span>(m, i, j):
-        <span style="color:#66d9ef">return</span> (m <span style="color:#f92672">&gt;&gt;</span> (i <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> j)) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>
-    m <span style="color:#f92672">=</span> <span style="color:#ae81ff">1267034045110727999721745963007</span>
-    fuel <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>
-    x, y <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)
-    stops <span style="color:#f92672">=</span> set([(<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">4</span>), (<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>)])
-    log <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
-    print(<span style="color:#e6db74">&#34;Fuels:&#34;</span>, fuel)
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
-        s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
-        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
-            <span style="color:#66d9ef">if</span> w(m, i, j):
-                s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;🧱&#39;</span>
-            <span style="color:#66d9ef">elif</span> (j, i) <span style="color:#f92672">==</span> (x, y):
-                s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;🚓&#39;</span>
-            <span style="color:#66d9ef">elif</span> (j, i) <span style="color:#f92672">==</span> (<span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">8</span>):
-                s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;🏁&#39;</span>
-            <span style="color:#66d9ef">elif</span> (j, i) <span style="color:#f92672">in</span> stops:
-                s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;⛽️&#39;</span>
-            <span style="color:#66d9ef">else</span>:
-                s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;  &#39;</span>
-        print (s)
-    inp <span style="color:#f92672">=</span> input()<span style="color:#f92672">.</span>strip()
-    <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> inp:
-        log <span style="color:#f92672">+=</span> c
-        <span style="color:#66d9ef">if</span> c <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> <span style="color:#e6db74">&#39;wasd&#39;</span>:
-            fail(<span style="color:#e6db74">&#39;Nope!&#39;</span>)
-        <span style="color:#66d9ef">elif</span> fuel <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-            fail(<span style="color:#e6db74">&#39;Empty...&#39;</span>)
-        dx, dy <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;w&#39;</span>:(<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), <span style="color:#e6db74">&#39;s&#39;</span>:(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>), <span style="color:#e6db74">&#39;a&#39;</span>:(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>), <span style="color:#e6db74">&#39;d&#39;</span>:(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)}[c]
-        x <span style="color:#f92672">+=</span> dx
-        y <span style="color:#f92672">+=</span> dy
-        <span style="color:#66d9ef">if</span> w(m, y, x):
-            fail(<span style="color:#e6db74">&#39;Crash!&#39;</span>)
-        fuel <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
-        <span style="color:#66d9ef">if</span> (x, y) <span style="color:#f92672">in</span> stops:
-            stops<span style="color:#f92672">.</span>remove((x, y))
-            fuel <span style="color:#f92672">+=</span> <span style="color:#ae81ff">15</span>
-        <span style="color:#66d9ef">elif</span> (x, y) <span style="color:#f92672">==</span> (<span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">8</span>):
-            print (<span style="color:#e6db74">&#39;Nice!&#39;</span>)
-            <span style="color:#66d9ef">return</span> log
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">game2</span>():
-    print (<span style="color:#e6db74">&#39;Math quiz time!&#39;</span>)
-    qs <span style="color:#f92672">=</span> ((<span style="color:#e6db74">&#39;sum&#39;</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">5</span>), (<span style="color:#e6db74">&#39;difference&#39;</span>, <span style="color:#ae81ff">45</span>, <span style="color:#ae81ff">14</span>), (<span style="color:#e6db74">&#39;product&#39;</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">9</span>), (<span style="color:#e6db74">&#39;ratio&#39;</span>, <span style="color:#ae81ff">18</span>, <span style="color:#ae81ff">6</span>), (<span style="color:#e6db74">&#39;remainder from division&#39;</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">7</span>))
-    log <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;_&#39;</span>
-    <span style="color:#66d9ef">for</span> q <span style="color:#f92672">in</span> qs: 
-        print (<span style="color:#e6db74">&#39;What is the </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> of </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> and </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">?&#39;</span> <span style="color:#f92672">%</span> q)
-        x, a, b <span style="color:#f92672">=</span> q
-        <span style="color:#66d9ef">if</span> x <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;sum&#39;</span>:
-            r <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b
-        <span style="color:#66d9ef">elif</span> x <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;difference&#39;</span>:
-            r <span style="color:#f92672">=</span> a <span style="color:#f92672">-</span> b
-        <span style="color:#66d9ef">elif</span> x <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;product&#39;</span>:
-            r <span style="color:#f92672">=</span> a <span style="color:#f92672">*</span> b
-        <span style="color:#66d9ef">elif</span> x <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;ratio&#39;</span>:
-            r <span style="color:#f92672">=</span> a <span style="color:#f92672">//</span> b
-        <span style="color:#66d9ef">elif</span> x <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;remainder from division&#39;</span>:
-            r <span style="color:#f92672">=</span> a <span style="color:#f92672">%</span> b
-        <span style="color:#66d9ef">else</span>:
-            print (<span style="color:#e6db74">&#39;What?&#39;</span>)
-        inp <span style="color:#f92672">=</span> int(input())
-        <span style="color:#66d9ef">if</span> inp <span style="color:#f92672">==</span> r:
-            print (<span style="color:#e6db74">&#39;Correct!&#39;</span>)
-            log <span style="color:#f92672">+=</span> str(inp) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;_&#39;</span>
-        <span style="color:#66d9ef">else</span>:
-            print (<span style="color:#e6db74">&#39;Wrong!&#39;</span>)
-    <span style="color:#66d9ef">return</span> log
-    <span style="color:#75715e">#_17_31_72_3_2_</span>
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">game3</span>():
-    print (<span style="color:#e6db74">&#39;Speed typing game.&#39;</span>)
-    t <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
-    text <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;&#39;
-</span><span style="color:#e6db74">  Text: Because of its performance advantage, today many language implementations
-</span><span style="color:#e6db74">  execute a program in two phases, first compiling the source code into bytecode,
-</span><span style="color:#e6db74">  and then passing the bytecode to the virtual machine.
-</span><span style="color:#e6db74">  &#39;&#39;&#39;</span>
-    words <span style="color:#f92672">=</span> text<span style="color:#f92672">.</span>split()
-    it <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-    log <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;_&#39;</span>
-    <span style="color:#66d9ef">while</span> it <span style="color:#f92672">!=</span> len(words):
-        print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%0.2f</span><span style="color:#e6db74"> seconds left.&#39;</span> <span style="color:#f92672">%</span> (<span style="color:#ae81ff">20</span> <span style="color:#f92672">-</span> (time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> t)))
-        print (<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x1b</span><span style="color:#e6db74">[32m&#39;</span>, <span style="color:#e6db74">&#39; &#39;</span><span style="color:#f92672">.</span>join(words[:it]), <span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x1b</span><span style="color:#e6db74">[39m &#39;</span>, words[it])
-        inp <span style="color:#f92672">=</span> input()
-        <span style="color:#66d9ef">if</span> time<span style="color:#f92672">.</span>time() <span style="color:#f92672">&gt;</span> t <span style="color:#f92672">+</span> <span style="color:#ae81ff">20</span>:
-            fail(<span style="color:#e6db74">&#39;Too slow!&#39;</span>)
-        <span style="color:#66d9ef">if</span> inp <span style="color:#f92672">==</span> words[it]:
-            log <span style="color:#f92672">+=</span> words[it]<span style="color:#f92672">.</span>upper() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;_&#39;</span>
-            it <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-        <span style="color:#66d9ef">else</span>:
-            fail(<span style="color:#e6db74">&#39;You made a mistake!&#39;</span>)
-    print (<span style="color:#e6db74">&#39;Nice!&#39;</span>)
-    <span style="color:#66d9ef">return</span> log
-<span style="color:#75715e">#_BECAUSE_OF_ITS_PERFORMANCE_ADVANTAGE,_TODAY_MANY_LANGUAGE_IMPLEMENTATIONS_EXECUTE_A_PROGRAM_IN_TWO_PHASES,_FIRST_COMPILING_THE_SOURCE_CODE_INTO_BYTECODE,_AND_THEN_PASSING_THE_BYTECODE_TO_THE_VIRTUAL_MACHINE._</span>
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
-    print(<span style="color:#e6db74">&#39;Pass 3 tests to prove your worth!&#39;</span>)
-    seed <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;seed:&#39;</span>
-    seed <span style="color:#f92672">+=</span> game1() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;:&#39;</span>
-    print (seed)
-    seed <span style="color:#f92672">+=</span> game2() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;:&#39;</span>
-    print (seed)
-    seed <span style="color:#f92672">+=</span> game3()
-    print (seed)
-    print ()
-    print (<span style="color:#e6db74">&#34;You can drive to work, know some maths and can type fast. You&#39;re hired!&#34;</span>)
-    print(<span style="color:#e6db74">&#39;Your sign-on bonus:&#39;</span>, cry(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xa0</span><span style="color:#e6db74">?n</span><span style="color:#ae81ff">\xa5\x7f</span><span style="color:#e6db74">)</span><span style="color:#ae81ff">\x1f</span><span style="color:#e6db74">6Jvh</span><span style="color:#ae81ff">\x95\xcc</span><span style="color:#e6db74">!</span><span style="color:#ae81ff">\x1e\x95\x99</span><span style="color:#e6db74">6a</span><span style="color:#ae81ff">\x11\xf6</span><span style="color:#e6db74">OV</span><span style="color:#ae81ff">\x88\xc1\x9f\xde\xb5</span><span style="color:#e6db74">0</span><span style="color:#ae81ff">\x9d\xae\x14\xde\x18</span><span style="color:#e6db74">YHI</span><span style="color:#ae81ff">\xd8\xd5\x90\x8a\x18</span><span style="color:#e6db74">1l</span><span style="color:#ae81ff">\xb0\x16</span><span style="color:#e6db74">^O;]&#39;</span>, seed)<span style="color:#f92672">.</span>decode())
-
-</code></pre></div><h2 id="solve">SOLVE!</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> random
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ks</span>(seed):
-    random<span style="color:#f92672">.</span>seed(seed)
-    <span style="color:#66d9ef">while</span> <span style="color:#ae81ff">1</span>:
-        <span style="color:#66d9ef">yield</span> (random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">255</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">13</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">17</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">cry</span>(s, seed):
-    r <span style="color:#f92672">=</span> []
-    <span style="color:#66d9ef">for</span> x, y <span style="color:#f92672">in</span> zip(ks(seed), s):
-        r<span style="color:#f92672">.</span>append(x <span style="color:#f92672">^</span> y)
-        bytes(r)
-    <span style="color:#66d9ef">return</span> r
-
-seed <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;seed:sssddwwddwddsssdssaaawwssaaaassddddddd:_17_31_72_3_2_:_BECAUSE_OF_ITS_PERFORMANCE_ADVANTAGE,_TODAY_MANY_LANGUAGE_IMPLEMENTATIONS_EXECUTE_A_PROGRAM_IN_TWO_PHASES,_FIRST_COMPILING_THE_SOURCE_CODE_INTO_BYTECODE,_AND_THEN_PASSING_THE_BYTECODE_TO_THE_VIRTUAL_MACHINE._&#39;</span>
-print(<span style="color:#e6db74">&#39;Your sign-on bonus:&#39;</span>, cry(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xa0</span><span style="color:#e6db74">?n</span><span style="color:#ae81ff">\xa5\x7f</span><span style="color:#e6db74">)</span><span style="color:#ae81ff">\x1f</span><span style="color:#e6db74">6Jvh</span><span style="color:#ae81ff">\x95\xcc</span><span style="color:#e6db74">!</span><span style="color:#ae81ff">\x1e\x95\x99</span><span style="color:#e6db74">6a</span><span style="color:#ae81ff">\x11\xf6</span><span style="color:#e6db74">OV</span><span style="color:#ae81ff">\x88\xc1\x9f\xde\xb5</span><span style="color:#e6db74">0</span><span style="color:#ae81ff">\x9d\xae\x14\xde\x18</span><span style="color:#e6db74">YHI</span><span style="color:#ae81ff">\xd8\xd5\x90\x8a\x18</span><span style="color:#e6db74">1l</span><span style="color:#ae81ff">\xb0\x16</span><span style="color:#e6db74">^O;]&#39;</span>, seed))
-
-</code></pre></div><h2 id="afterword">Afterword</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ks</span>(seed):
+</span></span><span style="display:flex;"><span>    random<span style="color:#f92672">.</span>seed(seed)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">yield</span> (random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">255</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">13</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">17</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">cry</span>(s, seed):
+</span></span><span style="display:flex;"><span>    r <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> x, y <span style="color:#f92672">in</span> zip(ks(seed), s):
+</span></span><span style="display:flex;"><span>        r<span style="color:#f92672">.</span>append(x <span style="color:#f92672">^</span> y)
+</span></span><span style="display:flex;"><span>    bytes(r)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fail</span>(s):
+</span></span><span style="display:flex;"><span>    print (s)
+</span></span><span style="display:flex;"><span>    print (<span style="color:#e6db74">&#34;Thanks for playing!&#34;</span>)
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>exit(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">game1</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">w</span>(m, i, j):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> (m <span style="color:#f92672">&gt;&gt;</span> (i <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> j)) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    m <span style="color:#f92672">=</span> <span style="color:#ae81ff">1267034045110727999721745963007</span>
+</span></span><span style="display:flex;"><span>    fuel <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>    x, y <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    stops <span style="color:#f92672">=</span> set([(<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">4</span>), (<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">3</span>)])
+</span></span><span style="display:flex;"><span>    log <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;Fuels:&#34;</span>, fuel)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
+</span></span><span style="display:flex;"><span>        s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> w(m, i, j):
+</span></span><span style="display:flex;"><span>                s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;🧱&#39;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">elif</span> (j, i) <span style="color:#f92672">==</span> (x, y):
+</span></span><span style="display:flex;"><span>                s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;🚓&#39;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">elif</span> (j, i) <span style="color:#f92672">==</span> (<span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">8</span>):
+</span></span><span style="display:flex;"><span>                s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;🏁&#39;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">elif</span> (j, i) <span style="color:#f92672">in</span> stops:
+</span></span><span style="display:flex;"><span>                s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;⛽️&#39;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;  &#39;</span>
+</span></span><span style="display:flex;"><span>        print (s)
+</span></span><span style="display:flex;"><span>    inp <span style="color:#f92672">=</span> input()<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> c <span style="color:#f92672">in</span> inp:
+</span></span><span style="display:flex;"><span>        log <span style="color:#f92672">+=</span> c
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> c <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> <span style="color:#e6db74">&#39;wasd&#39;</span>:
+</span></span><span style="display:flex;"><span>            fail(<span style="color:#e6db74">&#39;Nope!&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> fuel <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>            fail(<span style="color:#e6db74">&#39;Empty...&#39;</span>)
+</span></span><span style="display:flex;"><span>        dx, dy <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;w&#39;</span>:(<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), <span style="color:#e6db74">&#39;s&#39;</span>:(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>), <span style="color:#e6db74">&#39;a&#39;</span>:(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>), <span style="color:#e6db74">&#39;d&#39;</span>:(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)}[c]
+</span></span><span style="display:flex;"><span>        x <span style="color:#f92672">+=</span> dx
+</span></span><span style="display:flex;"><span>        y <span style="color:#f92672">+=</span> dy
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> w(m, y, x):
+</span></span><span style="display:flex;"><span>            fail(<span style="color:#e6db74">&#39;Crash!&#39;</span>)
+</span></span><span style="display:flex;"><span>        fuel <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (x, y) <span style="color:#f92672">in</span> stops:
+</span></span><span style="display:flex;"><span>            stops<span style="color:#f92672">.</span>remove((x, y))
+</span></span><span style="display:flex;"><span>            fuel <span style="color:#f92672">+=</span> <span style="color:#ae81ff">15</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> (x, y) <span style="color:#f92672">==</span> (<span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">8</span>):
+</span></span><span style="display:flex;"><span>            print (<span style="color:#e6db74">&#39;Nice!&#39;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> log
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">game2</span>():
+</span></span><span style="display:flex;"><span>    print (<span style="color:#e6db74">&#39;Math quiz time!&#39;</span>)
+</span></span><span style="display:flex;"><span>    qs <span style="color:#f92672">=</span> ((<span style="color:#e6db74">&#39;sum&#39;</span>, <span style="color:#ae81ff">12</span>, <span style="color:#ae81ff">5</span>), (<span style="color:#e6db74">&#39;difference&#39;</span>, <span style="color:#ae81ff">45</span>, <span style="color:#ae81ff">14</span>), (<span style="color:#e6db74">&#39;product&#39;</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">9</span>), (<span style="color:#e6db74">&#39;ratio&#39;</span>, <span style="color:#ae81ff">18</span>, <span style="color:#ae81ff">6</span>), (<span style="color:#e6db74">&#39;remainder from division&#39;</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">7</span>))
+</span></span><span style="display:flex;"><span>    log <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;_&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> q <span style="color:#f92672">in</span> qs: 
+</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#39;What is the </span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> of </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> and </span><span style="color:#e6db74">%d</span><span style="color:#e6db74">?&#39;</span> <span style="color:#f92672">%</span> q)
+</span></span><span style="display:flex;"><span>        x, a, b <span style="color:#f92672">=</span> q
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> x <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;sum&#39;</span>:
+</span></span><span style="display:flex;"><span>            r <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> x <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;difference&#39;</span>:
+</span></span><span style="display:flex;"><span>            r <span style="color:#f92672">=</span> a <span style="color:#f92672">-</span> b
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> x <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;product&#39;</span>:
+</span></span><span style="display:flex;"><span>            r <span style="color:#f92672">=</span> a <span style="color:#f92672">*</span> b
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> x <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;ratio&#39;</span>:
+</span></span><span style="display:flex;"><span>            r <span style="color:#f92672">=</span> a <span style="color:#f92672">//</span> b
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> x <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;remainder from division&#39;</span>:
+</span></span><span style="display:flex;"><span>            r <span style="color:#f92672">=</span> a <span style="color:#f92672">%</span> b
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            print (<span style="color:#e6db74">&#39;What?&#39;</span>)
+</span></span><span style="display:flex;"><span>        inp <span style="color:#f92672">=</span> int(input())
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> inp <span style="color:#f92672">==</span> r:
+</span></span><span style="display:flex;"><span>            print (<span style="color:#e6db74">&#39;Correct!&#39;</span>)
+</span></span><span style="display:flex;"><span>            log <span style="color:#f92672">+=</span> str(inp) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;_&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            print (<span style="color:#e6db74">&#39;Wrong!&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> log
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#_17_31_72_3_2_</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">game3</span>():
+</span></span><span style="display:flex;"><span>    print (<span style="color:#e6db74">&#39;Speed typing game.&#39;</span>)
+</span></span><span style="display:flex;"><span>    t <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span>    text <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  Text: Because of its performance advantage, today many language implementations
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  execute a program in two phases, first compiling the source code into bytecode,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  and then passing the bytecode to the virtual machine.
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>    words <span style="color:#f92672">=</span> text<span style="color:#f92672">.</span>split()
+</span></span><span style="display:flex;"><span>    it <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    log <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;_&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> it <span style="color:#f92672">!=</span> len(words):
+</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%0.2f</span><span style="color:#e6db74"> seconds left.&#39;</span> <span style="color:#f92672">%</span> (<span style="color:#ae81ff">20</span> <span style="color:#f92672">-</span> (time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> t)))
+</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x1b</span><span style="color:#e6db74">[32m&#39;</span>, <span style="color:#e6db74">&#39; &#39;</span><span style="color:#f92672">.</span>join(words[:it]), <span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\x1b</span><span style="color:#e6db74">[39m &#39;</span>, words[it])
+</span></span><span style="display:flex;"><span>        inp <span style="color:#f92672">=</span> input()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> time<span style="color:#f92672">.</span>time() <span style="color:#f92672">&gt;</span> t <span style="color:#f92672">+</span> <span style="color:#ae81ff">20</span>:
+</span></span><span style="display:flex;"><span>            fail(<span style="color:#e6db74">&#39;Too slow!&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> inp <span style="color:#f92672">==</span> words[it]:
+</span></span><span style="display:flex;"><span>            log <span style="color:#f92672">+=</span> words[it]<span style="color:#f92672">.</span>upper() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;_&#39;</span>
+</span></span><span style="display:flex;"><span>            it <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            fail(<span style="color:#e6db74">&#39;You made a mistake!&#39;</span>)
+</span></span><span style="display:flex;"><span>    print (<span style="color:#e6db74">&#39;Nice!&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> log
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#_BECAUSE_OF_ITS_PERFORMANCE_ADVANTAGE,_TODAY_MANY_LANGUAGE_IMPLEMENTATIONS_EXECUTE_A_PROGRAM_IN_TWO_PHASES,_FIRST_COMPILING_THE_SOURCE_CODE_INTO_BYTECODE,_AND_THEN_PASSING_THE_BYTECODE_TO_THE_VIRTUAL_MACHINE._</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Pass 3 tests to prove your worth!&#39;</span>)
+</span></span><span style="display:flex;"><span>    seed <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;seed:&#39;</span>
+</span></span><span style="display:flex;"><span>    seed <span style="color:#f92672">+=</span> game1() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;:&#39;</span>
+</span></span><span style="display:flex;"><span>    print (seed)
+</span></span><span style="display:flex;"><span>    seed <span style="color:#f92672">+=</span> game2() <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;:&#39;</span>
+</span></span><span style="display:flex;"><span>    print (seed)
+</span></span><span style="display:flex;"><span>    seed <span style="color:#f92672">+=</span> game3()
+</span></span><span style="display:flex;"><span>    print (seed)
+</span></span><span style="display:flex;"><span>    print ()
+</span></span><span style="display:flex;"><span>    print (<span style="color:#e6db74">&#34;You can drive to work, know some maths and can type fast. You&#39;re hired!&#34;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Your sign-on bonus:&#39;</span>, cry(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xa0</span><span style="color:#e6db74">?n</span><span style="color:#ae81ff">\xa5\x7f</span><span style="color:#e6db74">)</span><span style="color:#ae81ff">\x1f</span><span style="color:#e6db74">6Jvh</span><span style="color:#ae81ff">\x95\xcc</span><span style="color:#e6db74">!</span><span style="color:#ae81ff">\x1e\x95\x99</span><span style="color:#e6db74">6a</span><span style="color:#ae81ff">\x11\xf6</span><span style="color:#e6db74">OV</span><span style="color:#ae81ff">\x88\xc1\x9f\xde\xb5</span><span style="color:#e6db74">0</span><span style="color:#ae81ff">\x9d\xae\x14\xde\x18</span><span style="color:#e6db74">YHI</span><span style="color:#ae81ff">\xd8\xd5\x90\x8a\x18</span><span style="color:#e6db74">1l</span><span style="color:#ae81ff">\xb0\x16</span><span style="color:#e6db74">^O;]&#39;</span>, seed)<span style="color:#f92672">.</span>decode())
+</span></span></code></pre></div><h2 id="solve">SOLVE!</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ks</span>(seed):
+</span></span><span style="display:flex;"><span>    random<span style="color:#f92672">.</span>seed(seed)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">yield</span> (random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">255</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">13</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">17</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">cry</span>(s, seed):
+</span></span><span style="display:flex;"><span>    r <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> x, y <span style="color:#f92672">in</span> zip(ks(seed), s):
+</span></span><span style="display:flex;"><span>        r<span style="color:#f92672">.</span>append(x <span style="color:#f92672">^</span> y)
+</span></span><span style="display:flex;"><span>        bytes(r)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> r
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>seed <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;seed:sssddwwddwddsssdssaaawwssaaaassddddddd:_17_31_72_3_2_:_BECAUSE_OF_ITS_PERFORMANCE_ADVANTAGE,_TODAY_MANY_LANGUAGE_IMPLEMENTATIONS_EXECUTE_A_PROGRAM_IN_TWO_PHASES,_FIRST_COMPILING_THE_SOURCE_CODE_INTO_BYTECODE,_AND_THEN_PASSING_THE_BYTECODE_TO_THE_VIRTUAL_MACHINE._&#39;</span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#39;Your sign-on bonus:&#39;</span>, cry(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\xa0</span><span style="color:#e6db74">?n</span><span style="color:#ae81ff">\xa5\x7f</span><span style="color:#e6db74">)</span><span style="color:#ae81ff">\x1f</span><span style="color:#e6db74">6Jvh</span><span style="color:#ae81ff">\x95\xcc</span><span style="color:#e6db74">!</span><span style="color:#ae81ff">\x1e\x95\x99</span><span style="color:#e6db74">6a</span><span style="color:#ae81ff">\x11\xf6</span><span style="color:#e6db74">OV</span><span style="color:#ae81ff">\x88\xc1\x9f\xde\xb5</span><span style="color:#e6db74">0</span><span style="color:#ae81ff">\x9d\xae\x14\xde\x18</span><span style="color:#e6db74">YHI</span><span style="color:#ae81ff">\xd8\xd5\x90\x8a\x18</span><span style="color:#e6db74">1l</span><span style="color:#ae81ff">\xb0\x16</span><span style="color:#e6db74">^O;]&#39;</span>, seed))
+</span></span></code></pre></div><h2 id="afterword">Afterword</h2>
 <p>After failed to solve adamd in DEFCON 30 QUALS, I finally solved a Python 3.11 challenge :D</p>
 <p><figure 
 	

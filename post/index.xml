@@ -6,7 +6,23 @@
     <description>Recent content in Posts on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 04 Jul 2022 16:01:21 +0800</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 Aug 2022 23:23:23 +0800</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>qwb 2022 rev writeups</title>
+      <link>/post/qwb2022-rev-writeups/</link>
+      <pubDate>Tue, 02 Aug 2022 23:23:23 +0800</pubDate>
+      
+      <guid>/post/qwb2022-rev-writeups/</guid>
+      <description>find_basic 没保存过程数据，以后找时间再补吧
+用 IDA 查看，能够发现反编译结果很奇怪，看看反汇编就能够发现存在很多 pusha 和 call 之类的指令，不如对着汇编动调
+动调后因为不好找核心逻辑的位置，所以在输入处下个硬件断点，发现取出了输入的第一位内容，然后进行乘法和累加，类似下面这段代码：
+ADD EAX,0x11 MOVZX EAX,byte ptr [EAX] MOVZX EAX,AL IMUL EAX,EAX,-0x35cf6 主逻辑在0x750a9的位置，继续跟踪一下逻辑，整体相当于n个虚拟机，结构大概如下：
+father_func@0x750a9: MOV CL, 0x?? CALL son_func son_func: CMP CL, 0x?? JMP ??? CMP CL, 0x?? JMP ??? 每个子函数的开头和结尾都有一些类似话指令的逻辑，但动调发现好像不影响程序的逻辑，所以就忽略了
+跟踪了几个验证用的逻辑后，发现主要是乘法和累加，说明应该是一个矩阵运算，考虑到工作量很大，那就需要想办法进行自动提取了
+使用了 idapython 进行自动调试，并记录过程中运行的指令：
+from binascii import hexlify ea = get_reg_value(&amp;#39;eip&amp;#39;) end = ea + 0x1806 main_func = get_func_name(ea) fp = open(&amp;#39;all_asm.txt&amp;#39;,&amp;#39;w&amp;#39;) while True: ea = get_reg_value(&amp;#39;eip&amp;#39;) next_ea = next_head(ea) fp.write(hexlify(get_bytes(ea, next_ea - ea)).</description>
+    </item>
+    
     <item>
       <title>Google CTF 2022 MIXED Writeup</title>
       <link>/post/google-ctf-2022-mixed-writeup/</link>
@@ -27,7 +43,7 @@ Patch This patch file mainly patches the opcode.py file. After the patch, opcode
       <description>Repository:
 https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce
 Modify from a dockerfile based on DEBIAN: https://raw.githubusercontent.com/vanhauser-thc/peachpro/main/Dockerfile
-shell sudo apt update sudo apt install -y \  coreutils apt-utils wget curl openssl ca-certificates bash-completion \  joe vim nano \  unzip p7zip \  hping3 httping thc-ipv6 gdb \  tcpdump wireshark-common \  locales-all \  git build-essential joe vim strace tcpdump python python-pip python-is-python2\  ruby doxygen libxml2-utils less openjdk-8-jre xsltproc asciidoctor \  nodejs node-typescript wget \  apt-transport-https dirmngr gnupg libtool-bin \  cmake dos2unix g++-multilib --fix-missing cd ~/Downloads git clone https://gitlab.</description>
+shell sudo apt update sudo apt install -y \ coreutils apt-utils wget curl openssl ca-certificates bash-completion \ joe vim nano \ unzip p7zip \ hping3 httping thc-ipv6 gdb \ tcpdump wireshark-common \ locales-all \ git build-essential joe vim strace tcpdump python python-pip python-is-python2\ ruby doxygen libxml2-utils less openjdk-8-jre xsltproc asciidoctor \ nodejs node-typescript wget \ apt-transport-https dirmngr gnupg libtool-bin \ cmake dos2unix g++-multilib --fix-missing cd ~/Downloads git clone https://gitlab.</description>
     </item>
     
     <item>
@@ -48,7 +64,7 @@ v11 = std::operator&amp;lt;&amp;lt;&amp;lt;std::char_traits&amp;lt;char&amp;gt;&
       <guid>/post/hgame2022-writeups/</guid>
       <description>Week1 [RE]easyasm 题目说 asm，那就硬看汇编呗
 循环右移 4 位，然后异或 0x17
-cipher = [ 0x91, 0x61, 0x01, 0xC1, 0x41, 0xA0, 0x60, 0x41, 0xD1, 0x21, 0x14, 0xC1, 0x41, 0xE2, 0x50, 0xE1, 0xE2, 0x54, 0x20, 0xC1, 0xE2, 0x60, 0x14, 0x30, 0xD1, 0x51, 0xC0, 0x17 ] def ror(x): return (x &amp;gt;&amp;gt; 4) | (x &amp;lt;&amp;lt; 4) &amp;amp; 0xff for c in cipher: print (chr(ror(c ^ 0x17)), end=&amp;#39;&amp;#39;) # hgame{welc0me_to_4sm_w0rld} [RE]creakme int __cdecl main(int argc, const char **argv, const char **envp) { int v3; // edx  int i; // esi  unsigned int v5; // edi  unsigned int v6; // ebx  int v7; // esi  int v8; // esi  _DWORD v10[17]; // [esp+Ch] [ebp-8Ch] BYREF  _BYTE v11[32]; // [esp+50h] [ebp-48h]  char Arglist[32]; // [esp+70h] [ebp-28h] BYREF  int v13; // [esp+90h] [ebp-8h]  int v14; // [esp+94h] [ebp-4h]  memset(Arglist, 0, sizeof(Arglist)); sub_40103A(&amp;#34;%s&amp;#34;, (char)Arglist); strcpy((char *)v10, &amp;#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&amp;#34;); v3 = 0; v14 = 0; for ( i = 0; i &amp;lt; 32; v14 = i ) { v5 = *(_DWORD *)&amp;amp;Arglist[i]; v6 = *(_DWORD *)&amp;amp;Arglist[i + 4]; v13 = 0; v7 = 32; do { v3 += 0x12345678; v5 += v3 ^ (v3 + v6) ^ (v10[2] + 16 * v6) ^ (v10[3] + (v6 &amp;gt;&amp;gt; 5)); v6 += v3 ^ (v3 + v5) ^ (v10[0] + 16 * v5) ^ (v10[1] + (v5 &amp;gt;&amp;gt; 5)); --v7; } while ( v7 ); v8 = v14; v3 = 0; *(_DWORD *)&amp;amp;Arglist[v14] = v5; *(_DWORD *)&amp;amp;Arglist[v8 + 4] = v6; i = v8 + 8; } *(_OWORD *)v11 = *(_OWORD *)dword_402180; *(_OWORD *)&amp;amp;v11[16] = dword_402170; while ( Arglist[v3] == v11[v3] ) { if ( ++v3 &amp;gt;= 32 ) { sub_40100C(&amp;#34;right!</description>
+cipher = [ 0x91, 0x61, 0x01, 0xC1, 0x41, 0xA0, 0x60, 0x41, 0xD1, 0x21, 0x14, 0xC1, 0x41, 0xE2, 0x50, 0xE1, 0xE2, 0x54, 0x20, 0xC1, 0xE2, 0x60, 0x14, 0x30, 0xD1, 0x51, 0xC0, 0x17 ] def ror(x): return (x &amp;gt;&amp;gt; 4) | (x &amp;lt;&amp;lt; 4) &amp;amp; 0xff for c in cipher: print (chr(ror(c ^ 0x17)), end=&amp;#39;&amp;#39;) # hgame{welc0me_to_4sm_w0rld} [RE]creakme int __cdecl main(int argc, const char **argv, const char **envp) { int v3; // edx int i; // esi unsigned int v5; // edi unsigned int v6; // ebx int v7; // esi int v8; // esi _DWORD v10[17]; // [esp+Ch] [ebp-8Ch] BYREF _BYTE v11[32]; // [esp+50h] [ebp-48h] char Arglist[32]; // [esp+70h] [ebp-28h] BYREF int v13; // [esp+90h] [ebp-8h] int v14; // [esp+94h] [ebp-4h] memset(Arglist, 0, sizeof(Arglist)); sub_40103A(&amp;#34;%s&amp;#34;, (char)Arglist); strcpy((char *)v10, &amp;#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&amp;#34;); v3 = 0; v14 = 0; for ( i = 0; i &amp;lt; 32; v14 = i ) { v5 = *(_DWORD *)&amp;amp;Arglist[i]; v6 = *(_DWORD *)&amp;amp;Arglist[i + 4]; v13 = 0; v7 = 32; do { v3 += 0x12345678; v5 += v3 ^ (v3 + v6) ^ (v10[2] + 16 * v6) ^ (v10[3] + (v6 &amp;gt;&amp;gt; 5)); v6 += v3 ^ (v3 + v5) ^ (v10[0] + 16 * v5) ^ (v10[1] + (v5 &amp;gt;&amp;gt; 5)); --v7; } while ( v7 ); v8 = v14; v3 = 0; *(_DWORD *)&amp;amp;Arglist[v14] = v5; *(_DWORD *)&amp;amp;Arglist[v8 + 4] = v6; i = v8 + 8; } *(_OWORD *)v11 = *(_OWORD *)dword_402180; *(_OWORD *)&amp;amp;v11[16] = dword_402170; while ( Arglist[v3] == v11[v3] ) { if ( ++v3 &amp;gt;= 32 ) { sub_40100C(&amp;#34;right!</description>
     </item>
     
     <item>
@@ -59,7 +75,7 @@ cipher = [ 0x91, 0x61, 0x01, 0xC1, 0x41, 0xA0, 0x60, 0x41, 0xD1, 0x21, 0x14, 0xC
       <guid>/post/reversing-kr-writeups/</guid>
       <description>CSHOP 按一下回车就通关了
 如果要查看逻辑的话，需要先使用 de4dot 脱壳，然后用 dnSpy 打开
-private void Form1_Load(object sender, EventArgs e) { this.lblSu.Text = &amp;#34; &amp;#34;; this.lblGu.Text = &amp;#34; &amp;#34;; this.lblNu.Text = &amp;#34; &amp;#34;; this.lblKu.Text = &amp;#34; &amp;#34;; this.lblZu.Text = &amp;#34; &amp;#34;; this.lblMu.Text = &amp;#34; &amp;#34;; this.lblTu.Text = &amp;#34; &amp;#34;; this.ppppp.Text = &amp;#34; &amp;#34;; this.lblGu.Text = &amp;#34; &amp;#34;; this.lblQu.Text = &amp;#34; &amp;#34;; this.ppppp.Text = &amp;#34; &amp;#34;; this.lblTu.Text = &amp;#34; &amp;#34;; this.lblXu.Text = &amp;#34; &amp;#34;; } // Token: 0x06000004 RID: 4 RVA: 0x000021B0 File Offset: 0x000003B0 	private void btnStart_Click(object sender, EventArgs e) { this.</description>
+private void Form1_Load(object sender, EventArgs e) { this.lblSu.Text = &amp;#34; &amp;#34;; this.lblGu.Text = &amp;#34; &amp;#34;; this.lblNu.Text = &amp;#34; &amp;#34;; this.lblKu.Text = &amp;#34; &amp;#34;; this.lblZu.Text = &amp;#34; &amp;#34;; this.lblMu.Text = &amp;#34; &amp;#34;; this.lblTu.Text = &amp;#34; &amp;#34;; this.ppppp.Text = &amp;#34; &amp;#34;; this.lblGu.Text = &amp;#34; &amp;#34;; this.lblQu.Text = &amp;#34; &amp;#34;; this.ppppp.Text = &amp;#34; &amp;#34;; this.lblTu.Text = &amp;#34; &amp;#34;; this.lblXu.Text = &amp;#34; &amp;#34;; } // Token: 0x06000004 RID: 4 RVA: 0x000021B0 File Offset: 0x000003B0 private void btnStart_Click(object sender, EventArgs e) { this.</description>
     </item>
     
     <item>
@@ -71,26 +87,24 @@ private void Form1_Load(object sender, EventArgs e) { this.lblSu.Text = &amp;#34
       <description>有些题还是很值得补的，最近没什么时间，假期补吧（
 第一题 签到 这题还是比较容易的，需要一点点动调的经验
 上张队友的截图吧，懒得自己截了
-
 动调看看内存就知道，流程是：
 serial-&amp;gt;十进制-&amp;gt;与name的crc异或-&amp;gt;计算crc
 最后需要是一个固定的值，于是只需要想办法反解就行了
 这里注意到了一个事情，那就是图中看似是对 v6 的 crc 结果做了约束，其实是对 v6 本身进行了约束
 由于题目给了一个实例的 name 和 serial，我们只需要动调拿到这个的 v6，就知道能通过验证的 v6 是多少了
 接下来动调拿一下 KCTF 的 crc，这个的结果再异或一下目标的 v6，就得到serial了
- 靠记忆写的，希望没错
- 第二题 迷失丛林  这题就直接放提交的wp了
- 很容易定位到程序的输入
-
+靠记忆写的，希望没错
+第二题 迷失丛林 这题就直接放提交的wp了
+很容易定位到程序的输入
 输入长度为32，需要通过 sub_4014A0, sub_401580 的验证
 4014A0 较为简单，是个经典的hexstr转成char存到 4041F0 这个地址，最后的16是计算转换后的长度，所以输入就是 [0-9A-F]{32}
 随后将输入的前八字节存入 404000 中，剩下的部分传参进 sub_401580
 要想让该函数返回1，需要先通过如下的if验证
-
 简单看一下使用的变量，应该是对前八字节的输入进行的验证
-
 结合动调发现大概就是根据404000数组，构成一个 &amp;lt;value, index&amp;gt; 的结构，两两存放到404420当中
-分析了一下404000数组的作用和特征，发现这个数组应该是构成一个环状的结构（以当前数值作为索引寻找下一个数），猜测不能有重复的数字，否则可能会构成小循环之类的，用脚本验证了一下发现后面248个数字果然没有重复，于是将前八字节的取值可能锁定到了 0x1e, 0x28, 0x4b, 0x6d, 0x8c, 0xa3, 0xd2, 0xfb 中，总共有 $8!</description>
+分析了一下404000数组的作用和特征，发现这个数组应该是构成一个环状的结构（以当前数值作为索引寻找下一个数），猜测不能有重复的数字，否则可能会构成小循环之类的，用脚本验证了一下发现后面248个数字果然没有重复，于是将前八字节的取值可能锁定到了 0x1e, 0x28, 0x4b, 0x6d, 0x8c, 0xa3, 0xd2, 0xfb 中，总共有 $8!=40320$ 种可能，完全可以爆破
+把ida代码复制下来改一改
+#include &amp;lt;stdio.h&amp;gt; #include &amp;lt;stdint.h&amp;gt; #include &amp;lt;algorithm&amp;gt; #include &amp;lt;cstring&amp;gt; unsigned char byte_404000[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA2, 0x9B, 0xF4, 0xDF, 0xAC, 0x7C, 0xA1, 0xC6, 0x16, 0xD0, 0x0F, 0xDD, 0xDC, 0x73, 0xC5, 0x6B, 0xD1, 0x96, 0x47, 0xC2, 0x26, 0x67, 0x4E, 0x41, 0x82, 0x20, 0x56, 0x9A, 0x6E, 0x33, 0x92, 0x88, 0x29, 0xB5, 0xB4, 0x71, 0xA9, 0xCE, 0xC3, 0x34, 0x50, 0x59, 0xBF, 0x2D, 0x57, 0x22, 0xA6, 0x30, 0x04, 0xB2, 0xCD, 0x36, 0xD5, 0x68, 0x4D, 0x5B, 0x45, 0x9E, 0x85, 0xCF, 0x9D, 0xCC, 0x61, 0x78, 0x32, 0x76, 0x31, 0xE3, 0x80, 0xAD, 0x39, 0x4F, 0xFA, 0x72, 0x83, 0x4C, 0x86, 0x60, 0xB7, 0xD7, 0x63, 0x0C, 0x44, 0x35, 0xB3, 0x7B, 0x19, 0xD4, 0x69, 0x08, 0x0B, 0x1F, 0x3D, 0x11, 0x79, 0xD3, 0xEE, 0x93, 0x42, 0xDE, 0x23, 0x3B, 0x5D, 0x8D, 0xA5, 0x77, 0x5F, 0x58, 0xDB, 0x97, 0xF6, 0x7A, 0x18, 0x52, 0x15, 0x74, 0x25, 0x62, 0x2C, 0x05, 0xE8, 0x0D, 0x98, 0x2A, 0x43, 0xE2, 0xEF, 0x48, 0x87, 0x49, 0x1C, 0xCA, 0x2B, 0xA7, 0x8A, 0x09, 0x81, 0xE7, 0x53, 0xAA, 0xFF, 0x6F, 0x8E, 0x91, 0xF1, 0xF0, 0xA4, 0x46, 0x3A, 0x7D, 0x54, 0xEB, 0x2F, 0xC1, 0xC0, 0x0E, 0xBD, 0xE1, 0x6C, 0x64, 0xBE, 0xE4, 0x02, 0x3C, 0x5A, 0xA8, 0x9F, 0x37, 0xAF, 0xA0, 0x13, 0xED, 0x1B, 0xEC, 0x8B, 0x3E, 0x7E, 0x27, 0x99, 0x75, 0xAB, 0xFE, 0xD9, 0x3F, 0xF3, 0xEA, 0x70, 0xF7, 0x95, 0xBA, 0x1D, 0x40, 0xB0, 0xF9, 0xE5, 0xF8, 0x06, 0xBC, 0xB6, 0x03, 0xC9, 0x10, 0x9C, 0x2E, 0x89, 0x5C, 0x7F, 0xB1, 0x1A, 0xD6, 0x90, 0xAE, 0xDA, 0xE6, 0x5E, 0xB9, 0x84, 0xE9, 0x55, 0xBB, 0xC7, 0x0A, 0xE0, 0x66, 0xF2, 0xD8, 0xCB, 0x00, 0x12, 0xB8, 0x17, 0x94, 0x6A, 0x4A, 0x01, 0x24, 0x14, 0x51, 0x07, 0x65, 0x21, 0xC8, 0x38, 0xFD, 0x8F, 0xC4, 0xF5, 0xFC }; unsigned char byte_404220[520]; unsigned char byte_404420[65537]; int dword_404100[] = {2, 4, 8, 0x10, 0x20, 0x40, 0x80, 0}; using namespace std; int sub_401580(unsigned char *a2) { int v2; // ebp unsigned char *v3; // eax int *v4; // esi unsigned char *v5; // ecx int v6; // edi unsigned char *v7; // ecx int v8; // edx unsigned char *v9; // eax int v10; // ecx int v11; // esi int v12; // eax unsigned char v13; // dl int v14; // edi int v15; // eax int v16; // ecx int v17; // esi int i; // eax char v19; // dl unsigned char v21; // [esp+10h] [ebp-Ch] unsigned char v22; // [esp+11h] [ebp-Bh] unsigned char v23; // [esp+12h] [ebp-Ah] unsigned char v24; // [esp+13h] [ebp-9h] unsigned char *v25; // [esp+14h] [ebp-8h] v21 = 0; v22 = 0; v23 = 0; v24 = 0; v2 = 1; v25 = byte_404420; for (i = 0; i &amp;lt; 8; i++) byte_404000[i] = a2[i]; do { byte_404220[0] = byte_404000[v2 - 1]; byte_404220[1] = v2; v3 = byte_404220; v4 = dword_404100; v5 = &amp;amp;byte_404220[dword_404100[0]]; do { v6 = *v4; // 2, 4, 8, 10h, 20h, 40h, 80h if ( *v4 &amp;gt; 0 ) { do { v7 = v5 + 1; *(v7 - 1) = byte_404000[*v3]; *v7 = *v3 + 1; v5 = v7 + 1; ++v3; --v6; } while ( v6 ); } ++v4; } while ( v4 &amp;lt; &amp;amp;(dword_404100[7]) ); v8 = 256; do { ++v25[*v3++]; --v8; } while ( v8 ); ++v2; v25 += 256; } while ( v2 - 1 &amp;lt; 256 ); v9 = &amp;amp;byte_404420[0x28]; v10 = 256; do { if ( *(v9 - 40) ) ++v21; if ( *(v9 - 26) ) ++v22; if ( *v9 ) ++v23; if ( v9[39] ) ++v24; v9 += 256; --v10; } while ( v10 ); if ( v21 == 0xA9 &amp;amp;&amp;amp; v22 == 0xAC &amp;amp;&amp;amp; v23 == 0xA7 &amp;amp;&amp;amp; v24 &amp;gt; 0xC8u ){ for (i = 0; i &amp;lt; 8; i++){ printf(&amp;#34;%hhX&amp;#34;, a2[i]); } } return 0; } int main(){ unsigned char flag[] = {0x1e, 0x28, 0x4b, 0x6d, 0x8c, 0xa3, 0xd2, 0xfb}; do{ memset(byte_404420, 0, 65536); sub_401580(flag); }while (next_permutation(flag, flag + 8)); return 0; } 转换一下得到前八字节 B4D682C8BF2DE13A</description>
     </item>
     
     <item>
@@ -119,10 +133,10 @@ serial-&amp;gt;十进制-&amp;gt;与name的crc异或-&amp;gt;计算crc
       
       <guid>/post/all-solves-during-a-weekend/</guid>
       <description>打美团 CTF 的时候才意识到，有一种坐牢叫AK
- [MTCTF 4th]wow 先进行脱壳，因为脱壳后用的是绝对地址，而加载的时候是动态加载，所有没有办法调试，那就直接静态看吧
+[MTCTF 4th]wow 先进行脱壳，因为脱壳后用的是绝对地址，而加载的时候是动态加载，所有没有办法调试，那就直接静态看吧
 JUMPOUT 那里看一下汇编，发现有一个天堂之门
-push 0x33call $+5add [esp+84h+var_84], 5retf直接把后面的数据全 dump 出来，然后用 ida64 打开
-void __fastcall sub_0(unsigned int *a1) { unsigned int v1; // er9  int v2; // ebp  unsigned int v3; // esi  unsigned int *v4; // rdi  unsigned int *v5; // r10  unsigned int v6; // ebx  unsigned int i; // er11  unsigned int v8; // er8  int v9; // edx  unsigned int v10; // eax  unsigned int v11; // er9  unsigned int v12; // er8  int v13; // ebx  int v14; // ebx  int v15; // ebx  int v16; // edx  unsigned int v17; // eax  unsigned int v18; // er9  v1 = a1[8]; v2 = 12; v3 = 0; while ( 1 ) { v3 += 1732584193; v4 = a1 + 1; v5 = a1; v6 = v3 &amp;gt;&amp;gt; 2; for ( i = 0; i &amp;lt; 8; ++i ) { v8 = *v4; if ( (((unsigned __int8)i ^ (unsigned __int8)v6) &amp;amp; 3) !</description>
+push 0x33 call $+5 add [esp+84h+var_84], 5 retf 直接把后面的数据全 dump 出来，然后用 ida64 打开
+void __fastcall sub_0(unsigned int *a1) { unsigned int v1; // er9 int v2; // ebp unsigned int v3; // esi unsigned int *v4; // rdi unsigned int *v5; // r10 unsigned int v6; // ebx unsigned int i; // er11 unsigned int v8; // er8 int v9; // edx unsigned int v10; // eax unsigned int v11; // er9 unsigned int v12; // er8 int v13; // ebx int v14; // ebx int v15; // ebx int v16; // edx unsigned int v17; // eax unsigned int v18; // er9 v1 = a1[8]; v2 = 12; v3 = 0; while ( 1 ) { v3 += 1732584193; v4 = a1 + 1; v5 = a1; v6 = v3 &amp;gt;&amp;gt; 2; for ( i = 0; i &amp;lt; 8; ++i ) { v8 = *v4; if ( (((unsigned __int8)i ^ (unsigned __int8)v6) &amp;amp; 3) !</description>
     </item>
     
     <item>
@@ -139,7 +153,7 @@ v9 = byte_412000; v10 = byte_412050; v11 = 64LL; v12 = 0; do { v12 |= *v10++ ^ *
 Angr用的是手动往全局变量注入符号，然后在验证前停止，手动添加约束，wp中的写法是直接用程序中的验证，并添加了 LAZY_SOLVES 参数，学到了
 之前用自己脚本跑的适合发现一直是 unsat，以为Angr会有问题，但后来发现有个wp就是用的Angr
 于是掏出了之前写的脚本做了一些尝试
-from angr import *import claripyimport binasciiinput_length = 56base_addr = 0x400000proj = Project(&#39;runofthemill&#39;, main_opts={&amp;quot;base_addr&amp;quot;: base_addr})start_addr = 0x401054state = proj.</description>
+from angr import * import claripy import binascii input_length = 56 base_addr = 0x400000 proj = Project(&amp;#39;runofthemill&amp;#39;, main_opts={&amp;#34;base_addr&amp;#34;: base_addr}) start_addr = 0x401054 state = proj.</description>
     </item>
     
     <item>
@@ -151,7 +165,7 @@ from angr import *import claripyimport binasciiinput_length = 56base_addr = 
       <description>一些信号量函数的学习 信号量的注册在init函数中
 v2.sa_handler = (__sighandler_t)sub_400E1D; v2.sa_flags = 4; sigaction(34, &amp;amp;v2, &amp;amp;v1); sigaction() 函数定义为
 int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact); sigaction 结构体定义如下
-struct sigaction { void (*sa_handler) (int); sigset_t sa_mask; int sa_flags; // 用来设置信号处理的相关操作  void (*sa_restorer) (void); } 关于 sa_flags 的定义如下 (from linux/include/uapi/asm-generic/signal-defs.h)
+struct sigaction { void (*sa_handler) (int); sigset_t sa_mask; int sa_flags; // 用来设置信号处理的相关操作 void (*sa_restorer) (void); } 关于 sa_flags 的定义如下 (from linux/include/uapi/asm-generic/signal-defs.h)
 #ifndef SA_NOCLDSTOP #define SA_NOCLDSTOP	0x00000001 #endif #ifndef SA_NOCLDWAIT #define SA_NOCLDWAIT	0x00000002 #endif #ifndef SA_SIGINFO #define SA_SIGINFO	0x00000004 #endif /* 0x00000008 used on alpha, mips, parisc */ /* 0x00000010 used on alpha, parisc */ /* 0x00000020 used on alpha, parisc, sparc */ /* 0x00000040 used on alpha, parisc */ /* 0x00000080 used on parisc */ /* 0x00000100 used on sparc */ /* 0x00000200 used on sparc */ #define SA_UNSUPPORTED	0x00000400 #define SA_EXPOSE_TAGBITS	0x00000800 /* 0x00010000 used on mips */ /* 0x00800000 used for internal SA_IMMUTABLE */ /* 0x01000000 used on x86 */ /* 0x02000000 used on x86 */ /* * New architectures should not define the obsolete *	SA_RESTORER	0x04000000 */ #ifndef SA_ONSTACK #define SA_ONSTACK	0x08000000 #endif #ifndef SA_RESTART #define SA_RESTART	0x10000000 #endif #ifndef SA_NODEFER #define SA_NODEFER	0x40000000 #endif #ifndef SA_RESETHAND #define SA_RESETHAND	0x80000000 #endif 题目中使用的是 SA_SIGINFO，对信号处理程序提供了附加信息：一个指向 siginfo 结构的指针以及一个指向上下文标识符的指针</description>
     </item>
     
@@ -161,14 +175,15 @@ struct sigaction { void (*sa_handler) (int); sigset_t sa_mask; int sa_flags; // 
       <pubDate>Tue, 23 Nov 2021 14:06:23 +0000</pubDate>
       
       <guid>/post/resent-re-challenge/</guid>
-      <description>[N1CTF 2021]babyrust [N1CTF 2021]Py [L3HCTF 2021]double-joy [L3HCTF 2021]Load [hack.lu]pycoin [hack.lu]atareee  TODO:
- [L3HCTF 2021]idaaaaaaaa  [N1CTF]babyrust 题目直接给了Rust源码，之前没有见过，现查文档学习
+      <description>[N1CTF 2021]babyrust [N1CTF 2021]Py [L3HCTF 2021]double-joy [L3HCTF 2021]Load [hack.lu]pycoin [hack.lu]atareee TODO:
+[L3HCTF 2021]idaaaaaaaa [N1CTF]babyrust 题目直接给了Rust源码，之前没有见过，现查文档学习
 首先main函数里只是调用了一个 check!
 let result = check!(@s /*your answer*/); main 上面就是 check 的实现
 macro_rules! check { (@s n1ctf{$Never:tt}) =&amp;gt; { check!(stringify!($Never)) }; macro_rules! 是个宏定义，里面的 @s，@e 应该是类似字符串匹配的东西
 一开始的 (@s n1ctf{$Never:tt}) 就把flag中去除 n1ctf{} 的部分存到了 $Never 变量中，stringify! 将其转换为字符串常量
- stringify! 为 Rust 内置宏。其接收一个 Rust 表达式，如 1 + 2 ， 然后在编译时将表达式转换为一个字符串常量，如 &amp;ldquo;1 + 2&amp;rdquo; 。
- 接下来的宏定义有很多类似这个的：</description>
+stringify! 为 Rust 内置宏。其接收一个 Rust 表达式，如 1 + 2 ， 然后在编译时将表达式转换为一个字符串常量，如 &amp;ldquo;1 + 2&amp;rdquo; 。
+接下来的宏定义有很多类似这个的：
+(@e ($Never:expr,$Gonna:expr,$Give:expr); (Never gonna give you up $($code:tt)*)) =&amp;gt; { $Give += true as usize; check!</description>
     </item>
     
     <item>
@@ -201,7 +216,7 @@ v4 = (unsigned __int8 *)&amp;amp;key + a2; v5 = v4[2]; v6 = 1; while ( (unsigned
       <description>[RE]ea5ycpp 一开始还被逻辑绕了一下，结果发现核心部分就是brainfuck
 有一些结构体，可以恢复一下，会比较好看
 brainfuck解析出来就是简单的加减法
-#include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt; unsigned char a[9999]; int c; int main(int argc, char **argv) { a[24] += 2; while (a[24]) { ++a[0]; --a[24]; } a[24] += 3; while (a[24]) { ++a[1]; --a[24]; } a[24] += 4; while (a[24]) { ++a[2]; --a[24]; } a[24] += 5; while (a[24]) { ++a[3]; --a[24]; } a[24] += 6; while (a[24]) { ++a[4]; --a[24]; } a[24] += 7; while (a[24]) { ++a[5]; --a[24]; } a[24] += 8; while (a[24]) { ++a[6]; --a[24]; } a[24] += 9; while (a[24]) { ++a[7]; --a[24]; } a[24] += 10; while (a[24]) { ++a[8]; --a[24]; } a[24] += 11; while (a[24]) { ++a[9]; --a[24]; } a[24] += 12; while (a[24]) { ++a[10]; --a[24]; } a[24] += 13; while (a[24]) { ++a[11]; --a[24]; } a[24] += 14; while (a[24]) { ++a[12]; --a[24]; } a[24] += 15; while (a[24]) { ++a[13]; --a[24]; } a[24] += 16; while (a[24]) { ++a[14]; --a[24]; } a[24] += 18; while (a[24]) { ++a[15]; --a[24]; } a[24] += 19; while (a[24]) { ++a[16]; --a[24]; } a[24] += 20; while (a[24]) { ++a[17]; --a[24]; } a[24] += 21; while (a[24]) { ++a[18]; --a[24]; } a[24] += 22; while (a[24]) { ++a[19]; --a[24]; } a[24] += 23; while (a[24]) { ++a[20]; --a[24]; } a[24] += 24; while (a[24]) { ++a[21]; --a[24]; } a[24] += 25; while (a[24]) { ++a[22]; --a[24]; } a[24] += 26; while (a[24]) { ++a[23]; --a[24]; } return 0; } 根据字符串就能看到比较的位置，密文减一下就行</description>
+#include &amp;lt;stdio.h&amp;gt; #include &amp;lt;stdlib.h&amp;gt; unsigned char a[9999]; int c; int main(int argc, char **argv) { a[24] += 2; while (a[24]) { ++a[0]; --a[24]; } a[24] += 3; while (a[24]) { ++a[1]; --a[24]; } a[24] += 4; while (a[24]) { ++a[2]; --a[24]; } a[24] += 5; while (a[24]) { ++a[3]; --a[24]; } a[24] += 6; while (a[24]) { ++a[4]; --a[24]; } a[24] += 7; while (a[24]) { ++a[5]; --a[24]; } a[24] += 8; while (a[24]) { ++a[6]; --a[24]; } a[24] += 9; while (a[24]) { ++a[7]; --a[24]; } a[24] += 10; while (a[24]) { ++a[8]; --a[24]; } a[24] += 11; while (a[24]) { ++a[9]; --a[24]; } a[24] += 12; while (a[24]) { ++a[10]; --a[24]; } a[24] += 13; while (a[24]) { ++a[11]; --a[24]; } a[24] += 14; while (a[24]) { ++a[12]; --a[24]; } a[24] += 15; while (a[24]) { ++a[13]; --a[24]; } a[24] += 16; while (a[24]) { ++a[14]; --a[24]; } a[24] += 18; while (a[24]) { ++a[15]; --a[24]; } a[24] += 19; while (a[24]) { ++a[16]; --a[24]; } a[24] += 20; while (a[24]) { ++a[17]; --a[24]; } a[24] += 21; while (a[24]) { ++a[18]; --a[24]; } a[24] += 22; while (a[24]) { ++a[19]; --a[24]; } a[24] += 23; while (a[24]) { ++a[20]; --a[24]; } a[24] += 24; while (a[24]) { ++a[21]; --a[24]; } a[24] += 25; while (a[24]) { ++a[22]; --a[24]; } a[24] += 26; while (a[24]) { ++a[23]; --a[24]; } return 0; } 根据字符串就能看到比较的位置，密文减一下就行</description>
     </item>
     
     <item>
@@ -246,7 +261,7 @@ brainfuck解析出来就是简单的加减法
 from key import key import tinyaes print (key) f = open(&amp;#39;./PYZ-00.pyz_extracted/sign.pyc.encrypted&amp;#39;, &amp;#39;rb&amp;#39;) data = f.read() cipher = tinyaes.AES(key.encode(), data[:16]) output = cipher.CTR_xcrypt_buffer(data[16:]) f.close() import zlib output = zlib.decompress(output) f = open(&amp;#39;./sign.pyc&amp;#39;, &amp;#39;wb&amp;#39;) f.write(output) 解密 解出sign后看到有三个base64，其中两个是执行的语句，此外大部分语句涉及到了内存
 另外一个base解出来是乱码，用字节码辅助恢复函数（其实特征已经很明显了），发现进行了rc4加密，直接打印出解密结果，将结果写入文件，用ida查看
 发现smc
-mov eax, 41178Bhmov ecx, 411802hsub ecx, eaxloc_2A:mov ebx, [rax]xor ebx, 77hmov [rax], ebxloop loc_2A解出来后尝试恢复了一下函数，结果很丑&amp;hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</description>
+mov eax, 41178Bh mov ecx, 411802h sub ecx, eax loc_2A: mov ebx, [rax] xor ebx, 77h mov [rax], ebx loop loc_2A 解出来后尝试恢复了一下函数，结果很丑&amp;hellip;只能和汇编比较着进行分析了（好像只要把00 patch一下就可以反编译了）</description>
     </item>
     
     <item>
@@ -256,7 +271,7 @@ mov eax, 41178Bhmov ecx, 411802hsub ecx, eaxloc_2A:mov ebx, [rax]xor ebx, 7
       
       <guid>/post/reverse-from-1-to-2/</guid>
       <description>[NPUCTF2020]BasicASM 纯考察汇编的题目，有考虑想办法改成正确的汇编形式然后编译用ida看，但感觉就失去意义了，于是硬啃汇编
-00007FF7A8AC5A50 push rbp 00007FF7A8AC5A52 push rdi 00007FF7A8AC5A53 sub rsp,238h 00007FF7A8AC5A5A lea rbp,[rsp+20h] 00007FF7A8AC5A5F mov rdi,rsp 00007FF7A8AC5A62 mov ecx,8Eh 00007FF7A8AC5A67 mov eax,0CCCCCCCCh 00007FF7A8AC5A6C rep stos dword ptr [rdi] 00007FF7A8AC5A6E mov rax,qword ptr [__security_cookie (07FF7A8AD3018h)] 00007FF7A8AC5A75 xor rax,rbp 00007FF7A8AC5A78 mov qword ptr [rbp+208h],rax 00007FF7A8AC5A7F lea rcx,[__06A15900_ConsoleApplication@cpp (07FF7A8AD902Ah)] 00007FF7A8AC5A86 call __CheckForDebuggerJustMyCode (07FF7A8AC1122h) 00007FF7A8AC5A8B lea rdx,[string &amp;quot;flag{this_is_a_fake_flag}&amp;quot; (07FF7A8ACF450h)] 00007FF7A8AC5A92 lea rcx,[flag] 00007FF7A8AC5A96 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt; (07FF7A8AC15E1h) 00007FF7A8AC5A9B nop 00007FF7A8AC5A9C mov dword ptr [p],0 00007FF7A8AC5AA3 mov i,0 00007FF7A8AC5AAA jmp main+64h (07FF7A8AC5AB4h) 00007FF7A8AC5AAC mov eax,i 00007FF7A8AC5AAF inc eax 00007FF7A8AC5AB1 mov i,eax 00007FF7A8AC5AB4 movsxd rax,i 00007FF7A8AC5AB8 mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5ABF lea rcx,[flag] 00007FF7A8AC5AC3 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::length (07FF7A8AC122Bh) 00007FF7A8AC5AC8 mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5ACF cmp rcx,rax 00007FF7A8AC5AD2 jae main+1B2h (07FF7A8AC5C02h) ; 无符号数比较，大于或等于时跳转00007FF7A8AC5AD8 mov eax,i 00007FF7A8AC5ADB and eax,1 ; 取最后1位00007FF7A8AC5ADE cmp eax,1 ; 判断奇偶00007FF7A8AC5AE1 jne main+126h (07FF7A8AC5B76h) ; 偶数跳转（不相等跳转）00007FF7A8AC5AE7 movsxd rax,i 00007FF7A8AC5AEB mov rdx,rax 00007FF7A8AC5AEE lea rcx,[flag] 00007FF7A8AC5AF2 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::operator[] (07FF7A8AC1442h) 00007FF7A8AC5AF7 movsx eax,byte ptr [rax] ; 取flag第i位00007FF7A8AC5AFA xor eax,42h ; 与0x42异或00007FF7A8AC5AFD mov dword ptr [p],eax ; 异或结果移到内存中00007FF7A8AC5B00 mov dl,30h 00007FF7A8AC5B02 lea rcx,[rbp+144h] 00007FF7A8AC5B09 call std::setfill&amp;lt;char&amp;gt; (07FF7A8AC1046h) ; 用字符&#39;0&#39;进行填充00007FF7A8AC5B0E mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5B15 mov edx,2 00007FF7A8AC5B1A lea rcx,[rbp+168h] 00007FF7A8AC5B21 call std::setw (07FF7A8AC10D2h) ; 填充至2位00007FF7A8AC5B26 mov qword ptr [rbp+200h],rax 00007FF7A8AC5B2D lea rdx,[std::hex (07FF7A8AC1488h)] ; 以十六进制形式输出00007FF7A8AC5B34 mov rcx,qword ptr [__imp_std::cout (07FF7A8AD71C0h)] 00007FF7A8AC5B3B call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7160h)] 00007FF7A8AC5B41 mov rcx,qword ptr [rbp+200h] 00007FF7A8AC5B48 mov rdx,rcx 00007FF7A8AC5B4B mov rcx,rax 00007FF7A8AC5B4E call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,__int64&amp;gt; (07FF7A8AC12F8h) 00007FF7A8AC5B53 mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5B5A mov rdx,rcx 00007FF7A8AC5B5D mov rcx,rax 00007FF7A8AC5B60 call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,char&amp;gt; (07FF7A8AC11A4h) 00007FF7A8AC5B65 mov edx,dword ptr [p] 00007FF7A8AC5B68 mov rcx,rax 00007FF7A8AC5B6B call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7158h)] 00007FF7A8AC5B71 jmp main+1ADh (07FF7A8AC5BFDh) 00007FF7A8AC5B76 movsxd rax,i ; 偶数时跳转到这里，与奇数唯一的区别为没有异或运算00007FF7A8AC5B7A mov rdx,rax 00007FF7A8AC5B7D lea rcx,[flag] 00007FF7A8AC5B81 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::operator[] (07FF7A8AC1442h) 00007FF7A8AC5B86 movsx eax,byte ptr [rax] 00007FF7A8AC5B89 mov dword ptr [p],eax 00007FF7A8AC5B8C mov dl,30h 00007FF7A8AC5B8E lea rcx,[rbp+194h] 00007FF7A8AC5B95 call std::setfill&amp;lt;char&amp;gt; (07FF7A8AC1046h) 00007FF7A8AC5B9A mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5BA1 mov edx,2 00007FF7A8AC5BA6 lea rcx,[rbp+1B8h] 00007FF7A8AC5BAD call std::setw (07FF7A8AC10D2h) 00007FF7A8AC5BB2 mov qword ptr [rbp+200h],rax 00007FF7A8AC5BB9 lea rdx,[std::hex (07FF7A8AC1488h)] 00007FF7A8AC5BC0 mov rcx,qword ptr [__imp_std::cout (07FF7A8AD71C0h)] 00007FF7A8AC5BC7 call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7160h)] 00007FF7A8AC5BCD mov rcx,qword ptr [rbp+200h] 00007FF7A8AC5BD4 mov rdx,rcx 00007FF7A8AC5BD7 mov rcx,rax 00007FF7A8AC5BDA call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,__int64&amp;gt; (07FF7A8AC12F8h) 00007FF7A8AC5BDF mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5BE6 mov rdx,rcx 00007FF7A8AC5BE9 mov rcx,rax 00007FF7A8AC5BEC call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,char&amp;gt; (07FF7A8AC11A4h) 00007FF7A8AC5BF1 mov edx,dword ptr [p] 00007FF7A8AC5BF4 mov rcx,rax 00007FF7A8AC5BF7 call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7158h)] 00007FF7A8AC5BFD jmp main+5Ch (07FF7A8AC5AACh) 00007FF7A8AC5C02 mov dword ptr [rbp+1E4h],0 00007FF7A8AC5C0C lea rcx,[flag] 00007FF7A8AC5C10 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::~basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt; (07FF7A8AC1302h) 00007FF7A8AC5C15 mov eax,dword ptr [rbp+1E4h] 00007FF7A8AC5C1B mov edi,eax 00007FF7A8AC5C1D lea rcx,[rbp-20h] 00007FF7A8AC5C21 lea rdx,[__xt_z+540h (07FF7A8ACEFE0h)] 00007FF7A8AC5C28 call _RTC_CheckStackVars (07FF7A8AC1596h) 00007FF7A8AC5C2D mov eax,edi 00007FF7A8AC5C2F mov rcx,qword ptr [rbp+208h] 00007FF7A8AC5C36 xor rcx,rbp 00007FF7A8AC5C39 call __security_check_cookie (07FF7A8AC1190h) 00007FF7A8AC5C3E lea rsp,[rbp+218h] 00007FF7A8AC5C45 pop rdi 00007FF7A8AC5C46 pop rbp 00007FF7A8AC5C47 ret 简单的说，过程就是一个循环，根据 i 的奇偶进行判断，是否与 0x42 进行异或，然后将结果以 2 位十六进制输出，所以只需要进行反向求解即可</description>
+00007FF7A8AC5A50 push rbp 00007FF7A8AC5A52 push rdi 00007FF7A8AC5A53 sub rsp,238h 00007FF7A8AC5A5A lea rbp,[rsp+20h] 00007FF7A8AC5A5F mov rdi,rsp 00007FF7A8AC5A62 mov ecx,8Eh 00007FF7A8AC5A67 mov eax,0CCCCCCCCh 00007FF7A8AC5A6C rep stos dword ptr [rdi] 00007FF7A8AC5A6E mov rax,qword ptr [__security_cookie (07FF7A8AD3018h)] 00007FF7A8AC5A75 xor rax,rbp 00007FF7A8AC5A78 mov qword ptr [rbp+208h],rax 00007FF7A8AC5A7F lea rcx,[__06A15900_ConsoleApplication@cpp (07FF7A8AD902Ah)] 00007FF7A8AC5A86 call __CheckForDebuggerJustMyCode (07FF7A8AC1122h) 00007FF7A8AC5A8B lea rdx,[string &amp;#34;flag{this_is_a_fake_flag}&amp;#34; (07FF7A8ACF450h)] 00007FF7A8AC5A92 lea rcx,[flag] 00007FF7A8AC5A96 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt; (07FF7A8AC15E1h) 00007FF7A8AC5A9B nop 00007FF7A8AC5A9C mov dword ptr [p],0 00007FF7A8AC5AA3 mov i,0 00007FF7A8AC5AAA jmp main+64h (07FF7A8AC5AB4h) 00007FF7A8AC5AAC mov eax,i 00007FF7A8AC5AAF inc eax 00007FF7A8AC5AB1 mov i,eax 00007FF7A8AC5AB4 movsxd rax,i 00007FF7A8AC5AB8 mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5ABF lea rcx,[flag] 00007FF7A8AC5AC3 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::length (07FF7A8AC122Bh) 00007FF7A8AC5AC8 mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5ACF cmp rcx,rax 00007FF7A8AC5AD2 jae main+1B2h (07FF7A8AC5C02h) ; 无符号数比较，大于或等于时跳转 00007FF7A8AC5AD8 mov eax,i 00007FF7A8AC5ADB and eax,1 ; 取最后1位 00007FF7A8AC5ADE cmp eax,1 ; 判断奇偶 00007FF7A8AC5AE1 jne main+126h (07FF7A8AC5B76h) ; 偶数跳转（不相等跳转） 00007FF7A8AC5AE7 movsxd rax,i 00007FF7A8AC5AEB mov rdx,rax 00007FF7A8AC5AEE lea rcx,[flag] 00007FF7A8AC5AF2 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::operator[] (07FF7A8AC1442h) 00007FF7A8AC5AF7 movsx eax,byte ptr [rax] ; 取flag第i位 00007FF7A8AC5AFA xor eax,42h ; 与0x42异或 00007FF7A8AC5AFD mov dword ptr [p],eax ; 异或结果移到内存中 00007FF7A8AC5B00 mov dl,30h 00007FF7A8AC5B02 lea rcx,[rbp+144h] 00007FF7A8AC5B09 call std::setfill&amp;lt;char&amp;gt; (07FF7A8AC1046h) ; 用字符&amp;#39;0&amp;#39;进行填充 00007FF7A8AC5B0E mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5B15 mov edx,2 00007FF7A8AC5B1A lea rcx,[rbp+168h] 00007FF7A8AC5B21 call std::setw (07FF7A8AC10D2h) ; 填充至2位 00007FF7A8AC5B26 mov qword ptr [rbp+200h],rax 00007FF7A8AC5B2D lea rdx,[std::hex (07FF7A8AC1488h)] ; 以十六进制形式输出 00007FF7A8AC5B34 mov rcx,qword ptr [__imp_std::cout (07FF7A8AD71C0h)] 00007FF7A8AC5B3B call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7160h)] 00007FF7A8AC5B41 mov rcx,qword ptr [rbp+200h] 00007FF7A8AC5B48 mov rdx,rcx 00007FF7A8AC5B4B mov rcx,rax 00007FF7A8AC5B4E call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,__int64&amp;gt; (07FF7A8AC12F8h) 00007FF7A8AC5B53 mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5B5A mov rdx,rcx 00007FF7A8AC5B5D mov rcx,rax 00007FF7A8AC5B60 call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,char&amp;gt; (07FF7A8AC11A4h) 00007FF7A8AC5B65 mov edx,dword ptr [p] 00007FF7A8AC5B68 mov rcx,rax 00007FF7A8AC5B6B call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7158h)] 00007FF7A8AC5B71 jmp main+1ADh (07FF7A8AC5BFDh) 00007FF7A8AC5B76 movsxd rax,i ; 偶数时跳转到这里，与奇数唯一的区别为没有异或运算 00007FF7A8AC5B7A mov rdx,rax 00007FF7A8AC5B7D lea rcx,[flag] 00007FF7A8AC5B81 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::operator[] (07FF7A8AC1442h) 00007FF7A8AC5B86 movsx eax,byte ptr [rax] 00007FF7A8AC5B89 mov dword ptr [p],eax 00007FF7A8AC5B8C mov dl,30h 00007FF7A8AC5B8E lea rcx,[rbp+194h] 00007FF7A8AC5B95 call std::setfill&amp;lt;char&amp;gt; (07FF7A8AC1046h) 00007FF7A8AC5B9A mov qword ptr [rbp+1F8h],rax 00007FF7A8AC5BA1 mov edx,2 00007FF7A8AC5BA6 lea rcx,[rbp+1B8h] 00007FF7A8AC5BAD call std::setw (07FF7A8AC10D2h) 00007FF7A8AC5BB2 mov qword ptr [rbp+200h],rax 00007FF7A8AC5BB9 lea rdx,[std::hex (07FF7A8AC1488h)] 00007FF7A8AC5BC0 mov rcx,qword ptr [__imp_std::cout (07FF7A8AD71C0h)] 00007FF7A8AC5BC7 call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7160h)] 00007FF7A8AC5BCD mov rcx,qword ptr [rbp+200h] 00007FF7A8AC5BD4 mov rdx,rcx 00007FF7A8AC5BD7 mov rcx,rax 00007FF7A8AC5BDA call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,__int64&amp;gt; (07FF7A8AC12F8h) 00007FF7A8AC5BDF mov rcx,qword ptr [rbp+1F8h] 00007FF7A8AC5BE6 mov rdx,rcx 00007FF7A8AC5BE9 mov rcx,rax 00007FF7A8AC5BEC call std::operator&amp;lt;&amp;lt;&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,char&amp;gt; (07FF7A8AC11A4h) 00007FF7A8AC5BF1 mov edx,dword ptr [p] 00007FF7A8AC5BF4 mov rcx,rax 00007FF7A8AC5BF7 call qword ptr [__imp_std::basic_ostream&amp;lt;char,std::char_traits&amp;lt;char&amp;gt; &amp;gt;::operator&amp;lt;&amp;lt; (07FF7A8AD7158h)] 00007FF7A8AC5BFD jmp main+5Ch (07FF7A8AC5AACh) 00007FF7A8AC5C02 mov dword ptr [rbp+1E4h],0 00007FF7A8AC5C0C lea rcx,[flag] 00007FF7A8AC5C10 call std::basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt;::~basic_string&amp;lt;char,std::char_traits&amp;lt;char&amp;gt;,std::allocator&amp;lt;char&amp;gt; &amp;gt; (07FF7A8AC1302h) 00007FF7A8AC5C15 mov eax,dword ptr [rbp+1E4h] 00007FF7A8AC5C1B mov edi,eax 00007FF7A8AC5C1D lea rcx,[rbp-20h] 00007FF7A8AC5C21 lea rdx,[__xt_z+540h (07FF7A8ACEFE0h)] 00007FF7A8AC5C28 call _RTC_CheckStackVars (07FF7A8AC1596h) 00007FF7A8AC5C2D mov eax,edi 00007FF7A8AC5C2F mov rcx,qword ptr [rbp+208h] 00007FF7A8AC5C36 xor rcx,rbp 00007FF7A8AC5C39 call __security_check_cookie (07FF7A8AC1190h) 00007FF7A8AC5C3E lea rsp,[rbp+218h] 00007FF7A8AC5C45 pop rdi 00007FF7A8AC5C46 pop rbp 00007FF7A8AC5C47 ret 简单的说，过程就是一个循环，根据 i 的奇偶进行判断，是否与 0x42 进行异或，然后将结果以 2 位十六进制输出，所以只需要进行反向求解即可</description>
     </item>
     
     <item>
@@ -315,7 +330,7 @@ private void btnDecode_Click(object sender, EventArgs e) { this.</description>
       
       <guid>/post/gwctf2019-re3-writeup/</guid>
       <description>静态分析 首先通过关键字符串 Wrong 进入 main 函数
-void __fastcall __noreturn main(int a1, char **a2, char **a3) { int i; // [rsp+8h] [rbp-48h]  char s[40]; // [rsp+20h] [rbp-30h] BYREF  unsigned __int64 v5; // [rsp+48h] [rbp-8h]  v5 = __readfsqword(0x28u); __isoc99_scanf(&amp;#34;%39s&amp;#34;, s); if ( (unsigned int)strlen(s) != 32 ) { puts(&amp;#34;Wrong!&amp;#34;); exit(0); } mprotect(&amp;amp;dword_400000, 0xF000uLL, 7); for ( i = 0; i &amp;lt;= 223; ++i ) *((_BYTE *)sub_402219 + i) ^= 0x99u; sub_40207B((__int64)&amp;amp;unk_603170); sub_402219(); } 阅读一下代码，发现先是输入一个长度为32的字符串</description>
+void __fastcall __noreturn main(int a1, char **a2, char **a3) { int i; // [rsp+8h] [rbp-48h] char s[40]; // [rsp+20h] [rbp-30h] BYREF unsigned __int64 v5; // [rsp+48h] [rbp-8h] v5 = __readfsqword(0x28u); __isoc99_scanf(&amp;#34;%39s&amp;#34;, s); if ( (unsigned int)strlen(s) != 32 ) { puts(&amp;#34;Wrong!&amp;#34;); exit(0); } mprotect(&amp;amp;dword_400000, 0xF000uLL, 7); for ( i = 0; i &amp;lt;= 223; ++i ) *((_BYTE *)sub_402219 + i) ^= 0x99u; sub_40207B((__int64)&amp;amp;unk_603170); sub_402219(); } 阅读一下代码，发现先是输入一个长度为32的字符串</description>
     </item>
     
     <item>
@@ -324,9 +339,9 @@ void __fastcall __noreturn main(int a1, char **a2, char **a3) { int i; // [rsp+8
       <pubDate>Wed, 31 Mar 2021 20:33:02 +0000</pubDate>
       
       <guid>/post/gxzy-re-writeups/</guid>
-      <description>cycle graph 天津垓 fxck easyparser  cycle graph 逆向代码 根据提示，这是一道纯算法题，拖到 ida 中，根据关键字符串定位到关键函数。查看核心代码
+      <description>cycle graph 天津垓 fxck easyparser cycle graph 逆向代码 根据提示，这是一道纯算法题，拖到 ida 中，根据关键字符串定位到关键函数。查看核心代码
 dword_403370 = 0; v1 = &amp;amp;unk_403384; byte_403374 = 48; v2 = 0; dword_403378 = (int)&amp;amp;unk_403380; do { v3 = dword_402178[v2]; ++v2; *(v1 - 1) = v3; *v1 = (char *)&amp;amp;unk_403380 + 12 * dword_402274[v2]; v1[1] = (char *)&amp;amp;unk_403380 + 12 * dword_4021F4[v2]; v1 += 3; } while ( (signed int)v1 &amp;lt; (signed int)&amp;amp;unk_403504 ); 上面的代码是主函数开头的初始化部分
-sub_401020(&amp;#34;You need a flag to get out of this:\n&amp;#34;, a1); scan(&amp;#34;%s&amp;#34;, &amp;amp;input); v4 = dword_403370; // 0  v5 = byte_403374; // 48  v6 = 5; v7 = dword_403378; do { v11 = *(&amp;amp;input + v6); if ( *(_DWORD *)v7 + v5 == v11 ) { v7 = *(_DWORD *)(v7 + 4); } else { if ( v5 - *(_DWORD *)v7 !</description>
+sub_401020(&amp;#34;You need a flag to get out of this:\n&amp;#34;, a1); scan(&amp;#34;%s&amp;#34;, &amp;amp;input); v4 = dword_403370; // 0 v5 = byte_403374; // 48 v6 = 5; v7 = dword_403378; do { v11 = *(&amp;amp;input + v6); if ( *(_DWORD *)v7 + v5 == v11 ) { v7 = *(_DWORD *)(v7 + 4); } else { if ( v5 - *(_DWORD *)v7 !</description>
     </item>
     
     <item>
@@ -345,7 +360,7 @@ sub_401020(&amp;#34;You need a flag to get out of this:\n&amp;#34;, a1); scan(&a
 $ python3 pyinstxtractor.py notsudoku-noupx.exe 进入文件夹，找没有后缀的文件，发现有一个叫做 2 的，使用 010editor 从 struct 文件复制文件头（第一行），然后添加 .pyc 后缀，进行 pyc 反编译
 $ uncompyle6 -o 2.py 2.pyc 即可得到 python 源码文件
 发现文件里有一些日文，于是边阅读边修改就行
-# uncompyle6 version 3.7.4 # Python bytecode 3.7 (3394) # Decompiled from: Python 3.6.9 (default, Jan 26 2021, 15:33:00)  # [GCC 8.4.0] # Embedded file name: 2.</description>
+# uncompyle6 version 3.7.4 # Python bytecode 3.7 (3394) # Decompiled from: Python 3.6.9 (default, Jan 26 2021, 15:33:00) # [GCC 8.4.0] # Embedded file name: 2.</description>
     </item>
     
     <item>
@@ -443,23 +458,26 @@ import math from AITMCLab.Crypto.Util.number import long_to_bytes from AITMCLab.
       <description>参考文献：Hyperledger Fabric: A Distributed Operation System for Permissioned Blockchains
 架构 整体结构 Fabric是一个许可区块链的分布式操作系统，可以执行多种编程语言编写的分布式应用。它能够在一个只能追加的数据结构中安全地跟踪执行历史，并且没有内置的加密账本。
 Fabric使用了“执行-order-验证”的区块链架构，而没有遵顼标准的“order-执行”设计。其整体的分布式应用可以分为两个部分
-  智能合约，称为链码 (Chaincode) ，是一段实现了应用逻辑的程序代码，并在执行过程中运行。链码是Fabric分布式应用的核心部分，可能会被未受信任的开发者修改。有一种特殊的链码被用于管理区块链系统并维护参数，被称为系统链码 (system chaincode)
-  背书政策 (endorsement policy) 在验证阶段进行评价。许可政策无法被未受信任的开发者选择或修改。其在区块链中充当一个用于事物验证的静态库，且只能通过链码进行参数化。只有指定的管理员有权限使用系统管理功能修改。
-  “执行-排序-验证”结构示意图：
-
+智能合约，称为链码 (Chaincode) ，是一段实现了应用逻辑的程序代码，并在执行过程中运行。链码是Fabric分布式应用的核心部分，可能会被未受信任的开发者修改。有一种特殊的链码被用于管理区块链系统并维护参数，被称为系统链码 (system chaincode)
+背书政策 (endorsement policy) 在验证阶段进行评价。许可政策无法被未受信任的开发者选择或修改。其在区块链中充当一个用于事物验证的静态库，且只能通过链码进行参数化。只有指定的管理员有权限使用系统管理功能修改。
+“执行-排序-验证”结构示意图：
 一个客户端向背书政策指定的peer节点(peers)发送交易。这个交易被特殊的peer节点执行并且记录输出信息，这一步骤被称为背书。执行完成后，交易进入了排序(ordering)阶段，在这一个阶段中，使用了一种可插入的共识协议来产生一个完成排序的已背书交易的序列，并按区块分组。这些交易被广播到所有的节点。这个序列的顺序由输出和状态的依赖性决定。在验证阶段，每个peer节点都需要根据背书政策和执行的一致性对已背书交易的状态变化进行验证。所有peer节点都已相同的顺序进行验证，因此结果具有确定性。
 Fabric网络支持多个区块链链接到同一个排序服务上。每个区块链被称为一个通道(Channel)，可以有不同的peer节点作为其成员。这些通道可以被用来分离不同的区块链之间的状态，但每个通道的共识并不一致，并且通道中的交易顺序是相互分开的。认为所有排序都是可信的部署，可以通过通道访问控制来实现对节点的控制。
 其中的节点可分为：客户端、peer节点（其中一部分为背书节点）、排序服务节点(OSN, Ordering Service Nodes or orderers)
-交易的三个阶段 transaction_flow
-执行阶段 在执行阶段，客户端签署并发送一个交易提案给一个或多个背书节点来执行（根据背书政策，每个chaincode都有特定的一组背书节点）。一个交易提案包含了提交客户端的身份（根据MSP），交易的载荷、参数、链码标识符、每个客户端只能使用一次的nonce（随机值或计数器），以及客户端标识符和nonce生成的交易标识符。
+交易的三个阶段 transaction_flow 执行阶段 在执行阶段，客户端签署并发送一个交易提案给一个或多个背书节点来执行（根据背书政策，每个chaincode都有特定的一组背书节点）。一个交易提案包含了提交客户端的身份（根据MSP），交易的载荷、参数、链码标识符、每个客户端只能使用一次的nonce（随机值或计数器），以及客户端标识符和nonce生成的交易标识符。
 背书节点会对交易提案进行模拟，在指定的区块链链码上执行操作。模拟操作在背书节点的本地区块链状态中进行模拟，不与其它节点同步，也不会将模拟的结果永久化到帐本中。区块链的状态仍然由节点交易管理器(Peer Transaction Manager)维护。一个链码创建的状态只能限定在该链码上，不能被其他的链码直接访问。需要注意的是，链码只能维护GetState、PutState、DelState操作访问的内容（可能意思是：需要使用这些接口进行访问，不能直接修改，猜测状态权限为private）。给予适当的权限，链码可以调用同一个通道的链码，并访问其状态。
 在模拟后，背书节点会产生一个writeset，其中包括模拟产生的状态更新，和一个readset，代表交易提案模拟的版本依赖（模拟时的所有密钥以及对应的版本号）。在模拟结束后，背书节点会以加密的方式签署一份“背书”消息，包括了writeset和readset（包括交易id和背书节点的一些数据），随后以响应的方式发送给客户端。客户端收集背书，直到满足链码的背书政策，开始交易。特别的，这要求政策决定的所有背书节点都返回相同的writeset和readset。然后，客户端将继续创建交易，并传递给排序阶段。
 排序阶段 客户端收集到足够的背书后，将会把交易组装起来并发送给排序服务端。整个交易包括了载荷(payload)（包括参数的链码操作）、交易元数据、背书的集合。排序阶段对每个通道的所有提交建立了一个排序。排序服务端会将多个交易分成块，输出包含交易的哈希链序列，以提高广播协议的吞吐量。
- broadcast(tx)：客户端调用这个函数来广播交易tx，包含了载荷和签名。 B $\leftarrow$ deliver(s)：客户端调用这个函数来获取非负序列号s的区块B，$B=([tx_1,tx_2,\ldots,tx_k],h)$，$h$为s-1区块的哈希值。  排序服务确保了一个通道中的交付区块被完全排序，确保安全。
+broadcast(tx)：客户端调用这个函数来广播交易tx，包含了载荷和签名。 B $\leftarrow$ deliver(s)：客户端调用这个函数来获取非负序列号s的区块B，$B=([tx_1,tx_2,\ldots,tx_k],h)$，$h$为s-1区块的哈希值。 排序服务确保了一个通道中的交付区块被完全排序，确保安全。
 然而，每一个单独的排序实现都允许在客户端请求中保证自己的活跃性与公平性。
 由于区块链中包含了大量的节点，但仅有少部分节点实现了排序服务，因此Fabric可以配置使用内置的gossip服务，将排序服务中交付的区块分发给所有的节点。
 验证阶段 排序服务会把区块直接分发给各个节点（或通过gossip）。随后，一个新的区块进入验证阶段，包含三个连续步骤：
- 并行执行区块中所有的交易的背书政策评估。评估是验证系统链码(VSCC, validation system chaincode)的任务。VSCC是一个静态库，是区块链配置的一部分，负责根据链码中的背书政策验证背书。如果不满足，这个交易会被标记为无效，并被忽略。 对块中的所有交易进行读写冲突检查(read-write conflict check)（版本号比较）。对于每个交易，将会对比其中readset的版本号和节点本地存储的账本当前状态中的版本号，确保版本相同。如果版本不匹配，交易会被标记为无效，并被忽略。 最后进行账本的更新阶段，在这个阶段，区块被追加到本地存储的账本中，并且更新区块链的状态。将区块添加到账本时，前两步的检查结果将被持久化以掩码的形式表示区块中的交易有效。这有助于后面进行重建状态。此外，所有的状态更新都是通过将writeset中的键值对写入本地完成的。  信任与故障模型 Fabric可以适应灵活的信任和故障假设。通常情况下，所有的客户端都被认为是潜在的恶意用户或是Byzantine。节点都被归入组织(organization)并且每个组织组成一个信任域(trust domain)。每个节点信任其组织内部的其他节点，而不信任其他组织的节点。排序服务同样认为所有的节点（或客户端）都是潜在的拜占庭。</description>
+并行执行区块中所有的交易的背书政策评估。评估是验证系统链码(VSCC, validation system chaincode)的任务。VSCC是一个静态库，是区块链配置的一部分，负责根据链码中的背书政策验证背书。如果不满足，这个交易会被标记为无效，并被忽略。 对块中的所有交易进行读写冲突检查(read-write conflict check)（版本号比较）。对于每个交易，将会对比其中readset的版本号和节点本地存储的账本当前状态中的版本号，确保版本相同。如果版本不匹配，交易会被标记为无效，并被忽略。 最后进行账本的更新阶段，在这个阶段，区块被追加到本地存储的账本中，并且更新区块链的状态。将区块添加到账本时，前两步的检查结果将被持久化以掩码的形式表示区块中的交易有效。这有助于后面进行重建状态。此外，所有的状态更新都是通过将writeset中的键值对写入本地完成的。 信任与故障模型 Fabric可以适应灵活的信任和故障假设。通常情况下，所有的客户端都被认为是潜在的恶意用户或是Byzantine。节点都被归入组织(organization)并且每个组织组成一个信任域(trust domain)。每个节点信任其组织内部的其他节点，而不信任其他组织的节点。排序服务同样认为所有的节点（或客户端）都是潜在的拜占庭。
+Fabric网络的完整性依赖于排序服务的一致性。排序服务的信任模型取决于其实现。
+在Fabric中，分布式应用可以定义自己的信任假设，通过背书政策来传达，并且独立于排序服务实现的共识的信任假设。
+组件 Fabric使用了gRPC架构实现客户端、节点和排序服务之间的通信。
+What is gRPC?
+A high-performance, open-source universal RPC framework</description>
     </item>
     
     <item>
@@ -477,7 +495,6 @@ Fabric网络支持多个区块链链接到同一个排序服务上。每个区�
 后面应该就不需要去动三棱镜了，钠光的入射光应该是可以找到的。
 最终的测量结果应该在50°50′左右。
 掠入射法测量棱镜的折射率 当时做这个实验的时候主要是不知道怎么摆放。。。好在最后找了个做过的大佬，画了个草图。
-
 最终的测量结果应该在39°左右。
 如果时间不够用的话，一个省时间的技巧是在测下一组数据的时候不动目镜，只转动刻度盘，这样就可以少调整一次。（如果彻底没有时间了，那就测量一组，然后写到第五组的位置上，剩下的数据全靠编。我室友就这么硬水过的。。。）
 干涉法测平板玻璃折射率 这个实验做了也不算积分，而且至少要1小时的时间，所以就没做（也没人做）。
@@ -488,7 +505,7 @@ Fabric网络支持多个区块链链接到同一个排序服务上。每个区�
 二极管伏安特性曲线 当时按照电路图连了电路，结果发现线貌似不够用，打算先测量声速。
 然后就没有然后了
 声速测量 测量声速的时候遇到了好几个坑。
- 实验前和实验后一定要记得调整频率，使得振幅最大，并记录下来。 实验的线材和器材有毒，各种连接不稳定，最后是用笔袋支撑着线才能做实验的。 我当时老师要求振幅法和李萨如法都要用，很耽误时间，建议先做第二个实验。不过我当时的老师人比较好，让我们几个人拖延了一会，硬是把数据记完了，而且没有查实验器材。  迈克尔逊干涉 实验时间：2020年11月9日
+实验前和实验后一定要记得调整频率，使得振幅最大，并记录下来。 实验的线材和器材有毒，各种连接不稳定，最后是用笔袋支撑着线才能做实验的。 我当时老师要求振幅法和李萨如法都要用，很耽误时间，建议先做第二个实验。不过我当时的老师人比较好，让我们几个人拖延了一会，硬是把数据记完了，而且没有查实验器材。 迈克尔逊干涉 实验时间：2020年11月9日
 第二个光学实验，也AK了。让人不禁感叹，光学实验真的是适合刷积分啊。
 迈克尔逊干涉 这个实验老师会讲好久（但里面有不少干货，建议认真听），我当时足足讲了1小时20分钟，讲到最后我都直接开激光偷偷调整了。
 整个调整步骤有四步，一步一步来就行，别忘了第一步是调激光入射光就行（我做完实验才发现这个事情，还好最后没出现问题）。如果发现自己找不到水平一排的三个亮点，可能是入射光没有完全射到各个镜子上，调整的时候出现问题了还是动脑子想一想吧，毕竟遇到的问题真的是各种各样的都有。
@@ -498,12 +515,19 @@ Fabric网络支持多个区块链链接到同一个排序服务上。每个区�
 牛顿环干涉 感觉牛顿环是最简单的实验了，只需要调好反射镜的位置和目镜的高度就行。重点是不要数错环，我当时是从11数到20。。。建议从6数到15。
 数错了重新数其实也浪费不了多少时间，如果懒的话就继续编数据大法吧。。。
 劈尖干涉 这个实验的劈尖干涉应该是来得及做的，我当时最后有几十分钟的时间来纠结应该怎么做（其实想法一直都没问题，但我的仪器测量范围有问题，浪费了巨量时间）。当时认识的大佬没做这个实验，于是只能自己摸索了。下面是我总结的实验步骤。
-  本实验的样本无须自己制作。
-  做实验过程中遇到的唯一障碍在于测量“细丝位置到尖端的距离”。我遇到的样本为一张纸，因此与图片中的细丝有些小差别。实际操作中的装置如下图所示（左侧是尖端，右侧的小横线是纸张）。图片中的L就是需要测量的部分。具体做法大致就是把装置侧过来，显微镜对焦，然后从尖端量到纸张即可。
-
-  我用的仪器貌似有问题。。。小于25mm的部分手轮转不过去，最后还是借室友的仪器做的&amp;hellip;&amp;hellip;
-  在测量干涉条纹宽度时，显微镜物镜可能会被螺丝卡住，建议把装置倒过来测量，把四个突出来的螺丝放在下面当支柱。。。
-  我的测量结果是$L\approx39\ \mathrm{mm}$, $n=5$时$l\approx5.6\ \mathrm{mm}$。反正最后处理时别忘了还有个$n$就行，刚开始算出来的结果给我人都看傻了，最后算的大概是$50\mu m$，感觉小了一些，不过至少还有点靠谱。</description>
+本实验的样本无须自己制作。
+做实验过程中遇到的唯一障碍在于测量“细丝位置到尖端的距离”。我遇到的样本为一张纸，因此与图片中的细丝有些小差别。实际操作中的装置如下图所示（左侧是尖端，右侧的小横线是纸张）。图片中的L就是需要测量的部分。具体做法大致就是把装置侧过来，显微镜对焦，然后从尖端量到纸张即可。
+我用的仪器貌似有问题。。。小于25mm的部分手轮转不过去，最后还是借室友的仪器做的&amp;hellip;&amp;hellip;
+在测量干涉条纹宽度时，显微镜物镜可能会被螺丝卡住，建议把装置倒过来测量，把四个突出来的螺丝放在下面当支柱。。。
+我的测量结果是$L\approx39\ \mathrm{mm}$, $n=5$时$l\approx5.6\ \mathrm{mm}$。反正最后处理时别忘了还有个$n$就行，刚开始算出来的结果给我人都看傻了，最后算的大概是$50\mu m$，感觉小了一些，不过至少还有点靠谱。
+钠光干涉 时间：2020年11月16日
+第三个光学实验，第一个非必修实验。
+这次没有AK（这句话导致我险些被室友暴打）。还是大意了，没有闪。
+钠光双棱镜 本实验的仪器调整步骤很坑，耽误了巨量时间。。。最后只能卡点强行搞完双棱镜的实验。
+我最后总结的调整方法：
+前面用ppt或者书上的方法都行，毕竟各个元器件的高度之类的还是比较好调的。 到最后找大小像和干涉条纹时，一定要先找干涉条纹，老师也强调了，但没说怎么操作。。。搞得我各种前后移动最后还是找不到。最后发现是双棱镜和狭缝不平行所导致的。 最好的方法是先参考别人的报告摆放好狭缝和双棱镜的位置（这样可以确保有20个条纹），让目镜紧贴双棱镜，旋转双棱镜或调整狭缝宽度以找到清晰的干涉条纹，再把目镜拉到正确的位置，找大小像并把叉丝调到中心。 实验室的双棱镜上半部分是空的，会漏光。所以如果发现目镜拉远后干涉条纹被光盖住了，可以试试把双棱镜位置提高一点。 另外，感觉目镜手轮的4和5很容易读错，读的时候一定要注意一点。仪器的位置最好和已有实验报告的位置差不多，可以对着别人的数据检查，不然最后数据偏差过大就傻了。这种东西能水过去就尽量水过去吧。。。
+钠光劳埃镜 勉强做完双棱镜，gg。祝xdm好运。
+稳态法测不良导体热导率 时间：2020年12月5日</description>
     </item>
     
     <item>
@@ -512,7 +536,7 @@ Fabric网络支持多个区块链链接到同一个排序服务上。每个区�
       <pubDate>Sun, 15 Nov 2020 23:45:58 +0000</pubDate>
       
       <guid>/post/my-latex-cheatsheet/</guid>
-      <description>标题及基础设置 \documentclass[a4paper, zihao=-4, UTF8]{ctexart} \CTEXsetup[format={\Large\bfseries}]{section} \title{} \author{} \date{} \pagesytle{} %\setcounter{section}{-1} % section start from 0  \begin{document} \maketitle \section{} \section[short title]{} \label{sec:section_with_short_title} section \ref{sec:section_with_short_title} is a section with a short title. %交叉引用 	\section*{} \subsection{} \subsection*{} \subsubsection{} \subsubsection*{} \paragraph{} \par \end{document} 数学符号 常用数学符号    Code Latex Code Latex     \because $\because$ \therefore $\therefore$   \frac{a}{b} $\frac{a}{b}$ \dfrac{a}{b} $\dfrac{a}{b}$   \cdot $\cdot$ \cdots $\cdots$   \ldots $\ldots$ \infty $\infty$   \log $\log$ \lim $\lim$   \sin $\sin$ \cos $\cos$   \rightarrow $\rightarrow$ \int_{0}^{1} $\int_{0}^{1}$   \iint $\iint$ \oint $\oint$   \oiint $\oiint$ \iiint $\iiint$   \in $\in$ \notin $\notin$   \forall $\forall$ \exist $\exist$   \sqrt{a} $\sqrt{a}$ \exist $\exist$   \neg $\neg$ \oplus $\oplus$    \sum\limits\_{i=1}^{10}: $\sum\limits_{i=1}^{10}$</description>
+      <description>标题及基础设置 \documentclass[a4paper, zihao=-4, UTF8]{ctexart} \CTEXsetup[format={\Large\bfseries}]{section} \title{} \author{} \date{} \pagesytle{} %\setcounter{section}{-1} % section start from 0 \begin{document} \maketitle \section{} \section[short title]{} \label{sec:section_with_short_title} section \ref{sec:section_with_short_title} is a section with a short title. %交叉引用 \section*{} \subsection{} \subsection*{} \subsubsection{} \subsubsection*{} \paragraph{} \par \end{document} 数学符号 常用数学符号 Code Latex Code Latex \because $\because$ \therefore $\therefore$ \frac{a}{b} $\frac{a}{b}$ \dfrac{a}{b} $\dfrac{a}{b}$ \cdot $\cdot$ \cdots $\cdots$ \ldots $\ldots$ \infty $\infty$ \log $\log$ \lim $\lim$ \sin $\sin$ \cos $\cos$ \rightarrow $\rightarrow$ \int_{0}^{1} $\int_{0}^{1}$ \iint $\iint$ \oint $\oint$ \oiint $\oiint$ \iiint $\iiint$ \in $\in$ \notin $\notin$ \forall $\forall$ \exist $\exist$ \sqrt{a} $\sqrt{a}$ \exist $\exist$ \neg $\neg$ \oplus $\oplus$ \sum\limits\_{i=1}^{10}: $\sum\limits_{i=1}^{10}$</description>
     </item>
     
   </channel>
