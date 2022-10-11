@@ -123,7 +123,7 @@
 
 
                 <time class="article-time--reading">
-                    44 minute read
+                    45 minute read
                 </time>
             </div>
         
@@ -2194,7 +2194,24 @@ size_t <span style="color:#a6e22e">size_to_type</span>(size_t size) {
     }
     <span style="color:#66d9ef">return</span> nblock;
 }
-</code></pre></div>
+</code></pre></div><p>测试结果：</p>
+<pre tabindex="0"><code>Results for mm malloc:
+trace  valid  util     ops      secs  Kops
+ 0       yes   98%    5694  0.000143 39818
+ 1       yes   94%    5848  0.000171 34259
+ 2       yes   98%    6648  0.000196 33936
+ 3       yes   99%    5380  0.000147 36499
+ 4       yes   66%   14400  0.000256 56338
+ 5       yes   89%    4800  0.000180 26667
+ 6       yes   86%    4800  0.000192 25065
+ 7       yes   55%   12000  0.000243 49322
+ 8       yes   51%   24000  0.000424 56630
+ 9       yes   99%   14401  0.000163 88513
+10       yes   67%   14401  0.000128112684
+Total          82%  112372  0.002242 50128
+
+Perf index = 49 (util) + 40 (thru) = 89/100
+</code></pre>
 </section>
 
 
