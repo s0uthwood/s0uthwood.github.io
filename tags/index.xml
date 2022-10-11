@@ -6,22 +6,49 @@
     <description>Recent content in Tags on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Aug 2022 23:23:23 +0800</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Oct 2022 00:19:32 +0800</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>CTF</title>
-      <link>/tags/ctf/</link>
-      <pubDate>Tue, 02 Aug 2022 23:23:23 +0800</pubDate>
+      <title>Labs</title>
+      <link>/tags/labs/</link>
+      <pubDate>Wed, 12 Oct 2022 00:19:32 +0800</pubDate>
       
-      <guid>/tags/ctf/</guid>
+      <guid>/tags/labs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pwn</title>
+      <link>/tags/pwn/</link>
+      <pubDate>Wed, 12 Oct 2022 00:19:32 +0800</pubDate>
+      
+      <guid>/tags/pwn/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Reverse</title>
       <link>/tags/reverse/</link>
-      <pubDate>Tue, 02 Aug 2022 23:23:23 +0800</pubDate>
+      <pubDate>Wed, 12 Oct 2022 00:19:32 +0800</pubDate>
       
       <guid>/tags/reverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>System</title>
+      <link>/tags/system/</link>
+      <pubDate>Wed, 12 Oct 2022 00:19:32 +0800</pubDate>
+      
+      <guid>/tags/system/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CTF</title>
+      <link>/tags/ctf/</link>
+      <pubDate>Tue, 02 Aug 2022 23:23:23 +0800</pubDate>
+      
+      <guid>/tags/ctf/</guid>
       <description></description>
     </item>
     
@@ -40,15 +67,6 @@
       <pubDate>Fri, 04 Feb 2022 13:08:32 +0800</pubDate>
       
       <guid>/tags/crypto/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Pwn</title>
-      <link>/tags/pwn/</link>
-      <pubDate>Fri, 04 Feb 2022 13:08:32 +0800</pubDate>
-      
-      <guid>/tags/pwn/</guid>
       <description></description>
     </item>
     
@@ -211,15 +229,6 @@
       <pubDate>Tue, 23 Nov 2021 14:06:23 +0000</pubDate>
       
       <guid>/tags/n1ctf/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Labs</title>
-      <link>/tags/labs/</link>
-      <pubDate>Mon, 27 Sep 2021 21:03:03 +0000</pubDate>
-      
-      <guid>/tags/labs/</guid>
       <description></description>
     </item>
     

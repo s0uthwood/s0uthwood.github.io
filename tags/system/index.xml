@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>System on s0uthwood&#39;s Blog</title>
+    <link>/tags/system/</link>
+    <description>Recent content in System on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 12 Oct 2022 00:19:32 +0800</lastBuildDate><atom:link href="/tags/system/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CSAPP Labs</title>
+      <link>/post/csapp-labs/</link>
+      <pubDate>Wed, 12 Oct 2022 00:19:32 +0800</pubDate>
+      
+      <guid>/post/csapp-labs/</guid>
+      <description>Lab1 Data-lab bitXor 用 ~ 和 &amp;amp; 进行异或运算，简单离散数学
+/* * bitXor - x^y using only ~ and &amp;amp; * Example: bitXor(4, 5) = 1 * Legal ops: ~ &amp;amp; * Max ops: 14 * Rating: 1 */ int bitXor(int x, int y) { return ~(~(~x &amp;amp; y) &amp;amp; ~(x &amp;amp; ~y)); } tmin 要求返回补码中最小的整数
+众所周知补码形式下最小数为0x80000000，由于使用的常数不能超过 0xff，所以需要使用左移运算生成
+/* * tmin - return minimum two&amp;#39;s complement integer * Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt; * Max ops: 4 * Rating: 1 */ int tmin(void) { return (1 &amp;lt;&amp;lt; 31); } isTmax 判断 x 是否为补码格式下的最大数字</description>
+    </item>
+    
+  </channel>
+</rss>

