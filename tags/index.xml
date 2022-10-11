@@ -215,6 +215,15 @@
     </item>
     
     <item>
+      <title>Labs</title>
+      <link>/tags/labs/</link>
+      <pubDate>Mon, 27 Sep 2021 21:03:03 +0000</pubDate>
+      
+      <guid>/tags/labs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>BUUOJ</title>
       <link>/tags/buuoj/</link>
       <pubDate>Sun, 26 Sep 2021 00:10:18 +0000</pubDate>
@@ -274,15 +283,6 @@
       <pubDate>Wed, 17 Mar 2021 20:06:09 +0000</pubDate>
       
       <guid>/tags/hgame/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AITMC</title>
-      <link>/tags/aitmc/</link>
-      <pubDate>Wed, 09 Dec 2020 23:27:25 +0000</pubDate>
-      
-      <guid>/tags/aitmc/</guid>
       <description></description>
     </item>
     

@@ -16,7 +16,7 @@
       <description>Repository:
 https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce
 Modify from a dockerfile based on DEBIAN: https://raw.githubusercontent.com/vanhauser-thc/peachpro/main/Dockerfile
-shell sudo apt update sudo apt install -y \ coreutils apt-utils wget curl openssl ca-certificates bash-completion \ joe vim nano \ unzip p7zip \ hping3 httping thc-ipv6 gdb \ tcpdump wireshark-common \ locales-all \ git build-essential joe vim strace tcpdump python python-pip python-is-python2\ ruby doxygen libxml2-utils less openjdk-8-jre xsltproc asciidoctor \ nodejs node-typescript wget \ apt-transport-https dirmngr gnupg libtool-bin \ cmake dos2unix g++-multilib --fix-missing cd ~/Downloads git clone https://gitlab.</description>
+shell sudo apt update sudo apt install -y \  coreutils apt-utils wget curl openssl ca-certificates bash-completion \  joe vim nano \  unzip p7zip \  hping3 httping thc-ipv6 gdb \  tcpdump wireshark-common \  locales-all \  git build-essential joe vim strace tcpdump python python-pip python-is-python2\  ruby doxygen libxml2-utils less openjdk-8-jre xsltproc asciidoctor \  nodejs node-typescript wget \  apt-transport-https dirmngr gnupg libtool-bin \  cmake dos2unix g++-multilib --fix-missing cd ~/Downloads git clone https://gitlab.</description>
     </item>
     
   </channel>

@@ -13,15 +13,14 @@
       <pubDate>Tue, 23 Nov 2021 14:06:23 +0000</pubDate>
       
       <guid>/post/resent-re-challenge/</guid>
-      <description>[N1CTF 2021]babyrust [N1CTF 2021]Py [L3HCTF 2021]double-joy [L3HCTF 2021]Load [hack.lu]pycoin [hack.lu]atareee TODO:
-[L3HCTF 2021]idaaaaaaaa [N1CTF]babyrust 题目直接给了Rust源码，之前没有见过，现查文档学习
+      <description>[N1CTF 2021]babyrust [N1CTF 2021]Py [L3HCTF 2021]double-joy [L3HCTF 2021]Load [hack.lu]pycoin [hack.lu]atareee  TODO:
+ [L3HCTF 2021]idaaaaaaaa  [N1CTF]babyrust 题目直接给了Rust源码，之前没有见过，现查文档学习
 首先main函数里只是调用了一个 check!
 let result = check!(@s /*your answer*/); main 上面就是 check 的实现
 macro_rules! check { (@s n1ctf{$Never:tt}) =&amp;gt; { check!(stringify!($Never)) }; macro_rules! 是个宏定义，里面的 @s，@e 应该是类似字符串匹配的东西
 一开始的 (@s n1ctf{$Never:tt}) 就把flag中去除 n1ctf{} 的部分存到了 $Never 变量中，stringify! 将其转换为字符串常量
-stringify! 为 Rust 内置宏。其接收一个 Rust 表达式，如 1 + 2 ， 然后在编译时将表达式转换为一个字符串常量，如 &amp;ldquo;1 + 2&amp;rdquo; 。
-接下来的宏定义有很多类似这个的：
-(@e ($Never:expr,$Gonna:expr,$Give:expr); (Never gonna give you up $($code:tt)*)) =&amp;gt; { $Give += true as usize; check!</description>
+ stringify! 为 Rust 内置宏。其接收一个 Rust 表达式，如 1 + 2 ， 然后在编译时将表达式转换为一个字符串常量，如 &amp;ldquo;1 + 2&amp;rdquo; 。
+ 接下来的宏定义有很多类似这个的：</description>
     </item>
     
   </channel>

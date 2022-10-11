@@ -133,378 +133,379 @@
 <p>比赛的时候没想到这个是python逆向，直接拖到ida里面了，于是直接gg</p>
 <p>再使用 <code>exeinfo</code> 查一下，会发现是 <code>pyinstaller</code> 编译的文件，说明是python逆向</p>
 <p>上网下载一下 <code>pyinstxtractor.py</code> 进行反编译</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ python3 pyinstxtractor.py notsudoku-noupx.exe
-</span></span></code></pre></div><p>进入文件夹，找没有后缀的文件，发现有一个叫做 <code>2</code> 的，使用 <code>010editor</code> 从 <code>struct</code> 文件复制文件头（第一行），然后添加 <code>.pyc</code> 后缀，进行 <code>pyc</code> 反编译</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ uncompyle6 -o 2.py 2.pyc
-</span></span></code></pre></div><p>即可得到 python 源码文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ python3 pyinstxtractor.py notsudoku-noupx.exe
+</code></pre></div><p>进入文件夹，找没有后缀的文件，发现有一个叫做 <code>2</code> 的，使用 <code>010editor</code> 从 <code>struct</code> 文件复制文件头（第一行），然后添加 <code>.pyc</code> 后缀，进行 <code>pyc</code> 反编译</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ uncompyle6 -o 2.py 2.pyc
+</code></pre></div><p>即可得到 python 源码文件</p>
 <p>发现文件里有一些日文，于是边阅读边修改就行</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># uncompyle6 version 3.7.4</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Python bytecode 3.7 (3394)</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Decompiled from: Python 3.6.9 (default, Jan 26 2021, 15:33:00) </span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># [GCC 8.4.0]</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Embedded file name: 2.py</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Compiled at: 1995-09-28 00:18:56</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Size of source mod 2**32: 272 bytes</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time<span style="color:#f92672">,</span> sys<span style="color:#f92672">,</span> hashlib
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">class_a</span>:
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self):
-</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>dic <span style="color:#f92672">=</span> {}
-</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>list_a <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>inputflag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
-</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>list_b <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>int <span style="color:#f92672">=</span> <span style="color:#ae81ff">65</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">え</span>(self, other):
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">の</span>(f):
-</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>dic[other] <span style="color:#f92672">=</span> f
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> f
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> の
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">お</span>(self, other):
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>dic<span style="color:#f92672">.</span>get(other)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
-</span></span><span style="display:flex;"><span>        i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
-</span></span><span style="display:flex;"><span>            invoke <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>list_a[i][<span style="color:#ae81ff">0</span>]
-</span></span><span style="display:flex;"><span>            value <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>list_a[i][<span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>            value_2 <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>list_a[i][<span style="color:#ae81ff">2</span>]
-</span></span><span style="display:flex;"><span>            func <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>お(invoke)
-</span></span><span style="display:flex;"><span>            func(value, value_2)
-</span></span><span style="display:flex;"><span>            i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>object_a <span style="color:#f92672">=</span> class_a()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;add&#39;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>        object_a<span style="color:#f92672">.</span>list_b <span style="color:#f92672">+=</span> b
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;string&#39;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>        print(object_a<span style="color:#f92672">.</span>inputflag)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
-</span></span><span style="display:flex;"><span>            print(object_a<span style="color:#f92672">.</span>list_b)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>:
-</span></span><span style="display:flex;"><span>                print((object_a<span style="color:#f92672">.</span>flag), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>                print(a, end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;exit&#39;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
-</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>exit()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;input&#39;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
-</span></span><span style="display:flex;"><span>    object_a<span style="color:#f92672">.</span>inputflag <span style="color:#f92672">=</span> input()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;sleep&#39;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
-</span></span><span style="display:flex;"><span>    time<span style="color:#f92672">.</span>sleep(a)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;crypt&#39;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> len(object_a<span style="color:#f92672">.</span>inputflag) <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
-</span></span><span style="display:flex;"><span>        sys<span style="color:#f92672">.</span>exit()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> object_a<span style="color:#f92672">.</span>inputflag:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ord(i) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">52</span> <span style="color:#f92672">or</span> ord(i) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">48</span>: <span style="color:#75715e"># input &gt; &#39;0&#39;, input &lt; &#39;4&#39;</span>
-</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>exit()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    x <span style="color:#f92672">=</span> str(hashlib<span style="color:#f92672">.</span>new(<span style="color:#e6db74">&#39;md5&#39;</span>, bytes((object_a<span style="color:#f92672">.</span>inputflag), encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf8&#39;</span>))<span style="color:#f92672">.</span>hexdigest())
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> x[:<span style="color:#ae81ff">6</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;e3a912&#39;</span>: <span style="color:#75715e"># md5 start with &#39;e3a912&#39;</span>
-</span></span><span style="display:flex;"><span>        sys<span style="color:#f92672">.</span>exit()
-</span></span><span style="display:flex;"><span>    object_a<span style="color:#f92672">.</span>flag <span style="color:#f92672">=</span> x
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;initlist&#39;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
-</span></span><span style="display:flex;"><span>    j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(object_a<span style="color:#f92672">.</span>inputflag), <span style="color:#ae81ff">2</span>):
-</span></span><span style="display:flex;"><span>        j <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        a <span style="color:#f92672">=</span> int(object_a<span style="color:#f92672">.</span>inputflag[i])
-</span></span><span style="display:flex;"><span>        b <span style="color:#f92672">=</span> int(object_a<span style="color:#f92672">.</span>inputflag[(i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)])
-</span></span><span style="display:flex;"><span>        object_a<span style="color:#f92672">.</span>list_b[a][b] <span style="color:#f92672">=</span> j <span style="color:#75715e"># 为list_b赋值</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;basiccheck&#39;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">24</span> <span style="color:#f92672">or</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">4</span>][<span style="color:#ae81ff">3</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>:
-</span></span><span style="display:flex;"><span>        sys<span style="color:#f92672">.</span>exit()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">2</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">or</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">2</span>][<span style="color:#ae81ff">3</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">20</span>:
-</span></span><span style="display:flex;"><span>        sys<span style="color:#f92672">.</span>exit()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">1</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">23</span> <span style="color:#f92672">or</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">3</span>][<span style="color:#ae81ff">4</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">3</span>:
-</span></span><span style="display:flex;"><span>        sys<span style="color:#f92672">.</span>exit()
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 024334xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx23xxxx1001xx</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;check&#39;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
-</span></span><span style="display:flex;"><span>    int <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> b <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
-</span></span><span style="display:flex;"><span>            int <span style="color:#f92672">+=</span> object_a<span style="color:#f92672">.</span>list_b[a][i]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> int <span style="color:#f92672">!=</span> object_a<span style="color:#f92672">.</span>int:
-</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>exit()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
-</span></span><span style="display:flex;"><span>            int <span style="color:#f92672">+=</span> object_a<span style="color:#f92672">.</span>list_b[i][b]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> int <span style="color:#f92672">!=</span> object_a<span style="color:#f92672">.</span>int:
-</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>exit()
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># list_b 每行每列和为65</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># 02433420112112034430403122130414004132233324100142</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>object_a<span style="color:#f92672">.</span>list_a <span style="color:#f92672">=</span> [
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;welcome baby~ &#39;</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;input your flag~:&#39;</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;input&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;your input is:&#39;</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#34;let&#39;s check......&#34;</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;sleep&#39;</span>, <span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;add&#39;</span>, <span style="color:#ae81ff">1</span>, [[<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]]],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;add&#39;</span>, <span style="color:#ae81ff">1</span>, [[<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]]],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;add&#39;</span>, <span style="color:#ae81ff">1</span>, [[<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]]],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;add&#39;</span>, <span style="color:#ae81ff">1</span>, [[<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]]],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;add&#39;</span>, <span style="color:#ae81ff">1</span>, [[<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]]], <span style="color:#75715e"># list_b 包含5个五元list</span>
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;crypt&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;initlist&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;basiccheck&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">2</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">3</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">4</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">3</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">4</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;Goodjob!&#39;</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;The flag is vnctf{&#39;</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;}&#39;</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span> [
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#39;exit&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>]]
-</span></span><span style="display:flex;"><span>object_a<span style="color:#f92672">.</span>run()
-</span></span></code></pre></div><p>不太懂python的注解，这里好像是通过给定的字符串调用相应的函数？</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># uncompyle6 version 3.7.4</span>
+<span style="color:#75715e"># Python bytecode 3.7 (3394)</span>
+<span style="color:#75715e"># Decompiled from: Python 3.6.9 (default, Jan 26 2021, 15:33:00) </span>
+<span style="color:#75715e"># [GCC 8.4.0]</span>
+<span style="color:#75715e"># Embedded file name: 2.py</span>
+<span style="color:#75715e"># Compiled at: 1995-09-28 00:18:56</span>
+<span style="color:#75715e"># Size of source mod 2**32: 272 bytes</span>
+<span style="color:#f92672">import</span> time<span style="color:#f92672">,</span> sys<span style="color:#f92672">,</span> hashlib
+
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">class_a</span>:
+
+    <span style="color:#66d9ef">def</span> __init__(self):
+        self<span style="color:#f92672">.</span>dic <span style="color:#f92672">=</span> {}
+        self<span style="color:#f92672">.</span>list_a <span style="color:#f92672">=</span> []
+        self<span style="color:#f92672">.</span>inputflag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+        self<span style="color:#f92672">.</span>list_b <span style="color:#f92672">=</span> []
+        self<span style="color:#f92672">.</span>int <span style="color:#f92672">=</span> <span style="color:#ae81ff">65</span>
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">え</span>(self, other):
+        <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">の</span>(f):
+            self<span style="color:#f92672">.</span>dic[other] <span style="color:#f92672">=</span> f
+            <span style="color:#66d9ef">return</span> f
+
+        <span style="color:#66d9ef">return</span> の
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">お</span>(self, other):
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>dic<span style="color:#f92672">.</span>get(other)
+
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
+        i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+            invoke <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>list_a[i][<span style="color:#ae81ff">0</span>]
+            value <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>list_a[i][<span style="color:#ae81ff">1</span>]
+            value_2 <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>list_a[i][<span style="color:#ae81ff">2</span>]
+            func <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>お(invoke)
+            func(value, value_2)
+            i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+
+
+object_a <span style="color:#f92672">=</span> class_a()
+
+<span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;add&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
+    <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+        object_a<span style="color:#f92672">.</span>list_b <span style="color:#f92672">+=</span> b
+
+
+<span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;string&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
+    <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+        print(object_a<span style="color:#f92672">.</span>inputflag)
+    <span style="color:#66d9ef">else</span>:
+        <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
+            print(object_a<span style="color:#f92672">.</span>list_b)
+        <span style="color:#66d9ef">else</span>:
+            <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>:
+                print((object_a<span style="color:#f92672">.</span>flag), end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+            <span style="color:#66d9ef">else</span>:
+                print(a, end<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>)
+
+
+<span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;exit&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
+    sys<span style="color:#f92672">.</span>exit()
+
+
+<span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;input&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
+    object_a<span style="color:#f92672">.</span>inputflag <span style="color:#f92672">=</span> input()
+
+
+<span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;sleep&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
+    time<span style="color:#f92672">.</span>sleep(a)
+
+
+<span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;crypt&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
+    <span style="color:#66d9ef">if</span> len(object_a<span style="color:#f92672">.</span>inputflag) <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>:
+        sys<span style="color:#f92672">.</span>exit()
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> object_a<span style="color:#f92672">.</span>inputflag:
+        <span style="color:#66d9ef">if</span> ord(i) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">52</span> <span style="color:#f92672">or</span> ord(i) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">48</span>: <span style="color:#75715e"># input &gt; &#39;0&#39;, input &lt; &#39;4&#39;</span>
+            sys<span style="color:#f92672">.</span>exit()
+
+    x <span style="color:#f92672">=</span> str(hashlib<span style="color:#f92672">.</span>new(<span style="color:#e6db74">&#39;md5&#39;</span>, bytes((object_a<span style="color:#f92672">.</span>inputflag), encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf8&#39;</span>))<span style="color:#f92672">.</span>hexdigest())
+    <span style="color:#66d9ef">if</span> x[:<span style="color:#ae81ff">6</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;e3a912&#39;</span>: <span style="color:#75715e"># md5 start with &#39;e3a912&#39;</span>
+        sys<span style="color:#f92672">.</span>exit()
+    object_a<span style="color:#f92672">.</span>flag <span style="color:#f92672">=</span> x
+
+
+<span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;initlist&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
+    j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, len(object_a<span style="color:#f92672">.</span>inputflag), <span style="color:#ae81ff">2</span>):
+        j <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        a <span style="color:#f92672">=</span> int(object_a<span style="color:#f92672">.</span>inputflag[i])
+        b <span style="color:#f92672">=</span> int(object_a<span style="color:#f92672">.</span>inputflag[(i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)])
+        object_a<span style="color:#f92672">.</span>list_b[a][b] <span style="color:#f92672">=</span> j <span style="color:#75715e"># 为list_b赋值</span>
+
+
+<span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;basiccheck&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
+    <span style="color:#66d9ef">if</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">24</span> <span style="color:#f92672">or</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">4</span>][<span style="color:#ae81ff">3</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">2</span>:
+        sys<span style="color:#f92672">.</span>exit()
+    <span style="color:#66d9ef">if</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">0</span>][<span style="color:#ae81ff">2</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">or</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">2</span>][<span style="color:#ae81ff">3</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">20</span>:
+        sys<span style="color:#f92672">.</span>exit()
+    <span style="color:#66d9ef">if</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">1</span>][<span style="color:#ae81ff">0</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">23</span> <span style="color:#f92672">or</span> object_a<span style="color:#f92672">.</span>list_b[<span style="color:#ae81ff">3</span>][<span style="color:#ae81ff">4</span>] <span style="color:#f92672">!=</span> <span style="color:#ae81ff">3</span>:
+        sys<span style="color:#f92672">.</span>exit()
+<span style="color:#75715e"># 024334xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx23xxxx1001xx</span>
+
+<span style="color:#a6e22e">@object_a</span><span style="color:#f92672">.</span>え(<span style="color:#e6db74">&#39;check&#39;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(a, b):
+    int <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">if</span> b <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+            int <span style="color:#f92672">+=</span> object_a<span style="color:#f92672">.</span>list_b[a][i]
+
+        <span style="color:#66d9ef">if</span> int <span style="color:#f92672">!=</span> object_a<span style="color:#f92672">.</span>int:
+            sys<span style="color:#f92672">.</span>exit()
+    <span style="color:#66d9ef">else</span>:
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+            int <span style="color:#f92672">+=</span> object_a<span style="color:#f92672">.</span>list_b[i][b]
+
+        <span style="color:#66d9ef">if</span> int <span style="color:#f92672">!=</span> object_a<span style="color:#f92672">.</span>int:
+            sys<span style="color:#f92672">.</span>exit()
+<span style="color:#75715e"># list_b 每行每列和为65</span>
+<span style="color:#75715e"># 02433420112112034430403122130414004132233324100142</span>
+
+object_a<span style="color:#f92672">.</span>list_a <span style="color:#f92672">=</span> [
+ [
+  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;welcome baby~ &#39;</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;input your flag~:&#39;</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;input&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;your input is:&#39;</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#34;let&#39;s check......&#34;</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;sleep&#39;</span>, <span style="color:#ae81ff">0.5</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;add&#39;</span>, <span style="color:#ae81ff">1</span>, [[<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]]],
+ [
+  <span style="color:#e6db74">&#39;add&#39;</span>, <span style="color:#ae81ff">1</span>, [[<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]]],
+ [
+  <span style="color:#e6db74">&#39;add&#39;</span>, <span style="color:#ae81ff">1</span>, [[<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]]],
+ [
+  <span style="color:#e6db74">&#39;add&#39;</span>, <span style="color:#ae81ff">1</span>, [[<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]]],
+ [
+  <span style="color:#e6db74">&#39;add&#39;</span>, <span style="color:#ae81ff">1</span>, [[<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)]]], <span style="color:#75715e"># list_b 包含5个五元list</span>
+ [
+  <span style="color:#e6db74">&#39;crypt&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;initlist&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;basiccheck&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
+ [
+  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
+ [
+  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">2</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
+ [
+  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">3</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
+ [
+  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">4</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
+ [
+  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
+ [
+  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>],
+ [
+  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">3</span>],
+ [
+  <span style="color:#e6db74">&#39;check&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">4</span>],
+ [
+  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;Goodjob!&#39;</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;The flag is vnctf{&#39;</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;string&#39;</span>, <span style="color:#e6db74">&#39;}&#39;</span>, <span style="color:#ae81ff">0</span>],
+ [
+  <span style="color:#e6db74">&#39;exit&#39;</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>]]
+object_a<span style="color:#f92672">.</span>run()
+</code></pre></div><p>不太懂python的注解，这里好像是通过给定的字符串调用相应的函数？</p>
 <p>整体就是一个五阶幻方，最后使用hashlib里的md5算一下</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> hashlib
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> hashlib<span style="color:#f92672">.</span>new(<span style="color:#e6db74">&#39;md5&#39;</span>, bytes((<span style="color:#e6db74">&#39;02433420112112034430403122130414004132233324100142&#39;</span>), encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf8&#39;</span>))<span style="color:#f92672">.</span>hexdigest()
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;e3a912c1e911ad82544af0c3d753f44f&#39;</span>
-</span></span></code></pre></div><p>套上 <code>vnctf{}</code> 即可</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> hashlib
+<span style="color:#f92672">&gt;&gt;&gt;</span> hashlib<span style="color:#f92672">.</span>new(<span style="color:#e6db74">&#39;md5&#39;</span>, bytes((<span style="color:#e6db74">&#39;02433420112112034430403122130414004132233324100142&#39;</span>), encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf8&#39;</span>))<span style="color:#f92672">.</span>hexdigest()
+<span style="color:#e6db74">&#39;e3a912c1e911ad82544af0c3d753f44f&#39;</span>
+</code></pre></div><p>套上 <code>vnctf{}</code> 即可</p>
 <h2 id="filpgame">FilpGame</h2>
 <p>官方WP写的好玄学，其实用z3也可以解的</p>
 <h3 id="逆向分析">逆向分析</h3>
 <p>拖入ida，通过字符串定位到关键代码。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  sub_401020(<span style="color:#e6db74">&#34;Input: &#34;</span>);
-</span></span><span style="display:flex;"><span>  sub_401050(<span style="color:#e6db74">&#34;%s&#34;</span>, inputstring, <span style="color:#ae81ff">512</span>);
-</span></span><span style="display:flex;"><span>  v0 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>  v13 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( inputstring[<span style="color:#ae81ff">0</span>] )
-</span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    v1 <span style="color:#f92672">=</span> dword_403398;
-</span></span><span style="display:flex;"><span>    v2 <span style="color:#f92672">=</span> dword_40339C;
-</span></span><span style="display:flex;"><span>    v14 <span style="color:#f92672">=</span> dword_403398;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ( v0 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">214</span> )
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      v3 <span style="color:#f92672">=</span> v0;
-</span></span><span style="display:flex;"><span>      v4 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>inputstring[v0];
-</span></span><span style="display:flex;"><span>      v5 <span style="color:#f92672">=</span> v3 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( v5 )                                 <span style="color:#75715e">// 第奇数位
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      {
-</span></span><span style="display:flex;"><span>        v6 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>v4;
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(<span style="color:#f92672">*</span>v4 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">9u</span> )
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(v6 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;A&#39;</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x19u</span> )<span style="color:#75715e">// 大于大写字母时
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          {
-</span></span><span style="display:flex;"><span>            v2 <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>            dword_40339C <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">else</span>                                  <span style="color:#75715e">// 大写字母时
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          {
-</span></span><span style="display:flex;"><span>            v2 <span style="color:#f92672">=</span> v6 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;7&#39;</span>;
-</span></span><span style="display:flex;"><span>            dword_40339C <span style="color:#f92672">=</span> v6 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;7&#39;</span>;
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>                                    <span style="color:#75715e">// 为数字时
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        {
-</span></span><span style="display:flex;"><span>          v2 <span style="color:#f92672">=</span> v6 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>;
-</span></span><span style="display:flex;"><span>          dword_40339C <span style="color:#f92672">=</span> v6 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>;
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">else</span>                                      <span style="color:#75715e">// 偶数位
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      {
-</span></span><span style="display:flex;"><span>        v7 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>v4;
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(<span style="color:#f92672">*</span>v4 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">9u</span> )
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(v7 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;A&#39;</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x19u</span> )
-</span></span><span style="display:flex;"><span>          {
-</span></span><span style="display:flex;"><span>            dword_403398 <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>          v1 <span style="color:#f92672">=</span> v7 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;7&#39;</span>;
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>          v1 <span style="color:#f92672">=</span> v7 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>;
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        dword_403398 <span style="color:#f92672">=</span> v1;
-</span></span><span style="display:flex;"><span>        v14 <span style="color:#f92672">=</span> v1;
-</span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( v1 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0xF</span> <span style="color:#f92672">||</span> v2 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0xF</span> )               <span style="color:#75715e">// 不能大于F
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( v5 )                                 <span style="color:#75715e">// 奇数时，两位两位进行计算
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( dword_403018 <span style="color:#f92672">&gt;=</span> (<span style="color:#66d9ef">signed</span> <span style="color:#66d9ef">int</span>)(v1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">*</span> v2) )<span style="color:#75715e">// 0FFFFFFFF
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>        dword_403018 <span style="color:#f92672">=</span> v1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">*</span> v2;            <span style="color:#75715e">// v1为列，v2为行
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        v8 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">do</span>
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>          v9 <span style="color:#f92672">=</span> v1 <span style="color:#f92672">+</span> dword_40212C[v8];           <span style="color:#75715e">// -1  0  0  0  1 先输入的数
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          v10 <span style="color:#f92672">=</span> v2 <span style="color:#f92672">+</span> dword_402140[v8];          <span style="color:#75715e">//  0  0 -1  1  0 后输入的数
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          <span style="color:#66d9ef">if</span> ( v9 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0xF</span> <span style="color:#f92672">&amp;&amp;</span> v10 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0xF</span> )
-</span></span><span style="display:flex;"><span>            final_check[v10] <span style="color:#f92672">^=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#ae81ff">15</span> <span style="color:#f92672">-</span> v9); <span style="color:#75715e">// 将所选位置及周围一圈的数字都进行取反，位置用大写十六进制表示
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>          v1 <span style="color:#f92672">=</span> v14;
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">++</span>v8;
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> ( v8 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span> );
-</span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>      v0 <span style="color:#f92672">=</span> v13 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>      v13 <span style="color:#f92672">=</span> v0;
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>inputstring[v0] )
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">goto</span> LABEL_25;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>
-</span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>LABEL_25:
-</span></span><span style="display:flex;"><span>    v11 <span style="color:#f92672">=</span> final_check;                          <span style="color:#75715e">// 目标：均为-1
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> ( <span style="color:#f92672">*</span>v11 <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> )
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">++</span>v11;
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">signed</span> <span style="color:#66d9ef">int</span>)v11 <span style="color:#f92672">&gt;=</span> (<span style="color:#66d9ef">signed</span> <span style="color:#66d9ef">int</span>)<span style="color:#f92672">&amp;</span>unk_40303C )
-</span></span><span style="display:flex;"><span>      {
-</span></span><span style="display:flex;"><span>        sub_401020(<span style="color:#e6db74">&#34;right, vnctf{MD5(%s)}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  sub_401020(<span style="color:#e6db74">&#34;wrong</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span></code></pre></div><h3 id="脚本求解">脚本求解</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">  sub_401020(<span style="color:#e6db74">&#34;Input: &#34;</span>);
+  sub_401050(<span style="color:#e6db74">&#34;%s&#34;</span>, inputstring, <span style="color:#ae81ff">512</span>);
+  v0 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  v13 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">if</span> ( inputstring[<span style="color:#ae81ff">0</span>] )
+  {
+    v1 <span style="color:#f92672">=</span> dword_403398;
+    v2 <span style="color:#f92672">=</span> dword_40339C;
+    v14 <span style="color:#f92672">=</span> dword_403398;
+    <span style="color:#66d9ef">while</span> ( v0 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">214</span> )
+    {
+      v3 <span style="color:#f92672">=</span> v0;
+      v4 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>inputstring[v0];
+      v5 <span style="color:#f92672">=</span> v3 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>;
+      <span style="color:#66d9ef">if</span> ( v5 )                                 <span style="color:#75715e">// 第奇数位
+</span><span style="color:#75715e"></span>      {
+        v6 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>v4;
+        <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(<span style="color:#f92672">*</span>v4 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">9u</span> )
+        {
+          <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(v6 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;A&#39;</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x19u</span> )<span style="color:#75715e">// 大于大写字母时
+</span><span style="color:#75715e"></span>          {
+            v2 <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+            dword_40339C <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+          }
+          <span style="color:#66d9ef">else</span>                                  <span style="color:#75715e">// 大写字母时
+</span><span style="color:#75715e"></span>          {
+            v2 <span style="color:#f92672">=</span> v6 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;7&#39;</span>;
+            dword_40339C <span style="color:#f92672">=</span> v6 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;7&#39;</span>;
+          }
+        }
+        <span style="color:#66d9ef">else</span>                                    <span style="color:#75715e">// 为数字时
+</span><span style="color:#75715e"></span>        {
+          v2 <span style="color:#f92672">=</span> v6 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>;
+          dword_40339C <span style="color:#f92672">=</span> v6 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>;
+        }
+      }
+      <span style="color:#66d9ef">else</span>                                      <span style="color:#75715e">// 偶数位
+</span><span style="color:#75715e"></span>      {
+        v7 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>v4;
+        <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(<span style="color:#f92672">*</span>v4 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">9u</span> )
+        {
+          <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)(v7 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;A&#39;</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x19u</span> )
+          {
+            dword_403398 <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+            <span style="color:#66d9ef">break</span>;
+          }
+          v1 <span style="color:#f92672">=</span> v7 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;7&#39;</span>;
+        }
+        <span style="color:#66d9ef">else</span>
+        {
+          v1 <span style="color:#f92672">=</span> v7 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span>;
+        }
+        dword_403398 <span style="color:#f92672">=</span> v1;
+        v14 <span style="color:#f92672">=</span> v1;
+      }
+      <span style="color:#66d9ef">if</span> ( v1 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0xF</span> <span style="color:#f92672">||</span> v2 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0xF</span> )               <span style="color:#75715e">// 不能大于F
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">break</span>;
+      <span style="color:#66d9ef">if</span> ( v5 )                                 <span style="color:#75715e">// 奇数时，两位两位进行计算
+</span><span style="color:#75715e"></span>      {
+        <span style="color:#66d9ef">if</span> ( dword_403018 <span style="color:#f92672">&gt;=</span> (<span style="color:#66d9ef">signed</span> <span style="color:#66d9ef">int</span>)(v1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">*</span> v2) )<span style="color:#75715e">// 0FFFFFFFF
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">break</span>;
+        dword_403018 <span style="color:#f92672">=</span> v1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">*</span> v2;            <span style="color:#75715e">// v1为列，v2为行
+</span><span style="color:#75715e"></span>        v8 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">do</span>
+        {
+          v9 <span style="color:#f92672">=</span> v1 <span style="color:#f92672">+</span> dword_40212C[v8];           <span style="color:#75715e">// -1  0  0  0  1 先输入的数
+</span><span style="color:#75715e"></span>          v10 <span style="color:#f92672">=</span> v2 <span style="color:#f92672">+</span> dword_402140[v8];          <span style="color:#75715e">//  0  0 -1  1  0 后输入的数
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">if</span> ( v9 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0xF</span> <span style="color:#f92672">&amp;&amp;</span> v10 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0xF</span> )
+            final_check[v10] <span style="color:#f92672">^=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> (<span style="color:#ae81ff">15</span> <span style="color:#f92672">-</span> v9); <span style="color:#75715e">// 将所选位置及周围一圈的数字都进行取反，位置用大写十六进制表示
+</span><span style="color:#75715e"></span>          v1 <span style="color:#f92672">=</span> v14;
+          <span style="color:#f92672">++</span>v8;
+        }
+        <span style="color:#66d9ef">while</span> ( v8 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">5</span> );
+      }
+      v0 <span style="color:#f92672">=</span> v13 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+      v13 <span style="color:#f92672">=</span> v0;
+      <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>inputstring[v0] )
+        <span style="color:#66d9ef">goto</span> LABEL_25;
+    }
+  }
+  <span style="color:#66d9ef">else</span>
+  {
+LABEL_25:
+    v11 <span style="color:#f92672">=</span> final_check;                          <span style="color:#75715e">// 目标：均为-1
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> ( <span style="color:#f92672">*</span>v11 <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> )
+    {
+      <span style="color:#f92672">++</span>v11;
+      <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">signed</span> <span style="color:#66d9ef">int</span>)v11 <span style="color:#f92672">&gt;=</span> (<span style="color:#66d9ef">signed</span> <span style="color:#66d9ef">int</span>)<span style="color:#f92672">&amp;</span>unk_40303C )
+      {
+        sub_401020(<span style="color:#e6db74">&#34;right, vnctf{MD5(%s)}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+      }
+    }
+  }
+  sub_401020(<span style="color:#e6db74">&#34;wrong</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</code></pre></div><h3 id="脚本求解">脚本求解</h3>
 <p>简单的说就是已知一个 $16\times 16$ 的 $01$ 方阵，每次对一个格子取反，都会对相邻的四个格子同样进行取反，最终求解一个操作顺序使得所有的数字为 $1$。</p>
 <p>一开始写了个回溯，然后直接炸了。</p>
 <p>经过队友的提醒开始用z3求解（<del>队友的z3还是从我这里学的。。。</del>），但没想到踩到了好多坑，也学会了一些z3的新用法。</p>
 <p>直接上最后的代码。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> z3 <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>init_check <span style="color:#f92672">=</span> [
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
-</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>]
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>posx <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>]
-</span></span><span style="display:flex;"><span>posy <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>solver <span style="color:#f92672">=</span> Solver()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>change <span style="color:#f92672">=</span> [ [BitVec(<span style="color:#e6db74">&#39;change</span><span style="color:#e6db74">%x%x</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (i, j), <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>)] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>) ]
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> i <span style="color:#f92672">+</span> posx[k] <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> i <span style="color:#f92672">+</span> posx[k] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">and</span> j <span style="color:#f92672">+</span> posy[k] <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> j <span style="color:#f92672">+</span> posy[k] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span>:
-</span></span><span style="display:flex;"><span>                init_check[i][j] <span style="color:#f92672">^=</span> (change[i <span style="color:#f92672">+</span> posx[k]][j <span style="color:#f92672">+</span> posy[k]])
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>        solver<span style="color:#f92672">.</span>add(change[i][j] <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>        solver<span style="color:#f92672">.</span>add(init_check[i][j] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> solver<span style="color:#f92672">.</span>check() <span style="color:#f92672">==</span> sat:
-</span></span><span style="display:flex;"><span>    length <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>    model <span style="color:#f92672">=</span> solver<span style="color:#f92672">.</span>model()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> model[change[i][j]] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>                length <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> length <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">220</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> model[change[i][j]] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>                    print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%X%X</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (j, i), end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>)
-</span></span><span style="display:flex;"><span>        print ()
-</span></span><span style="display:flex;"><span>    condition <span style="color:#f92672">=</span> []
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
-</span></span><span style="display:flex;"><span>            condition<span style="color:#f92672">.</span>append(change[i][j] <span style="color:#f92672">!=</span> int(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (model[change[i][j]])))
-</span></span><span style="display:flex;"><span>    solver<span style="color:#f92672">.</span>add(Or(condition))
-</span></span><span style="display:flex;"><span>print (<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">finish&#39;</span>)
-</span></span></code></pre></div><p>运行结果</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ FilpGame python3 solve.py
-</span></span><span style="display:flex;"><span>2050608090A0B0C0D02131417191A1B1527282B2D2E2F213234363B3D36494C4D4E415456575C5D5E50626566686C6F6071787B7C72838587898C8D81949596999B9C9F95A8AAAEA0B1B3B4B7B1C2C3C4C6C9CBCEC0D4D7D9DBDCDED0E1E3E4E5E6E8E9ECEEEFE3F7F8FBF
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>finish
-</span></span></code></pre></div><p>过程中踩到的坑：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> z3 <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+init_check <span style="color:#f92672">=</span> [
+    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
+    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
+    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
+    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
+    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
+    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
+    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
+    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
+    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>],
+    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
+    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
+    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>],
+    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>],
+    [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
+    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>],
+    [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>]
+]
+
+posx <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>]
+posy <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>]
+
+solver <span style="color:#f92672">=</span> Solver()
+
+change <span style="color:#f92672">=</span> [ [BitVec(<span style="color:#e6db74">&#39;change</span><span style="color:#e6db74">%x%x</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (i, j), <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>)] <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>) ]
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+        <span style="color:#66d9ef">for</span> k <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>):
+            <span style="color:#66d9ef">if</span> i <span style="color:#f92672">+</span> posx[k] <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> i <span style="color:#f92672">+</span> posx[k] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span> <span style="color:#f92672">and</span> j <span style="color:#f92672">+</span> posy[k] <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> j <span style="color:#f92672">+</span> posy[k] <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span>:
+                init_check[i][j] <span style="color:#f92672">^=</span> (change[i <span style="color:#f92672">+</span> posx[k]][j <span style="color:#f92672">+</span> posy[k]])
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+        solver<span style="color:#f92672">.</span>add(change[i][j] <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+        solver<span style="color:#f92672">.</span>add(init_check[i][j] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>)
+
+<span style="color:#66d9ef">while</span> solver<span style="color:#f92672">.</span>check() <span style="color:#f92672">==</span> sat:
+    length <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+    model <span style="color:#f92672">=</span> solver<span style="color:#f92672">.</span>model()
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+            <span style="color:#66d9ef">if</span> model[change[i][j]] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+                length <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
+    <span style="color:#66d9ef">if</span> length <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">220</span>:
+        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+            <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+                <span style="color:#66d9ef">if</span> model[change[i][j]] <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+                    print (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%X%X</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> (j, i), end <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>)
+        print ()
+    condition <span style="color:#f92672">=</span> []
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">16</span>):
+            condition<span style="color:#f92672">.</span>append(change[i][j] <span style="color:#f92672">!=</span> int(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (model[change[i][j]])))
+    solver<span style="color:#f92672">.</span>add(Or(condition))
+print (<span style="color:#e6db74">&#39;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">finish&#39;</span>)
+
+</code></pre></div><p>运行结果</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ FilpGame python3 solve.py
+2050608090A0B0C0D02131417191A1B1527282B2D2E2F213234363B3D36494C4D4E415456575C5D5E50626566686C6F6071787B7C72838587898C8D81949596999B9C9F95A8AAAEA0B1B3B4B7B1C2C3C4C6C9CBCEC0D4D7D9DBDCDED0E1E3E4E5E6E8E9ECEEEFE3F7F8FBF
+
+finish
+</code></pre></div><p>过程中踩到的坑：</p>
 <ol>
 <li>这道题的行和列很绕，一定要看清楚；</li>
 <li>不知道为什么，<code>BitVec</code> 大小不能设置成 $1$；</li>
@@ -512,19 +513,19 @@
 <li>如果对数没有最基本的约束的话，可能会出现一堆 <code>None</code> 的情况。</li>
 </ol>
 <p>程序运行结果</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ FilpGame ./FilpGame.exe
-</span></span><span style="display:flex;"><span>Input: 2050608090A0B0C0D02131417191A1B1527282B2D2E2F213234363B3D36494C4D4E415456575C5D5E50626566686C6F6071787B7C72838587898C8D81949596999
-</span></span><span style="display:flex;"><span>B9C9F95A8AAAEA0B1B3B4B7B1C2C3C4C6C9CBCEC0D4D7D9DBDCDED0E1E3E4E5E6E8E9ECEEEFE3F7F8FBF
-</span></span><span style="display:flex;"><span>right, vnctf<span style="color:#f92672">{</span>MD5<span style="color:#f92672">(</span>2050608090A0B0C0D02131417191A1B1527282B2D2E2F213234363B3D36494C4D4E415456575C5D5E50626566686C6F6071787B7C72838587898C8D8
-</span></span><span style="display:flex;"><span>1949596999B9C9F95A8AAAEA0B1B3B4B7B1C2C3C4C6C9CBCEC0D4D7D9DBDCDED0E1E3E4E5E6E8E9ECEEEFE3F7F8FBF<span style="color:#f92672">)}</span>
-</span></span></code></pre></div><p>最后算一下md5</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> hashlib
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> hl <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>md5()
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;2050608090A0B0C0D02131417191A1B1527282B2D2E2F213234363B3D36494C4D4E415456575C5D5E50626566686C6F6071787B7C72838587898C8D81949596999B9C9F95A8AAAEA0B1B3B4B7B1C2C3C4C6C9CBCEC0D4D7D9DBDCDED0E1E3E4E5E6E8E9ECEEEFE3F7F8FBF&#39;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> hl<span style="color:#f92672">.</span>update(str<span style="color:#f92672">.</span>encode(encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>))
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> hl<span style="color:#f92672">.</span>hexdigest()
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;c51a6d6d3929cd2a0192572e604b371d&#39;</span>
-</span></span></code></pre></div><p>拿到flag！</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ FilpGame ./FilpGame.exe
+Input: 2050608090A0B0C0D02131417191A1B1527282B2D2E2F213234363B3D36494C4D4E415456575C5D5E50626566686C6F6071787B7C72838587898C8D81949596999
+B9C9F95A8AAAEA0B1B3B4B7B1C2C3C4C6C9CBCEC0D4D7D9DBDCDED0E1E3E4E5E6E8E9ECEEEFE3F7F8FBF
+right, vnctf<span style="color:#f92672">{</span>MD5<span style="color:#f92672">(</span>2050608090A0B0C0D02131417191A1B1527282B2D2E2F213234363B3D36494C4D4E415456575C5D5E50626566686C6F6071787B7C72838587898C8D8
+1949596999B9C9F95A8AAAEA0B1B3B4B7B1C2C3C4C6C9CBCEC0D4D7D9DBDCDED0E1E3E4E5E6E8E9ECEEEFE3F7F8FBF<span style="color:#f92672">)}</span>
+</code></pre></div><p>最后算一下md5</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> hashlib
+<span style="color:#f92672">&gt;&gt;&gt;</span> hl <span style="color:#f92672">=</span> hashlib<span style="color:#f92672">.</span>md5()
+<span style="color:#f92672">&gt;&gt;&gt;</span> str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;2050608090A0B0C0D02131417191A1B1527282B2D2E2F213234363B3D36494C4D4E415456575C5D5E50626566686C6F6071787B7C72838587898C8D81949596999B9C9F95A8AAAEA0B1B3B4B7B1C2C3C4C6C9CBCEC0D4D7D9DBDCDED0E1E3E4E5E6E8E9ECEEEFE3F7F8FBF&#39;</span>
+<span style="color:#f92672">&gt;&gt;&gt;</span> hl<span style="color:#f92672">.</span>update(str<span style="color:#f92672">.</span>encode(encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>))
+<span style="color:#f92672">&gt;&gt;&gt;</span> hl<span style="color:#f92672">.</span>hexdigest()
+<span style="color:#e6db74">&#39;c51a6d6d3929cd2a0192572e604b371d&#39;</span>
+</code></pre></div><p>拿到flag！</p>
 <h3 id="总结">总结</h3>
 <p>又学到了一些z3的用法，真不戳。</p>
 <p>这道题告诉我们，以后算法题无脑上z3就完事了。。。</p>
@@ -624,18 +625,6 @@
 
         <div class="article-details">
             <h2 class="article-title">HGAME2021 Vernam and FAKE</h2>
-        </div>
-    </a>
-</article>
-                
-                    
-<article class="">
-    <a href="/post/aitmc-challenge/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">AITMC-challenge</h2>
         </div>
     </a>
 </article>

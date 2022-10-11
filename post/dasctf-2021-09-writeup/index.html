@@ -124,147 +124,148 @@
 <p>一开始还被逻辑绕了一下，结果发现核心部分就是brainfuck</p>
 <p>有一些结构体，可以恢复一下，会比较好看</p>
 <p>brainfuck解析出来就是简单的加减法</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> a[<span style="color:#ae81ff">9999</span>];
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> c;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">0</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">3</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">1</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">4</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">2</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">5</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">3</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">6</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">4</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">7</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">5</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">8</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">6</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">9</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">7</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">10</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">8</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">11</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">9</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">12</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">10</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">13</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">11</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">14</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">12</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">15</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">13</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">16</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">14</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">18</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">15</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">19</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">16</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">20</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">17</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">21</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">18</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">22</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">19</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">23</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">20</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">24</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">21</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">25</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">22</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">26</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">23</span>];
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>根据字符串就能看到比较的位置，密文减一下就行</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> a[<span style="color:#ae81ff">9999</span>];
+	<span style="color:#66d9ef">int</span> c;
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#f92672">**</span>argv)
+{
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">0</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">3</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">1</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">4</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">2</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">5</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">3</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">6</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">4</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">7</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">5</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">8</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">6</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">9</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">7</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">10</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">8</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">11</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">9</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">12</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">10</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">13</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">11</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">14</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">12</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">15</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">13</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">16</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">14</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">18</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">15</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">19</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">16</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">20</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">17</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">21</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">18</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">22</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">19</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">23</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">20</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">24</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">21</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">25</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">22</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+		a[<span style="color:#ae81ff">24</span>] <span style="color:#f92672">+=</span> <span style="color:#ae81ff">26</span>;
+	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">24</span>]) {
+		<span style="color:#f92672">++</span>a[<span style="color:#ae81ff">23</span>];
+		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">24</span>];
+	}
+
+	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+
+</code></pre></div><p>根据字符串就能看到比较的位置，密文减一下就行</p>
 <h2 id="reeasy_math">[RE]easy_math</h2>
 <p>几个加减法解一下就行，甚至不需要z3</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( v20 <span style="color:#f92672">-</span> v16 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x61536369217D</span>i64 )
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( v19 <span style="color:#f92672">-</span> v16 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x586531316F</span>i64 )
-</span></span><span style="display:flex;"><span>      {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( v18 <span style="color:#f92672">-</span> v16 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x5F3631626F4E</span>i64 )
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> ( v16 <span style="color:#f92672">+</span> v18 <span style="color:#f92672">+</span> v19 <span style="color:#f92672">+</span> v20 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xC121F9FCC23A</span>i64 )
-</span></span></code></pre></div><p>完事之后需要把flag拼一下，而且第一个输入好像没有用？</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#66d9ef">if</span> ( v20 <span style="color:#f92672">-</span> v16 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x61536369217D</span>i64 )
+    {
+      <span style="color:#66d9ef">if</span> ( v19 <span style="color:#f92672">-</span> v16 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x586531316F</span>i64 )
+      {
+        <span style="color:#66d9ef">if</span> ( v18 <span style="color:#f92672">-</span> v16 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x5F3631626F4E</span>i64 )
+        {
+          <span style="color:#66d9ef">if</span> ( v16 <span style="color:#f92672">+</span> v18 <span style="color:#f92672">+</span> v19 <span style="color:#f92672">+</span> v20 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xC121F9FCC23A</span>i64 )
+</code></pre></div><p>完事之后需要把flag拼一下，而且第一个输入好像没有用？</p>
 <p>反正我的输入是这个</p>
 <pre tabindex="0"><code>439904987003
 107079497490813
@@ -273,45 +274,45 @@
 439904987003
 </code></pre><h2 id="repig_brain_king">[RE]pig_brain_king</h2>
 <p>玩了一下，发现是个记忆游戏，字符串越来越长，逻辑没有细看，感觉可能找到了flag生成函数吧，不过不重要，pwntools玩通就完事了</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#39;./pig_brain_king.exe&#39;</span>)
-</span></span><span style="display:flex;"><span>context<span style="color:#f92672">.</span>log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1000</span>):
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;questions!</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#39;</span>)
-</span></span><span style="display:flex;"><span>    ans <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()
-</span></span><span style="display:flex;"><span>    print (ans)
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;enter:&#39;</span>)
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">.</span>send(ans)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>p<span style="color:#f92672">.</span>interactive()
-</span></span></code></pre></div><p>脚本没写好，最后一关需要自己动手复制一下（手动狗头）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pwn <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+
+p <span style="color:#f92672">=</span> process(<span style="color:#e6db74">&#39;./pig_brain_king.exe&#39;</span>)
+context<span style="color:#f92672">.</span>log_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;debug&#39;</span>
+
+<span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1000</span>):
+    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;questions!</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#39;</span>)
+    ans <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span>recvline()
+    print (ans)
+    p<span style="color:#f92672">.</span>recvuntil(<span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;enter:&#39;</span>)
+    p<span style="color:#f92672">.</span>send(ans)
+
+p<span style="color:#f92672">.</span>interactive()
+</code></pre></div><p>脚本没写好，最后一关需要自己动手复制一下（手动狗头）</p>
 <blockquote>
 <p>AK的人有点多，沉思（</p>
 </blockquote>
 <h2 id="miscgirlfriends-account">[Misc]Girlfriend&rsquo;s account</h2>
 <p>一开始还想着找个工具，然后发现各种bug</p>
 <p>但认认真真写代码转码是不可能的，这辈子也不可能的，用vscode批量操作一把梭不香吗</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>girl <span style="color:#f92672">=</span> [
-</span></span><span style="display:flex;"><span>    (<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.01</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">6</span>,
-</span></span><span style="display:flex;"><span>    (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">9</span>,
-</span></span><span style="display:flex;"><span>    (<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>,
-</span></span><span style="display:flex;"><span>    (<span style="color:#ae81ff">9</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.01</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">5</span>,
-</span></span><span style="display:flex;"><span>    (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.01</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">9</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># ...</span>
-</span></span><span style="display:flex;"><span>    (<span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.01</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">7</span>,
-</span></span><span style="display:flex;"><span>    (<span style="color:#ae81ff">7</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">5</span>,
-</span></span><span style="display:flex;"><span>    (<span style="color:#ae81ff">7</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span>  <span style="color:#f92672">+</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>,
-</span></span><span style="display:flex;"><span>    (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.01</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">5</span>,
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>spend <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> g <span style="color:#f92672">in</span> girl:
-</span></span><span style="display:flex;"><span>    spend <span style="color:#f92672">+=</span> g
-</span></span><span style="display:flex;"><span>print (spend)
-</span></span></code></pre></div><p>这账单，幸好没有npy</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">girl <span style="color:#f92672">=</span> [
+    (<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.01</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">6</span>,
+    (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">9</span>,
+    (<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>,
+    (<span style="color:#ae81ff">9</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.01</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">5</span>,
+    (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.01</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">9</span>,
+    <span style="color:#75715e"># ...</span>
+    (<span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.01</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">7</span>,
+    (<span style="color:#ae81ff">7</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">5</span>,
+    (<span style="color:#ae81ff">7</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span>  <span style="color:#f92672">+</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">4</span>,
+    (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.01</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">5</span>,
+]
+
+spend <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+
+<span style="color:#66d9ef">for</span> g <span style="color:#f92672">in</span> girl:
+    spend <span style="color:#f92672">+=</span> g
+print (spend)
+</code></pre></div><p>这账单，幸好没有npy</p>
 <h2 id="miscblind">[Misc]blind</h2>
 <p>压缩包里有俩“一样”的图片，用工具xor一看，发现只有一点蓝色，猜测可能是个盲水印，上网找工具装环境</p>
 <p><figure 
@@ -337,8 +338,8 @@
 <p>网上找了半天，才发现是拼音盲文，麻了</p>
 <h2 id="crypto签到">[Crypto]签到</h2>
 <p>说出来可能不信，这求解脚本是我在贴吧找到的&hellip;</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>e<span style="color:#f92672">=</span>discrete_log(c,mod(m,n))
-</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">e<span style="color:#f92672">=</span>discrete_log(c,mod(m,n))
+</code></pre></div>
 </section>
 
 

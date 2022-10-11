@@ -149,6 +149,12 @@
     <loc>/post/angr-ctf-writeup/</loc>
     <lastmod>2021-09-27T21:03:03+00:00</lastmod>
   </url><url>
+    <loc>/tags/labs/</loc>
+    <lastmod>2021-09-27T21:03:03+00:00</lastmod>
+  </url><url>
+    <loc>/categories/labs/</loc>
+    <lastmod>2021-09-27T21:03:03+00:00</lastmod>
+  </url><url>
     <loc>/tags/buuoj/</loc>
     <lastmod>2021-09-26T00:10:18+00:00</lastmod>
   </url><url>
@@ -220,12 +226,6 @@
   </url><url>
     <loc>/post/reverse-from-0-to-1/</loc>
     <lastmod>2021-03-07T21:35:10+00:00</lastmod>
-  </url><url>
-    <loc>/tags/aitmc/</loc>
-    <lastmod>2020-12-09T23:27:25+00:00</lastmod>
-  </url><url>
-    <loc>/categories/aitmc/</loc>
-    <lastmod>2020-12-09T23:27:25+00:00</lastmod>
   </url><url>
     <loc>/post/aitmc-challenge/</loc>
     <lastmod>2020-12-09T23:27:25+00:00</lastmod>

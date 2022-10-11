@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Labs on s0uthwood&#39;s Blog</title>
+    <link>/tags/labs/</link>
+    <description>Recent content in Labs on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 27 Sep 2021 21:03:03 +0000</lastBuildDate><atom:link href="/tags/labs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>angr ctf writeup</title>
+      <link>/post/angr-ctf-writeup/</link>
+      <pubDate>Mon, 27 Sep 2021 21:03:03 +0000</pubDate>
+      
+      <guid>/post/angr-ctf-writeup/</guid>
+      <description>&lt;p&gt;开始学angr&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;就是在抄solution&lt;/del&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>AITMC-challenge</title>
+      <link>/post/aitmc-challenge/</link>
+      <pubDate>Wed, 09 Dec 2020 23:27:25 +0000</pubDate>
+      
+      <guid>/post/aitmc-challenge/</guid>
+      <description>Quiz from bzb 前言&amp;amp;题目 前段时间学习信安数基，助教学长就配套出了道Quiz，来给我们练手。
+先上题目
+import math from AITMCLab.Crypto.Util.number import long_to_bytes from AITMCLab.Crypto.Util.number import bytes_to_long from AITMCLab.Crypto.Util.number import getRandomNBitInteger from AITMCLab.Crypto.Util.number import getPrime from AITMCLab.Crypto.Util.number import isPrime from AITMCLab.Crypto.Util.number import inverse from secret import flag def nextPrime(n): n += 2 if n &amp;amp; 1 else 1 while not isPrime(n): n += 2 return n def init(S, K): j = 0 k = [] K = list(K) for i in range(len(K)): K[i] = ord(K[i]) for i in range(256): S.</description>
+    </item>
+    
+  </channel>
+</rss>

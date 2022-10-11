@@ -126,350 +126,350 @@
     <section class="article-content">
     <h2 id="一些信号量函数的学习">一些信号量函数的学习</h2>
 <p>信号量的注册在init函数中</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>  v2.sa_handler <span style="color:#f92672">=</span> (__sighandler_t)sub_400E1D;
-</span></span><span style="display:flex;"><span>  v2.sa_flags <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>;
-</span></span><span style="display:flex;"><span>  sigaction(<span style="color:#ae81ff">34</span>, <span style="color:#f92672">&amp;</span>v2, <span style="color:#f92672">&amp;</span>v1);
-</span></span></code></pre></div><p><code>sigaction()</code> 函数定义为</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sigaction</span>(<span style="color:#66d9ef">int</span> signum, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sigaction</span> <span style="color:#f92672">*</span>act, <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sigaction</span> <span style="color:#f92672">*</span>oldact);
-</span></span></code></pre></div><p>sigaction 结构体定义如下</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sigaction</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>sa_handler) (<span style="color:#66d9ef">int</span>);
-</span></span><span style="display:flex;"><span>    sigset_t sa_mask;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sa_flags;       <span style="color:#75715e">// 用来设置信号处理的相关操作
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>sa_restorer) (<span style="color:#66d9ef">void</span>);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>关于 <code>sa_flags</code> 的定义如下 (from <code>linux/include/uapi/asm-generic/signal-defs.h</code>)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#ifndef SA_NOCLDSTOP
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SA_NOCLDSTOP	0x00000001
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef SA_NOCLDWAIT
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SA_NOCLDWAIT	0x00000002
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef SA_SIGINFO
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SA_SIGINFO	0x00000004
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">/* 0x00000008 used on alpha, mips, parisc */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 0x00000010 used on alpha, parisc */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 0x00000020 used on alpha, parisc, sparc */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 0x00000040 used on alpha, parisc */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 0x00000080 used on parisc */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 0x00000100 used on sparc */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 0x00000200 used on sparc */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#define SA_UNSUPPORTED	0x00000400
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SA_EXPOSE_TAGBITS	0x00000800
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">/* 0x00010000 used on mips */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 0x00800000 used for internal SA_IMMUTABLE */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 0x01000000 used on x86 */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 0x02000000 used on x86 */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * New architectures should not define the obsolete
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *	SA_RESTORER	0x04000000
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef SA_ONSTACK
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SA_ONSTACK	0x08000000
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef SA_RESTART
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SA_RESTART	0x10000000
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef SA_NODEFER
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SA_NODEFER	0x40000000
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef SA_RESETHAND
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SA_RESETHAND	0x80000000
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
-</span></span></span></code></pre></div><p>题目中使用的是 <code>SA_SIGINFO</code>，对信号处理程序提供了附加信息：一个指向 <code>siginfo</code> 结构的指针以及一个指向上下文标识符的指针</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">  v2.sa_handler <span style="color:#f92672">=</span> (__sighandler_t)sub_400E1D;
+  v2.sa_flags <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>;
+  sigaction(<span style="color:#ae81ff">34</span>, <span style="color:#f92672">&amp;</span>v2, <span style="color:#f92672">&amp;</span>v1);
+</code></pre></div><p><code>sigaction()</code> 函数定义为</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sigaction</span>(<span style="color:#66d9ef">int</span> signum, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sigaction</span> <span style="color:#f92672">*</span>act, <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sigaction</span> <span style="color:#f92672">*</span>oldact);
+</code></pre></div><p>sigaction 结构体定义如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">sigaction</span> {
+    <span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>sa_handler) (<span style="color:#66d9ef">int</span>);
+    sigset_t sa_mask;
+    <span style="color:#66d9ef">int</span> sa_flags;       <span style="color:#75715e">// 用来设置信号处理的相关操作
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>sa_restorer) (<span style="color:#66d9ef">void</span>);
+}
+</code></pre></div><p>关于 <code>sa_flags</code> 的定义如下 (from <code>linux/include/uapi/asm-generic/signal-defs.h</code>)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#ifndef SA_NOCLDSTOP
+</span><span style="color:#75715e">#define SA_NOCLDSTOP	0x00000001
+</span><span style="color:#75715e">#endif
+</span><span style="color:#75715e">#ifndef SA_NOCLDWAIT
+</span><span style="color:#75715e">#define SA_NOCLDWAIT	0x00000002
+</span><span style="color:#75715e">#endif
+</span><span style="color:#75715e">#ifndef SA_SIGINFO
+</span><span style="color:#75715e">#define SA_SIGINFO	0x00000004
+</span><span style="color:#75715e">#endif
+</span><span style="color:#75715e"></span><span style="color:#75715e">/* 0x00000008 used on alpha, mips, parisc */</span>
+<span style="color:#75715e">/* 0x00000010 used on alpha, parisc */</span>
+<span style="color:#75715e">/* 0x00000020 used on alpha, parisc, sparc */</span>
+<span style="color:#75715e">/* 0x00000040 used on alpha, parisc */</span>
+<span style="color:#75715e">/* 0x00000080 used on parisc */</span>
+<span style="color:#75715e">/* 0x00000100 used on sparc */</span>
+<span style="color:#75715e">/* 0x00000200 used on sparc */</span>
+<span style="color:#75715e">#define SA_UNSUPPORTED	0x00000400
+</span><span style="color:#75715e">#define SA_EXPOSE_TAGBITS	0x00000800
+</span><span style="color:#75715e"></span><span style="color:#75715e">/* 0x00010000 used on mips */</span>
+<span style="color:#75715e">/* 0x00800000 used for internal SA_IMMUTABLE */</span>
+<span style="color:#75715e">/* 0x01000000 used on x86 */</span>
+<span style="color:#75715e">/* 0x02000000 used on x86 */</span>
+<span style="color:#75715e">/*
+</span><span style="color:#75715e"> * New architectures should not define the obsolete
+</span><span style="color:#75715e"> *	SA_RESTORER	0x04000000
+</span><span style="color:#75715e"> */</span>
+<span style="color:#75715e">#ifndef SA_ONSTACK
+</span><span style="color:#75715e">#define SA_ONSTACK	0x08000000
+</span><span style="color:#75715e">#endif
+</span><span style="color:#75715e">#ifndef SA_RESTART
+</span><span style="color:#75715e">#define SA_RESTART	0x10000000
+</span><span style="color:#75715e">#endif
+</span><span style="color:#75715e">#ifndef SA_NODEFER
+</span><span style="color:#75715e">#define SA_NODEFER	0x40000000
+</span><span style="color:#75715e">#endif
+</span><span style="color:#75715e">#ifndef SA_RESETHAND
+</span><span style="color:#75715e">#define SA_RESETHAND	0x80000000
+</span><span style="color:#75715e">#endif
+</span></code></pre></div><p>题目中使用的是 <code>SA_SIGINFO</code>，对信号处理程序提供了附加信息：一个指向 <code>siginfo</code> 结构的指针以及一个指向上下文标识符的指针</p>
 <p>比如上述部分就是将 <code>sub_400E1D</code> 函数注册为34信号的处理函数</p>
 <p>主程序中，为 <code>2</code> 信号注册了一个处理函数，这个函数是用于对最终加密结果进行判断的，随后进行了一个初始化，接下来进入一个死循环，等待子程序发送 <code>2</code> 信号</p>
 <p>接下来需要了解是如何读取指令的</p>
 <p>子程序中调用了函数 <code>sub_400A0D(dword_4019C0, s1);</code>，其中，第一个参数是vm的指令码，s1是输入的 <code>flag</code></p>
 <p>这个函数是由 <code>while</code> 循环和 <code>switch</code> 语句实现的</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>    v41 <span style="color:#f92672">=</span> a1[(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)qword_6030C8[<span style="color:#ae81ff">20</span>]];
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( v41 <span style="color:#f92672">==</span> <span style="color:#ae81ff">23</span> )
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">++</span>qword_6030C8[<span style="color:#ae81ff">20</span>];
-</span></span></code></pre></div><p>这里可以看出来 <code>a1</code> 存储了vm程序的机器码，<code>qword_6030C8[20]</code> 存放的是 <code>eip</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>    <span style="color:#66d9ef">switch</span> ( v41 )
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">8</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">9</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">10</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">12</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">13</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">14</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">17</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">19</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">20</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>        v2 <span style="color:#f92672">=</span> qword_6030C8[<span style="color:#ae81ff">20</span>];
-</span></span><span style="display:flex;"><span>        qword_6030C8[<span style="color:#ae81ff">20</span>] <span style="color:#f92672">=</span> v2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">*</span>v42 <span style="color:#f92672">=</span> a1[v2];
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span></code></pre></div><p>这个 <code>switch</code> 中判断指令码是否为 <code>0, 8, 9 ...</code>，如果是，将会进行 <code>eip+1</code> 的操作，并再从机器码中取出一位，说明这些指令含有参数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">    v41 <span style="color:#f92672">=</span> a1[(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)qword_6030C8[<span style="color:#ae81ff">20</span>]];
+    <span style="color:#66d9ef">if</span> ( v41 <span style="color:#f92672">==</span> <span style="color:#ae81ff">23</span> )
+      <span style="color:#66d9ef">break</span>;
+    <span style="color:#f92672">++</span>qword_6030C8[<span style="color:#ae81ff">20</span>];
+</code></pre></div><p>这里可以看出来 <code>a1</code> 存储了vm程序的机器码，<code>qword_6030C8[20]</code> 存放的是 <code>eip</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">    <span style="color:#66d9ef">switch</span> ( v41 )
+    {
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">8</span><span style="color:#f92672">:</span>
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">9</span><span style="color:#f92672">:</span>
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">10</span><span style="color:#f92672">:</span>
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">12</span><span style="color:#f92672">:</span>
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">13</span><span style="color:#f92672">:</span>
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">14</span><span style="color:#f92672">:</span>
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">17</span><span style="color:#f92672">:</span>
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">19</span><span style="color:#f92672">:</span>
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">20</span><span style="color:#f92672">:</span>
+        v2 <span style="color:#f92672">=</span> qword_6030C8[<span style="color:#ae81ff">20</span>];
+        qword_6030C8[<span style="color:#ae81ff">20</span>] <span style="color:#f92672">=</span> v2 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+        <span style="color:#f92672">*</span>v42 <span style="color:#f92672">=</span> a1[v2];
+        <span style="color:#66d9ef">break</span>;
+      <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+        <span style="color:#66d9ef">break</span>;
+    }
+</code></pre></div><p>这个 <code>switch</code> 中判断指令码是否为 <code>0, 8, 9 ...</code>，如果是，将会进行 <code>eip+1</code> 的操作，并再从机器码中取出一位，说明这些指令含有参数</p>
 <p>接下来选择几个指令，分析是如何传参的</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>        v3 <span style="color:#f92672">=</span> getppid();
-</span></span><span style="display:flex;"><span>        sigqueue(v3, <span style="color:#ae81ff">34</span>, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> <span style="color:#a6e22e">sigval</span>)v42);
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
-</span></span></code></pre></div><p><code>0</code> 指令发送了 <code>34</code> 信号量，将参数设置为 <code>sigval</code> 进行传递，这个指令仅传递了一个指令参数</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>        val <span style="color:#f92672">=</span> qword_6030C8 <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>;
-</span></span><span style="display:flex;"><span>        v4 <span style="color:#f92672">=</span> getppid();
-</span></span><span style="display:flex;"><span>        sigqueue(v4, <span style="color:#ae81ff">34</span>, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> <span style="color:#a6e22e">sigval</span>)val);
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>        vala <span style="color:#f92672">=</span> qword_6030C8 <span style="color:#f92672">+</span> <span style="color:#ae81ff">17</span>;
-</span></span><span style="display:flex;"><span>        v5 <span style="color:#f92672">=</span> getppid();
-</span></span><span style="display:flex;"><span>        sigqueue(v5, <span style="color:#ae81ff">34</span>, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> <span style="color:#a6e22e">sigval</span>)vala);
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>        valb <span style="color:#f92672">=</span> qword_6030C8 <span style="color:#f92672">+</span> <span style="color:#ae81ff">18</span>;
-</span></span><span style="display:flex;"><span>        v6 <span style="color:#f92672">=</span> getppid();
-</span></span><span style="display:flex;"><span>        sigqueue(v6, <span style="color:#ae81ff">34</span>, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> <span style="color:#a6e22e">sigval</span>)valb);
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
-</span></span></code></pre></div><p><code>1, 2, 3</code> 三条指令区别仅在于使用的全局变量地址不同（可以猜测出来是三个不同的寄存器）</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">8</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>        valf <span style="color:#f92672">=</span> qword_6030C8 <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>;
-</span></span><span style="display:flex;"><span>        v11 <span style="color:#f92672">=</span> getppid();
-</span></span><span style="display:flex;"><span>        sigqueue(v11, <span style="color:#ae81ff">37</span>, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> <span style="color:#a6e22e">sigval</span>)valf);
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
-</span></span></code></pre></div><p>根据之前的分析，<code>8</code> 指令理应含有参数，但只传递了寄存器一个参数，因此观察处理函数</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">sub_400F16</span>(<span style="color:#66d9ef">__int64</span> a1, siginfo_t <span style="color:#f92672">*</span>a2)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)a2<span style="color:#f92672">-&gt;</span>_sifields._timer.si_sigval.sival_ptr <span style="color:#f92672">+=</span> s1[<span style="color:#ae81ff">79</span>];
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> semop(semid, <span style="color:#f92672">&amp;</span>stru_6030BE, <span style="color:#ae81ff">1uLL</span>);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>发现使用了 <code>s1[79]</code> 这个变量，而 vm 函数中含有语句 <code>v42 = s1 + 79;</code> 因此，参数通过 <code>s1[79]</code> 这个全局变量传递到了处理函数中</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+        v3 <span style="color:#f92672">=</span> getppid();
+        sigqueue(v3, <span style="color:#ae81ff">34</span>, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> <span style="color:#a6e22e">sigval</span>)v42);
+        <span style="color:#66d9ef">break</span>;
+</code></pre></div><p><code>0</code> 指令发送了 <code>34</code> 信号量，将参数设置为 <code>sigval</code> 进行传递，这个指令仅传递了一个指令参数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>
+        val <span style="color:#f92672">=</span> qword_6030C8 <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>;
+        v4 <span style="color:#f92672">=</span> getppid();
+        sigqueue(v4, <span style="color:#ae81ff">34</span>, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> <span style="color:#a6e22e">sigval</span>)val);
+        <span style="color:#66d9ef">break</span>;
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">:</span>
+        vala <span style="color:#f92672">=</span> qword_6030C8 <span style="color:#f92672">+</span> <span style="color:#ae81ff">17</span>;
+        v5 <span style="color:#f92672">=</span> getppid();
+        sigqueue(v5, <span style="color:#ae81ff">34</span>, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> <span style="color:#a6e22e">sigval</span>)vala);
+        <span style="color:#66d9ef">break</span>;
+      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">:</span>
+        valb <span style="color:#f92672">=</span> qword_6030C8 <span style="color:#f92672">+</span> <span style="color:#ae81ff">18</span>;
+        v6 <span style="color:#f92672">=</span> getppid();
+        sigqueue(v6, <span style="color:#ae81ff">34</span>, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> <span style="color:#a6e22e">sigval</span>)valb);
+        <span style="color:#66d9ef">break</span>;
+</code></pre></div><p><code>1, 2, 3</code> 三条指令区别仅在于使用的全局变量地址不同（可以猜测出来是三个不同的寄存器）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">8</span><span style="color:#f92672">:</span>
+        valf <span style="color:#f92672">=</span> qword_6030C8 <span style="color:#f92672">+</span> <span style="color:#ae81ff">16</span>;
+        v11 <span style="color:#f92672">=</span> getppid();
+        sigqueue(v11, <span style="color:#ae81ff">37</span>, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">union</span> <span style="color:#a6e22e">sigval</span>)valf);
+        <span style="color:#66d9ef">break</span>;
+</code></pre></div><p>根据之前的分析，<code>8</code> 指令理应含有参数，但只传递了寄存器一个参数，因此观察处理函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">sub_400F16</span>(<span style="color:#66d9ef">__int64</span> a1, siginfo_t <span style="color:#f92672">*</span>a2)
+{
+  <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)a2<span style="color:#f92672">-&gt;</span>_sifields._timer.si_sigval.sival_ptr <span style="color:#f92672">+=</span> s1[<span style="color:#ae81ff">79</span>];
+  <span style="color:#66d9ef">return</span> semop(semid, <span style="color:#f92672">&amp;</span>stru_6030BE, <span style="color:#ae81ff">1uLL</span>);
+}
+</code></pre></div><p>发现使用了 <code>s1[79]</code> 这个变量，而 vm 函数中含有语句 <code>v42 = s1 + 79;</code> 因此，参数通过 <code>s1[79]</code> 这个全局变量传递到了处理函数中</p>
 <p>还有一类指令只有kill</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">21</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>        v24 <span style="color:#f92672">=</span> getppid();
-</span></span><span style="display:flex;"><span>        kill(v24, <span style="color:#ae81ff">46</span>);
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
-</span></span></code></pre></div><p>这类指令仅传递了全局变量</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">      <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">21</span><span style="color:#f92672">:</span>
+        v24 <span style="color:#f92672">=</span> getppid();
+        kill(v24, <span style="color:#ae81ff">46</span>);
+        <span style="color:#66d9ef">break</span>;
+</code></pre></div><p>这类指令仅传递了全局变量</p>
 <p>最后经过对每条指令的分析，以及动调查看内存，确定 <code>qword_6030C8[19]</code> 是 <code>esp</code>，<code>*(_QWORD *)qword_6030C8</code> 模拟了栈，<code>*((_QWORD *)qword_6030C8 + 1)</code> 是输入的开始地址，<code>qword_6030C8[16, 17, 18]</code> 是三个寄存器，<code>qword_6030C8[21]</code> 是跳转用的 <code>ZF</code> 标志位</p>
 <h2 id="writeup">Writeup</h2>
 <p>先手动反汇编</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>code <span style="color:#f92672">=</span> [
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">42</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">36</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">29</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">0</span>, 
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">64</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">72</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">29</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">14</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">21</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">15</span>, 
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">29</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">18</span>, 
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">21</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">61</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">18</span>, <span style="color:#ae81ff">14</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">21</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">7</span>, 
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">85</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">64</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">18</span>
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>sub_400E1D <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;push(</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">);&#34;</span>
-</span></span><span style="display:flex;"><span>sub_400E78 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;pop(</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">);&#34;</span>
-</span></span><span style="display:flex;"><span>sub_400F16 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74"> += </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">;&#34;</span>
-</span></span><span style="display:flex;"><span>sub_400FA8 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74"> -= </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">;&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e"># 20</span>
-</span></span><span style="display:flex;"><span>eax <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e"># 16</span>
-</span></span><span style="display:flex;"><span>ebx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e"># 17</span>
-</span></span><span style="display:flex;"><span>ecx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e"># 18</span>
-</span></span><span style="display:flex;"><span>edx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e"># 19</span>
-</span></span><span style="display:flex;"><span>memory <span style="color:#f92672">=</span> [<span style="color:#ae81ff">2</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x1000</span>
-</span></span><span style="display:flex;"><span>memory2 <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">50</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> eip <span style="color:#f92672">&lt;</span> len(code):
-</span></span><span style="display:flex;"><span>    cur_op <span style="color:#f92672">=</span> code[eip]
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> (eip), sub_400E1D<span style="color:#f92672">.</span>format(cur_arg))
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        memory[edx] <span style="color:#f92672">=</span> cur_arg
-</span></span><span style="display:flex;"><span>        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eax&#34;</span>
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> (eip), sub_400E1D<span style="color:#f92672">.</span>format(cur_arg))
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        memory[edx] <span style="color:#f92672">=</span> eax
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ebx&#34;</span>
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> (eip), sub_400E1D<span style="color:#f92672">.</span>format(cur_arg))
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        memory[edx] <span style="color:#f92672">=</span> ebx
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ecx&#34;</span>
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> (eip), sub_400E1D<span style="color:#f92672">.</span>format(cur_arg))
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        memory[edx] <span style="color:#f92672">=</span> ecx
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">4</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eax&#34;</span>
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400E78<span style="color:#f92672">.</span>format(cur_arg))
-</span></span><span style="display:flex;"><span>        eax <span style="color:#f92672">=</span> memory[edx]
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">5</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ebx&#34;</span>
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400E78<span style="color:#f92672">.</span>format(cur_arg))
-</span></span><span style="display:flex;"><span>        ebx <span style="color:#f92672">=</span> memory[edx]
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">6</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ecx&#34;</span>
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400E78<span style="color:#f92672">.</span>format(cur_arg))
-</span></span><span style="display:flex;"><span>        ecx <span style="color:#f92672">=</span> memory[edx]
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">7</span>:
-</span></span><span style="display:flex;"><span>        eax <span style="color:#f92672">+=</span> ebx
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">&#34;eax += ebx;&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">8</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400F16<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;eax&#34;</span>, cur_arg))
-</span></span><span style="display:flex;"><span>        eax <span style="color:#f92672">+=</span> cur_arg
-</span></span><span style="display:flex;"><span>        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">9</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400F16<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;ebx&#34;</span>, cur_arg))
-</span></span><span style="display:flex;"><span>        ebx <span style="color:#f92672">+=</span> cur_arg
-</span></span><span style="display:flex;"><span>        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">10</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400F16<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;ecx&#34;</span>, cur_arg))
-</span></span><span style="display:flex;"><span>        ecx <span style="color:#f92672">+=</span> cur_arg
-</span></span><span style="display:flex;"><span>        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">11</span>:
-</span></span><span style="display:flex;"><span>        eax <span style="color:#f92672">-=</span> ebx
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">&#34;eax -= ebx;&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">12</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400FA8<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;eax&#34;</span>, cur_arg))
-</span></span><span style="display:flex;"><span>        eax <span style="color:#f92672">-=</span> cur_arg
-</span></span><span style="display:flex;"><span>        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">13</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400FA8<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;ebx&#34;</span>, cur_arg))
-</span></span><span style="display:flex;"><span>        ebx <span style="color:#f92672">-=</span> cur_arg
-</span></span><span style="display:flex;"><span>        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">14</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400FA8<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;ecx&#34;</span>, cur_arg))
-</span></span><span style="display:flex;"><span>        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">15</span>:
-</span></span><span style="display:flex;"><span>        eax <span style="color:#f92672">^=</span> ebx
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;eax ^= ebx;&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">16</span>:
-</span></span><span style="display:flex;"><span>        zf <span style="color:#f92672">=</span> (eax <span style="color:#f92672">==</span> ebx)
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;zf = (eax == ebx);&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">17</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;push(eip+2); eip = </span><span style="color:#e6db74">{</span>hex(cur_arg)<span style="color:#e6db74">}</span><span style="color:#e6db74">;&#34;</span>)
-</span></span><span style="display:flex;"><span>        memory[edx] <span style="color:#f92672">=</span> eip
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">18</span>:
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;pop(eip);&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">19</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;eip = </span><span style="color:#e6db74">{</span>hex(cur_arg)<span style="color:#e6db74">}</span><span style="color:#e6db74">;&#34;</span>)
-</span></span><span style="display:flex;"><span>        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">20</span>:
-</span></span><span style="display:flex;"><span>        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;if zf:    eip = </span><span style="color:#e6db74">{</span>hex(cur_arg)<span style="color:#e6db74">}</span><span style="color:#e6db74">;&#34;</span>)
-</span></span><span style="display:flex;"><span>        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">21</span>:
-</span></span><span style="display:flex;"><span>        memory[edx] <span style="color:#f92672">=</span> memory2[ecx]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;push(memory2[ecx]);&#34;</span>)
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">22</span>:
-</span></span><span style="display:flex;"><span>        edx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        memory2[ecx] <span style="color:#f92672">=</span> memory[edx]
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;pop(memory2[ecx]);&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">23</span>:
-</span></span><span style="display:flex;"><span>        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">&#34;break;&#34;</span>)
-</span></span><span style="display:flex;"><span>    eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span></code></pre></div><p>拿到反汇编结果</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>_00: push(eip<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>); eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x34</span>;
-</span></span><span style="display:flex;"><span>_02: push(<span style="color:#ae81ff">42</span>);
-</span></span><span style="display:flex;"><span>_04: pop(ebx);
-</span></span><span style="display:flex;"><span>_05: zf <span style="color:#f92672">=</span> (eax <span style="color:#f92672">==</span> ebx);
-</span></span><span style="display:flex;"><span>_06: <span style="color:#66d9ef">if</span> zf:    eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x9</span>;
-</span></span><span style="display:flex;"><span>_08: <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>_09: push(<span style="color:#ae81ff">36</span>);
-</span></span><span style="display:flex;"><span>_0B: pop(ebx);
-</span></span><span style="display:flex;"><span>_0C: push(ecx);
-</span></span><span style="display:flex;"><span>_0D: push(eip<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>); eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1d</span>;
-</span></span><span style="display:flex;"><span>_0F: pop(ecx);
-</span></span><span style="display:flex;"><span>_10: push(<span style="color:#ae81ff">0</span>);
-</span></span><span style="display:flex;"><span>_12: pop(ebx);
-</span></span><span style="display:flex;"><span>_13: push(ecx);
-</span></span><span style="display:flex;"><span>_14: push(eip<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>); eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40</span>;
-</span></span><span style="display:flex;"><span>_16: pop(ecx);
-</span></span><span style="display:flex;"><span>_17: push(<span style="color:#ae81ff">72</span>);
-</span></span><span style="display:flex;"><span>_19: pop(ebx);
-</span></span><span style="display:flex;"><span>_1A: push(eip<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>); eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1d</span>;
-</span></span><span style="display:flex;"><span>_1C: <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>_1D: ecx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>_1F: push(memory2[ecx]);
-</span></span><span style="display:flex;"><span>_20: pop(eax);
-</span></span><span style="display:flex;"><span>_21: eax <span style="color:#f92672">^=</span> ebx;
-</span></span><span style="display:flex;"><span>_22: push(eax);
-</span></span><span style="display:flex;"><span>_23: pop(memory2[ecx]);
-</span></span><span style="display:flex;"><span>_24: push(ebx);
-</span></span><span style="display:flex;"><span>_25: push(<span style="color:#ae81ff">0</span>);
-</span></span><span style="display:flex;"><span>_27: pop(eax);
-</span></span><span style="display:flex;"><span>_28: push(ecx);
-</span></span><span style="display:flex;"><span>_29: pop(ebx);
-</span></span><span style="display:flex;"><span>_2A: zf <span style="color:#f92672">=</span> (eax <span style="color:#f92672">==</span> ebx);
-</span></span><span style="display:flex;"><span>_2B: <span style="color:#66d9ef">if</span> zf:    eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x32</span>;
-</span></span><span style="display:flex;"><span>_2D: pop(ebx);
-</span></span><span style="display:flex;"><span>_2E: ebx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
-</span></span><span style="display:flex;"><span>_30: eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1d</span>;
-</span></span><span style="display:flex;"><span>_32: pop(ebx);
-</span></span><span style="display:flex;"><span>_33: pop(eip);
-</span></span><span style="display:flex;"><span>_34: push(memory2[ecx]);
-</span></span><span style="display:flex;"><span>_35: pop(eax);
-</span></span><span style="display:flex;"><span>_36: zf <span style="color:#f92672">=</span> (eax <span style="color:#f92672">==</span> ebx);
-</span></span><span style="display:flex;"><span>_37: <span style="color:#66d9ef">if</span> zf:    eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3d</span>;
-</span></span><span style="display:flex;"><span>_39: ecx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>_3B: eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x34</span>;
-</span></span><span style="display:flex;"><span>_3D: push(ecx);
-</span></span><span style="display:flex;"><span>_3E: pop(eax);
-</span></span><span style="display:flex;"><span>_3F: pop(eip);
-</span></span><span style="display:flex;"><span>_40: ecx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>_42: push(memory2[ecx]);
-</span></span><span style="display:flex;"><span>_43: pop(eax);
-</span></span><span style="display:flex;"><span>_44: eax <span style="color:#f92672">+=</span> ebx;
-</span></span><span style="display:flex;"><span>_45: push(eax);
-</span></span><span style="display:flex;"><span>_46: pop(memory2[ecx]);
-</span></span><span style="display:flex;"><span>_47: push(ebx);
-</span></span><span style="display:flex;"><span>_48: push(<span style="color:#ae81ff">0</span>);
-</span></span><span style="display:flex;"><span>_4A: pop(eax);
-</span></span><span style="display:flex;"><span>_4B: push(ecx);
-</span></span><span style="display:flex;"><span>_4C: pop(ebx);
-</span></span><span style="display:flex;"><span>_4D: zf <span style="color:#f92672">=</span> (eax <span style="color:#f92672">==</span> ebx);
-</span></span><span style="display:flex;"><span>_4E: <span style="color:#66d9ef">if</span> zf:    eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x55</span>;
-</span></span><span style="display:flex;"><span>_50: pop(ebx);
-</span></span><span style="display:flex;"><span>_51: ebx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>_53: eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40</span>;
-</span></span><span style="display:flex;"><span>_55: pop(ebx);
-</span></span><span style="display:flex;"><span>_56: pop(eip);
-</span></span></code></pre></div><p>发现其实是调用了几个函数，分别在0x34、0x40、0x1D</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">code <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">42</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">36</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">29</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">0</span>, 
+    <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">64</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">72</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">17</span>, <span style="color:#ae81ff">29</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">14</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">21</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">15</span>, 
+    <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">29</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">18</span>, 
+    <span style="color:#ae81ff">21</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">61</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">52</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">18</span>, <span style="color:#ae81ff">14</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">21</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">7</span>, 
+    <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">16</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">85</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">64</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">18</span>
+]
+
+sub_400E1D <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;push(</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">);&#34;</span>
+sub_400E78 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;pop(</span><span style="color:#e6db74">{}</span><span style="color:#e6db74">);&#34;</span>
+sub_400F16 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74"> += </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">;&#34;</span>
+sub_400FA8 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{}</span><span style="color:#e6db74"> -= </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">;&#34;</span>
+
+eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e"># 20</span>
+eax <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e"># 16</span>
+ebx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e"># 17</span>
+ecx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e"># 18</span>
+edx <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#75715e"># 19</span>
+memory <span style="color:#f92672">=</span> [<span style="color:#ae81ff">2</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x1000</span>
+memory2 <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">50</span>
+<span style="color:#66d9ef">while</span> eip <span style="color:#f92672">&lt;</span> len(code):
+    cur_op <span style="color:#f92672">=</span> code[eip]
+    <span style="color:#66d9ef">if</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> (eip), sub_400E1D<span style="color:#f92672">.</span>format(cur_arg))
+        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        memory[edx] <span style="color:#f92672">=</span> cur_arg
+        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eax&#34;</span>
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> (eip), sub_400E1D<span style="color:#f92672">.</span>format(cur_arg))
+        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        memory[edx] <span style="color:#f92672">=</span> eax
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
+        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ebx&#34;</span>
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> (eip), sub_400E1D<span style="color:#f92672">.</span>format(cur_arg))
+        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        memory[edx] <span style="color:#f92672">=</span> ebx
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>:
+        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ecx&#34;</span>
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> (eip), sub_400E1D<span style="color:#f92672">.</span>format(cur_arg))
+        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        memory[edx] <span style="color:#f92672">=</span> ecx
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">4</span>:
+        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;eax&#34;</span>
+        edx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400E78<span style="color:#f92672">.</span>format(cur_arg))
+        eax <span style="color:#f92672">=</span> memory[edx]
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">5</span>:
+        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ebx&#34;</span>
+        edx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400E78<span style="color:#f92672">.</span>format(cur_arg))
+        ebx <span style="color:#f92672">=</span> memory[edx]
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">6</span>:
+        cur_arg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ecx&#34;</span>
+        edx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400E78<span style="color:#f92672">.</span>format(cur_arg))
+        ecx <span style="color:#f92672">=</span> memory[edx]
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">7</span>:
+        eax <span style="color:#f92672">+=</span> ebx
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">&#34;eax += ebx;&#34;</span>)
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">8</span>:
+        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400F16<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;eax&#34;</span>, cur_arg))
+        eax <span style="color:#f92672">+=</span> cur_arg
+        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">9</span>:
+        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400F16<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;ebx&#34;</span>, cur_arg))
+        ebx <span style="color:#f92672">+=</span> cur_arg
+        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">10</span>:
+        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400F16<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;ecx&#34;</span>, cur_arg))
+        ecx <span style="color:#f92672">+=</span> cur_arg
+        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">11</span>:
+        eax <span style="color:#f92672">-=</span> ebx
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">&#34;eax -= ebx;&#34;</span>)
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">12</span>:
+        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400FA8<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;eax&#34;</span>, cur_arg))
+        eax <span style="color:#f92672">-=</span> cur_arg
+        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">13</span>:
+        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400FA8<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;ebx&#34;</span>, cur_arg))
+        ebx <span style="color:#f92672">-=</span> cur_arg
+        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">14</span>:
+        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, sub_400FA8<span style="color:#f92672">.</span>format(<span style="color:#e6db74">&#34;ecx&#34;</span>, cur_arg))
+        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">15</span>:
+        eax <span style="color:#f92672">^=</span> ebx
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;eax ^= ebx;&#34;</span>)
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">16</span>:
+        zf <span style="color:#f92672">=</span> (eax <span style="color:#f92672">==</span> ebx)
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;zf = (eax == ebx);&#34;</span>)
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">17</span>:
+        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;push(eip+2); eip = </span><span style="color:#e6db74">{</span>hex(cur_arg)<span style="color:#e6db74">}</span><span style="color:#e6db74">;&#34;</span>)
+        memory[edx] <span style="color:#f92672">=</span> eip
+        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">18</span>:
+        edx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;pop(eip);&#34;</span>)
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">19</span>:
+        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;eip = </span><span style="color:#e6db74">{</span>hex(cur_arg)<span style="color:#e6db74">}</span><span style="color:#e6db74">;&#34;</span>)
+        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">20</span>:
+        cur_arg <span style="color:#f92672">=</span> code[eip <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;if zf:    eip = </span><span style="color:#e6db74">{</span>hex(cur_arg)<span style="color:#e6db74">}</span><span style="color:#e6db74">;&#34;</span>)
+        eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">21</span>:
+        memory[edx] <span style="color:#f92672">=</span> memory2[ecx]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;push(memory2[ecx]);&#34;</span>)
+        edx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">22</span>:
+        edx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>
+        memory2[ecx] <span style="color:#f92672">=</span> memory[edx]
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;pop(memory2[ecx]);&#34;</span>)
+    <span style="color:#66d9ef">elif</span> cur_op <span style="color:#f92672">==</span> <span style="color:#ae81ff">23</span>:
+        print (<span style="color:#e6db74">&#34;_</span><span style="color:#e6db74">%02X</span><span style="color:#e6db74">:&#34;</span> <span style="color:#f92672">%</span> eip, <span style="color:#e6db74">&#34;break;&#34;</span>)
+    eip <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</code></pre></div><p>拿到反汇编结果</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">_00: push(eip<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>); eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x34</span>;
+_02: push(<span style="color:#ae81ff">42</span>);
+_04: pop(ebx);
+_05: zf <span style="color:#f92672">=</span> (eax <span style="color:#f92672">==</span> ebx);
+_06: <span style="color:#66d9ef">if</span> zf:    eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x9</span>;
+_08: <span style="color:#66d9ef">break</span>;
+_09: push(<span style="color:#ae81ff">36</span>);
+_0B: pop(ebx);
+_0C: push(ecx);
+_0D: push(eip<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>); eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1d</span>;
+_0F: pop(ecx);
+_10: push(<span style="color:#ae81ff">0</span>);
+_12: pop(ebx);
+_13: push(ecx);
+_14: push(eip<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>); eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40</span>;
+_16: pop(ecx);
+_17: push(<span style="color:#ae81ff">72</span>);
+_19: pop(ebx);
+_1A: push(eip<span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>); eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1d</span>;
+_1C: <span style="color:#66d9ef">break</span>;
+_1D: ecx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>;
+_1F: push(memory2[ecx]);
+_20: pop(eax);
+_21: eax <span style="color:#f92672">^=</span> ebx;
+_22: push(eax);
+_23: pop(memory2[ecx]);
+_24: push(ebx);
+_25: push(<span style="color:#ae81ff">0</span>);
+_27: pop(eax);
+_28: push(ecx);
+_29: pop(ebx);
+_2A: zf <span style="color:#f92672">=</span> (eax <span style="color:#f92672">==</span> ebx);
+_2B: <span style="color:#66d9ef">if</span> zf:    eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x32</span>;
+_2D: pop(ebx);
+_2E: ebx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
+_30: eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x1d</span>;
+_32: pop(ebx);
+_33: pop(eip);
+_34: push(memory2[ecx]);
+_35: pop(eax);
+_36: zf <span style="color:#f92672">=</span> (eax <span style="color:#f92672">==</span> ebx);
+_37: <span style="color:#66d9ef">if</span> zf:    eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3d</span>;
+_39: ecx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+_3B: eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x34</span>;
+_3D: push(ecx);
+_3E: pop(eax);
+_3F: pop(eip);
+_40: ecx <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>;
+_42: push(memory2[ecx]);
+_43: pop(eax);
+_44: eax <span style="color:#f92672">+=</span> ebx;
+_45: push(eax);
+_46: pop(memory2[ecx]);
+_47: push(ebx);
+_48: push(<span style="color:#ae81ff">0</span>);
+_4A: pop(eax);
+_4B: push(ecx);
+_4C: pop(ebx);
+_4D: zf <span style="color:#f92672">=</span> (eax <span style="color:#f92672">==</span> ebx);
+_4E: <span style="color:#66d9ef">if</span> zf:    eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x55</span>;
+_50: pop(ebx);
+_51: ebx <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+_53: eip <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x40</span>;
+_55: pop(ebx);
+_56: pop(eip);
+</code></pre></div><p>发现其实是调用了几个函数，分别在0x34、0x40、0x1D</p>
 <p>0x34处的函数判断了长度，0x1D处的函数从后往前异或数字，每次加2，0x40处的函数从后往前进行加法，数字每次加1</p>
 <p>所以最后的加密算法为：首先从后往前 ^36, ^38, ^40，随后从后往前+0, +1, +2…，最后从后往前 ^72, ^74, ^76…</p>
 <p>反向解密即可</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s2 <span style="color:#f92672">=</span> [
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xA3</span>, <span style="color:#ae81ff">0xD8</span>, <span style="color:#ae81ff">0xAC</span>, <span style="color:#ae81ff">0xA9</span>, <span style="color:#ae81ff">0xA8</span>, <span style="color:#ae81ff">0xD6</span>, <span style="color:#ae81ff">0xA6</span>, <span style="color:#ae81ff">0xCD</span>, <span style="color:#ae81ff">0xD0</span>, <span style="color:#ae81ff">0xD5</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xF7</span>, <span style="color:#ae81ff">0xB7</span>, <span style="color:#ae81ff">0x9C</span>, <span style="color:#ae81ff">0xB3</span>, <span style="color:#ae81ff">0x31</span>, <span style="color:#ae81ff">0x2D</span>, <span style="color:#ae81ff">0x40</span>, <span style="color:#ae81ff">0x5B</span>, <span style="color:#ae81ff">0x4B</span>, <span style="color:#ae81ff">0x3A</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0xFD</span>, <span style="color:#ae81ff">0x57</span>, <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0x52</span>, <span style="color:#ae81ff">0x54</span>, <span style="color:#ae81ff">0x1B</span>, <span style="color:#ae81ff">0x0C</span>, <span style="color:#ae81ff">0x78</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x39</span>, <span style="color:#ae81ff">0x2D</span>, <span style="color:#ae81ff">0xD9</span>, <span style="color:#ae81ff">0x3D</span>, <span style="color:#ae81ff">0x35</span>, <span style="color:#ae81ff">0x1F</span>, <span style="color:#ae81ff">0x09</span>, <span style="color:#ae81ff">0x41</span>, <span style="color:#ae81ff">0x40</span>, <span style="color:#ae81ff">0x47</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0x11</span>
-</span></span><span style="display:flex;"><span>]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
-</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> <span style="color:#ae81ff">36</span>
-</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>z <span style="color:#f92672">=</span> <span style="color:#ae81ff">72</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> s2[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]:
-</span></span><span style="display:flex;"><span>    flag <span style="color:#f92672">+=</span> chr(((i <span style="color:#f92672">^</span> z) <span style="color:#f92672">-</span> y) <span style="color:#f92672">^</span> x)
-</span></span><span style="display:flex;"><span>        x <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>        y <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>        z <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>print (flag[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#39;flag{Now_Y0u_Know_th4_Signa1_0f_Linux!!!!}&#39;</span>
-</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">s2 <span style="color:#f92672">=</span> [
+    <span style="color:#ae81ff">0xA3</span>, <span style="color:#ae81ff">0xD8</span>, <span style="color:#ae81ff">0xAC</span>, <span style="color:#ae81ff">0xA9</span>, <span style="color:#ae81ff">0xA8</span>, <span style="color:#ae81ff">0xD6</span>, <span style="color:#ae81ff">0xA6</span>, <span style="color:#ae81ff">0xCD</span>, <span style="color:#ae81ff">0xD0</span>, <span style="color:#ae81ff">0xD5</span>,
+    <span style="color:#ae81ff">0xF7</span>, <span style="color:#ae81ff">0xB7</span>, <span style="color:#ae81ff">0x9C</span>, <span style="color:#ae81ff">0xB3</span>, <span style="color:#ae81ff">0x31</span>, <span style="color:#ae81ff">0x2D</span>, <span style="color:#ae81ff">0x40</span>, <span style="color:#ae81ff">0x5B</span>, <span style="color:#ae81ff">0x4B</span>, <span style="color:#ae81ff">0x3A</span>,
+    <span style="color:#ae81ff">0xFD</span>, <span style="color:#ae81ff">0x57</span>, <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0x5F</span>, <span style="color:#ae81ff">0x58</span>, <span style="color:#ae81ff">0x52</span>, <span style="color:#ae81ff">0x54</span>, <span style="color:#ae81ff">0x1B</span>, <span style="color:#ae81ff">0x0C</span>, <span style="color:#ae81ff">0x78</span>,
+    <span style="color:#ae81ff">0x39</span>, <span style="color:#ae81ff">0x2D</span>, <span style="color:#ae81ff">0xD9</span>, <span style="color:#ae81ff">0x3D</span>, <span style="color:#ae81ff">0x35</span>, <span style="color:#ae81ff">0x1F</span>, <span style="color:#ae81ff">0x09</span>, <span style="color:#ae81ff">0x41</span>, <span style="color:#ae81ff">0x40</span>, <span style="color:#ae81ff">0x47</span>,
+    <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0x11</span>
+]
+
+flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+x <span style="color:#f92672">=</span> <span style="color:#ae81ff">36</span>
+y <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+z <span style="color:#f92672">=</span> <span style="color:#ae81ff">72</span>
+
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> s2[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]:
+    flag <span style="color:#f92672">+=</span> chr(((i <span style="color:#f92672">^</span> z) <span style="color:#f92672">-</span> y) <span style="color:#f92672">^</span> x)
+        x <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
+        y <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+        z <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
+
+print (flag[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])
+<span style="color:#75715e"># &#39;flag{Now_Y0u_Know_th4_Signa1_0f_Linux!!!!}&#39;</span>
+</code></pre></div>
 </section>
 
 
@@ -559,18 +559,6 @@
                 
                     
 <article class="">
-    <a href="/post/angr-ctf-writeup/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">angr ctf writeup</h2>
-        </div>
-    </a>
-</article>
-                
-                    
-<article class="">
     <a href="/post/dasctf-2021-09-writeup/">
         
         
@@ -589,6 +577,18 @@
 
         <div class="article-details">
             <h2 class="article-title">dfjk 2021 RE</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/ciscn-n-2021-re-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CISCN-N 2021 RE Writeup</h2>
         </div>
     </a>
 </article>
