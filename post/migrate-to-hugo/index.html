@@ -114,6 +114,16 @@
 
         
             <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M4 20h4L18.5 9.5a1.5 1.5.0 00-4-4L4 16v4"></path>
+    <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
+</svg>
+                <time class="article-words">
+                    664 words
+                </time>
+            </div>
+            <div>
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
   <circle cx="12" cy="12" r="9" />
@@ -123,7 +133,7 @@
 
 
                 <time class="article-time--reading">
-                    2 minute read
+                    4 minute read
                 </time>
             </div>
         
@@ -143,7 +153,8 @@
 <p>最初看到 Hugo 其实是在帮 web 手收集博客的时候看到了陆队的博客，正好记录了迁移到 Hugo 的过程。博客里讲了 Hugo 的静态网页生成速度很快。联想到自己的博客垃圾文章也越来越多，Hexo 确实有点慢了，Hugo 也许以后会是个不错的选择。</p>
 <p>后来想要帮校队搭个博客，于是决定试试 Hugo。最一开始看中的是 Hugo Bootstrap Theme，想把背景改一下颜色，但是失败了，于是又找了找主题，发现 Stack 更好看，于是干脆就拿 Stack 搭了，而后来才发现，原来陆队的博客也是 stack 主题，看来审美从来没有变过 😂。</p>
 <p>于是，在 Claudia 配置失败后，我果断转到了 Hugo Stack 主题。</p>
-<h2 id="目前的修改友链">目前的修改——友链</h2>
+<h2 id="目前的修改">目前的修改</h2>
+<h3 id="友链">友链</h3>
 <p>Stack 主题本身是不带友链的，作者应该是正在写，但比较忙，也不知道什么时候能写完，于是就看了看别人的方案。直接搜能搜到一个方案，但讲得不是特别清楚，搭建失败了。后来在 pull request 里面发现有人实现了一个，作者没有采纳而已，于是就以这个作为临时方案了。</p>
 <p>主题 <code>assets/scss/style.scss</code> 27行添加：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scss" data-lang="scss"><span style="color:#66d9ef">@import</span> <span style="color:#e6db74">&#34;partials/layout/links.scss&#34;</span>;
@@ -312,7 +323,110 @@ menu:
 { {&lt; friend name=&quot;&quot; url=&quot;&quot; avatar=&quot;&quot; bio=&quot;&quot; &gt;} }
 
 两个大括号之间的空格需要去掉，我这里不去掉的话会显示友链标签（竟然没有考虑到代码块的问题，可以考虑提 issue 了）
-</code></pre><h2 id="目前的问题">目前的问题</h2>
+</code></pre><h3 id="文章字数统计">文章字数统计</h3>
+<blockquote>
+<p>参考 <code>https://coderqs.github.io/2022/02/hugo-stack-%E4%B8%BB%E9%A2%98%E8%A3%85%E4%BF%AE%E7%AC%94%E8%AE%B0</code></p>
+</blockquote>
+<p><code>layouts/partials/article/components/details.html</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">        {{ if .Site.Params.article.readingTime }}
+            &lt;<span style="color:#f92672">div</span>&gt;
+                {{ partial &#34;helper/icon&#34; &#34;brush&#34; }}
+                &lt;<span style="color:#f92672">time</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;article-words&#34;</span>&gt;
+                    {{ T &#34;article.wordCount&#34; .WordCount }}
+                &lt;/<span style="color:#f92672">time</span>&gt;
+            &lt;/<span style="color:#f92672">div</span>&gt;
+</code></pre></div><p><code>i18n/en.yaml</code> 的 <code>article</code> 中添加</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">    <span style="color:#f92672">wordCount</span>:
+        <span style="color:#f92672">other</span>: <span style="color:#e6db74">&#34;{{ .Count }} words&#34;</span>
+</code></pre></div><h3 id="站点上线时间统计总字数统计">站点上线时间统计、总字数统计</h3>
+<blockquote>
+<p>参考 <code>https://coderqs.github.io/2022/02/hugo-stack-%E4%B8%BB%E9%A2%98%E8%A3%85%E4%BF%AE%E7%AC%94%E8%AE%B0</code></p>
+</blockquote>
+<p><code>layouts\partials\footer\footer.html</code></p>
+<p>修改：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">section</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;copyright&#34;</span>&gt;
+    &amp;copy;
+    {{ if and (.Site.Params.footer.since) (ne .Site.Params.footer.since (int (now.Format &#34;2006&#34;))) }}
+        {{ .Site.Params.footer.since }} -
+    {{ end }}
+    {{ now.Format &#34;2006&#34; }} {{ .Site.Title }} &lt;<span style="color:#f92672">br</span> /&gt;
+    已运行 &lt;<span style="color:#f92672">i</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;fas fa-bell&#34;</span>&gt;&lt;/<span style="color:#f92672">i</span>&gt; &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;days&#34;</span>&gt;0&lt;/<span style="color:#f92672">a</span>&gt; 天
+    {{$scratch := newScratch}}
+    {{ range (where .Site.Pages &#34;Kind&#34; &#34;page&#34; )}}
+        {{$scratch.Add &#34;total&#34; .WordCount}}
+    {{ end }}
+
+    ⌨ {{ div ($scratch.Get &#34;total&#34;) 1000.0 | lang.FormatNumber 2 }}k 字 🧠 {{ len (where .Site.RegularPages &#34;Section&#34; &#34;post&#34;) }} 篇文章
+&lt;/<span style="color:#f92672">section</span>&gt;
+</code></pre></div><p>最后添加</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">script</span>&gt;
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">s1</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;2022-01-01&#39;</span>;
+    <span style="color:#a6e22e">s1</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date(<span style="color:#a6e22e">s1</span>.<span style="color:#a6e22e">replace</span>(<span style="color:#e6db74">/-/g</span>, <span style="color:#e6db74">&#34;/&#34;</span>));
+    <span style="color:#a6e22e">s2</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date();
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">days</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">s2</span>.<span style="color:#a6e22e">getTime</span>() <span style="color:#f92672">-</span> <span style="color:#a6e22e">s1</span>.<span style="color:#a6e22e">getTime</span>();
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">number_of_days</span> <span style="color:#f92672">=</span> parseInt(<span style="color:#a6e22e">days</span> <span style="color:#f92672">/</span> (<span style="color:#ae81ff">1000</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">60</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">60</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">24</span>));
+    document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#e6db74">&#39;days&#39;</span>).<span style="color:#a6e22e">innerHTML</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">number_of_days</span>;
+&lt;/<span style="color:#f92672">script</span>&gt;
+</code></pre></div><h3 id="站点信息居中">站点信息居中</h3>
+<blockquote>
+<p>参考 <code>https://coderqs.github.io/2022/02/hugo-stack-%E4%B8%BB%E9%A2%98%E8%A3%85%E4%BF%AE%E7%AC%94%E8%AE%B0</code></p>
+</blockquote>
+<p>修改 <code>assets/scss/partials/sidebar.scss</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">site-avatar</span> {
+    <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">relative</span>;
+    <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">margin-left</span>: <span style="color:#66d9ef">auto</span>; <span style="color:#960050;background-color:#1e0010">//站点头像居中</span>
+    <span style="color:#66d9ef">margin-right</span>: <span style="color:#66d9ef">auto</span>; <span style="color:#960050;background-color:#1e0010">//站点头像居中</span>
+    <span style="color:#66d9ef">width</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar<span style="color:#f92672">-</span>avatar<span style="color:#f92672">-</span>size);
+    <span style="color:#66d9ef">height</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar<span style="color:#f92672">-</span>avatar<span style="color:#f92672">-</span>size);
+
+    <span style="color:#66d9ef">margin-bottom</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>sidebar<span style="color:#f92672">-</span>element<span style="color:#f92672">-</span>separation);
+
+    <span style="color:#960050;background-color:#1e0010">.site-logo</span> <span style="color:#960050;background-color:#1e0010">{</span>
+        <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+        <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+        <span style="color:#66d9ef">border-radius</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+        <span style="color:#66d9ef">box-shadow</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>shadow<span style="color:#f92672">-</span>l1);
+    }
+
+
+.<span style="color:#a6e22e">site-name</span> {
+    <span style="color:#66d9ef">color</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>accent<span style="color:#f92672">-</span><span style="color:#66d9ef">color</span>);
+    <span style="color:#66d9ef">text-align</span>: <span style="color:#66d9ef">center</span>; <span style="color:#960050;background-color:#1e0010">//站点名称居中</span>
+    <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">1.8</span><span style="color:#66d9ef">rem</span>;
+
+    <span style="color:#960050;background-color:#1e0010">@include</span> <span style="color:#960050;background-color:#1e0010">respond(2xl)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+        <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">2</span><span style="color:#66d9ef">rem</span>;
+    }
+<span style="color:#960050;background-color:#1e0010">}</span>
+
+.<span style="color:#a6e22e">site-description</span> { 
+    <span style="color:#66d9ef">color</span>: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>body<span style="color:#f92672">-</span><span style="color:#66d9ef">text</span><span style="color:#f92672">-</span><span style="color:#66d9ef">color</span>);
+    <span style="color:#66d9ef">font-weight</span>: <span style="color:#66d9ef">normal</span>;
+    <span style="color:#66d9ef">text-align</span>: <span style="color:#66d9ef">center</span>; <span style="color:#960050;background-color:#1e0010">//站点描述居中</span>
+    <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">1.6</span><span style="color:#66d9ef">rem</span>;
+
+    <span style="color:#960050;background-color:#1e0010">@include</span> <span style="color:#960050;background-color:#1e0010">respond(2xl)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+        <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">1.8</span><span style="color:#66d9ef">rem</span>;
+    }
+<span style="color:#960050;background-color:#1e0010">}</span>
+</code></pre></div><p>修改 <code>assets/scss/partials/memu.scss</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">social-menu</span> {
+    <span style="color:#66d9ef">list-style</span>: <span style="color:#66d9ef">none</span>;
+    <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0</span><span style="color:#66d9ef">%</span>;
+    <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">flex</span>;
+    <span style="color:#66d9ef">flex-direction</span>: <span style="color:#66d9ef">row</span>;
+    gap: <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+    <span style="color:#66d9ef">justify-content</span>: <span style="color:#66d9ef">center</span>;
+    
+    <span style="color:#960050;background-color:#1e0010">svg</span> <span style="color:#960050;background-color:#1e0010">{</span>
+        <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">24</span><span style="color:#66d9ef">px</span>;
+        <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">24</span><span style="color:#66d9ef">px</span>;
+        stroke: <span style="color:#a6e22e">var</span>(<span style="color:#f92672">--</span>body<span style="color:#f92672">-</span><span style="color:#66d9ef">text</span><span style="color:#f92672">-</span><span style="color:#66d9ef">color</span>);
+        stroke-width: <span style="color:#ae81ff">1.33</span>;
+    }
+<span style="color:#960050;background-color:#1e0010">}</span>
+</code></pre></div><h2 id="目前的问题">目前的问题</h2>
 <p>在迁移博客的时候顺便稍微整合了一下以前的一些文章，但同时也发现了问题，之前用 Hexo 的时候，习惯用 <code>&lt;--!more--&gt;</code> 来写摘要，所以就使得摘要习惯性地放了目录，目前还没能在 Hugo 中找到对应的解决方案，所以可能以后的博客归纳思路需要改一改，但之前的应该就这样了。</p>
 
 </section>
@@ -347,15 +461,121 @@ menu:
 
     <footer class="site-footer">
     <section class="copyright">
-        &copy; 
+        &copy;
         
         2022 s0uthwood&#39;s Blog
-    </section>
     
+        
+            <br />
+            已运行 <i class="fas fa-bell"></i> <a id="days">0</a> 天
+        
+    
+        
+            &nbsp;&nbsp;
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            ⌨&nbsp;
+            77.98k&nbsp;
+            字
+            &nbsp;&nbsp;
+            🧠&nbsp;
+            34&nbsp;
+            篇文章
+        
+    </section>
+
     <section class="powerby">
         Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
         Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
     </section>
+
+    
+        <script>
+            var s1 = "2020-11-15";
+            s1 = new Date(s1.replace(/-/g, "/"));
+            s2 = new Date();
+            var days = s2.getTime() - s1.getTime();
+            var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+            document.getElementById('days').innerHTML = number_of_days;
+        </script>
+    
 </footer>
 
 
@@ -461,7 +681,14 @@ menu:
     <li><a href="#修改主题的想法">修改主题的想法</a></li>
     <li><a href="#本来的选择">本来的选择</a></li>
     <li><a href="#结识-hugo-stack">结识 Hugo stack</a></li>
-    <li><a href="#目前的修改友链">目前的修改——友链</a></li>
+    <li><a href="#目前的修改">目前的修改</a>
+      <ul>
+        <li><a href="#友链">友链</a></li>
+        <li><a href="#文章字数统计">文章字数统计</a></li>
+        <li><a href="#站点上线时间统计总字数统计">站点上线时间统计、总字数统计</a></li>
+        <li><a href="#站点信息居中">站点信息居中</a></li>
+      </ul>
+    </li>
     <li><a href="#目前的问题">目前的问题</a></li>
   </ul>
 </nav>

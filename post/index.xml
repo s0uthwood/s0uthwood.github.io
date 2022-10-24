@@ -134,7 +134,7 @@ serial-&amp;gt;十进制-&amp;gt;与name的crc异或-&amp;gt;计算crc
 结识 Hugo stack 最初看到 Hugo 其实是在帮 web 手收集博客的时候看到了陆队的博客，正好记录了迁移到 Hugo 的过程。博客里讲了 Hugo 的静态网页生成速度很快。联想到自己的博客垃圾文章也越来越多，Hexo 确实有点慢了，Hugo 也许以后会是个不错的选择。
 后来想要帮校队搭个博客，于是决定试试 Hugo。最一开始看中的是 Hugo Bootstrap Theme，想把背景改一下颜色，但是失败了，于是又找了找主题，发现 Stack 更好看，于是干脆就拿 Stack 搭了，而后来才发现，原来陆队的博客也是 stack 主题，看来审美从来没有变过 😂。
 于是，在 Claudia 配置失败后，我果断转到了 Hugo Stack 主题。
-目前的修改——友链 Stack 主题本身是不带友链的，作者应该是正在写，但比较忙，也不知道什么时候能写完，于是就看了看别人的方案。直接搜能搜到一个方案，但讲得不是特别清楚，搭建失败了。后来在 pull request 里面发现有人实现了一个，作者没有采纳而已，于是就以这个作为临时方案了。
+目前的修改 友链 Stack 主题本身是不带友链的，作者应该是正在写，但比较忙，也不知道什么时候能写完，于是就看了看别人的方案。直接搜能搜到一个方案，但讲得不是特别清楚，搭建失败了。后来在 pull request 里面发现有人实现了一个，作者没有采纳而已，于是就以这个作为临时方案了。
 主题 assets/scss/style.scss 27行添加：
 @import &amp;#34;partials/layout/links.scss&amp;#34;; 新建 assets/scss/partials/layout/links.scss
 /* Place your custom SCSS in HUGO_SITE_FOLDER/assets/scss/custom.</description>

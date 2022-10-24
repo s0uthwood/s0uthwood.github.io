@@ -6060,7 +6060,8 @@ im&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;show()
 &lt;p&gt;最初看到 Hugo 其实是在帮 web 手收集博客的时候看到了陆队的博客，正好记录了迁移到 Hugo 的过程。博客里讲了 Hugo 的静态网页生成速度很快。联想到自己的博客垃圾文章也越来越多，Hexo 确实有点慢了，Hugo 也许以后会是个不错的选择。&lt;/p&gt;
 &lt;p&gt;后来想要帮校队搭个博客，于是决定试试 Hugo。最一开始看中的是 Hugo Bootstrap Theme，想把背景改一下颜色，但是失败了，于是又找了找主题，发现 Stack 更好看，于是干脆就拿 Stack 搭了，而后来才发现，原来陆队的博客也是 stack 主题，看来审美从来没有变过 😂。&lt;/p&gt;
 &lt;p&gt;于是，在 Claudia 配置失败后，我果断转到了 Hugo Stack 主题。&lt;/p&gt;
-&lt;h2 id=&#34;目前的修改友链&#34;&gt;目前的修改——友链&lt;/h2&gt;
+&lt;h2 id=&#34;目前的修改&#34;&gt;目前的修改&lt;/h2&gt;
+&lt;h3 id=&#34;友链&#34;&gt;友链&lt;/h3&gt;
 &lt;p&gt;Stack 主题本身是不带友链的，作者应该是正在写，但比较忙，也不知道什么时候能写完，于是就看了看别人的方案。直接搜能搜到一个方案，但讲得不是特别清楚，搭建失败了。后来在 pull request 里面发现有人实现了一个，作者没有采纳而已，于是就以这个作为临时方案了。&lt;/p&gt;
 &lt;p&gt;主题 &lt;code&gt;assets/scss/style.scss&lt;/code&gt; 27行添加：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-scss&#34; data-lang=&#34;scss&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;@import&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;partials/layout/links.scss&amp;#34;&lt;/span&gt;;
@@ -6229,7 +6230,110 @@ menu:
 { {&amp;lt; friend name=&amp;quot;&amp;quot; url=&amp;quot;&amp;quot; avatar=&amp;quot;&amp;quot; bio=&amp;quot;&amp;quot; &amp;gt;} }
 
 两个大括号之间的空格需要去掉，我这里不去掉的话会显示友链标签（竟然没有考虑到代码块的问题，可以考虑提 issue 了）
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;目前的问题&#34;&gt;目前的问题&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;文章字数统计&#34;&gt;文章字数统计&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;参考 &lt;code&gt;https://coderqs.github.io/2022/02/hugo-stack-%E4%B8%BB%E9%A2%98%E8%A3%85%E4%BF%AE%E7%AC%94%E8%AE%B0&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code&gt;layouts/partials/article/components/details.html&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;        {{ if .Site.Params.article.readingTime }}
+            &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+                {{ partial &amp;#34;helper/icon&amp;#34; &amp;#34;brush&amp;#34; }}
+                &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;time&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;article-words&amp;#34;&lt;/span&gt;&amp;gt;
+                    {{ T &amp;#34;article.wordCount&amp;#34; .WordCount }}
+                &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;time&lt;/span&gt;&amp;gt;
+            &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;i18n/en.yaml&lt;/code&gt; 的 &lt;code&gt;article&lt;/code&gt; 中添加&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;wordCount&lt;/span&gt;:
+        &lt;span style=&#34;color:#f92672&#34;&gt;other&lt;/span&gt;: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{{ .Count }} words&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;站点上线时间统计总字数统计&#34;&gt;站点上线时间统计、总字数统计&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;参考 &lt;code&gt;https://coderqs.github.io/2022/02/hugo-stack-%E4%B8%BB%E9%A2%98%E8%A3%85%E4%BF%AE%E7%AC%94%E8%AE%B0&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code&gt;layouts\partials\footer\footer.html&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;修改：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;section&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;copyright&amp;#34;&lt;/span&gt;&amp;gt;
+    &amp;amp;copy;
+    {{ if and (.Site.Params.footer.since) (ne .Site.Params.footer.since (int (now.Format &amp;#34;2006&amp;#34;))) }}
+        {{ .Site.Params.footer.since }} -
+    {{ end }}
+    {{ now.Format &amp;#34;2006&amp;#34; }} {{ .Site.Title }} &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;br&lt;/span&gt; /&amp;gt;
+    已运行 &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;fas fa-bell&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;i&lt;/span&gt;&amp;gt; &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;a&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;days&amp;#34;&lt;/span&gt;&amp;gt;0&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;a&lt;/span&gt;&amp;gt; 天
+    {{$scratch := newScratch}}
+    {{ range (where .Site.Pages &amp;#34;Kind&amp;#34; &amp;#34;page&amp;#34; )}}
+        {{$scratch.Add &amp;#34;total&amp;#34; .WordCount}}
+    {{ end }}
+
+    ⌨ {{ div ($scratch.Get &amp;#34;total&amp;#34;) 1000.0 | lang.FormatNumber 2 }}k 字 🧠 {{ len (where .Site.RegularPages &amp;#34;Section&amp;#34; &amp;#34;post&amp;#34;) }} 篇文章
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;section&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;最后添加&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;s1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2022-01-01&amp;#39;&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;s1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Date(&lt;span style=&#34;color:#a6e22e&#34;&gt;s1&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;replace&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;/-/g&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;));
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;s2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Date();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;days&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;s2&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getTime&lt;/span&gt;() &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;s1&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getTime&lt;/span&gt;();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;number_of_days&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; parseInt(&lt;span style=&#34;color:#a6e22e&#34;&gt;days&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;60&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;60&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;));
+    document.&lt;span style=&#34;color:#a6e22e&#34;&gt;getElementById&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;days&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;innerHTML&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;number_of_days&lt;/span&gt;;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;站点信息居中&#34;&gt;站点信息居中&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;参考 &lt;code&gt;https://coderqs.github.io/2022/02/hugo-stack-%E4%B8%BB%E9%A2%98%E8%A3%85%E4%BF%AE%E7%AC%94%E8%AE%B0&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;修改 &lt;code&gt;assets/scss/partials/sidebar.scss&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-css&#34; data-lang=&#34;css&#34;&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;site-avatar&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;position&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;relative&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;margin&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;margin-left&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;auto&lt;/span&gt;; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;//站点头像居中&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;margin-right&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;auto&lt;/span&gt;; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;//站点头像居中&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;width&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;sidebar&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;avatar&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;size);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;height&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;sidebar&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;avatar&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;size);
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;margin-bottom&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;sidebar&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;element&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;separation);
+
+    &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;.site-logo&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;width&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;height&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;border-radius&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;100&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;box-shadow&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;shadow&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;l1);
+    }
+
+
+.&lt;span style=&#34;color:#a6e22e&#34;&gt;site-name&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;color&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;accent&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;color&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;text-align&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;center&lt;/span&gt;; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;//站点名称居中&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;font-size&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;1.8&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;rem&lt;/span&gt;;
+
+    &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;@include&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;respond(2xl)&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;font-size&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;rem&lt;/span&gt;;
+    }
+&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;}&lt;/span&gt;
+
+.&lt;span style=&#34;color:#a6e22e&#34;&gt;site-description&lt;/span&gt; { 
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;color&lt;/span&gt;: &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;body&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;text&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;color&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;font-weight&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;normal&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;text-align&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;center&lt;/span&gt;; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;//站点描述居中&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;font-size&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;1.6&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;rem&lt;/span&gt;;
+
+    &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;@include&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;respond(2xl)&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;font-size&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;1.8&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;rem&lt;/span&gt;;
+    }
+&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;修改 &lt;code&gt;assets/scss/partials/memu.scss&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-css&#34; data-lang=&#34;css&#34;&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;social-menu&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;list-style&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;none&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;padding&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;%&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;display&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;flex&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;flex-direction&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;row&lt;/span&gt;;
+    gap: &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;justify-content&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;center&lt;/span&gt;;
+    
+    &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;svg&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;{&lt;/span&gt;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;width&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;height&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;px&lt;/span&gt;;
+        stroke: &lt;span style=&#34;color:#a6e22e&#34;&gt;var&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;body&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;text&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;color&lt;/span&gt;);
+        stroke-width: &lt;span style=&#34;color:#ae81ff&#34;&gt;1.33&lt;/span&gt;;
+    }
+&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;目前的问题&#34;&gt;目前的问题&lt;/h2&gt;
 &lt;p&gt;在迁移博客的时候顺便稍微整合了一下以前的一些文章，但同时也发现了问题，之前用 Hexo 的时候，习惯用 &lt;code&gt;&amp;lt;--!more--&amp;gt;&lt;/code&gt; 来写摘要，所以就使得摘要习惯性地放了目录，目前还没能在 Hugo 中找到对应的解决方案，所以可能以后的博客归纳思路需要改一改，但之前的应该就这样了。&lt;/p&gt;
 </description>
         </item>
