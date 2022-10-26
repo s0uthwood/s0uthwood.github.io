@@ -349,78 +349,95 @@ high                low
   .word 0x00C0      ; granularity=4096, 386
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这里写了三个段描述符，段描述符的具体结构如下 (from Wiki Pedia)&lt;/p&gt;
 &lt;p&gt;&lt;figure 
+	
+		class=&#34;gallery-image&#34; 
+		style=&#34;
+			flex-grow: 659; 
+			flex-basis: 1581px&#34;
 	&gt;
-	&lt;a href=&#34;/image/580px-SegmentDescriptor.svg.png&#34; &gt;
-		&lt;img src=&#34;/image/580px-SegmentDescriptor.svg.png&#34;
-			
-			
-			
+	&lt;a href=&#34;/post/rtfsc-linux-part1-from-bios-to-main/image/580px-SegmentDescriptor.svg.png&#34; data-size=&#34;580x88&#34;&gt;
+		&lt;img src=&#34;/post/rtfsc-linux-part1-from-bios-to-main/image/580px-SegmentDescriptor.svg.png&#34;
+			width=&#34;580&#34;
+			height=&#34;88&#34;
+			srcset=&#34;/post/rtfsc-linux-part1-from-bios-to-main/image/580px-SegmentDescriptor.svg_hu2b038b0c8fa95279f40e8bc916b89d61_11617_480x0_resize_box_3.png 480w, /post/rtfsc-linux-part1-from-bios-to-main/image/580px-SegmentDescriptor.svg_hu2b038b0c8fa95279f40e8bc916b89d61_11617_1024x0_resize_box_3.png 1024w&#34;
 			loading=&#34;lazy&#34;
 			&gt;
 	&lt;/a&gt;
 	
 &lt;/figure&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Base Address&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Starting memory address of the segment. Its length is 32 Bit and it is created of the lower Part Bit 16 to 31, and the upper Part Bit 0 to 7, followed by Bit 24 to 31.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Segment Limit&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Its length is 20 bit and is created of the lower Part Bit 0 to 15 and the upper Part Bit 16 to 19. It defines the address of the last accessible data. The length is one more than the value stored here. How exactly this should be interpreted depends on the Granularity bit of the segment descriptor.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;G=Granularity&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;If clear, the limit is in units of bytes, with a maximum of 220 bytes. If set, the limit is in units of 4096-byte pages, for a maximum of 232 bytes.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;D/B&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;D = Default operand size : If clear, this is a 16-bit code segment; if set, this is a 32-bit segment.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;B = Big: If set, the maximum offset size for a data segment is increased to 32-bit 0xffffffff. Otherwise it&amp;rsquo;s the 16-bit max 0x0000ffff. Essentially the same meaning as &amp;ldquo;D&amp;rdquo;.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;L=Long&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;If set, this is a 64-bit segment (and D must be zero), and code in this segment uses the 64-bit instruction encoding. &amp;ldquo;L&amp;rdquo; cannot be set at the same time as &amp;ldquo;D&amp;rdquo; aka &amp;ldquo;B&amp;rdquo;. (Bit 21 in the image)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;AVL=Available&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;For software use, not used by hardware (Bit 20 in the image with the label A)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;P=Present&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;If clear, a &amp;ldquo;segment not present&amp;rdquo; exception is generated on any reference to this segment&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;DPL=Descriptor privilege level&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Privilege level (ring) required to access this descriptor&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Type&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;If set, this is a code segment descriptor. If clear, this is a data/stack segment descriptor, which has &amp;ldquo;D&amp;rdquo; replaced by &amp;ldquo;B&amp;rdquo;, &amp;ldquo;C&amp;rdquo; replaced by &amp;ldquo;E&amp;quot;and &amp;ldquo;R&amp;rdquo; replaced by &amp;ldquo;W&amp;rdquo;. This is in fact a special case of the 2-bit type field, where the preceding bit 12 cleared as &amp;ldquo;0&amp;rdquo; refers to more internal system descriptors, for LDT, LSS, and gates.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;C=Conforming&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Code in this segment may be called from less-privileged levels.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;E=Expand-Down&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;If clear, the segment expands from base address up to base+limit. If set, it expands from maximum offset down to limit, a behavior usually used for stacks.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;R=Readable&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;If clear, the segment may be executed but not read from.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;W=Writable&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;If clear, the data segment may be read but not written to.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;A=Accessed&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;This bit is set to 1 by hardware when the segment is accessed, and cleared by software.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;Base Address
+&lt;ul&gt;
+&lt;li&gt;Starting memory address of the segment. Its length is 32 Bit and it is created of the lower Part Bit 16 to 31, and the upper Part Bit 0 to 7, followed by Bit 24 to 31.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Segment Limit
+&lt;ul&gt;
+&lt;li&gt;Its length is 20 bit and is created of the lower Part Bit 0 to 15 and the upper Part Bit 16 to 19. It defines the address of the last accessible data. The length is one more than the value stored here. How exactly this should be interpreted depends on the Granularity bit of the segment descriptor.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;G=Granularity
+&lt;ul&gt;
+&lt;li&gt;If clear, the limit is in units of bytes, with a maximum of 220 bytes. If set, the limit is in units of 4096-byte pages, for a maximum of 232 bytes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;D/B
+&lt;ul&gt;
+&lt;li&gt;D = Default operand size : If clear, this is a 16-bit code segment; if set, this is a 32-bit segment.&lt;/li&gt;
+&lt;li&gt;B = Big: If set, the maximum offset size for a data segment is increased to 32-bit 0xffffffff. Otherwise it&amp;rsquo;s the 16-bit max 0x0000ffff. Essentially the same meaning as &amp;ldquo;D&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;L=Long
+&lt;ul&gt;
+&lt;li&gt;If set, this is a 64-bit segment (and D must be zero), and code in this segment uses the 64-bit instruction encoding. &amp;ldquo;L&amp;rdquo; cannot be set at the same time as &amp;ldquo;D&amp;rdquo; aka &amp;ldquo;B&amp;rdquo;. (Bit 21 in the image)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;AVL=Available
+&lt;ul&gt;
+&lt;li&gt;For software use, not used by hardware (Bit 20 in the image with the label A)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;P=Present
+&lt;ul&gt;
+&lt;li&gt;If clear, a &amp;ldquo;segment not present&amp;rdquo; exception is generated on any reference to this segment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;DPL=Descriptor privilege level
+&lt;ul&gt;
+&lt;li&gt;Privilege level (ring) required to access this descriptor&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Type
+&lt;ul&gt;
+&lt;li&gt;If set, this is a code segment descriptor. If clear, this is a data/stack segment descriptor, which has &amp;ldquo;D&amp;rdquo; replaced by &amp;ldquo;B&amp;rdquo;, &amp;ldquo;C&amp;rdquo; replaced by &amp;ldquo;E&amp;quot;and &amp;ldquo;R&amp;rdquo; replaced by &amp;ldquo;W&amp;rdquo;. This is in fact a special case of the 2-bit type field, where the preceding bit 12 cleared as &amp;ldquo;0&amp;rdquo; refers to more internal system descriptors, for LDT, LSS, and gates.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;C=Conforming
+&lt;ul&gt;
+&lt;li&gt;Code in this segment may be called from less-privileged levels.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;E=Expand-Down
+&lt;ul&gt;
+&lt;li&gt;If clear, the segment expands from base address up to base+limit. If set, it expands from maximum offset down to limit, a behavior usually used for stacks.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;R=Readable
+&lt;ul&gt;
+&lt;li&gt;If clear, the segment may be executed but not read from.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;W=Writable
+&lt;ul&gt;
+&lt;li&gt;If clear, the data segment may be read but not written to.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;A=Accessed
+&lt;ul&gt;
+&lt;li&gt;This bit is set to 1 by hardware when the segment is accessed, and cleared by software.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;根据上述信息，可以对应到三个描述符&lt;/p&gt;
 &lt;p&gt;第一个为空&lt;/p&gt;
 &lt;p&gt;根据高 22 位 (B/D) 表示代码段或数据段，可知第二个为代码段描述符，第三个为数据段描述符，基址均为 0（这样设置，在保护模式的寻址结果中，物理地址与逻辑地址完全相同）&lt;/p&gt;
@@ -673,7 +690,7 @@ setup_paging:
 
 setup_paging:
   ...
-  ret                 ; this also flushes prefetch-queue
+  ret   ; ROP to _main
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;把 &lt;code&gt;_main&lt;/code&gt; 的地址放到栈顶，然后用 &lt;code&gt;jmp&lt;/code&gt; 指令跳转到另一个子程序，此时对栈本身没有进行改变，而 &lt;code&gt;setup_paging&lt;/code&gt; 作为被 &lt;code&gt;jmp&lt;/code&gt; 执行的程序，最后却 &lt;code&gt;ret&lt;/code&gt; 了，这就相当于执行了一个 &lt;code&gt;pop eip&lt;/code&gt;，结果就是 &lt;code&gt;eip=_main&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;于是接下来就正式开始执行 &lt;code&gt;_main&lt;/code&gt; 函数了&lt;/p&gt;
 &lt;p&gt;总结一下此时的内存情况&lt;/p&gt;
