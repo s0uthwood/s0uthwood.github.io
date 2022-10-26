@@ -15,7 +15,7 @@
       <guid>/post/rtfsc-linux-part1-from-bios-to-main/</guid>
       <description>跟着大佬的文章读一下 Linux 0.11 的源码
 github.com/sunym1993/flash-linux0.11-talk
-How Everything Begins (bootsects.s) 从 0x7C00 开始的操作系统启动 开机首先会执行主板上的 BIOS 程序，BIOS 将启动区的 512 字节（一个扇区）复制到内存中的 0x7C00 地址，随后跳转到这个地址继续执行
+万事开头难 (bootsects.s) 从 0x7C00 开始的操作系统启动 开机首先会执行主板上的 BIOS 程序，BIOS 将启动区的 512 字节（一个扇区）复制到内存中的 0x7C00 地址，随后跳转到这个地址继续执行
  启动区的识别：0 盘 0 道 1 扇区的 512 字节最后两个字节为 55 AA
  所以操作系统将从第一扇区启动，这在源码中对应了 boot/bootsect.s 文件
 最开始的两行源码：

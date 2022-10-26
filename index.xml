@@ -14,7 +14,7 @@
         <guid>/post/rtfsc-linux-part1-from-bios-to-main/</guid>
         <description>&lt;img src="/post/rtfsc-linux-part1-from-bios-to-main/cover.jpg" alt="Featured image of post RTFSC-Linux0.11 Part1: From BIOS to main" /&gt;&lt;p&gt;跟着大佬的文章读一下 Linux 0.11 的源码&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;github.com/sunym1993/flash-linux0.11-talk&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;how-everything-begins-bootsectss&#34;&gt;How Everything Begins (bootsects.s)&lt;/h2&gt;
+&lt;h2 id=&#34;万事开头难-bootsectss&#34;&gt;万事开头难 (bootsects.s)&lt;/h2&gt;
 &lt;h3 id=&#34;从-0x7c00-开始的操作系统启动&#34;&gt;从 0x7C00 开始的操作系统启动&lt;/h3&gt;
 &lt;p&gt;开机首先会执行主板上的 BIOS 程序，BIOS 将启动区的 512 字节（一个扇区）复制到内存中的 &lt;code&gt;0x7C00&lt;/code&gt; 地址，随后跳转到这个地址继续执行&lt;/p&gt;
 &lt;blockquote&gt;
@@ -46,7 +46,7 @@ go:
   mov ax, cs
   ...
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;相当于 &lt;code&gt;jmp go+0x90000&lt;/code&gt;，配合一下上面的复制指令，虽然执行的指令与实际地址后面这条指令相同，但实际地址已经挪过去了&lt;/p&gt;
-&lt;p&gt;《给自己挪个地方》&lt;/p&gt;
+&lt;p&gt;正所谓《给自己挪个地方》&lt;/p&gt;
 &lt;h3 id=&#34;一些基础工作&#34;&gt;一些基础工作&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;go&lt;/code&gt; 后面的指令&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-assembly&#34; data-lang=&#34;assembly&#34;&gt;go:
@@ -511,8 +511,8 @@ jmpi 0, 8         ; jmp offset 0 of segment 8 (cs)
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;所以这里的段选择子指向的是代码段描述符，段基址为 &lt;code&gt;0&lt;/code&gt;，所以最终结构为跳转到地址为 &lt;code&gt;0&lt;/code&gt; 继续执行&lt;/p&gt;
 &lt;p&gt;根据此前的地址设置，&lt;code&gt;0&lt;/code&gt; 这个地址就是 240 个扇区的指令，对应 &lt;code&gt;head.s&lt;/code&gt; 和 &lt;code&gt;main.c&lt;/code&gt; 及其他各模块的操作系统代码&lt;/p&gt;
 &lt;p&gt;到这里，就要正式进入操作系统了&lt;/p&gt;
-&lt;h2 id=&#34;总算是进入操作系统了&#34;&gt;总算是进入操作系统了&lt;/h2&gt;
-&lt;h3 id=&#34;再来一次初始化-heads&#34;&gt;再来一次初始化 (head.s)&lt;/h3&gt;
+&lt;h2 id=&#34;总算是进入操作系统了-heads&#34;&gt;总算是进入操作系统了 (head.s)&lt;/h2&gt;
+&lt;h3 id=&#34;再来一次初始化&#34;&gt;再来一次初始化&lt;/h3&gt;
 &lt;p&gt;正经的源码在这里换成了 &lt;code&gt;AT&amp;amp;T&lt;/code&gt; 格式，很烦，还好大佬的文章还是用的 &lt;code&gt;intel&lt;/code&gt; 格式&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-assembly&#34; data-lang=&#34;assembly&#34;&gt;_pg_dir:
 _setartup_32:

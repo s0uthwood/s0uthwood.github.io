@@ -120,7 +120,7 @@
     <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
 </svg>
                 <time class="article-words">
-                    2722 words
+                    2720 words
                 </time>
             </div>
             <div>
@@ -145,7 +145,7 @@
     <section class="article-content">
     <p>跟着大佬的文章读一下 Linux 0.11 的源码</p>
 <p><code>github.com/sunym1993/flash-linux0.11-talk</code></p>
-<h2 id="how-everything-begins-bootsectss">How Everything Begins (bootsects.s)</h2>
+<h2 id="万事开头难-bootsectss">万事开头难 (bootsects.s)</h2>
 <h3 id="从-0x7c00-开始的操作系统启动">从 0x7C00 开始的操作系统启动</h3>
 <p>开机首先会执行主板上的 BIOS 程序，BIOS 将启动区的 512 字节（一个扇区）复制到内存中的 <code>0x7C00</code> 地址，随后跳转到这个地址继续执行</p>
 <blockquote>
@@ -177,7 +177,7 @@ go:
   mov ax, cs
   ...
 </code></pre><p>相当于 <code>jmp go+0x90000</code>，配合一下上面的复制指令，虽然执行的指令与实际地址后面这条指令相同，但实际地址已经挪过去了</p>
-<p>《给自己挪个地方》</p>
+<p>正所谓《给自己挪个地方》</p>
 <h3 id="一些基础工作">一些基础工作</h3>
 <p><code>go</code> 后面的指令</p>
 <pre tabindex="0"><code class="language-assembly" data-lang="assembly">go:
@@ -642,8 +642,8 @@ jmpi 0, 8         ; jmp offset 0 of segment 8 (cs)
 </code></pre><p>所以这里的段选择子指向的是代码段描述符，段基址为 <code>0</code>，所以最终结构为跳转到地址为 <code>0</code> 继续执行</p>
 <p>根据此前的地址设置，<code>0</code> 这个地址就是 240 个扇区的指令，对应 <code>head.s</code> 和 <code>main.c</code> 及其他各模块的操作系统代码</p>
 <p>到这里，就要正式进入操作系统了</p>
-<h2 id="总算是进入操作系统了">总算是进入操作系统了</h2>
-<h3 id="再来一次初始化-heads">再来一次初始化 (head.s)</h3>
+<h2 id="总算是进入操作系统了-heads">总算是进入操作系统了 (head.s)</h2>
+<h3 id="再来一次初始化">再来一次初始化</h3>
 <p>正经的源码在这里换成了 <code>AT&amp;T</code> 格式，很烦，还好大佬的文章还是用的 <code>intel</code> 格式</p>
 <pre tabindex="0"><code class="language-assembly" data-lang="assembly">_pg_dir:
 _setartup_32:
@@ -1042,7 +1042,7 @@ setup_paging:
             
             
             ⌨&nbsp;
-            80.71k&nbsp;
+            80.70k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
@@ -1168,7 +1168,7 @@ setup_paging:
                 <div class="widget--toc">
                     <nav id="TableOfContents">
   <ul>
-    <li><a href="#how-everything-begins-bootsectss">How Everything Begins (bootsects.s)</a>
+    <li><a href="#万事开头难-bootsectss">万事开头难 (bootsects.s)</a>
       <ul>
         <li><a href="#从-0x7c00-开始的操作系统启动">从 0x7C00 开始的操作系统启动</a></li>
         <li><a href="#给自己挪个地方">给自己挪个地方</a></li>
@@ -1183,9 +1183,9 @@ setup_paging:
         <li><a href="#保护模式漫长的前摇简单的切换">保护模式：漫长的前摇，简单的切换</a></li>
       </ul>
     </li>
-    <li><a href="#总算是进入操作系统了">总算是进入操作系统了</a>
+    <li><a href="#总算是进入操作系统了-heads">总算是进入操作系统了 (head.s)</a>
       <ul>
-        <li><a href="#再来一次初始化-heads">再来一次初始化 (head.s)</a></li>
+        <li><a href="#再来一次初始化">再来一次初始化</a></li>
         <li><a href="#开启分页机制">开启分页机制</a></li>
         <li><a href="#跳转到-main">跳转到 main</a></li>
       </ul>
