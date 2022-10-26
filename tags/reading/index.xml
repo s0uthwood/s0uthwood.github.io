@@ -6,7 +6,25 @@
     <description>Recent content in Reading on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 25 Sep 2021 02:15:45 +0800</lastBuildDate><atom:link href="/tags/reading/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 23 Oct 2022 02:41:13 +0800</lastBuildDate><atom:link href="/tags/reading/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RTFSC-Linux0.11 Part1: From BIOS to main</title>
+      <link>/post/rtfsc-linux-part1-from-bios-to-main/</link>
+      <pubDate>Sun, 23 Oct 2022 02:41:13 +0800</pubDate>
+      
+      <guid>/post/rtfsc-linux-part1-from-bios-to-main/</guid>
+      <description>跟着大佬的文章读一下 Linux 0.11 的源码
+github.com/sunym1993/flash-linux0.11-talk
+How Everything Begins (bootsects.s) 从 0x7C00 开始的操作系统启动 开机首先会执行主板上的 BIOS 程序，BIOS 将启动区的 512 字节（一个扇区）复制到内存中的 0x7C00 地址，随后跳转到这个地址继续执行
+ 启动区的识别：0 盘 0 道 1 扇区的 512 字节最后两个字节为 55 AA
+ 所以操作系统将从第一扇区启动，这在源码中对应了 boot/bootsect.s 文件
+最开始的两行源码：
+mov ax, 0x07C0 mov ds, ax 将 ds 寄存器赋值为 0x7C0
+ 为了能够在 16 位实模式下访问 20 位的地址，在读取段寄存器时需要 &amp;lt;&amp;lt; 4，所以 ds 是 0x7C0 时对应了地址 0x7C00，指向了此时代码段的地址，方便了后续对内存的访问
+ 给自己挪个地方 随后执行：
+mov ax, 0x9000 mov es, ax mov cx, #256 sub si, si sub di, di rep movw 前面两行和最开始的两行类似，将 es 寄存器赋值为 0x9000，随后 cx = 0x100; si = 0; di = 0，最后循环执行 movw 指令</description>
+    </item>
+    
     <item>
       <title>加密与解密学习笔记（持续更新ing）</title>
       <link>/post/note-of-book-encryption-and-decryption/</link>

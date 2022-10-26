@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Read the F**king Source Code'><title>RTFSC-Linux0.11 Part1: From BIOS to main</title>
+
+<link rel='canonical' href='/post/rtfsc-linux-part1-from-bios-to-main/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='RTFSC-Linux0.11 Part1: From BIOS to main'>
+<meta property='og:description' content='Read the F**king Source Code'>
+<meta property='og:url' content='/post/rtfsc-linux-part1-from-bios-to-main/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='System' /><meta property='article:tag' content='RTFSC' /><meta property='article:tag' content='Reading' /><meta property='article:published_time' content='2022-10-23T02:41:13&#43;08:00'/><meta property='article:modified_time' content='2022-10-23T02:41:13&#43;08:00'/><meta property='og:image' content='/post/rtfsc-linux-part1-from-bios-to-main/cover.jpg' />
+<meta name="twitter:title" content="RTFSC-Linux0.11 Part1: From BIOS to main">
+<meta name="twitter:description" content="Read the F**king Source Code"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='/post/rtfsc-linux-part1-from-bios-to-main/cover.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/post/rtfsc-linux-part1-from-bios-to-main/">
+                <img src="/post/rtfsc-linux-part1-from-bios-to-main/cover_hu9a326951c8c9be216fda73ae6923adfc_1779523_800x0_resize_q75_box.jpg"
+                        srcset="/post/rtfsc-linux-part1-from-bios-to-main/cover_hu9a326951c8c9be216fda73ae6923adfc_1779523_800x0_resize_q75_box.jpg 800w, /post/rtfsc-linux-part1-from-bios-to-main/cover_hu9a326951c8c9be216fda73ae6923adfc_1779523_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="425" 
+                        loading="lazy"
+                        alt="Featured image of post RTFSC-Linux0.11 Part1: From BIOS to main" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/reading/" >
+                Reading
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/rtfsc-linux-part1-from-bios-to-main/">RTFSC-Linux0.11 Part1: From BIOS to main</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        Read the F**king Source Code
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 23, 2022</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M4 20h4L18.5 9.5a1.5 1.5.0 00-4-4L4 16v4"></path>
+    <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
+</svg>
+                <time class="article-words">
+                    2722 words
+                </time>
+            </div>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    13 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>跟着大佬的文章读一下 Linux 0.11 的源码</p>
+<p><code>github.com/sunym1993/flash-linux0.11-talk</code></p>
+<h2 id="how-everything-begins-bootsectss">How Everything Begins (bootsects.s)</h2>
+<h3 id="从-0x7c00-开始的操作系统启动">从 0x7C00 开始的操作系统启动</h3>
+<p>开机首先会执行主板上的 BIOS 程序，BIOS 将启动区的 512 字节（一个扇区）复制到内存中的 <code>0x7C00</code> 地址，随后跳转到这个地址继续执行</p>
+<blockquote>
+<p>启动区的识别：0 盘 0 道 1 扇区的 512 字节最后两个字节为 <code>55 AA</code></p>
+</blockquote>
+<p>所以操作系统将从第一扇区启动，这在源码中对应了 <code>boot/bootsect.s</code> 文件</p>
+<p>最开始的两行源码：</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov ax, 0x07C0
+mov ds, ax
+</code></pre><p>将 <code>ds</code> 寄存器赋值为 <code>0x7C0</code></p>
+<blockquote>
+<p>为了能够在 16 位实模式下访问 20 位的地址，在读取段寄存器时需要 <code>&lt;&lt; 4</code>，所以 <code>ds</code> 是 <code>0x7C0</code> 时对应了地址 <code>0x7C00</code>，指向了此时代码段的地址，方便了后续对内存的访问</p>
+</blockquote>
+<h3 id="给自己挪个地方">给自己挪个地方</h3>
+<p>随后执行：</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov ax, 0x9000
+mov es, ax
+mov cx, #256
+sub si, si
+sub di, di
+rep movw
+</code></pre><p>前面两行和最开始的两行类似，将 <code>es</code> 寄存器赋值为 <code>0x9000</code>，随后 <code>cx = 0x100; si = 0; di = 0</code>，最后循环执行 movw 指令</p>
+<blockquote>
+<p><code>rep</code> 指令执行次数取决于 <code>cx</code>，配合<code>movw</code> 指令从 <code>ds</code> 复制到 <code>es</code></p>
+</blockquote>
+<p>这里就将 <code>0x7C00</code> 处的 512 字节（256 WORDS）复制到了 <code>0x90000</code> 处</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">jmpi go, 0x9000
+go:
+  mov ax, cs
+  ...
+</code></pre><p>相当于 <code>jmp go+0x90000</code>，配合一下上面的复制指令，虽然执行的指令与实际地址后面这条指令相同，但实际地址已经挪过去了</p>
+<p>《给自己挪个地方》</p>
+<h3 id="一些基础工作">一些基础工作</h3>
+<p><code>go</code> 后面的指令</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">go:
+  mov ax, cs
+  mov ds, ax
+  mov es, ax
+  mov ss, ax
+  mov sp, #0xFF00
+</code></pre><p>之前 <code>jmpi</code> 指令后，<code>cs</code> 寄存器就被复制为 <code>0x9000</code>，随后将 <code>ds, es, ss</code> 都赋值为了 <code>0x9000</code>，栈顶地址则被赋值为 <code>ss:sp=0x9FF00</code></p>
+<p>简单画一下目前的内存情况</p>
+<pre tabindex="0"><code>+-----------------+ 0x90000 &lt;- cs, ds, es, ss
+|  mov ax, 0x7c0  |
+|     ......      |
+| mov sp, #0xFF00 |
+|     next i      | &lt;- ip
+|     ......      |
++-----------------+
+|     stack       |
++-----------------+ 0x9FF00 &lt;- ss:sp
+</code></pre><h3 id="把硬盘里的其他部分也挪过来">把硬盘里的其他部分也挪过来</h3>
+<p>在完成基本工作后</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">load_setup:
+  mov dx, #0x0000   ; drive 0, head 0
+  mov cx, #0x0002   ; sector 2, track 0
+  mov bx, #0x0200   ; address = 512, in 0x9000
+  mov ax, #0x0200+SETUPLEN ; SETUPLEN = 4, service 2, nr of sectors
+  int 0x13          ; read it
+  jnc ok_load_setup ; ok - continue
+  mov dx, #0x0000
+  mov ax, #0x0000   ; reset the diskette
+  int 0x13
+  j   load_setup
+
+ok_load_setup:
+  ...
+</code></pre><p><code>int 0x13</code> 是 BIOS 中的中断，在这里执行了 BIOS 中读取磁盘的程序，结合上面设置好的参数，就是将 2 ~ 5 扇区的内容（setup.s 程序）读取到 0x90200 内存中，由于该中断具体实现在 BIOS 中，此处只关注结果即可</p>
+<p>随后继续执行 <code>ok_load_setup</code></p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">ok_load_setup:
+  ; Get disk drive parameters, specifically nr of sectors/track
+  ...
+  ; Print some inane message
+  ...
+  ; Load the system (at 0x10000)
+  mov ax, #0x1000
+  mov es, ax
+  call read_it    ; This routine loads the system at address 0x10000, making sure no 64KB boundaries are crossed.
+  ; Check which root-device to use
+  ...
+  ; jump to the setup-routine loaded directly after the bootblock
+  jmpi 0, SETUPSEG ; SETUPSEG = 0x9020
+</code></pre><p>省略的代码和主要逻辑无关（参考省略号前的注释），主要用于输出 <code>Loading system</code> 等内容</p>
+<p>这几行代码主要是执行了 <code>read_it</code> 函数，将第 6 扇区开始的 240 个扇区读取到 <code>0x10000</code> 地址（剩余全部代码，开头为 head.s），具体的原理与此前相似，最后跳转到 <code>0x90200</code> 执行第二扇区的代码</p>
+<p>此时的内存</p>
+<pre tabindex="0"><code>+------------+ &lt;- 0x7C00
+| bootsect.s |
++------------+
+|    ...     |
++------------+ &lt;- 0x10000
+|   head.s   |
+|            |
+|   system   |
+|            |
+|            |
++------------+
+|    ...     |
++------------+ &lt;- 0x90000
+| bootsect.s |
++------------+ &lt;- 0x90200
+|            |
+|  setup.s   |
+|            |
++------------+
+</code></pre><blockquote>
+<p>接下来就跳转到 setup.s 程序了，在第一个程序中，一个最明显的特征就是所有的地址都是写死的，比如从第 1 扇区挪到固定的地址 <code>0x7C00</code>，再挪到固定的地址 <code>0x90000</code>，最后把剩下的东西也挪到固定的地址 <code>0x90200</code> 和 <code>0x10000</code>，这些地址都是写死的，不能出现任何偏差，简单总结就是“强耦合”，把前后执行的每一条指令与相应的内存都安排好了</p>
+</blockquote>
+<h2 id="继续启动-setups">继续启动 (setup.s)</h2>
+<h3 id="保护模式前的准备">保护模式前的准备</h3>
+<p>上一段程序最后跳转到了 <code>0x90200</code>，也就是 setup.s 中的代码</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">start:
+  mov ax, #0x9000 ; this is done in bootsect already, but...
+  mov ds, ax
+  mov ah, #0x03   ; read cursor pos
+  xor bh, bh
+  int 0x10        ; save it in  known place, con_init fetches
+  mov [0], dx     ; it from 0x90000.
+</code></pre><blockquote>
+<p>吐槽一下，前面清零用的是 <code>sub ax, ax</code>，这里怎么就用 <code>xor ax, ax</code> 了</p>
+</blockquote>
+<p>int 0x10 中断仍然是 BIOS 中的中断，用于显示服务，当 <code>AH = 3</code> 时，用于获取光标的位置与形态，并保存到 <code>dx</code> 寄存器中，其中 <code>dh</code> 保存了行号，<code>dl</code> 保存了列号</p>
+<p>最终将结果保存至了 <code>0x90000</code> 地址，用于后续初始化控制台</p>
+<p>后续的代码都是在干类似的事情，获取环境的信息，然后保存到内存中</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">; Get memory size (extended mem, kB)
+mov ah, #0x88
+int 0x15
+mov [2], ax
+
+; Get vedio-card data:
+mov ah, #0x0F
+int 0x10
+mov [4], bx   ; bh = display page
+mov [6], ax   ; al = video mode, ah = window width
+
+; Check for EGA/VGA and some config parameters
+mov ah, #0x12
+mov bl, #0x10
+int 0x10
+mov [8], ax
+mov [10], bx
+mov [12], cx
+
+; Get hd0 data
+mov ax, #0x0000
+mov ds, ax
+lds si, [4 * 0x41]
+mov ax, #INITSEG
+mov es, ax
+mov di, #0x0080
+mov cx, #0x10
+rep movsb
+
+; Get hd1 data
+mov ax, #0x0000
+mov ds, ax
+lds si, [4 * 0x46]
+mov ax, #INITSEG  ; INITSET = 0x9000
+mov es, ax
+mov di, #0x0090
+mov cx, #0x10
+rep movsb
+
+; Check that there IS a hd1
+...
+</code></pre><p>依次获取了内存、显卡、显示方式、硬盘等信息，都是在调用 BIOS 中断并保存，没必要细看了，最后的内存如下表所示</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">addr</th>
+<th style="text-align:center">length</th>
+<th style="text-align:left">info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0x90000</td>
+<td style="text-align:center">2</td>
+<td style="text-align:left">光标位置</td>
+</tr>
+<tr>
+<td style="text-align:center">0x90002</td>
+<td style="text-align:center">2</td>
+<td style="text-align:left">扩展内存数</td>
+</tr>
+<tr>
+<td style="text-align:center">0x90004</td>
+<td style="text-align:center">2</td>
+<td style="text-align:left">显示页面</td>
+</tr>
+<tr>
+<td style="text-align:center">0x90006</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">显示模式</td>
+</tr>
+<tr>
+<td style="text-align:center">0x90007</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">字符列数</td>
+</tr>
+<tr>
+<td style="text-align:center">0x90008</td>
+<td style="text-align:center">2</td>
+<td style="text-align:left">未知</td>
+</tr>
+<tr>
+<td style="text-align:center">0x9000A</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">显示内存</td>
+</tr>
+<tr>
+<td style="text-align:center">0x9000B</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">显示状态</td>
+</tr>
+<tr>
+<td style="text-align:center">0x9000C</td>
+<td style="text-align:center">2</td>
+<td style="text-align:left">显卡特性参数</td>
+</tr>
+<tr>
+<td style="text-align:center">0x9000E</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">屏幕行数</td>
+</tr>
+<tr>
+<td style="text-align:center">0x9000F</td>
+<td style="text-align:center">1</td>
+<td style="text-align:left">屏幕列数</td>
+</tr>
+<tr>
+<td style="text-align:center">0x90080</td>
+<td style="text-align:center">16</td>
+<td style="text-align:left">硬盘0参数</td>
+</tr>
+<tr>
+<td style="text-align:center">0x90090</td>
+<td style="text-align:center">16</td>
+<td style="text-align:left">硬盘1参数</td>
+</tr>
+<tr>
+<td style="text-align:center">0x901FC</td>
+<td style="text-align:center">2</td>
+<td style="text-align:left">根设备号</td>
+</tr>
+</tbody>
+</table>
+<p>这些地址也都是约定好的，后面需要用的时候从这里获取即可</p>
+<p>接下来需要为进入保护模式做准备了</p>
+<p>首先是关闭中断</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">; now we want to move to protected mode ...
+cli       ; no interrupts allowed
+</code></pre><p>BIOS 中断至此就不再调用了，接下来会用操作系统的中断覆盖此前 BIOS 提供的中断向量表</p>
+<p>不过首先我们需要将操作系统移动到正确的地址</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">; first we move the system to it's rightful place
+mov ax, #0x0000
+cld                 ; 'direction'=0, movs moves forward
+do_move:
+  mov es, ax        ; destination segment
+  add ax, #0x1000
+  cmp ax, #0x9000
+  jz end_move
+  mov ds, ax        ; source segment
+  sub di, di
+  sub si, si
+  mov cx, #0x8000
+  rep movsw
+  jmp do_move
+
+; then we load the segment descriptors
+end_move:
+  ...
+</code></pre><p>这里做的操作与之前从 <code>0x7C00</code> 挪到 <code>0x90000</code> 是类似的，这里的效果就是将 <code>0x10000 ~ 0x90000</code> 的内存（后 240 个扇区的代码）移动到 <code>0x0 ~ 0x80000</code>（用了个 <code>while</code> 循环，每次挪 <code>0x10000</code> 字节）</p>
+<h3 id="段寄存器的历史包袱">段寄存器的历史包袱</h3>
+<p>实模式下的段基址：</p>
+<p>$[ds:3] = (ds &laquo; 4) + 3$</p>
+<p>保护模式下的段保护子则复杂多了，因为使用了分段机制，该机制下段<strong>寄存器中存放的是段选择子，使用段选择子到段描述符表（GDT, Global Descriptor Table）中找到所需要的段描述符，段描述符中存放的是真正的段基址，该地址再加上偏移得到物理地址</strong></p>
+<pre tabindex="0"><code>Linear Address Space
++------------------+ &lt;- GDTR (a register)
+| Descriptor Table |
+|                  |
+|                  |
+|                  |
+|  +------------+  |
+|  | Descriptor |&lt;-|------------+
+|  +------------+  |            |
+|        |         |            |
++------------------+            |
+         |                      |
+         V                  Selector:Offset (Logical Address)
++------------------+                   |
+|     Segment      |                   |
+|                  |                   |
+|  +------------+  |                   |
+|  |    Data    |&lt;-|-------------------+
+|  +------------+  |
+|                  |
+|                  |
+|                  |
+|                  |
++------------------+
+</code></pre><p>所以，要想进入保护模式，必须要对寻址部分进行初始化</p>
+<pre tabindex="0"><code>; Then we load the segment descriptors
+lidt idt_48   ; load idt with 0, 0
+lgdt gdt_48   ; load gdt with whatever appropriate
+</code></pre><p>在源码末尾可以看到 <code>idt_48</code> 和 <code>gdt_48</code> 的定义</p>
+<pre tabindex="0"><code>idt_48:
+  .word 0     ; idt limit = 0
+  .word 0, 0  ; idt base = 0L
+
+gdt_48:
+  .word 0x800 ; gdt limit = 0x800, 256 GDT entries
+  .word 512+gdt, 0x9  ; get base = 0x9XXXX
+</code></pre><p>这里 <code>gdt_48</code> 是一个 48 位数据，其中，高 32 位存储了全局描述符表 gdt 的内存地址，低 16 位则为表界限</p>
+<pre tabindex="0"><code>gdt_48:
+high                low
++-------------+-------+
+| 00 09 xx xx | 08 00 |
++-------------+-------+
+</code></pre><p>这里 <code>gdt</code> 的地址手动加上了 <code>0x90200</code> 的偏移</p>
+<p>指令 <code>lgdt</code> 的用处就是将 <code>gdt</code> 位置信息存入 <code>gdtr</code> 寄存器</p>
+<p><code>gdt</code> 标签也在源码的最后，这就是 <code>gdt</code> 表中的真实数据了</p>
+<pre tabindex="0"><code>gdt:
+  .word 0, 0, 0, 0  ; dummy
+  .word 0x07FF      ; 8Mb - limit=2047 (2048 * 4096 = 8Mb)
+  .word 0x0000      ; base address = 0
+  .word 0x9A00      ; code read/exec
+  .word 0x00C0      ; granularity=4096, 386
+
+  .word 0x07FF      ; 8Mb - limit=2047 (2048 * 4096 = 8Mb)
+  .word 0x0000      ; base address = 0
+  .word 0x9200      ; data read/exec
+  .word 0x00C0      ; granularity=4096, 386
+</code></pre><p>这里写了三个段描述符，段描述符的具体结构如下 (from Wiki Pedia)</p>
+<p><figure 
+	>
+	<a href="/image/580px-SegmentDescriptor.svg.png" >
+		<img src="/image/580px-SegmentDescriptor.svg.png"
+			
+			
+			
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<blockquote>
+<p>Base Address</p>
+<blockquote>
+<p>Starting memory address of the segment. Its length is 32 Bit and it is created of the lower Part Bit 16 to 31, and the upper Part Bit 0 to 7, followed by Bit 24 to 31.</p>
+</blockquote>
+<p>Segment Limit</p>
+<blockquote>
+<p>Its length is 20 bit and is created of the lower Part Bit 0 to 15 and the upper Part Bit 16 to 19. It defines the address of the last accessible data. The length is one more than the value stored here. How exactly this should be interpreted depends on the Granularity bit of the segment descriptor.</p>
+</blockquote>
+<p>G=Granularity</p>
+<blockquote>
+<p>If clear, the limit is in units of bytes, with a maximum of 220 bytes. If set, the limit is in units of 4096-byte pages, for a maximum of 232 bytes.</p>
+</blockquote>
+<p>D/B</p>
+<blockquote>
+<p>D = Default operand size : If clear, this is a 16-bit code segment; if set, this is a 32-bit segment.</p>
+</blockquote>
+<blockquote>
+<p>B = Big: If set, the maximum offset size for a data segment is increased to 32-bit 0xffffffff. Otherwise it&rsquo;s the 16-bit max 0x0000ffff. Essentially the same meaning as &ldquo;D&rdquo;.</p>
+</blockquote>
+<p>L=Long</p>
+<blockquote>
+<p>If set, this is a 64-bit segment (and D must be zero), and code in this segment uses the 64-bit instruction encoding. &ldquo;L&rdquo; cannot be set at the same time as &ldquo;D&rdquo; aka &ldquo;B&rdquo;. (Bit 21 in the image)</p>
+</blockquote>
+<p>AVL=Available</p>
+<blockquote>
+<p>For software use, not used by hardware (Bit 20 in the image with the label A)</p>
+</blockquote>
+<p>P=Present</p>
+<blockquote>
+<p>If clear, a &ldquo;segment not present&rdquo; exception is generated on any reference to this segment</p>
+</blockquote>
+<p>DPL=Descriptor privilege level</p>
+<blockquote>
+<p>Privilege level (ring) required to access this descriptor</p>
+</blockquote>
+<p>Type</p>
+<blockquote>
+<p>If set, this is a code segment descriptor. If clear, this is a data/stack segment descriptor, which has &ldquo;D&rdquo; replaced by &ldquo;B&rdquo;, &ldquo;C&rdquo; replaced by &ldquo;E&quot;and &ldquo;R&rdquo; replaced by &ldquo;W&rdquo;. This is in fact a special case of the 2-bit type field, where the preceding bit 12 cleared as &ldquo;0&rdquo; refers to more internal system descriptors, for LDT, LSS, and gates.</p>
+</blockquote>
+<p>C=Conforming</p>
+<blockquote>
+<p>Code in this segment may be called from less-privileged levels.</p>
+</blockquote>
+<p>E=Expand-Down</p>
+<blockquote>
+<p>If clear, the segment expands from base address up to base+limit. If set, it expands from maximum offset down to limit, a behavior usually used for stacks.</p>
+</blockquote>
+<p>R=Readable</p>
+<blockquote>
+<p>If clear, the segment may be executed but not read from.</p>
+</blockquote>
+<p>W=Writable</p>
+<blockquote>
+<p>If clear, the data segment may be read but not written to.</p>
+</blockquote>
+<p>A=Accessed</p>
+<blockquote>
+<p>This bit is set to 1 by hardware when the segment is accessed, and cleared by software.</p>
+</blockquote>
+</blockquote>
+<p>根据上述信息，可以对应到三个描述符</p>
+<p>第一个为空</p>
+<p>根据高 22 位 (B/D) 表示代码段或数据段，可知第二个为代码段描述符，第三个为数据段描述符，基址均为 0（这样设置，在保护模式的寻址结果中，物理地址与逻辑地址完全相同）</p>
+<p>另一个重要的东西是 <code>idt</code> （中断描述符表），同样有一个 <code>idtr</code> 指向 <code>idt</code>，原理与 <code>gdt</code> 相同，此处指令暂时将 <code>idtr</code> 清空了，后面才会重新设置</p>
+<p>在进入保护模式前，再看一下此时的内存情况：</p>
+<pre tabindex="0"><code>+--------------+ &lt;- 0x00000
+|    system    |
+| from 6 ~ 246 |
++--------------+ &lt;- 0x80000
+|     ...      |
++--------------+ &lt;- 0x90000
+|  Some  Data  |
++--------------+ &lt;- 0x90200
+|              |
+|   setup.s    |
+|     idt      | &lt;- idtr
+|     gdt      | &lt;- gdtr
+|              |
++--------------+
+|     ...      |
++--------------+
+|     Stack    |
++--------------+ &lt;- 0x9FF00
+</code></pre><h3 id="保护模式漫长的前摇简单的切换">保护模式：漫长的前摇，简单的切换</h3>
+<p>赋值完 <code>idtr</code> 和 <code>gdtr</code> 后，要打开 <code>A20</code> 地址线</p>
+<pre tabindex="0"><code>; that was painless, now we enable A20
+call empty_8042
+mov al, #0xD1     ; command write
+out #0x64, al
+call empty_8042
+mov al, #0xDF     ; A20 on
+out #0x60, al
+call empty_8042
+</code></pre><blockquote>
+<p>about <code>empty_8042</code>: This routine checks that the keyboard command queue is empty. No timeout is used - if this hangs there is someting wrong with the machine, and we probably couldn&rsquo;t proceed anyway.</p>
+</blockquote>
+<p>简单来说就是检查输入缓冲区是否为空，可以忽略</p>
+<p>打开 <code>A20</code> 地址线这里其实又是对 CPU 的控制了，32 位 CPU 考虑到兼容性，必须手动设置才能开启 32 位模式，这里就是手动设置环节</p>
+<pre tabindex="0"><code>; Now we have to reprogram the interrupts.
+; We put them right after the intel-reserved hardware interrupts, at int 0x20-0x2F.
+; There they won't mess up anything.
+; Sadly IBM really messed this up with the original PC, and they haven't been able to rectify it afterwards.
+; Thus th bios puts interrupts at 0x08-0x0F, witch is used for the internal hardware interrupts as well.
+; We just have to reprogram the 8259's, and it isn't fun.
+
+  mov al,#0x11        ; initialization sequence
+                      ; 其中 0x11 表示初始化命令的开始，ICW1 命令字，表示边沿触发、多片 8259 级连，最后发送 ICW4 命令字
+  out #0x20,al        ; send it to 8259A-1
+                      ; 将命令发送至芯片 8259A-1
+  .word   0x00eb,0x00eb       ; jmp $+2, jmp $+2
+                      ; 这两条指令相当于 nop，用于延时，直接用机器语言的写法挺有意思
+  out #0xA0,al        ; and to 8259A-2
+                      ; 同样也给 8259A-2 芯片
+  .word   0x00eb,0x00eb
+  mov al,#0x20        ; start of hardware int's (0x20)
+  out #0x21,al        ; 这里 0x21 是 8259A-1（主芯片），0xA1 是 8259A-2（从芯片）
+                      ; 设置起始中断号为 0x20
+  .word   0x00eb,0x00eb
+  mov al,#0x28        ; start of hardware int's 2 (0x28)
+  out #0xA1,al        ; 设置从芯片起始中断号为 0x28
+  .word   0x00eb,0x00eb
+  mov al,#0x04        ; 8259-1 is master
+  out #0x21,al        ; 这里设置的主从芯片，ICW3 命令字将主芯片的 IR2 连接从芯片的 INT
+  .word   0x00eb,0x00eb
+  mov al,#0x02        ; 8259-2 is slave
+  out #0xA1,al        ; 将从芯片的 INT 连到主芯片的 IR2
+  .word   0x00eb,0x00eb
+  mov al,#0x01        ; 8086 mode for both
+  out #0x21,al
+  .word   0x00eb,0x00eb
+  out #0xA1,al        ; 向主从芯片发送 ICW4 命令字，进入 8086 模式
+  .word   0x00eb,0x00eb
+  mov al,#0xFF        ; mask off all interrupts for now
+  out #0x21,al
+  .word   0x00eb,0x00eb
+  out #0xA1,al        ; 屏蔽主从芯片所有中断请求
+</code></pre><p>这里都是对可编程终端控制器 8259 芯片进行的编程，整合了一下中文注释（from <code>github.com/beride/linux0.11-1</code>）</p>
+<p>前摇很长，但真正的切换只有下面几行</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">mov ax, #0x0001   ; protected mode (PE) bit
+lmsw ax           ; This is it
+jmpi 0, 8         ; jmp offset 0 of segment 8 (cs)
+</code></pre><p><code>lmsw</code> 命令将 <code>cr0</code> 寄存器的末尾（PE）赋值为 <code>ax=1</code>，这就开启保护模式了</p>
+<p>而这个 <code>jmpi</code> 命令中过，后面的 <code>8</code> 表示是段选择子，<code>0</code> 表示偏移地址，这里的索引方式已经变成了保护模式下的索引方式了，所以根据段选择子的结构，描述符索引为 <code>1</code>，根据之前对 <code>gdt</code> 的定义，对应的描述符是</p>
+<pre tabindex="0"><code>.word 0x7FFF  ; 8Mb - limit = 2047
+.word 0x0000  ; base address = 0
+.word 0x9A00  ; code read/exec
+.word 0x00C0  ; granularity=4096, 386
+</code></pre><p>所以这里的段选择子指向的是代码段描述符，段基址为 <code>0</code>，所以最终结构为跳转到地址为 <code>0</code> 继续执行</p>
+<p>根据此前的地址设置，<code>0</code> 这个地址就是 240 个扇区的指令，对应 <code>head.s</code> 和 <code>main.c</code> 及其他各模块的操作系统代码</p>
+<p>到这里，就要正式进入操作系统了</p>
+<h2 id="总算是进入操作系统了">总算是进入操作系统了</h2>
+<h3 id="再来一次初始化-heads">再来一次初始化 (head.s)</h3>
+<p>正经的源码在这里换成了 <code>AT&amp;T</code> 格式，很烦，还好大佬的文章还是用的 <code>intel</code> 格式</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">_pg_dir:
+_setartup_32:
+  mov eax, 0x10
+  mov ds, ax
+  mov es, ax
+  mov fs, ax
+  mov gs, ax
+  lss esp, _stack_start
+</code></pre><p><code>_pg_dir</code> 表示页目录，设置分页机制的时候会用到</p>
+<p>将 <code>ds</code> 到 <code>gs</code> 四个段寄存器都赋值为 <code>0x10</code>，按照段选择子，这几个段寄存器都指向了此前 <code>gdt</code> 中，描述符索引为 <code>2</code> 的描述符，也就是数据段描述符</p>
+<p><code>lss</code> 指令相当于让 <code>ss:esp</code> 栈顶指针指向 <code>_stack_start</code>，这在 <code>sched.c</code> 中定义</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">long</span> user_stack[<span style="color:#ae81ff">4096</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>];
+
+<span style="color:#66d9ef">struct</span> {
+  <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>a;
+  <span style="color:#66d9ef">short</span> b;
+} stack_start <span style="color:#f92672">=</span> {<span style="color:#f92672">&amp;</span>user_stack[<span style="color:#ae81ff">4096</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>], <span style="color:#ae81ff">0x10</span>};
+</code></pre></div><p>根据这个定义，<code>0x10</code> 将会赋值给 <code>ss</code> 寄存器（依然是数据段描述符，基址为 <code>0</code>），而 <code>user_stack</code> 的最后一个地址的后一个地址将会赋值给 <code>esp</code>，所以这个 <code>user_stack</code> 就是后面用到的栈了</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">call setup_idt
+call setup_gdt
+mov eax, 0x10
+mov ds, ax
+mov es, ax
+mov fs, ax
+mov gs, ax
+lss esp, _stack_start
+</code></pre><p>执行了设置 <code>idt</code> 和 <code>gdt</code> 的函数后，又把刚才的指令执行了一遍</p>
+<p>这里的 <code>setup_idt</code> 子程序如下</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">; set up a idt with 256 entries pointint to ignore_int, interrupt gates.
+; It then loads idt.
+; Everything that wants to install itself in the idt-table may do so themselves.
+; Interrupts are enabled elsewhere, when we can be relatively sure everything is ok.
+; This routine whil be over-written by the page tables.
+setup_idt:
+  lea edx, ignore_int
+  mov eax, 0x00080000
+  mov ax, dx      ; selector = 0x0008 = cs
+  mov dx, 0x8E00  ; interrupt gate - dpl=0, present
+  lea edi, _idt
+  mov ecx, 0x100
+  rp_sidt:
+    mov [edi], eax
+    mov [edi+4], edx
+    add edi, 8
+    dec ecx
+    jne rp_sidt
+  lidt fword ptr idt_descr
+  ret
+
+idt_descr:
+  dw 256 * 8 - 1
+  dd _idt
+
+_idt:
+  DQ 256 dup(0)
+</code></pre><p>使用了一个 <code>0x100</code> 次的 <code>do while</code> 循环对 <code>_idt</code> 进行初始化，每一次循环设置一个中断描述符，值均为 <code>00 00 8E 00 00 08 ignore_int</code> （地址由高到低），因此所有的 <code>idt</code> 均指向了 <code>ignore_int</code> 函数（默认中断函数），后面会逐渐替换</p>
+<p><code>setup_gdt</code> 如下</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">setup_gdt:
+  lgdt gdt_descr
+  ret
+</code></pre><p>比较简单，就是将 <code>gdt_descr</code> 加载到 <code>gdtr</code></p>
+<p>长这样：</p>
+<pre tabindex="0"><code>gdt_descr:
+  .word 256 * 8 - 1         ; so does gdt (not that that's any
+  .long _gdt                ; magic number, but it works for me :^)
+
+  .align 3
+_idt:
+  .fill 256, 8, 0           ; idt is uninitialized
+
+_gdt:
+  .quad 0x0000000000000000  ; NULL descriptor
+  .quad 0x00c09a0000000fff  ; 16Mb
+  .quad 0x00c0920000000fff  ; 16Mb
+  .quad 0x0000000000000000  ; TEMPORARY - don't use
+  .fill 252, 8, 0
+</code></pre><p>可以看到，给 <code>idt</code> 和 <code>gdt</code> 都预留了 <code>256 * 8</code> 字节的空间，而 <code>gdt</code> 的初始值为 <code>NULL descriptor</code>，共 64 项</p>
+<blockquote>
+<p>这里重新设置的原因在于此前的内存已经不再使用（可以理解为 <code>setup</code> 部分占的内存被 free 掉了），后续将用于存放其他内容，因此需要将 <code>idtr</code> 和 <code>gdtr</code> 指向这个新的 <code>idt</code> 和 <code>gdt</code> 表</p>
+</blockquote>
+<h3 id="开启分页机制">开启分页机制</h3>
+<p>在执行完上面的代码后，是一些简单的检查：</p>
+<p>检查 A20 开启（进入保护模式）</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">1:
+  incl eax
+  movl 0x000000, eax
+  cmpl 0x100000, eax
+  je 1b
+</code></pre><p>检查芯片设置</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">; 486 should set bit 16, to check for wirte-protect in supervisor mode.
+; Then it would be unnecessary with the &quot;verify_area()&quot;-calls.
+; 486 users probably want to set the NE (#5) bit also, so as to use int 16 for math errors.
+movl eax, cr0         ; check math chip
+andl 0x80000011, eax  ; Save PG, ET, PE
+orl eax, 2            ; set MP
+testl eax, 0x10
+jne 1f                ; ET is set - 387 is present
+xorl eax, 6           ; else reset MP and set EM
+1: 
+  movl cr0, eax
+  jmp after_page_tables
+</code></pre><p>在做完基本检查后，将跳转到分页模式</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">after_page_tables:
+  pushl 0
+  pushl 0
+  pushl 0
+  pushl L6
+  pushl _main             ; 这里的压栈用于后续跳转到 _main
+  jmp setup_paging
+L6:
+  jmp L6
+
+setup_paging:
+  movl ecx, 1024 * 5      ; 5 pages - pg_dir+4 page tables
+  xorl eax, eax
+  xorl edi, edi           ; pg_dir is at 0x000
+  cld;rep;stosl
+  movl eax, _pg_dir
+  movl [_pg_dir]   , pg0+7  ; set present bit/user r/w
+  movl [_pg_dir+4] , pg1+7
+  movl [_pg_dir+8] , pg2+7
+  movl [_pg_dir+12], pg3+7
+  movl edi, pg3+4092
+  movl eax, 0xfff007  ; 16Mb - 4096 + 7 (r/w user, p)
+  std
+1:
+  stosl               ; fill pages backward - more efficient
+  subl eax, 0x1000
+  jge 1b
+  xorl eax, eax       ; pg_dir is at 0x0000
+  movl cr3, eax       ; cr3 - page directory start
+  movl eax, cr0
+  orl eax, 0x80000000
+  movl cr0, eax       ; set paging (PG) bit
+  ret                 ; this also flushes prefetch-queue
+</code></pre><p>开启分页机制的设置在 <code>ret</code> 前的最后三条指令上，这三条指令的效果就是将 <code>cr0</code> 的最高位置为 <code>1</code>，这一位就是 <code>PG</code> 位，<code>1</code> 表示开启分页机制</p>
+<p>这个版本的 Linux 只为内存预留了 <code>16 Mb</code> 的空间，最大地址为 <code>0xFFFFFF</code>，1 页为 <code>4KB</code>，1 页表为 1024 页，1页表目录为 1024 页表，因此只需要提供 1 页表目录和 4 页表即可，这也就对应了开头一些指令的含义</p>
+<p><code>mov ecx, 1024 * 5</code> 表示总共需要 5 页，而 <code>pg_dir</code> 就成功与上文 <code>head.s</code> 开头呼应上了，这个标签就是页表目录，而下面将存放四个页表</p>
+<pre tabindex="0"><code class="language-assembly" data-lang="assembly">.org 0x1000 pg0;
+.org 0x2000 pg1;
+.org 0x3000 pg2;
+.org 0x4000 pg3;
+.org 0x5000
+</code></pre><p>所以在经过这一步设置后，物理内存的 <code>0x0000-0x5000</code> 都是分页机制使用的空间了，最后将 <code>cr3</code> 赋值为 <code>0</code>，就是指向了 <code>pg_dir</code> 的地址</p>
+<blockquote>
+<p>开启分页机制后，覆盖掉的空间是此前初始化 idt 和 gdt 的代码（占用空间为 <code>0x0000-0x1000</code>）</p>
+</blockquote>
+<p>此外，<code>pg?+7</code> 中，<code>pg?</code> 部分是地址，因为后三位必须要对其到 <code>0b000</code>，所以正好用于表示权限，<code>7=0x111</code> 就表示页存在、用户可读写</p>
+<p>在开启分页模式后，经过此前分段机制计算得到的地址为线性地址，需要再次经过分页机制计算才能得到物理地址：</p>
+<p>前 10 bit 表示页目录项的索引，中间 10 bit 表示页表项的索引，最后 12 bit 表示页内的偏移，先找对应的页目录项，再找页表项，最后加上索引，就得到实际物理地址了</p>
+<h3 id="跳转到-main">跳转到 main</h3>
+<p>这里跳转到 main 的方法和 ROP 很类似</p>
+<pre tabindex="0"><code>after_page_tables:
+  ...
+  pushl _main
+  jmp setup_paging
+
+setup_paging:
+  ...
+  ret                 ; this also flushes prefetch-queue
+</code></pre><p>把 <code>_main</code> 的地址放到栈顶，然后用 <code>jmp</code> 指令跳转到另一个子程序，此时对栈本身没有进行改变，而 <code>setup_paging</code> 作为被 <code>jmp</code> 执行的程序，最后却 <code>ret</code> 了，这就相当于执行了一个 <code>pop eip</code>，结果就是 <code>eip=_main</code></p>
+<p>于是接下来就正式开始执行 <code>_main</code> 函数了</p>
+<p>总结一下此时的内存情况</p>
+<pre tabindex="0"><code>+--------------+ &lt;- 0x00000 &lt;- cr3
+|    pg_dir    |
+|     pg 0     |
+|     pg 1     |
+|     pg 2     |
+|     pg 3     |
++--------------+ &lt;- 0x05000
+|              |
+|    system    |
+| from 6 ~ 246 |
+|              |
+|     idt      | &lt;- idtr
+|     gdt      | &lt;- gdtr
+|              |
+|              |
+|     512K     |
+|              |
++--------------+ &lt;- 0x80000
+|     ...      |
++--------------+ &lt;- 0x90000
+|  Some  Data  |
++--------------+ &lt;- 0x90200
+|              |
+|   setup.s    |
+|              |
++--------------+
+|     ...      |
++--------------+
+|    Stack     |
++--------------+ &lt;- 0x9FF00
+</code></pre>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/system/">System</a>
+        
+            <a href="/tags/rtfsc/">RTFSC</a>
+        
+            <a href="/tags/reading/">Reading</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/post/csapp-labs/">
+        
+        
+            <div class="article-image">
+                <img src="/post/csapp-labs/cover.60f2c68d83d56007c5960ebcac35cd70_hu3b8d692d45d6b215e59701d25ac88074_3319905_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSAPP Labs"
+                        
+                        data-hash="md5-YPLGjYPVYAfFlg68rDXNcA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSAPP Labs</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/note-of-book-encryption-and-decryption/">
+        
+        
+            <div class="article-image">
+                <img src="/post/note-of-book-encryption-and-decryption/cover.c485ea85e1f847123fac81fc1611fb77_huf14a87ae5877971d635f5feb6ec88f93_885732_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 加密与解密学习笔记（持续更新ing）"
+                        
+                        data-hash="md5-xIXqheH4RxI/rIH8FhH7dw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">加密与解密学习笔记（持续更新ing）</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy;
+        
+        2022 s0uthwood&#39;s Blog
+    
+        
+            <br />
+            已运行 <i class="fas fa-bell"></i> <a id="days">0</a> 天
+        
+    
+        
+            &nbsp;&nbsp;
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            ⌨&nbsp;
+            80.71k&nbsp;
+            字
+            &nbsp;&nbsp;
+            🧠&nbsp;
+            35&nbsp;
+            篇文章
+        
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+
+    
+        <script>
+            var s1 = "2020-11-15";
+            s1 = new Date(s1.replace(/-/g, "/"));
+            s2 = new Date();
+            var days = s2.getTime() - s1.getTime();
+            var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+            document.getElementById('days').innerHTML = number_of_days;
+        </script>
+    
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#how-everything-begins-bootsectss">How Everything Begins (bootsects.s)</a>
+      <ul>
+        <li><a href="#从-0x7c00-开始的操作系统启动">从 0x7C00 开始的操作系统启动</a></li>
+        <li><a href="#给自己挪个地方">给自己挪个地方</a></li>
+        <li><a href="#一些基础工作">一些基础工作</a></li>
+        <li><a href="#把硬盘里的其他部分也挪过来">把硬盘里的其他部分也挪过来</a></li>
+      </ul>
+    </li>
+    <li><a href="#继续启动-setups">继续启动 (setup.s)</a>
+      <ul>
+        <li><a href="#保护模式前的准备">保护模式前的准备</a></li>
+        <li><a href="#段寄存器的历史包袱">段寄存器的历史包袱</a></li>
+        <li><a href="#保护模式漫长的前摇简单的切换">保护模式：漫长的前摇，简单的切换</a></li>
+      </ul>
+    </li>
+    <li><a href="#总算是进入操作系统了">总算是进入操作系统了</a>
+      <ul>
+        <li><a href="#再来一次初始化-heads">再来一次初始化 (head.s)</a></li>
+        <li><a href="#开启分页机制">开启分页机制</a></li>
+        <li><a href="#跳转到-main">跳转到 main</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
