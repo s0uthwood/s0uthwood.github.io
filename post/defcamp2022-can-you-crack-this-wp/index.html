@@ -153,213 +153,213 @@
     <section class="article-content">
     <h2 id="can-you-crack-this">can-you-crack-this</h2>
 <p>The main function reads the input and constrains the length.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">  v11 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Enter your public key: &#34;</span>);
-  std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v11, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
-  std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&gt;&gt;&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cin, public_key);
-  <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>length(public_key) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">20</span> ) {
-    v9 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Enter serial key:&#34;</span>);
-    std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v9, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
-    std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&gt;&gt;&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cin, serial_key);
-    v8 <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>length(public_key) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
-    <span style="color:#66d9ef">if</span> ( v8 <span style="color:#f92672">==</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>length(serial_key) ) {
-      std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>basic_string(str_public_key, public_key);
-      std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>basic_string(str_serial_key, serial_key);
-      v6 <span style="color:#f92672">=</span> verify_serial((<span style="color:#66d9ef">__int64</span>)str_public_key, (<span style="color:#66d9ef">__int64</span>)str_serial_key);
-      std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(str_serial_key);
-      std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(str_public_key);
-      <span style="color:#66d9ef">if</span> ( v6 ) {
-        v5 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Serial accepted.&#34;</span>);
-        std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v5, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
-      }
-      <span style="color:#66d9ef">else</span> {
-        v4 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Try harder.&#34;</span>);
-        std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v4, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
-      }
-      v17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-      v14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-    }
-    <span style="color:#66d9ef">else</span> {
-      v7 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Invalid serial length.&#34;</span>);
-      std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v7, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
-      v17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-      v14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-    }
-  }
-  <span style="color:#66d9ef">else</span> {
-    v10 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Invalid length.&#34;</span>);
-    std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v10, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
-    v17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    v14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-  }
-</code></pre></div><p>It requires that the two input strings satisfy the constraint <code>len(serial) = len(publik_key) * 4 - 1</code> and passes the two strings into the <code>verify_serial()</code> function.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">_BOOL8 <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">verify_serial</span>(<span style="color:#66d9ef">__int64</span> a1, <span style="color:#66d9ef">__int64</span> a2) {
-  <span style="color:#66d9ef">__int64</span> v2; <span style="color:#75715e">// rsi
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v3; <span style="color:#75715e">// rax
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v4; <span style="color:#75715e">// rax
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v6; <span style="color:#75715e">// [rsp+10h] [rbp-C0h]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">bool</span> v7; <span style="color:#75715e">// [rsp+1Bh] [rbp-B5h]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>char_from_pb_key; <span style="color:#75715e">// [rsp+20h] [rbp-B0h]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> v10[<span style="color:#ae81ff">24</span>]; <span style="color:#75715e">// [rsp+38h] [rbp-98h] BYREF
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> sub_serial[<span style="color:#ae81ff">28</span>]; <span style="color:#75715e">// [rsp+50h] [rbp-80h] BYREF
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v12; <span style="color:#75715e">// [rsp+6Ch] [rbp-64h]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> count; <span style="color:#75715e">// [rsp+70h] [rbp-60h]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> sub_serial_v12[<span style="color:#ae81ff">24</span>]; <span style="color:#75715e">// [rsp+88h] [rbp-48h] BYREF
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> pos_v13; <span style="color:#75715e">// [rsp+A0h] [rbp-30h]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v16; <span style="color:#75715e">// [rsp+A8h] [rbp-28h]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> v17[<span style="color:#ae81ff">28</span>]; <span style="color:#75715e">// [rsp+B0h] [rbp-20h] BYREF
-</span><span style="color:#75715e"></span>  _BOOL4 v18; <span style="color:#75715e">// [rsp+CCh] [rbp-4h]
-</span><span style="color:#75715e"></span>
-  std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>basic_string<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>nullptr_t<span style="color:#f92672">&gt;</span>(v17, <span style="color:#e6db74">&#34;-&#34;</span>);
-  v16 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
-  pos_v13 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
-  std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>basic_string((<span style="color:#66d9ef">__int64</span>)sub_serial_v12);
-  count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
-  <span style="color:#66d9ef">while</span> ( <span style="color:#ae81ff">1</span> ) {
-    pos_v13 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>find(a2, v17, <span style="color:#ae81ff">0LL</span>);
-    <span style="color:#66d9ef">if</span> ( pos_v13 <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> )
-      <span style="color:#66d9ef">break</span>;
-    <span style="color:#f92672">++</span>count;
-    <span style="color:#66d9ef">if</span> ( pos_v13 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">3</span> ) {
-      v18 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-      v12 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-      <span style="color:#66d9ef">goto</span> L_EXIT;
-    }
-    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>substr(sub_serial, a2, <span style="color:#ae81ff">0LL</span>, <span style="color:#ae81ff">3LL</span>);
-    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>((<span style="color:#66d9ef">__int64</span>)sub_serial_v12, (<span style="color:#66d9ef">__int64</span>)sub_serial);
-    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(sub_serial);
-    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>basic_string(v10, sub_serial_v12);
-    v2 <span style="color:#f92672">=</span> v16<span style="color:#f92672">++</span>;
-    char_from_pb_key <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>at(a1, v2);
-    v7 <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>verify_char(v10, <span style="color:#f92672">*</span>char_from_pb_key);
-    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(v10);
-    <span style="color:#66d9ef">if</span> ( v7 ) {
-      v18 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-      v12 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-      <span style="color:#66d9ef">goto</span> L_EXIT;
-    }
-    v6 <span style="color:#f92672">=</span> pos_v13;
-    v3 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>length(v17);
-    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>erase(a2, <span style="color:#ae81ff">0LL</span>, v3 <span style="color:#f92672">+</span> v6);
-  }
-  <span style="color:#66d9ef">if</span> ( count <span style="color:#f92672">==</span> <span style="color:#ae81ff">19</span> ) {
-    v4 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>c_str(a2);
-    v18 <span style="color:#f92672">=</span> strncmp(v4, <span style="color:#e6db74">&#34;bss&#34;</span>, <span style="color:#ae81ff">3uLL</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>;
-  }
-  <span style="color:#66d9ef">else</span> {
-    v18 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-  }
-  v12 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-L_EXIT:
-  std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(sub_serial_v12);
-  std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(v17);
-  <span style="color:#66d9ef">return</span> v18;
-}
-</code></pre></div><p>This function splits the Serial Key into 20 parts by <code>-</code> and requires each part to be 3 in length, ending with <code>bss</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>  v11 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Enter your public key: &#34;</span>);
+</span></span><span style="display:flex;"><span>  std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v11, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
+</span></span><span style="display:flex;"><span>  std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&gt;&gt;&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cin, public_key);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>length(public_key) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">20</span> ) {
+</span></span><span style="display:flex;"><span>    v9 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Enter serial key:&#34;</span>);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v9, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&gt;&gt;&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cin, serial_key);
+</span></span><span style="display:flex;"><span>    v8 <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>length(public_key) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( v8 <span style="color:#f92672">==</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>length(serial_key) ) {
+</span></span><span style="display:flex;"><span>      std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>basic_string(str_public_key, public_key);
+</span></span><span style="display:flex;"><span>      std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>basic_string(str_serial_key, serial_key);
+</span></span><span style="display:flex;"><span>      v6 <span style="color:#f92672">=</span> verify_serial((<span style="color:#66d9ef">__int64</span>)str_public_key, (<span style="color:#66d9ef">__int64</span>)str_serial_key);
+</span></span><span style="display:flex;"><span>      std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(str_serial_key);
+</span></span><span style="display:flex;"><span>      std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(str_public_key);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( v6 ) {
+</span></span><span style="display:flex;"><span>        v5 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Serial accepted.&#34;</span>);
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v5, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        v4 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Try harder.&#34;</span>);
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v4, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      v17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>      v14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>      v7 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Invalid serial length.&#34;</span>);
+</span></span><span style="display:flex;"><span>      std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v7, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
+</span></span><span style="display:flex;"><span>      v17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>      v14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    v10 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;&lt;</span>std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>(<span style="color:#f92672">&amp;</span>std<span style="color:#f92672">::</span>cout, <span style="color:#e6db74">&#34;Invalid length.&#34;</span>);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>ostream<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;&lt;</span>(v10, std<span style="color:#f92672">::</span>endl<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span>,std<span style="color:#f92672">::</span>char_traits<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;&gt;</span>);
+</span></span><span style="display:flex;"><span>    v17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    v14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><p>It requires that the two input strings satisfy the constraint <code>len(serial) = len(publik_key) * 4 - 1</code> and passes the two strings into the <code>verify_serial()</code> function.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>_BOOL8 <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">verify_serial</span>(<span style="color:#66d9ef">__int64</span> a1, <span style="color:#66d9ef">__int64</span> a2) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">__int64</span> v2; <span style="color:#75715e">// rsi
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v3; <span style="color:#75715e">// rax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v4; <span style="color:#75715e">// rax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v6; <span style="color:#75715e">// [rsp+10h] [rbp-C0h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">bool</span> v7; <span style="color:#75715e">// [rsp+1Bh] [rbp-B5h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>char_from_pb_key; <span style="color:#75715e">// [rsp+20h] [rbp-B0h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> v10[<span style="color:#ae81ff">24</span>]; <span style="color:#75715e">// [rsp+38h] [rbp-98h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> sub_serial[<span style="color:#ae81ff">28</span>]; <span style="color:#75715e">// [rsp+50h] [rbp-80h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v12; <span style="color:#75715e">// [rsp+6Ch] [rbp-64h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> count; <span style="color:#75715e">// [rsp+70h] [rbp-60h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> sub_serial_v12[<span style="color:#ae81ff">24</span>]; <span style="color:#75715e">// [rsp+88h] [rbp-48h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> pos_v13; <span style="color:#75715e">// [rsp+A0h] [rbp-30h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v16; <span style="color:#75715e">// [rsp+A8h] [rbp-28h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> v17[<span style="color:#ae81ff">28</span>]; <span style="color:#75715e">// [rsp+B0h] [rbp-20h] BYREF
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  _BOOL4 v18; <span style="color:#75715e">// [rsp+CCh] [rbp-4h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>basic_string<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>nullptr_t<span style="color:#f92672">&gt;</span>(v17, <span style="color:#e6db74">&#34;-&#34;</span>);
+</span></span><span style="display:flex;"><span>  v16 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
+</span></span><span style="display:flex;"><span>  pos_v13 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
+</span></span><span style="display:flex;"><span>  std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>basic_string((<span style="color:#66d9ef">__int64</span>)sub_serial_v12);
+</span></span><span style="display:flex;"><span>  count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( <span style="color:#ae81ff">1</span> ) {
+</span></span><span style="display:flex;"><span>    pos_v13 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>find(a2, v17, <span style="color:#ae81ff">0LL</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( pos_v13 <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> )
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">++</span>count;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( pos_v13 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">3</span> ) {
+</span></span><span style="display:flex;"><span>      v18 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>      v12 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">goto</span> L_EXIT;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>substr(sub_serial, a2, <span style="color:#ae81ff">0LL</span>, <span style="color:#ae81ff">3LL</span>);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>((<span style="color:#66d9ef">__int64</span>)sub_serial_v12, (<span style="color:#66d9ef">__int64</span>)sub_serial);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(sub_serial);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>basic_string(v10, sub_serial_v12);
+</span></span><span style="display:flex;"><span>    v2 <span style="color:#f92672">=</span> v16<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    char_from_pb_key <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>at(a1, v2);
+</span></span><span style="display:flex;"><span>    v7 <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>verify_char(v10, <span style="color:#f92672">*</span>char_from_pb_key);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(v10);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( v7 ) {
+</span></span><span style="display:flex;"><span>      v18 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>      v12 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">goto</span> L_EXIT;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    v6 <span style="color:#f92672">=</span> pos_v13;
+</span></span><span style="display:flex;"><span>    v3 <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>length(v17);
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>erase(a2, <span style="color:#ae81ff">0LL</span>, v3 <span style="color:#f92672">+</span> v6);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( count <span style="color:#f92672">==</span> <span style="color:#ae81ff">19</span> ) {
+</span></span><span style="display:flex;"><span>    v4 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>c_str(a2);
+</span></span><span style="display:flex;"><span>    v18 <span style="color:#f92672">=</span> strncmp(v4, <span style="color:#e6db74">&#34;bss&#34;</span>, <span style="color:#ae81ff">3uLL</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    v18 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  v12 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>L_EXIT:
+</span></span><span style="display:flex;"><span>  std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(sub_serial_v12);
+</span></span><span style="display:flex;"><span>  std<span style="color:#f92672">::</span>string<span style="color:#f92672">::~</span>string(v17);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> v18;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This function splits the Serial Key into 20 parts by <code>-</code> and requires each part to be 3 in length, ending with <code>bss</code>.</p>
 <p>The three characters of each Serial Key part and one Public Key character in the corresponding position are passed to the <code>verify_char()</code> function.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">_BOOL8 <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">verify_char</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>a1, <span style="color:#66d9ef">char</span> a2) {
-  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v2; <span style="color:#75715e">// rax
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v3; <span style="color:#75715e">// eax
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> v5; <span style="color:#75715e">// [rsp+0h] [rbp-20h]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v6; <span style="color:#75715e">// [rsp+8h] [rbp-18h]
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v7; <span style="color:#75715e">// [rsp+10h] [rbp-10h]
-</span><span style="color:#75715e"></span>
-  v2 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>c_str(a1);
-  v7 <span style="color:#f92672">=</span> strtol(v2, <span style="color:#ae81ff">0LL</span>, <span style="color:#ae81ff">16</span>);
-  v6 <span style="color:#f92672">=</span> fib(v7);                                 <span style="color:#75715e">// fib / 100
-</span><span style="color:#75715e"></span>  v5 <span style="color:#f92672">=</span> v6;
-  <span style="color:#66d9ef">do</span> {
-    <span style="color:#66d9ef">do</span>
-      <span style="color:#f92672">--</span>v5;
-    <span style="color:#66d9ef">while</span> ( <span style="color:#f92672">!</span>check_arm(v5) );
-  } <span style="color:#66d9ef">while</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)notused(v5) <span style="color:#f92672">||</span> v5 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x10E47F4C575565LL</span> );
-  <span style="color:#66d9ef">if</span> ( v7 <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">100</span> ) {
-    <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)isprint(a2) ) {
-      v3 <span style="color:#f92672">=</span> UN<span style="color:#f92672">++</span>;
-      used[v3] <span style="color:#f92672">=</span> v5;
-      <span style="color:#66d9ef">return</span> v5 <span style="color:#f92672">&amp;&amp;</span> v6 <span style="color:#f92672">&amp;&amp;</span> v5 <span style="color:#f92672">!=</span> v6 <span style="color:#f92672">&amp;&amp;</span> (v6 <span style="color:#f92672">-</span> v5) <span style="color:#f92672">%</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">==</span> a2;
-    }
-  }
-  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-}
-</code></pre></div><p>This function first converts the hex string (format of input) to int, then uses <code>fib()</code> to calculate the value of that index in the Fibonacci series and divides it by 100 to return <code>v6</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>_BOOL8 <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">verify_char</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>a1, <span style="color:#66d9ef">char</span> a2) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>v2; <span style="color:#75715e">// rax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v3; <span style="color:#75715e">// eax
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span> v5; <span style="color:#75715e">// [rsp+0h] [rbp-20h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v6; <span style="color:#75715e">// [rsp+8h] [rbp-18h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">__int64</span> v7; <span style="color:#75715e">// [rsp+10h] [rbp-10h]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  v2 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)std<span style="color:#f92672">::</span>string<span style="color:#f92672">::</span>c_str(a1);
+</span></span><span style="display:flex;"><span>  v7 <span style="color:#f92672">=</span> strtol(v2, <span style="color:#ae81ff">0LL</span>, <span style="color:#ae81ff">16</span>);
+</span></span><span style="display:flex;"><span>  v6 <span style="color:#f92672">=</span> fib(v7);                                 <span style="color:#75715e">// fib / 100
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  v5 <span style="color:#f92672">=</span> v6;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">--</span>v5;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ( <span style="color:#f92672">!</span>check_arm(v5) );
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">while</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)notused(v5) <span style="color:#f92672">||</span> v5 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x10E47F4C575565LL</span> );
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v7 <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">100</span> ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)isprint(a2) ) {
+</span></span><span style="display:flex;"><span>      v3 <span style="color:#f92672">=</span> UN<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>      used[v3] <span style="color:#f92672">=</span> v5;
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> v5 <span style="color:#f92672">&amp;&amp;</span> v6 <span style="color:#f92672">&amp;&amp;</span> v5 <span style="color:#f92672">!=</span> v6 <span style="color:#f92672">&amp;&amp;</span> (v6 <span style="color:#f92672">-</span> v5) <span style="color:#f92672">%</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">==</span> a2;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This function first converts the hex string (format of input) to int, then uses <code>fib()</code> to calculate the value of that index in the Fibonacci series and divides it by 100 to return <code>v6</code>.</p>
 <p>The <code>check_arm()</code> function is as follows</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">_BOOL8 <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">check_arm</span>(<span style="color:#66d9ef">__int64</span> a1) {
-  <span style="color:#66d9ef">return</span> (countSetBits(a1) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>;
-}
-
-<span style="color:#66d9ef">__int64</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">countSetBits</span>(<span style="color:#66d9ef">__int64</span> a1) {
-  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> v2; <span style="color:#75715e">// [rsp+0h] [rbp-Ch]
-</span><span style="color:#75715e"></span>
-  v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-  <span style="color:#66d9ef">while</span> ( a1 ) {
-    a1 <span style="color:#f92672">&amp;=</span> a1 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
-    <span style="color:#f92672">++</span>v2;
-  }
-  <span style="color:#66d9ef">return</span> v2;
-}
-</code></pre></div><p><code>countSetBits()</code> is used to calculate the number of 1 in the binary form of the argument, so the number of 1 is odd to exit the inner <code>do while</code> loop. For the outer loop, the number <code>v5</code> must be less than 0x10E47F4C575565, and <code>notused()</code> will record the previous <code>v5</code> and cannot be reused.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>_BOOL8 <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">check_arm</span>(<span style="color:#66d9ef">__int64</span> a1) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> (countSetBits(a1) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">__int64</span> <span style="color:#66d9ef">__fastcall</span> <span style="color:#a6e22e">countSetBits</span>(<span style="color:#66d9ef">__int64</span> a1) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> v2; <span style="color:#75715e">// [rsp+0h] [rbp-Ch]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( a1 ) {
+</span></span><span style="display:flex;"><span>    a1 <span style="color:#f92672">&amp;=</span> a1 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">++</span>v2;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> v2;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>countSetBits()</code> is used to calculate the number of 1 in the binary form of the argument, so the number of 1 is odd to exit the inner <code>do while</code> loop. For the outer loop, the number <code>v5</code> must be less than 0x10E47F4C575565, and <code>notused()</code> will record the previous <code>v5</code> and cannot be reused.</p>
 <p>In addition, since <code>v6 - v5 &gt; 0x20</code> (<code>isprint(a2)</code> and <code>(v6 - v5) % 100 == a2</code>) is required, it is obvious that the upper limit of <code>v5</code> needs to be used in the construction. So that the value of <code>v5</code> in 20 calculations can be determined, and the Serial Key and Public Key can be constructed by finding <code>(v6, a2)</code> that match the condition.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">fib</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> x) {
-    <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> v5[<span style="color:#ae81ff">4096</span>];
-    v5[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    v5[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>; i <span style="color:#f92672">&lt;=</span> x; i<span style="color:#f92672">++</span>)
-        v5[i] <span style="color:#f92672">=</span> v5[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> v5[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>];
-    <span style="color:#66d9ef">return</span> v5[x] <span style="color:#f92672">/</span> <span style="color:#ae81ff">100uLL</span>;
-}
-
-<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">countSetBits</span>(<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> x) {
-    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">while</span> (x) {
-        x <span style="color:#f92672">&amp;=</span> x <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
-        v2<span style="color:#f92672">++</span>;
-    }
-    <span style="color:#66d9ef">return</span> v2;
-}
-
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">check_arm</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> x) {
-    <span style="color:#66d9ef">return</span> (countSetBits(x) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>;
-}
-
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>v5) {
-    <span style="color:#66d9ef">do</span> {
-        <span style="color:#f92672">--*</span>v5;
-    } <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>check_arm(<span style="color:#f92672">*</span>v5));
-    <span style="color:#66d9ef">return</span>;
-}
-
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
-    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> v7;
-    <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> v5 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x10E47F4C575565LL</span>;
-    <span style="color:#66d9ef">int</span> serial[<span style="color:#ae81ff">105</span>];
-    <span style="color:#66d9ef">int</span> public[<span style="color:#ae81ff">105</span>];
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">20</span>; i<span style="color:#f92672">++</span>){
-        next(<span style="color:#f92672">&amp;</span>v5);
-        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>; j <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x1000</span>; j<span style="color:#f92672">++</span>){
-            <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> tmp <span style="color:#f92672">=</span> (fib(j) <span style="color:#f92672">-</span> v5) <span style="color:#f92672">%</span> <span style="color:#ae81ff">100</span>;
-            <span style="color:#75715e">// add constraints of fib(j) &gt; 0x10E47F4C575565LL is better
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (tmp <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x20</span>){
-                serial[i] <span style="color:#f92672">=</span> j;
-                public[i] <span style="color:#f92672">=</span> tmp;
-                <span style="color:#66d9ef">break</span>;
-            }
-        }
-    }
-    printf(<span style="color:#e6db74">&#34;Public Key: &#34;</span>);
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">20</span>; i<span style="color:#f92672">++</span>)
-        printf(<span style="color:#e6db74">&#34;%c&#34;</span>, public[i]);
-    printf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-    printf(<span style="color:#e6db74">&#34;Serial Key: &#34;</span>);
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">19</span>; i<span style="color:#f92672">++</span>)
-        printf(<span style="color:#e6db74">&#34;%03x-&#34;</span>, serial[i]);
-    printf(<span style="color:#e6db74">&#34;bss</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-}
-<span style="color:#75715e">// Public Key: ;=&gt;ABDGH#%&amp;(+-.12479
-</span><span style="color:#75715e">// Serial Key: 066-066-066-066-066-066-066-066-064-064-064-064-064-064-064-064-064-064-064-bss
-</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">fib</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> x) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> v5[<span style="color:#ae81ff">4096</span>];
+</span></span><span style="display:flex;"><span>    v5[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    v5[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>; i <span style="color:#f92672">&lt;=</span> x; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>        v5[i] <span style="color:#f92672">=</span> v5[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">+</span> v5[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> v5[x] <span style="color:#f92672">/</span> <span style="color:#ae81ff">100uLL</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">countSetBits</span>(<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> x) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (x) {
+</span></span><span style="display:flex;"><span>        x <span style="color:#f92672">&amp;=</span> x <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        v2<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> v2;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">check_arm</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> x) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (countSetBits(x) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>v5) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">--*</span>v5;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>check_arm(<span style="color:#f92672">*</span>v5));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> v7;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> v5 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x10E47F4C575565LL</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> serial[<span style="color:#ae81ff">105</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> public[<span style="color:#ae81ff">105</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">20</span>; i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>        next(<span style="color:#f92672">&amp;</span>v5);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>; j <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x1000</span>; j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> tmp <span style="color:#f92672">=</span> (fib(j) <span style="color:#f92672">-</span> v5) <span style="color:#f92672">%</span> <span style="color:#ae81ff">100</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// add constraints of fib(j) &gt; 0x10E47F4C575565LL is better
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (tmp <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x20</span>){
+</span></span><span style="display:flex;"><span>                serial[i] <span style="color:#f92672">=</span> j;
+</span></span><span style="display:flex;"><span>                public[i] <span style="color:#f92672">=</span> tmp;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;Public Key: &#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">20</span>; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>        printf(<span style="color:#e6db74">&#34;%c&#34;</span>, public[i]);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;Serial Key: &#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">19</span>; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>        printf(<span style="color:#e6db74">&#34;%03x-&#34;</span>, serial[i]);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;bss</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Public Key: ;=&gt;ABDGH#%&amp;(+-.12479
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// Serial Key: 066-066-066-066-066-066-066-066-064-064-064-064-064-064-064-064-064-064-064-bss
+</span></span></span></code></pre></div>
 </section>
 
 
@@ -598,7 +598,7 @@ L_EXIT:
             
             
             ⌨&nbsp;
-            83.15k&nbsp;
+            83.31k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;

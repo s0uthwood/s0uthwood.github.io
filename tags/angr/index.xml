@@ -21,7 +21,7 @@ v9 = byte_412000; v10 = byte_412050; v11 = 64LL; v12 = 0; do { v12 |= *v10++ ^ *
 Angr用的是手动往全局变量注入符号，然后在验证前停止，手动添加约束，wp中的写法是直接用程序中的验证，并添加了 LAZY_SOLVES 参数，学到了
 之前用自己脚本跑的适合发现一直是 unsat，以为Angr会有问题，但后来发现有个wp就是用的Angr
 于是掏出了之前写的脚本做了一些尝试
-from angr import * import claripy import binascii input_length = 56 base_addr = 0x400000 proj = Project(&#39;runofthemill&#39;, main_opts={&amp;quot;base_addr&amp;quot;: base_addr}) start_addr = 0x401054 state = proj.</description>
+from angr import * import claripy import binascii input_length = 56 base_addr = 0x400000 proj = Project(&amp;#39;runofthemill&amp;#39;, main_opts={&amp;#34;base_addr&amp;#34;: base_addr}) start_addr = 0x401054 state = proj.</description>
     </item>
     
     <item>

@@ -17,7 +17,7 @@
 github.com/sunym1993/flash-linux0.11-talk
 一个操作系统的主函数 main 函数在 init/main.c
 这里用了 https://github.com/karottc/linux-0.11 中注释过的代码
-// 内核初始化主程序。初始化结束后将以任务0（idle任务即空闲任务）的身份运行。 void main(void) { /* This really IS void, no error here. */ /* The startup routine assumes (well, ...) this */ /* * Interrupts are still disabled. Do necessary setups, then * enable them */ // 下面这段代码用于保存：  // 根设备号 -&amp;gt;ROOT_DEV；高速缓存末端地址-&amp;gt;buffer_memory_end;  // 机器内存数-&amp;gt;memory_end；主内存开始地址-&amp;gt;main_memory_start；  // 其中ROOT_DEV已在前面包含进的fs.h文件中声明为extern int  ROOT_DEV = ORIG_ROOT_DEV; drive_info = DRIVE_INFO; // 复制0x90080处的硬盘参数  memory_end = (1&amp;lt;&amp;lt;20) + (EXT_MEM_K&amp;lt;&amp;lt;10); // 内存大小=1Mb + 扩展内存(k)*1024 byte  memory_end &amp;amp;= 0xfffff000; // 忽略不到4kb(1页)的内存数  if (memory_end &amp;gt; 16*1024*1024) // 内存超过16Mb，则按16Mb计  memory_end = 16*1024*1024; if (memory_end &amp;gt; 12*1024*1024) // 如果内存&amp;gt;12Mb,则设置缓冲区末端=4Mb  buffer_memory_end = 4*1024*1024; else if (memory_end &amp;gt; 6*1024*1024) // 否则若内存&amp;gt;6Mb,则设置缓冲区末端=2Mb  buffer_memory_end = 2*1024*1024; else buffer_memory_end = 1*1024*1024; // 否则设置缓冲区末端=1Mb  main_memory_start = buffer_memory_end; // 如果在Makefile文件中定义了内存虚拟盘符号RAMDISK,则初始化虚拟盘。此时主内存将减少。  // 以下是内核进行所有方面的初始化工作  mem_init(main_memory_start,memory_end); // 主内存区初始化。mm/memory.</description>
+// 内核初始化主程序。初始化结束后将以任务0（idle任务即空闲任务）的身份运行。 void main(void) { /* This really IS void, no error here. */ /* The startup routine assumes (well, ...) this */ /* * Interrupts are still disabled. Do necessary setups, then * enable them */ // 下面这段代码用于保存： // 根设备号 -&amp;gt;ROOT_DEV；高速缓存末端地址-&amp;gt;buffer_memory_end; // 机器内存数-&amp;gt;memory_end；主内存开始地址-&amp;gt;main_memory_start； // 其中ROOT_DEV已在前面包含进的fs.h文件中声明为extern int ROOT_DEV = ORIG_ROOT_DEV; drive_info = DRIVE_INFO; // 复制0x90080处的硬盘参数 memory_end = (1&amp;lt;&amp;lt;20) + (EXT_MEM_K&amp;lt;&amp;lt;10); // 内存大小=1Mb + 扩展内存(k)*1024 byte memory_end &amp;amp;= 0xfffff000; // 忽略不到4kb(1页)的内存数 if (memory_end &amp;gt; 16*1024*1024) // 内存超过16Mb，则按16Mb计 memory_end = 16*1024*1024; if (memory_end &amp;gt; 12*1024*1024) // 如果内存&amp;gt;12Mb,则设置缓冲区末端=4Mb buffer_memory_end = 4*1024*1024; else if (memory_end &amp;gt; 6*1024*1024) // 否则若内存&amp;gt;6Mb,则设置缓冲区末端=2Mb buffer_memory_end = 2*1024*1024; else buffer_memory_end = 1*1024*1024; // 否则设置缓冲区末端=1Mb main_memory_start = buffer_memory_end; // 如果在Makefile文件中定义了内存虚拟盘符号RAMDISK,则初始化虚拟盘。此时主内存将减少。 // 以下是内核进行所有方面的初始化工作 mem_init(main_memory_start,memory_end); // 主内存区初始化。mm/memory.</description>
     </item>
     
     <item>
@@ -29,12 +29,12 @@ github.com/sunym1993/flash-linux0.11-talk
       <description>跟着大佬的文章读一下 Linux 0.11 的源码
 github.com/sunym1993/flash-linux0.11-talk
 万事开头难 (bootsects.s) 从 0x7C00 开始的操作系统启动 开机首先会执行主板上的 BIOS 程序，BIOS 将启动区的 512 字节（一个扇区）复制到内存中的 0x7C00 地址，随后跳转到这个地址继续执行
- 启动区的识别：0 盘 0 道 1 扇区的 512 字节最后两个字节为 55 AA
- 所以操作系统将从第一扇区启动，这在源码中对应了 boot/bootsect.s 文件
+启动区的识别：0 盘 0 道 1 扇区的 512 字节最后两个字节为 55 AA
+所以操作系统将从第一扇区启动，这在源码中对应了 boot/bootsect.s 文件
 最开始的两行源码：
 mov ax, 0x07C0 mov ds, ax 将 ds 寄存器赋值为 0x7C0
- 为了能够在 16 位实模式下访问 20 位的地址，在读取段寄存器时需要 &amp;lt;&amp;lt; 4，所以 ds 是 0x7C0 时对应了地址 0x7C00，指向了此时代码段的地址，方便了后续对内存的访问
- 给自己挪个地方 随后执行：
+为了能够在 16 位实模式下访问 20 位的地址，在读取段寄存器时需要 &amp;lt;&amp;lt; 4，所以 ds 是 0x7C0 时对应了地址 0x7C00，指向了此时代码段的地址，方便了后续对内存的访问
+给自己挪个地方 随后执行：
 mov ax, 0x9000 mov es, ax mov cx, #256 sub si, si sub di, di rep movw 前面两行和最开始的两行类似，将 es 寄存器赋值为 0x9000，随后 cx = 0x100; si = 0; di = 0，最后循环执行 movw 指令</description>
     </item>
     

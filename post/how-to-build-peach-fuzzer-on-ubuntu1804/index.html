@@ -120,7 +120,7 @@
     <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
 </svg>
                 <time class="article-words">
-                    702 words
+                    790 words
                 </time>
             </div>
             <div>
@@ -149,188 +149,188 @@
 <p>Modify from a dockerfile based on DEBIAN: <a class="link" href="https://raw.githubusercontent.com/vanhauser-thc/peachpro/main/Dockerfile"  target="_blank" rel="noopener"
     >https://raw.githubusercontent.com/vanhauser-thc/peachpro/main/Dockerfile</a></p>
 <h2 id="shell">shell</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">sudo apt update
-sudo apt install -y <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    coreutils apt-utils wget curl openssl ca-certificates bash-completion <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    joe vim nano <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    unzip p7zip <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    hping3 httping thc-ipv6 gdb <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    tcpdump wireshark-common <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    locales-all <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    git build-essential joe vim strace tcpdump python python-pip python-is-python2<span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    ruby doxygen libxml2-utils less openjdk-8-jre xsltproc asciidoctor <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    nodejs node-typescript wget <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    apt-transport-https dirmngr gnupg libtool-bin <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    cmake dos2unix g++-multilib --fix-missing
-
-cd ~/Downloads
-git clone https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce
-cd protocol-fuzzer-ce
-git checkout 5697f699dc43593d69c44b8521a50976dfff266e
-
-cd paket/.paket
-wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.bootstrapper.exe
-wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.targets
-wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.exe
-wget https://github.com/fsprojects/Paket/releases/download/5.257.0/Paket.Restore.targets
-
-cd ../../
-wget https://software.intel.com/sites/landingpage/pintool/downloads/pin-3.20-98437-gf02b61307-gcc-linux.tar.gz
-mv pin-3.20-98437-gf02b61307-gcc-linux.tar.gz 3rdParty/pin/
-cd 3rdParty/pin/
-tar -xf pin-3.20-98437-gf02b61307-gcc-linux.tar.gz
-cd ../../
-sed -i s/pin-3.19-98425-gcc-linux/pin-3.20-98437-gf02b61307-gcc-linux/g build/config/linux.py
-
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-
-<span style="color:#75715e"># switch to root</span>
-sudo su
-echo <span style="color:#e6db74">&#34;deb https://download.mono-project.com/repo/ubuntu stable-bionic main&#34;</span> &gt; /etc/apt/sources.list.d/mono-official-stable.list
-exit
-<span style="color:#75715e"># exit root</span>
-
-sudo apt update -y
-sudo apt install -y mono-devel
-mozroots --import --sync
-
-<span style="color:#75715e"># check the mono version, should by 6.12.0</span>
-mono --version
-
-sed -i <span style="color:#e6db74">&#39;/^int main.*/itemplate&lt;bool b&gt;\nstruct StaticAssert {};\ntemplate &lt;&gt;\nstruct StaticAssert&lt;true&gt;\n{\n       static void myassert() {}\n};\n&#39;</span> core/BasicBlocks/bblocks.cpp
-sed -i <span style="color:#e6db74">&#39;s/STATIC_ASSERT(sizeof(size_t) == sizeof(ADDRINT))/StaticAssert&lt;sizeof(size_t) == sizeof(ADDRINT)&gt;::myassert()/g&#39;</span> core/BasicBlocks/bblocks.cpp
-
-./waf configure
-./waf build
-
-<span style="color:#75715e"># Downgrade mono back to 4.x for installation and runtime</span>
-sudo apt purge -y mono* libmono* doxygen
-sudo rm /etc/apt/sources.list.d/mono-official-stable.list
-sudo apt update -y
-sudo apt install -y mono-complete
-
-./waf install
-<span style="color:#75715e"># install binary is in ./output/linux_x86_64_release/bin</span>
-<span style="color:#75715e"># copy to peach dir</span>
-cp -r output/linux_x86_64_release/bin /your_own_dir/to/peach
-cp -r output/doc/sdk /your_own_dir/peach/doc
-</code></pre></div><h2 id="dockerfile">dockerfile</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> ubuntu:18.04 AS peachpro</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">MAINTAINER</span><span style="color:#e6db74"> vh@thc.org</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ARG</span> DEBIAN_FRONTEND<span style="color:#f92672">=</span>noninteractive
-
-<span style="color:#66d9ef">RUN</span> apt-get update<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt-get install -y <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    coreutils apt-utils wget curl openssl ca-certificates bash-completion <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    joe vim nano <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    unzip p7zip <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    hping3 httping thc-ipv6 gdb <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    tcpdump wireshark-common <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    locales-all <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    git build-essential joe vim strace tcpdump python python-pip <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    ruby doxygen libxml2-utils less openjdk-8-jre xsltproc asciidoctor <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    nodejs node-typescript wget <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    apt-transport-https dirmngr gnupg libtool-bin <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    cmake dos2unix g++-multilib --fix-missing<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> git clone https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Pin to a known version</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> cd protocol-fuzzer-ce <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    git checkout 5697f699dc43593d69c44b8521a50976dfff266e<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.154              github.githubassets.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;140.82.112.22                central.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              desktop.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.153              assets-cdn.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              camo.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              github.map.fastly.net&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;199.232.69.194               github.global.ssl.fastly.net&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;140.82.114.3                 gist.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.153              github.io&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;140.82.114.4                 github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;140.82.113.6                 api.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              raw.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              user-images.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              favicons.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars5.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars4.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars3.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars2.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars1.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars0.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;140.82.112.10                codeload.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;52.217.44.188                github-cloud.s3.amazonaws.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;52.217.33.196                github-com.s3.amazonaws.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;52.216.93.147                github-production-release-asset-2e65be.s3.amazonaws.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;52.216.93.147                github-production-user-asset-6210df.s3.amazonaws.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;52.217.207.33                github-production-repository-file-5c1aeb.s3.amazonaws.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.153              githubstatus.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;64.71.144.211                github.community&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              media.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              objects.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              raw.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Get specific mono packages</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /protocol-fuzzer-ce/paket/.paket</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.bootstrapper.exe<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.targets<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.exe<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget https://github.com/fsprojects/Paket/releases/download/5.257.0/Paket.Restore.targets<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /protocol-fuzzer-ce</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Download new PIN and change PIN version in build config</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget https://software.intel.com/sites/landingpage/pintool/downloads/pin-3.20-98437-gf02b61307-gcc-linux.tar.gz<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mv pin-3.20-98437-gf02b61307-gcc-linux.tar.gz 3rdParty/pin/<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> cd 3rdParty/pin/ <span style="color:#f92672">&amp;&amp;</span> tar -xf pin-3.20-98437-gf02b61307-gcc-linux.tar.gz<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> sed -i s/pin-3.19-98425-gcc-linux/pin-3.20-98437-gf02b61307-gcc-linux/g build/config/linux.py<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># &amp;&amp; \</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#    mv pin-3.20-98437-gf02b61307-gcc-linux pin-3.2-98437-gcc-linux</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#RUN sed -i s/pin-3.19-98425-gcc-linux/pin-3.2-98437-gcc-linux/g build/config/linux.py</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#RUN cd 3rdParty/pin/ &amp;&amp; tar xzf pin-3.20-98437-gf02b61307-gcc-linux.tar.gz &amp;&amp; \</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#    mv pin-3.20-98437-gf02b61307-gcc-linux pin-3.2-98437-gcc-linux</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#RUN sed -i s/pin-3.2-81205-gcc-linux/pin-3.20-98437-gf02b61307-gcc-linux/g build/config/linux.py</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Install specific mono for compiling</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># RUN apt install dirmngr gnupg apt-transport-https ca-certificates -y</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;deb https://download.mono-project.com/repo/ubuntu stable-bionic main&#34;</span> &gt; /etc/apt/sources.list.d/mono-official-stable.list<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt-get update -y<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt-get install -y mono-devel<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mozroots --import --sync<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mono --version<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Patch bblocks.cpp</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce/-/issues/1</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce/-/merge_requests/7</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> sed -i <span style="color:#e6db74">&#39;/^int main.*/itemplate&lt;bool b&gt;\nstruct StaticAssert {};\ntemplate &lt;&gt;\nstruct StaticAssert&lt;true&gt;\n{\n       static void myassert() {}\n};\n&#39;</span> core/BasicBlocks/bblocks.cpp<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> sed -i <span style="color:#e6db74">&#39;s/STATIC_ASSERT(sizeof(size_t) == sizeof(ADDRINT))/StaticAssert&lt;sizeof(size_t) == sizeof(ADDRINT)&gt;::myassert()/g&#39;</span> core/BasicBlocks/bblocks.cpp<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Patch BaseProgram.cs  error CS0219: Warning as Error: The variable `config&#39; is assigned but its value is never used</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce/-/issues/3</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> sed -i <span style="color:#e6db74">&#39;s/var config = new LicenseConfig();/\/\/var config = new LicenseConfig();/g&#39;</span> pro/Core/Runtime/BaseProgram.cs<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Configure and build</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> ./waf configure<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> ./waf build<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Downgrade mono back to 4.x for installation and runtime</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># The installed mono version 6.12.0.122 (tarball Mon Feb 22 17:33:15 UTC 2021) is not supported.</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Ensure mono version 4.x and not 4.4 is installed and try again.</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt purge -y mono* libmono* doxygen <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    rm /etc/apt/sources.list.d/mono-official-stable.list<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt update -y<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt install -y mono-complete<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> ./waf install<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> cp -r output/linux_x86_64_release/bin /peach<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> cp -r output/doc/sdk /peach/doc<span style="color:#960050;background-color:#1e0010">
-</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>sudo apt install -y <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    coreutils apt-utils wget curl openssl ca-certificates bash-completion <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    joe vim nano <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    unzip p7zip <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    hping3 httping thc-ipv6 gdb <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    tcpdump wireshark-common <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    locales-all <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    git build-essential joe vim strace tcpdump python python-pip python-is-python2<span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    ruby doxygen libxml2-utils less openjdk-8-jre xsltproc asciidoctor <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    nodejs node-typescript wget <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    apt-transport-https dirmngr gnupg libtool-bin <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    cmake dos2unix g++-multilib --fix-missing
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cd ~/Downloads
+</span></span><span style="display:flex;"><span>git clone https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce
+</span></span><span style="display:flex;"><span>cd protocol-fuzzer-ce
+</span></span><span style="display:flex;"><span>git checkout 5697f699dc43593d69c44b8521a50976dfff266e
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cd paket/.paket
+</span></span><span style="display:flex;"><span>wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.bootstrapper.exe
+</span></span><span style="display:flex;"><span>wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.targets
+</span></span><span style="display:flex;"><span>wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.exe
+</span></span><span style="display:flex;"><span>wget https://github.com/fsprojects/Paket/releases/download/5.257.0/Paket.Restore.targets
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cd ../../
+</span></span><span style="display:flex;"><span>wget https://software.intel.com/sites/landingpage/pintool/downloads/pin-3.20-98437-gf02b61307-gcc-linux.tar.gz
+</span></span><span style="display:flex;"><span>mv pin-3.20-98437-gf02b61307-gcc-linux.tar.gz 3rdParty/pin/
+</span></span><span style="display:flex;"><span>cd 3rdParty/pin/
+</span></span><span style="display:flex;"><span>tar -xf pin-3.20-98437-gf02b61307-gcc-linux.tar.gz
+</span></span><span style="display:flex;"><span>cd ../../
+</span></span><span style="display:flex;"><span>sed -i s/pin-3.19-98425-gcc-linux/pin-3.20-98437-gf02b61307-gcc-linux/g build/config/linux.py
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># switch to root</span>
+</span></span><span style="display:flex;"><span>sudo su
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;deb https://download.mono-project.com/repo/ubuntu stable-bionic main&#34;</span> &gt; /etc/apt/sources.list.d/mono-official-stable.list
+</span></span><span style="display:flex;"><span>exit
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># exit root</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo apt update -y
+</span></span><span style="display:flex;"><span>sudo apt install -y mono-devel
+</span></span><span style="display:flex;"><span>mozroots --import --sync
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># check the mono version, should by 6.12.0</span>
+</span></span><span style="display:flex;"><span>mono --version
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sed -i <span style="color:#e6db74">&#39;/^int main.*/itemplate&lt;bool b&gt;\nstruct StaticAssert {};\ntemplate &lt;&gt;\nstruct StaticAssert&lt;true&gt;\n{\n       static void myassert() {}\n};\n&#39;</span> core/BasicBlocks/bblocks.cpp
+</span></span><span style="display:flex;"><span>sed -i <span style="color:#e6db74">&#39;s/STATIC_ASSERT(sizeof(size_t) == sizeof(ADDRINT))/StaticAssert&lt;sizeof(size_t) == sizeof(ADDRINT)&gt;::myassert()/g&#39;</span> core/BasicBlocks/bblocks.cpp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>./waf configure
+</span></span><span style="display:flex;"><span>./waf build
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Downgrade mono back to 4.x for installation and runtime</span>
+</span></span><span style="display:flex;"><span>sudo apt purge -y mono* libmono* doxygen
+</span></span><span style="display:flex;"><span>sudo rm /etc/apt/sources.list.d/mono-official-stable.list
+</span></span><span style="display:flex;"><span>sudo apt update -y
+</span></span><span style="display:flex;"><span>sudo apt install -y mono-complete
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>./waf install
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># install binary is in ./output/linux_x86_64_release/bin</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># copy to peach dir</span>
+</span></span><span style="display:flex;"><span>cp -r output/linux_x86_64_release/bin /your_own_dir/to/peach
+</span></span><span style="display:flex;"><span>cp -r output/doc/sdk /your_own_dir/peach/doc
+</span></span></code></pre></div><h2 id="dockerfile">dockerfile</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> ubuntu:18.04 AS peachpro</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">MAINTAINER</span><span style="color:#e6db74"> vh@thc.org</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ARG</span> DEBIAN_FRONTEND<span style="color:#f92672">=</span>noninteractive
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">RUN</span> apt-get update<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt-get install -y <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    coreutils apt-utils wget curl openssl ca-certificates bash-completion <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    joe vim nano <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    unzip p7zip <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    hping3 httping thc-ipv6 gdb <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    tcpdump wireshark-common <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    locales-all <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    git build-essential joe vim strace tcpdump python python-pip <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    ruby doxygen libxml2-utils less openjdk-8-jre xsltproc asciidoctor <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    nodejs node-typescript wget <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    apt-transport-https dirmngr gnupg libtool-bin <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    cmake dos2unix g++-multilib --fix-missing<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> git clone https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Pin to a known version</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> cd protocol-fuzzer-ce <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    git checkout 5697f699dc43593d69c44b8521a50976dfff266e<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.154              github.githubassets.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;140.82.112.22                central.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              desktop.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.153              assets-cdn.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              camo.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              github.map.fastly.net&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;199.232.69.194               github.global.ssl.fastly.net&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;140.82.114.3                 gist.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.153              github.io&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;140.82.114.4                 github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;140.82.113.6                 api.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              raw.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              user-images.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              favicons.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars5.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars4.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars3.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars2.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars1.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars0.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              avatars.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;140.82.112.10                codeload.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;52.217.44.188                github-cloud.s3.amazonaws.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;52.217.33.196                github-com.s3.amazonaws.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;52.216.93.147                github-production-release-asset-2e65be.s3.amazonaws.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;52.216.93.147                github-production-user-asset-6210df.s3.amazonaws.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;52.217.207.33                github-production-repository-file-5c1aeb.s3.amazonaws.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.153              githubstatus.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;64.71.144.211                github.community&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              media.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              objects.githubusercontent.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;185.199.108.133              raw.github.com&#34;</span> &gt;&gt; /etc/hosts<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Get specific mono packages</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /protocol-fuzzer-ce/paket/.paket</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.bootstrapper.exe<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.targets<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget https://github.com/fsprojects/Paket/releases/download/5.257.0/paket.exe<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget https://github.com/fsprojects/Paket/releases/download/5.257.0/Paket.Restore.targets<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /protocol-fuzzer-ce</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Download new PIN and change PIN version in build config</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> wget https://software.intel.com/sites/landingpage/pintool/downloads/pin-3.20-98437-gf02b61307-gcc-linux.tar.gz<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mv pin-3.20-98437-gf02b61307-gcc-linux.tar.gz 3rdParty/pin/<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> cd 3rdParty/pin/ <span style="color:#f92672">&amp;&amp;</span> tar -xf pin-3.20-98437-gf02b61307-gcc-linux.tar.gz<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> sed -i s/pin-3.19-98425-gcc-linux/pin-3.20-98437-gf02b61307-gcc-linux/g build/config/linux.py<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># &amp;&amp; \</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#    mv pin-3.20-98437-gf02b61307-gcc-linux pin-3.2-98437-gcc-linux</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#RUN sed -i s/pin-3.19-98425-gcc-linux/pin-3.2-98437-gcc-linux/g build/config/linux.py</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#RUN cd 3rdParty/pin/ &amp;&amp; tar xzf pin-3.20-98437-gf02b61307-gcc-linux.tar.gz &amp;&amp; \</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#    mv pin-3.20-98437-gf02b61307-gcc-linux pin-3.2-98437-gcc-linux</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#RUN sed -i s/pin-3.2-81205-gcc-linux/pin-3.20-98437-gf02b61307-gcc-linux/g build/config/linux.py</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Install specific mono for compiling</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># RUN apt install dirmngr gnupg apt-transport-https ca-certificates -y</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> echo <span style="color:#e6db74">&#34;deb https://download.mono-project.com/repo/ubuntu stable-bionic main&#34;</span> &gt; /etc/apt/sources.list.d/mono-official-stable.list<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt-get update -y<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt-get install -y mono-devel<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mozroots --import --sync<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mono --version<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Patch bblocks.cpp</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce/-/issues/1</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce/-/merge_requests/7</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> sed -i <span style="color:#e6db74">&#39;/^int main.*/itemplate&lt;bool b&gt;\nstruct StaticAssert {};\ntemplate &lt;&gt;\nstruct StaticAssert&lt;true&gt;\n{\n       static void myassert() {}\n};\n&#39;</span> core/BasicBlocks/bblocks.cpp<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> sed -i <span style="color:#e6db74">&#39;s/STATIC_ASSERT(sizeof(size_t) == sizeof(ADDRINT))/StaticAssert&lt;sizeof(size_t) == sizeof(ADDRINT)&gt;::myassert()/g&#39;</span> core/BasicBlocks/bblocks.cpp<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Patch BaseProgram.cs  error CS0219: Warning as Error: The variable `config&#39; is assigned but its value is never used</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># https://gitlab.com/gitlab-org/security-products/protocol-fuzzer-ce/-/issues/3</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> sed -i <span style="color:#e6db74">&#39;s/var config = new LicenseConfig();/\/\/var config = new LicenseConfig();/g&#39;</span> pro/Core/Runtime/BaseProgram.cs<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Configure and build</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> ./waf configure<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> ./waf build<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Downgrade mono back to 4.x for installation and runtime</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># The installed mono version 6.12.0.122 (tarball Mon Feb 22 17:33:15 UTC 2021) is not supported.</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Ensure mono version 4.x and not 4.4 is installed and try again.</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt purge -y mono* libmono* doxygen <span style="color:#f92672">&amp;&amp;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    rm /etc/apt/sources.list.d/mono-official-stable.list<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt update -y<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt install -y mono-complete<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> ./waf install<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> cp -r output/linux_x86_64_release/bin /peach<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> cp -r output/doc/sdk /peach/doc<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div>
 </section>
 
 
@@ -456,7 +456,7 @@ cp -r output/doc/sdk /your_own_dir/peach/doc
             
             
             ⌨&nbsp;
-            83.15k&nbsp;
+            83.31k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;

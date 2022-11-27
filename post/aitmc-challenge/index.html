@@ -136,84 +136,84 @@ import math from AITMCLab.Crypto.Util.number import long_to_bytes from AITMCLab.
 <h3 id="前言题目">前言&amp;题目</h3>
 <p>前段时间学习信安数基，助教学长就配套出了道Quiz，来给我们练手。</p>
 <p>先上题目</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> math
-<span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes
-<span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> bytes_to_long
-<span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> getRandomNBitInteger
-<span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> getPrime
-<span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> isPrime
-<span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> inverse
-<span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> flag
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">nextPrime</span>(n):
-    n <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span> <span style="color:#66d9ef">if</span> n <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> isPrime(n):
-        n <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
-    <span style="color:#66d9ef">return</span> n
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">init</span>(S, K):
-    j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-    k <span style="color:#f92672">=</span> []
-    K <span style="color:#f92672">=</span> list(K)
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(K)):
-        K[i] <span style="color:#f92672">=</span> ord(K[i])
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">256</span>):
-        S<span style="color:#f92672">.</span>append(i)
-        k<span style="color:#f92672">.</span>append(K[i <span style="color:#f92672">%</span> len(K)])
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">256</span>):
-        j <span style="color:#f92672">=</span> (j <span style="color:#f92672">+</span> S[i] <span style="color:#f92672">+</span> k[i]) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
-        S[i], S[j] <span style="color:#f92672">=</span> S[j], S[i]
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">Encrypt</span>(key, D):
-    S<span style="color:#f92672">=</span>[]
-    init(S, key)
-    i <span style="color:#f92672">=</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-    result <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
-    <span style="color:#66d9ef">for</span> a <span style="color:#f92672">in</span> D:
-        a <span style="color:#f92672">=</span> ord(a)
-        i <span style="color:#f92672">=</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
-        j <span style="color:#f92672">=</span> (j <span style="color:#f92672">+</span> S[i]) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
-        S[i], S[j] <span style="color:#f92672">=</span> S[j], S[i]
-        k <span style="color:#f92672">=</span> chr(a <span style="color:#f92672">^</span> S[(S[i] <span style="color:#f92672">+</span> S[j]) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>])
-        result <span style="color:#f92672">+=</span> k
-    <span style="color:#66d9ef">return</span> result
-
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">Decrypt</span>(key, D):
-    S <span style="color:#f92672">=</span> []
-    init(S, key)
-    i <span style="color:#f92672">=</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-    result <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
-    <span style="color:#66d9ef">for</span> a <span style="color:#f92672">in</span> D:
-        a <span style="color:#f92672">=</span> ord(a)
-        i <span style="color:#f92672">=</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
-        j <span style="color:#f92672">=</span> (j <span style="color:#f92672">+</span> S[i]) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
-        S[i], S[j] <span style="color:#f92672">=</span> S[j], S[i]
-        k <span style="color:#f92672">=</span> chr(a <span style="color:#f92672">^</span> S[(S[i] <span style="color:#f92672">+</span> S[j]) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>])
-        result <span style="color:#f92672">+=</span> k
-    <span style="color:#66d9ef">return</span> result
-
-<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
-    key <span style="color:#f92672">=</span> long_to_bytes(getRandomNBitInteger(<span style="color:#ae81ff">100</span>))
-    print <span style="color:#e6db74">&#39;key =&#39;</span>, bytes_to_long(key)
-    e <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">512</span>)
-    print <span style="color:#e6db74">&#39;e =&#39;</span>, e
-
-    E <span style="color:#f92672">=</span> nextPrime(e)
-    f <span style="color:#f92672">=</span> math<span style="color:#f92672">.</span>factorial(e) <span style="color:#f92672">%</span> E
-
-    d <span style="color:#f92672">=</span> long_to_bytes(f)
-
-    c1 <span style="color:#f92672">=</span> bytes_to_long(Encrypt(key, d))
-    print <span style="color:#e6db74">&#39;c1 =&#39;</span>, c1
-
-    c2 <span style="color:#f92672">=</span> bytes_to_long(Encrypt(key, flag))
-    print <span style="color:#e6db74">&#39;c2 =&#39;</span>, c2
-
-<span style="color:#75715e"># e = 11248112333656902878308992204660514716130692202019193081806766887380465145401754698746718075268681481388695805324253817155823465013590321091178897918430457</span>
-<span style="color:#75715e"># c1 = 11792816667683654209610238149228683194178884298019505853565076663183883681365400495420305428570416004628438524072440231323696408946395141935772862600031614</span>
-<span style="color:#75715e"># c2 = 81946333492800053045881242964212560642046177081574600318494251620269838444004879162713842</span>
-</code></pre></div><h3 id="思路">思路</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> math
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> bytes_to_long
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> getRandomNBitInteger
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> getPrime
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> isPrime
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> inverse
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> flag
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">nextPrime</span>(n):
+</span></span><span style="display:flex;"><span>    n <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span> <span style="color:#66d9ef">if</span> n <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> isPrime(n):
+</span></span><span style="display:flex;"><span>        n <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> n
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">init</span>(S, K):
+</span></span><span style="display:flex;"><span>    j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    k <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    K <span style="color:#f92672">=</span> list(K)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(K)):
+</span></span><span style="display:flex;"><span>        K[i] <span style="color:#f92672">=</span> ord(K[i])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">256</span>):
+</span></span><span style="display:flex;"><span>        S<span style="color:#f92672">.</span>append(i)
+</span></span><span style="display:flex;"><span>        k<span style="color:#f92672">.</span>append(K[i <span style="color:#f92672">%</span> len(K)])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">256</span>):
+</span></span><span style="display:flex;"><span>        j <span style="color:#f92672">=</span> (j <span style="color:#f92672">+</span> S[i] <span style="color:#f92672">+</span> k[i]) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span>        S[i], S[j] <span style="color:#f92672">=</span> S[j], S[i]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">Encrypt</span>(key, D):
+</span></span><span style="display:flex;"><span>    S<span style="color:#f92672">=</span>[]
+</span></span><span style="display:flex;"><span>    init(S, key)
+</span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> a <span style="color:#f92672">in</span> D:
+</span></span><span style="display:flex;"><span>        a <span style="color:#f92672">=</span> ord(a)
+</span></span><span style="display:flex;"><span>        i <span style="color:#f92672">=</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span>        j <span style="color:#f92672">=</span> (j <span style="color:#f92672">+</span> S[i]) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span>        S[i], S[j] <span style="color:#f92672">=</span> S[j], S[i]
+</span></span><span style="display:flex;"><span>        k <span style="color:#f92672">=</span> chr(a <span style="color:#f92672">^</span> S[(S[i] <span style="color:#f92672">+</span> S[j]) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>])
+</span></span><span style="display:flex;"><span>        result <span style="color:#f92672">+=</span> k
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> result
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">Decrypt</span>(key, D):
+</span></span><span style="display:flex;"><span>    S <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>    init(S, key)
+</span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> a <span style="color:#f92672">in</span> D:
+</span></span><span style="display:flex;"><span>        a <span style="color:#f92672">=</span> ord(a)
+</span></span><span style="display:flex;"><span>        i <span style="color:#f92672">=</span> (i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span>        j <span style="color:#f92672">=</span> (j <span style="color:#f92672">+</span> S[i]) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span>        S[i], S[j] <span style="color:#f92672">=</span> S[j], S[i]
+</span></span><span style="display:flex;"><span>        k <span style="color:#f92672">=</span> chr(a <span style="color:#f92672">^</span> S[(S[i] <span style="color:#f92672">+</span> S[j]) <span style="color:#f92672">%</span> <span style="color:#ae81ff">256</span>])
+</span></span><span style="display:flex;"><span>        result <span style="color:#f92672">+=</span> k
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> result
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    key <span style="color:#f92672">=</span> long_to_bytes(getRandomNBitInteger(<span style="color:#ae81ff">100</span>))
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#39;key =&#39;</span>, bytes_to_long(key)
+</span></span><span style="display:flex;"><span>    e <span style="color:#f92672">=</span> getPrime(<span style="color:#ae81ff">512</span>)
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#39;e =&#39;</span>, e
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    E <span style="color:#f92672">=</span> nextPrime(e)
+</span></span><span style="display:flex;"><span>    f <span style="color:#f92672">=</span> math<span style="color:#f92672">.</span>factorial(e) <span style="color:#f92672">%</span> E
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    d <span style="color:#f92672">=</span> long_to_bytes(f)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    c1 <span style="color:#f92672">=</span> bytes_to_long(Encrypt(key, d))
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#39;c1 =&#39;</span>, c1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    c2 <span style="color:#f92672">=</span> bytes_to_long(Encrypt(key, flag))
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#39;c2 =&#39;</span>, c2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># e = 11248112333656902878308992204660514716130692202019193081806766887380465145401754698746718075268681481388695805324253817155823465013590321091178897918430457</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># c1 = 11792816667683654209610238149228683194178884298019505853565076663183883681365400495420305428570416004628438524072440231323696408946395141935772862600031614</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># c2 = 81946333492800053045881242964212560642046177081574600318494251620269838444004879162713842</span>
+</span></span></code></pre></div><h3 id="思路">思路</h3>
 <p>首先阅读主函数部分，显然这道题需要先通过e, E求解f，以此得到d，随后再利用d, c1, c2来求解flag。</p>
 <h4 id="求解f">求解f</h4>
 <p>题目中的 $f=e!\mathrm{mod} E$ ，但由于 e 过大，显然无法直接计算得到。观察发现，$e!$ 当中的绝大多数部分可以两两配对组成模 $E$ 的逆元，因此猜测可能存在类似于 $(E-1)!\equiv 1\ (\mathrm{mod}\ E)$ 的规律，如果满足这个规律，我们就可以通过计算 $\prod\limits_{i=e+1}^{E-1}i\ (\mathrm{mod}\ E)$ 的逆元得到f。</p>
@@ -222,54 +222,54 @@ import math from AITMCLab.Crypto.Util.number import long_to_bytes from AITMCLab.
 <p>得到了 f 后，可以直接利用 <code>long_to_bytes(f)</code> 来得到 d 。为求解 flag，初步设想为利用加密函数求解 key，随后直接利用解密函数求解 flag。阅读 <code>Encrypt</code> 函数和 <code>Decrypt</code> 函数后发现加解密函数完全一致，且实际的加解密过程只有异或运算，说明 d 到 c1 的运算步骤与 flag 到 c2 的运算步骤完全相同且可逆，因此求解时没必要求出 key。进一步分析后发现加密算法大致是将 key 转化成某个固定的数组，并与明文依次进行异或运算得到密文，也就是说经过了 init 函数和多次交换位置（交换的次序也是固定的）后的数列才是真正的密钥。</p>
 <p>因此，只需要将 c1, c2 和 d 转换成 bytes，然后对每一位取 <code>ord</code> 后进行异或运算，组成的数字取 <code>chr</code> 后加到答案字符串后面，即可得到 flag。</p>
 <h3 id="exp">exp</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> math
-<span style="color:#f92672">from</span> AITMCLab.libnum.modular <span style="color:#f92672">import</span> invmod
-<span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes
-<span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> bytes_to_long
-<span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> isPrime
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">nextPrime</span>(n):
-    n <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span> <span style="color:#66d9ef">if</span> n <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> isPrime(n):
-        n <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
-    <span style="color:#66d9ef">return</span> n
-
-<span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
-    e <span style="color:#f92672">=</span> <span style="color:#ae81ff">11248112333656902878308992204660514716130692202019193081806766887380465145401754698746718075268681481388695805324253817155823465013590321091178897918430457</span>
-    c1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">5120829596353532760839054347975234579355835073413768618360492980516438193909447500996222328143719619379838946544412967584025416378147246422705451415437468</span>
-    c2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">17985907282297772406857113433926323639543183645704827789984971602150950301590677893419082</span>
-    E <span style="color:#f92672">=</span> nextPrime(e)
-    f_1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-    i <span style="color:#f92672">=</span> e <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> E <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
-        f_1 <span style="color:#f92672">*=</span> i
-        f_1 <span style="color:#f92672">%=</span> E
-        i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-    f <span style="color:#f92672">=</span> invmod(f_1, E)
-    <span style="color:#75715e"># 以上为求解f的过程</span>
-    d <span style="color:#f92672">=</span> long_to_bytes(f)
-    c1_bytes <span style="color:#f92672">=</span> long_to_bytes(c1)
-    c2_bytes <span style="color:#f92672">=</span> lone_to_bytes(c2)
-    flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(c2_bytes)):
-        flag <span style="color:#f92672">+=</span> chr(ord(c2_bytes[i]) <span style="color:#f92672">^</span> ord(c1_bytes[i]) <span style="color:#f92672">^</span> ord(d[i]))
-    print flag
-<span style="color:#75715e"># flag{Congratulation!_quiz1_passed!!!}</span>
-</code></pre></div><h2 id="das2020-aprilnot-rsa">[DAS2020 April]not RSA</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> math
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.libnum.modular <span style="color:#f92672">import</span> invmod
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> bytes_to_long
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> isPrime
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">nextPrime</span>(n):
+</span></span><span style="display:flex;"><span>    n <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span> <span style="color:#66d9ef">if</span> n <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> isPrime(n):
+</span></span><span style="display:flex;"><span>        n <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> n
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    e <span style="color:#f92672">=</span> <span style="color:#ae81ff">11248112333656902878308992204660514716130692202019193081806766887380465145401754698746718075268681481388695805324253817155823465013590321091178897918430457</span>
+</span></span><span style="display:flex;"><span>    c1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">5120829596353532760839054347975234579355835073413768618360492980516438193909447500996222328143719619379838946544412967584025416378147246422705451415437468</span>
+</span></span><span style="display:flex;"><span>    c2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">17985907282297772406857113433926323639543183645704827789984971602150950301590677893419082</span>
+</span></span><span style="display:flex;"><span>    E <span style="color:#f92672">=</span> nextPrime(e)
+</span></span><span style="display:flex;"><span>    f_1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> e <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> E <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        f_1 <span style="color:#f92672">*=</span> i
+</span></span><span style="display:flex;"><span>        f_1 <span style="color:#f92672">%=</span> E
+</span></span><span style="display:flex;"><span>        i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    f <span style="color:#f92672">=</span> invmod(f_1, E)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 以上为求解f的过程</span>
+</span></span><span style="display:flex;"><span>    d <span style="color:#f92672">=</span> long_to_bytes(f)
+</span></span><span style="display:flex;"><span>    c1_bytes <span style="color:#f92672">=</span> long_to_bytes(c1)
+</span></span><span style="display:flex;"><span>    c2_bytes <span style="color:#f92672">=</span> lone_to_bytes(c2)
+</span></span><span style="display:flex;"><span>    flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(c2_bytes)):
+</span></span><span style="display:flex;"><span>        flag <span style="color:#f92672">+=</span> chr(ord(c2_bytes[i]) <span style="color:#f92672">^</span> ord(c1_bytes[i]) <span style="color:#f92672">^</span> ord(d[i]))
+</span></span><span style="display:flex;"><span>    print flag
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># flag{Congratulation!_quiz1_passed!!!}</span>
+</span></span></code></pre></div><h2 id="das2020-aprilnot-rsa">[DAS2020 April]not RSA</h2>
 <h3 id="题目">题目</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> AITMCLab.libnum <span style="color:#f92672">import</span> gcd, invmod, s2n
-<span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> isPrime
-<span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> flag
-p <span style="color:#f92672">=</span> <span style="color:#ae81ff">104879397075344024438671231239628115011303349344697797964879592144922079000957</span> 
-q <span style="color:#f92672">=</span> <span style="color:#ae81ff">104879397075344024438671231239628115011303349344697797964879592144922079001013</span>
-<span style="color:#66d9ef">assert</span> isPrime(p) <span style="color:#f92672">and</span> isPrime(q)
-n <span style="color:#f92672">=</span> p <span style="color:#f92672">*</span> q
-flag <span style="color:#f92672">=</span> s2n(flag)
-r <span style="color:#f92672">=</span> randint(<span style="color:#ae81ff">1</span>, n)
-c <span style="color:#f92672">=</span> (pow(n <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, flag, n <span style="color:#f92672">*</span> n) <span style="color:#f92672">*</span> pow(r, n, n <span style="color:#f92672">*</span> n)) <span style="color:#f92672">%</span> (n <span style="color:#f92672">*</span> n)
-print c
-<span style="color:#75715e"># c = 13134489820394613222282607681686272081419875146946401883172682167011759113388373349180457979897848113275982219264879081189886853062717764580364698888338032141434053832247476010400449272010082460437747190468766740274587999336359171283098137261396013153130265440425676242061845667887640808895666325466803989428</span>
-</code></pre></div><h3 id="思路-1">思路</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.libnum <span style="color:#f92672">import</span> gcd, invmod, s2n
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util.number <span style="color:#f92672">import</span> isPrime
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> flag
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">104879397075344024438671231239628115011303349344697797964879592144922079000957</span> 
+</span></span><span style="display:flex;"><span>q <span style="color:#f92672">=</span> <span style="color:#ae81ff">104879397075344024438671231239628115011303349344697797964879592144922079001013</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">assert</span> isPrime(p) <span style="color:#f92672">and</span> isPrime(q)
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> p <span style="color:#f92672">*</span> q
+</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> s2n(flag)
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> randint(<span style="color:#ae81ff">1</span>, n)
+</span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> (pow(n <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, flag, n <span style="color:#f92672">*</span> n) <span style="color:#f92672">*</span> pow(r, n, n <span style="color:#f92672">*</span> n)) <span style="color:#f92672">%</span> (n <span style="color:#f92672">*</span> n)
+</span></span><span style="display:flex;"><span>print c
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># c = 13134489820394613222282607681686272081419875146946401883172682167011759113388373349180457979897848113275982219264879081189886853062717764580364698888338032141434053832247476010400449272010082460437747190468766740274587999336359171283098137261396013153130265440425676242061845667887640808895666325466803989428</span>
+</span></span></code></pre></div><h3 id="思路-1">思路</h3>
 <p>代码很简单，就是道纯数学题</p>
 <p>由源码：</p>
 <p>$c\equiv (n+1)^f\cdot r^n\ (\mathrm{mod}\ n^2)$</p>
@@ -285,47 +285,47 @@ print c
 <p>对于左式，设 $\dfrac{c^{\varphi(n)}-1}{n}=kn+r'$</p>
 <p>$c^{\varphi(n)}=kn^2+rn+1$</p>
 <p>只需求解出 $rn+1$ 即可，因此可以对 $c^{\varphi(n)}$ 进行模 $n^2$，实现时可直接使用 python 中的 pow 函数。</p>
-<p>将左式求解后，化为求解 $\varphi(n)\cdot f\equiv r'\ (mod\ n)$，即 $f\equiv \varphi(n)^{-1}\cdot r'\ (mod\ n)$</p>
+<p>将左式求解后，化为求解 $\varphi(n)\cdot f\equiv r&rsquo;\ (mod\ n)$，即 $f\equiv \varphi(n)^{-1}\cdot r&rsquo;\ (mod\ n)$</p>
 <h3 id="代码">代码</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> AITMCLab.libnum <span style="color:#f92672">import</span> s2n, invmod, n2s
-
-c <span style="color:#f92672">=</span> <span style="color:#ae81ff">131344898203946132222826076816862720814198751469464018831726821670</span> <span style="color:#ae81ff">117591133883733491804579798978481132759822192648790811898868530627</span> <span style="color:#ae81ff">177645803646988883380321414340538322474760104004492720100824604377</span> <span style="color:#ae81ff">471904687667402745879993363591712830981372613960131531302654404256</span> <span style="color:#ae81ff">76242061845667887640808895666325466803989428</span>
-p <span style="color:#f92672">=</span> <span style="color:#ae81ff">104879397075344024438671231239628115011303349344697797964879592144</span> <span style="color:#ae81ff">922079000957</span> 
-q <span style="color:#f92672">=</span> <span style="color:#ae81ff">104879397075344024438671231239628115011303349344697797964879592144</span> <span style="color:#ae81ff">922079001013</span>
-phi_n <span style="color:#f92672">=</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> (q <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
-n <span style="color:#f92672">=</span> p <span style="color:#f92672">*</span> q
-r <span style="color:#f92672">=</span> (pow(c, phi_n, n <span style="color:#f92672">*</span> n) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">//</span> n
-print n2s(r <span style="color:#f92672">*</span> invmod(phi_n, n) <span style="color:#f92672">%</span> n)
-<span style="color:#75715e"># flag{can_you_find_me??}</span>
-</code></pre></div><h3 id="总结">总结</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.libnum <span style="color:#f92672">import</span> s2n, invmod, n2s
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>c <span style="color:#f92672">=</span> <span style="color:#ae81ff">131344898203946132222826076816862720814198751469464018831726821670</span> <span style="color:#ae81ff">117591133883733491804579798978481132759822192648790811898868530627</span> <span style="color:#ae81ff">177645803646988883380321414340538322474760104004492720100824604377</span> <span style="color:#ae81ff">471904687667402745879993363591712830981372613960131531302654404256</span> <span style="color:#ae81ff">76242061845667887640808895666325466803989428</span>
+</span></span><span style="display:flex;"><span>p <span style="color:#f92672">=</span> <span style="color:#ae81ff">104879397075344024438671231239628115011303349344697797964879592144</span> <span style="color:#ae81ff">922079000957</span> 
+</span></span><span style="display:flex;"><span>q <span style="color:#f92672">=</span> <span style="color:#ae81ff">104879397075344024438671231239628115011303349344697797964879592144</span> <span style="color:#ae81ff">922079001013</span>
+</span></span><span style="display:flex;"><span>phi_n <span style="color:#f92672">=</span> (p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> (q <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> p <span style="color:#f92672">*</span> q
+</span></span><span style="display:flex;"><span>r <span style="color:#f92672">=</span> (pow(c, phi_n, n <span style="color:#f92672">*</span> n) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">//</span> n
+</span></span><span style="display:flex;"><span>print n2s(r <span style="color:#f92672">*</span> invmod(phi_n, n) <span style="color:#f92672">%</span> n)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># flag{can_you_find_me??}</span>
+</span></span></code></pre></div><h3 id="总结">总结</h3>
 <p>纯数学题</p>
 <p>学长带着推了一遍。。。这也太难了。。。</p>
 <p>听说是 paillier 加密，果然是 not RSA</p>
 <h2 id="n1ctf2019babyrsa">[N1CTF2019]BabyRSA</h2>
 <h3 id="题目-1">题目</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> Crypto.Util <span style="color:#f92672">import</span> number
-<span style="color:#f92672">import</span> random
-<span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> flag
-N <span style="color:#f92672">=</span> <span style="color:#ae81ff">23981306327188221819291352455300124608114670714977979223022816906368788909398653961976023086718129607035805397846230124785550919468973090809881210560931396002918119995710297723411794214888622784232065592366390586879306041418300835178522354945438521139847806375923379136235993890801176301812907708937658277646761892297209069757559519399120988948212988924583632878840216559421398253025960456164998680766732013248599742397199862820924441357624187811402515396393385081892966284318521068948266144251848088067639941653475035145362236917008153460707675427945577597137822575880268720238301307972813226576071488632898694390629</span>
-e <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x10001</span>
-m <span style="color:#f92672">=</span> number<span style="color:#f92672">.</span>bytes_to_long(flag)
-<span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;flag.enc&#39;</span>, <span style="color:#e6db74">&#39;w&#39;</span>) <span style="color:#66d9ef">as</span> f:
-    <span style="color:#66d9ef">while</span> m:
-        padding <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">1000</span>) <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>
-        message <span style="color:#f92672">=</span> padding <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> m <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>
-        cipher <span style="color:#f92672">=</span> pow(message, e, N)
-        f<span style="color:#f92672">.</span>write(hex(cipher)<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;n&#39;</span>)
-        m <span style="color:#f92672">/=</span> <span style="color:#ae81ff">2</span>
-</code></pre></div><h3 id="思路-2">思路</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> Crypto.Util <span style="color:#f92672">import</span> number
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> secret <span style="color:#f92672">import</span> flag
+</span></span><span style="display:flex;"><span>N <span style="color:#f92672">=</span> <span style="color:#ae81ff">23981306327188221819291352455300124608114670714977979223022816906368788909398653961976023086718129607035805397846230124785550919468973090809881210560931396002918119995710297723411794214888622784232065592366390586879306041418300835178522354945438521139847806375923379136235993890801176301812907708937658277646761892297209069757559519399120988948212988924583632878840216559421398253025960456164998680766732013248599742397199862820924441357624187811402515396393385081892966284318521068948266144251848088067639941653475035145362236917008153460707675427945577597137822575880268720238301307972813226576071488632898694390629</span>
+</span></span><span style="display:flex;"><span>e <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x10001</span>
+</span></span><span style="display:flex;"><span>m <span style="color:#f92672">=</span> number<span style="color:#f92672">.</span>bytes_to_long(flag)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;flag.enc&#39;</span>, <span style="color:#e6db74">&#39;w&#39;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> m:
+</span></span><span style="display:flex;"><span>        padding <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">1000</span>) <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>        message <span style="color:#f92672">=</span> padding <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> m <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>        cipher <span style="color:#f92672">=</span> pow(message, e, N)
+</span></span><span style="display:flex;"><span>        f<span style="color:#f92672">.</span>write(hex(cipher)<span style="color:#f92672">+</span><span style="color:#e6db74">&#39;n&#39;</span>)
+</span></span><span style="display:flex;"><span>        m <span style="color:#f92672">/=</span> <span style="color:#ae81ff">2</span>
+</span></span></code></pre></div><h3 id="思路-2">思路</h3>
 <p>首先阅读代码。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">while</span> m:
-    <span style="color:#75715e"># several operations</span>
-    m <span style="color:#f92672">/=</span> <span style="color:#ae81ff">2</span>
-</code></pre></div><p>由上述代码部分以及过程中出现了 <code>m % 2</code> 操作可知，flag 的二进制数据每一位被存进了 <code>key.enc</code> 文件的每行数据中，因此对 <code>key.enc</code> 文件的每一行进行读取，只要能够判断该位为0还是1，即可完成解密。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">padding <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">1000</span>) <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>
-message <span style="color:#f92672">=</span> padding <span style="color:#f92672">&lt;&lt;</span> pow(m, p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, p) <span style="color:#f92672">+</span> m <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>
-cipher <span style="color:#f92672">=</span> pow(message, e, N)
-</code></pre></div><p>由上述代码可知，$c\equiv m^e\ (\mathrm{mod}\ N), m = r^2\cdot 2^{1+flag%2}$ （r为random结果），因此 <code>m % 2 = 1</code> 时，有$c\equiv r^2\cdot 2^2\equiv (2^er^e)^2\ (\mathrm{mod}\ N)$，而 <code>m % 2 = 0</code> 时，有$c\equiv 2^e\cdot r^{2^e}$。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> m:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># several operations</span>
+</span></span><span style="display:flex;"><span>    m <span style="color:#f92672">/=</span> <span style="color:#ae81ff">2</span>
+</span></span></code></pre></div><p>由上述代码部分以及过程中出现了 <code>m % 2</code> 操作可知，flag 的二进制数据每一位被存进了 <code>key.enc</code> 文件的每行数据中，因此对 <code>key.enc</code> 文件的每一行进行读取，只要能够判断该位为0还是1，即可完成解密。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>padding <span style="color:#f92672">=</span> random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span><span style="color:#f92672">**</span><span style="color:#ae81ff">1000</span>) <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>message <span style="color:#f92672">=</span> padding <span style="color:#f92672">&lt;&lt;</span> pow(m, p <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, p) <span style="color:#f92672">+</span> m <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>cipher <span style="color:#f92672">=</span> pow(message, e, N)
+</span></span></code></pre></div><p>由上述代码可知，$c\equiv m^e\ (\mathrm{mod}\ N), m = r^2\cdot 2^{1+flag%2}$ （r为random结果），因此 <code>m % 2 = 1</code> 时，有$c\equiv r^2\cdot 2^2\equiv (2^er^e)^2\ (\mathrm{mod}\ N)$，而 <code>m % 2 = 0</code> 时，有$c\equiv 2^e\cdot r^{2^e}$。</p>
 <p>首先猜测可以通过破解RSA密码，将加密信息还原为明文信息，判断该数整除 2 的奇数次方还是偶数次方即可得知该位的二进制数。使用 factordb 网站失败后贼心不死，又尝试了网上找的多种攻击脚本，发现均无法分解，于是寻找其它方法。</p>
 <p>观察<del>README.md</del>发现，本题可以尝试用二次剩余求解。<code>m % 2 = 1</code> 时，有 $c\equiv (2^er^e)^2\ (\mathrm{mod}\ N)$，<code>m%  2 = 0</code> 时，有 $c\equiv (2\cdot r^2)^e\ (\mathrm{mod}\ N)$，因此，当 c 为 N 的二次剩余时，对应<code>m % 2 = 1</code>，c 为 N 的二次非剩余时，对应 <code>m % 2 = 0</code>。</p>
 <p>可以使用 Jacobi 判断是否为二次剩余。只需满足 $\left(\dfrac{2^e\cdot r^{2^e}}{N}\right)=-1$ 即可求解。由于 $\left(\dfrac{2^e\cdot r^{2^e}}{N}\right)=\left(\dfrac{2}{p}\right)\left(\dfrac{2}{q}\right)$，所以当 <code>m % 2 = 0</code> 时，Jacobi 计算结果仅取决于 p 和 q，且在实际计算中发现存在 Jacobi 计算结果为 -1 的情况，又因为 <code>m % 2 = 1</code> 时 Jacobi 计算结果必然为 1，说明本题中 2 分别是 p 和 q 的二次剩余和二次非剩余，可得</p>
@@ -333,39 +333,39 @@ cipher <span style="color:#f92672">=</span> pow(message, e, N)
 <p>当 $m\equiv 1\pmod 2$，$\left(\dfrac{c}{N}\right)= 1$</p>
 <p>因此可以用 Jacobi 来计算 flag 的二进制结果。</p>
 <h3 id="exp-1">exp</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">jacobi</span>(a, b):
-    res <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
-        <span style="color:#66d9ef">return</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">**</span> ((b <span style="color:#f92672">*</span> b <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">8</span>)
-    <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> b <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
-        <span style="color:#66d9ef">return</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">**</span> ((b <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>)
-    <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">while</span> a <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
-        res <span style="color:#f92672">*=</span> jacobi(<span style="color:#ae81ff">2</span>, b)
-        a <span style="color:#f92672">/=</span> <span style="color:#ae81ff">2</span>
-    res <span style="color:#f92672">*=</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">**</span>((a <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> (b <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">*</span> jacobi(b <span style="color:#f92672">%</span> a, a)
-    <span style="color:#66d9ef">return</span> res
-
-n <span style="color:#f92672">=</span> <span style="color:#ae81ff">23981306327188221819291352455300124608114670714977979223022816906368788909398653961976023086718129607035805397846230124785550919468973090809881210560931396002918119995710297723411794214888622784232065592366390586879306041418300835178522354945438521139847806375923379136235993890801176301812907708937658277646761892297209069757559519399120988948212988924583632878840216559421398253025960456164998680766732013248599742397199862820924441357624187811402515396393385081892966284318521068948266144251848088067639941653475035145362236917008153460707675427945577597137822575880268720238301307972813226576071488632898694390629</span>
-flag <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
-<span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;key.enc&#39;</span>, <span style="color:#e6db74">&#39;r&#39;</span>) <span style="color:#66d9ef">as</span> f:
-    <span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> f:
-        line <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">&#34;L</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)    <span style="color:#75715e"># Filter out &#34;L\n&#34; at the end of line</span>
-        cur <span style="color:#f92672">=</span> int(line, <span style="color:#ae81ff">16</span>)         <span style="color:#75715e"># Convert hax string to number</span>
-        <span style="color:#66d9ef">if</span> (jacobi(cur, n) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>):
-            flag <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> i
-        i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-        print flag
-
-print flag
-print long_to_bytes(flag)
-
-<span style="color:#75715e"># N1CTF{You_can_leak_the_jacobi_symbol_from_RSA}</span>
-</code></pre></div><p>首先从<code>key.enc</code>中逐行读取，并对每一行结尾的&rsquo;L\n&rsquo;进行过滤，将其转换为整数cur后，计算Jacobi符号$J\left( cur, N\right)$。计算Jacobi符号时主要使用二次互反律进行计算（可以再使用其它定律进行加速，但没必要）。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> AITMCLab.Crypto.Util.number <span style="color:#f92672">import</span> long_to_bytes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">jacobi</span>(a, b):
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">**</span> ((b <span style="color:#f92672">*</span> b <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> b <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">**</span> ((b <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> a <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> a <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">*=</span> jacobi(<span style="color:#ae81ff">2</span>, b)
+</span></span><span style="display:flex;"><span>        a <span style="color:#f92672">/=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">*=</span> (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">**</span>((a <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> (b <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">*</span> jacobi(b <span style="color:#f92672">%</span> a, a)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>n <span style="color:#f92672">=</span> <span style="color:#ae81ff">23981306327188221819291352455300124608114670714977979223022816906368788909398653961976023086718129607035805397846230124785550919468973090809881210560931396002918119995710297723411794214888622784232065592366390586879306041418300835178522354945438521139847806375923379136235993890801176301812907708937658277646761892297209069757559519399120988948212988924583632878840216559421398253025960456164998680766732013248599742397199862820924441357624187811402515396393385081892966284318521068948266144251848088067639941653475035145362236917008153460707675427945577597137822575880268720238301307972813226576071488632898694390629</span>
+</span></span><span style="display:flex;"><span>flag <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;key.enc&#39;</span>, <span style="color:#e6db74">&#39;r&#39;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> line <span style="color:#f92672">in</span> f:
+</span></span><span style="display:flex;"><span>        line <span style="color:#f92672">=</span> line<span style="color:#f92672">.</span>strip(<span style="color:#e6db74">&#34;L</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)    <span style="color:#75715e"># Filter out &#34;L\n&#34; at the end of line</span>
+</span></span><span style="display:flex;"><span>        cur <span style="color:#f92672">=</span> int(line, <span style="color:#ae81ff">16</span>)         <span style="color:#75715e"># Convert hax string to number</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (jacobi(cur, n) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>            flag <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> i
+</span></span><span style="display:flex;"><span>        i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        print flag
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print flag
+</span></span><span style="display:flex;"><span>print long_to_bytes(flag)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># N1CTF{You_can_leak_the_jacobi_symbol_from_RSA}</span>
+</span></span></code></pre></div><p>首先从<code>key.enc</code>中逐行读取，并对每一行结尾的&rsquo;L\n&rsquo;进行过滤，将其转换为整数cur后，计算Jacobi符号$J\left( cur, N\right)$。计算Jacobi符号时主要使用二次互反律进行计算（可以再使用其它定律进行加速，但没必要）。</p>
 <p>由于第一行储存的为flag的最后一位（即从后往前储存），因此进行<code>flag += 1 &lt;&lt; i</code>即可将相应位置的二进制结果还原。</p>
 <h3 id="总结-1">总结</h3>
 <p>这道题在代码阅读上难度较低，唯一需要留意的地方就是<code>padding &lt;&lt; pow(m, p - 1, p) + m % 2</code>这个运算的优先级问题（感谢bg的注释提示）。把代码转换成数学公式后，二次剩余的方法就比较明显了，需要注意的是<code>Jacobi</code>符号无法准确判断二次剩余与二次非剩余（感谢bg指出了这个问题），简单推导后发现这个方法有一定的使用条件，如果题目中的p和q不满足一定的条件，这个方法就无法正确区分0和1。</p>
@@ -523,7 +523,7 @@ print long_to_bytes(flag)
             
             
             ⌨&nbsp;
-            83.15k&nbsp;
+            83.31k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
