@@ -16,6 +16,7 @@
       <description>跟着大佬的文章读一下 Linux 0.11 的源码
 https://github.com/sunym1993/flash-linux0.11-talk
 https://github.com/beride/linux0.11-1
+最近太摆了，拷打我自己
 Overview 第二部分中了解了每个 init 函数，继续往后看 main
 void main(void) { // init functions move_to_user_mode(); if (!fork()) { init(); } for(;;) pause(); } 后续只执行了四个函数
 move_to_user_mode() 顾名思义就是将系统切换至用户态
