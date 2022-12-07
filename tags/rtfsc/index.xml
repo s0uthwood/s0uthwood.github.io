@@ -6,7 +6,24 @@
     <description>Recent content in RTFSC on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 04 Nov 2022 03:46:37 +0800</lastBuildDate><atom:link href="/tags/rtfsc/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 10 Nov 2022 10:28:09 +0800</lastBuildDate><atom:link href="/tags/rtfsc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RTFSC-Linux0.11 Part3: A new process</title>
+      <link>/post/rtfsc-linux-part3-a-new-process/</link>
+      <pubDate>Thu, 10 Nov 2022 10:28:09 +0800</pubDate>
+      
+      <guid>/post/rtfsc-linux-part3-a-new-process/</guid>
+      <description>跟着大佬的文章读一下 Linux 0.11 的源码
+https://github.com/sunym1993/flash-linux0.11-talk
+https://github.com/beride/linux0.11-1
+Overview 第二部分中了解了每个 init 函数，继续往后看 main
+void main(void) { // init functions move_to_user_mode(); if (!fork()) { init(); } for(;;) pause(); } 后续只执行了四个函数
+move_to_user_mode() 顾名思义就是将系统切换至用户态
+fork() 函数是创建一个子进程，这个子进程将会执行 init() 函数，父进程随后将会进入一个死循环，不断重复执行 pause() 函数
+切换到用户态 函数在 include/asm/system.h 文件中定义
+#define move_to_user_mode() \ _asm { \ _asm mov eax, esp \ _asm push 0x00000017 /* 将堆栈段选择符（SS）入栈 */ \ _asm push eax /* 将保存的 esp 入栈 */ \ _asm pushfd /* 将 eflags 内容入栈 */ \ _asm push 0x0000000f /* 将内核代码段选择符（CS）入栈 */ \ _asm push offset l1 /* 将下面 LABEL l1 的偏移地址入栈 */ \ _asm iretd /* 执行中断返回指令，根据上面这个 push，会跳转到下面的 LABEL l1 */ \ _asm l1: mov eax, 0x17 /* 开始执行任务 0 */ \ _asm mov ds, ax /* 初始化段寄存器指向本局部表的数据 */ \ _asm mov es, ax \ _asm mov fs, ax \ _asm mov gs, ax \ } 在系统正常运行的时候，应当以用户态运行，通过中断进入内核态执行内核代码，再通过中断返回退出内核态，整体情况如下图</description>
+    </item>
+    
     <item>
       <title>RTFSC-Linux0.11 Part2: Initialize</title>
       <link>/post/rtfsc-linux-part2-initialize/</link>
