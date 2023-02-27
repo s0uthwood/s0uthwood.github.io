@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='从零开始的 rust 课程学习'><title>CS110L week1 writeup</title>
+
+<link rel='canonical' href='/post/cs110l-week1-writeup/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='CS110L week1 writeup'>
+<meta property='og:description' content='从零开始的 rust 课程学习'>
+<meta property='og:url' content='/post/cs110l-week1-writeup/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Rust' /><meta property='article:tag' content='Labs' /><meta property='og:image' content='/post/cs110l-week1-writeup/cover.jpg' />
+<meta name="twitter:title" content="CS110L week1 writeup">
+<meta name="twitter:description" content="从零开始的 rust 课程学习"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='/post/cs110l-week1-writeup/cover.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/post/cs110l-week1-writeup/">
+                <img src="/post/cs110l-week1-writeup/cover_huc101b9772897c0a3dab66cf39b92edd1_2229379_800x0_resize_q75_box.jpg"
+                        srcset="/post/cs110l-week1-writeup/cover_huc101b9772897c0a3dab66cf39b92edd1_2229379_800x0_resize_q75_box.jpg 800w, /post/cs110l-week1-writeup/cover_huc101b9772897c0a3dab66cf39b92edd1_2229379_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="450" 
+                        loading="lazy"
+                        alt="Featured image of post CS110L week1 writeup" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/labs/" >
+                Labs
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/cs110l-week1-writeup/">CS110L week1 writeup</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        从零开始的 rust 课程学习
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M4 20h4L18.5 9.5a1.5 1.5.0 00-4-4L4 16v4"></path>
+    <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
+</svg>
+                <time class="article-words">
+                    774 words
+                </time>
+            </div>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="part-1-getting-oriented">Part 1: Getting oriented</h2>
+<p>Rust 源码文件基本结构</p>
+<pre tabindex="0"><code>|- src
+|  |- main.rs
+|- Cargo.toml
+</code></pre><p>其中 <code>Cargo.toml</code> 文件内容</p>
+<pre tabindex="0"><code>[package]
+name = &quot;hello-world&quot;
+version = &quot;0.1.0&quot;
+authors = [&quot;Ryan Eberhardt &lt;reberhardt7@gmail.com&gt;&quot;]
+edition = &quot;2018&quot;
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+</code></pre><p><code>main.rs</code> 文件内容</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+    println!(<span style="color:#e6db74">&#34;Hello, world!&#34;</span>);
+}
+</code></pre></div><p>编译命令</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cargo build
+</code></pre></div><p>生成二进制文件为 <code>target/debug/hello-world</code>，文件名称由 <code>toml</code> 文件中的 <code>name</code> 设置</p>
+<p>运行命令</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ cargo run
+</code></pre></div><h2 id="part-2-rust-warmup">Part 2: Rust warmup</h2>
+<h3 id="语法">语法</h3>
+<p><strong>Numeric types</strong></p>
+<p>有符号类型为 <code>i8</code>, <code>i16</code>, <code>i32</code>, <code>i64</code>，<code>i</code> 表示 <code>int</code>，数字表示 bit 长度</p>
+<p>对应的无符号类型为 <code>u8</code>, <code>u16</code>, <code>u32</code>, <code>u64</code>，<code>u</code> 表示 <code>unsigned</code></p>
+<p>使用 <code>let</code> 声明变量</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">// int n = 1;
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> n: <span style="color:#66d9ef">i32</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</code></pre></div><p><strong>Type inference</strong></p>
+<p>编译器可以自动识别变量类型，只有无法确定时，才需要显式声明</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> n <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</code></pre></div><p><strong><em>variable</em> and <em>constants</em></strong></p>
+<p>数据类型默认是 <code>const</code>，定义变量时需要使用 <code>mut</code> 关键字</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> n <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+n <span style="color:#f92672">=</span> n <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</code></pre></div><p><strong>Strings</strong></p>
+<p>字符串有两种类型，分别为 <code>&amp;str</code> 和 <code>String</code></p>
+<p><code>&amp;str</code> 指向内存中不可变的字符串（可以缺省），例如定义一个只读字符串：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> s: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Hello world&#34;</span>;
+</code></pre></div><p><code>String</code> 类型保存在 heap 中，需要使用 <code>mut</code>，<code>String</code> 可缺省</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> s: String <span style="color:#f92672">=</span> String::from(<span style="color:#e6db74">&#34;Hello&#34;</span>);
+s.push_str(<span style="color:#e6db74">&#34;world!&#34;</span>);
+</code></pre></div><blockquote>
+<p>在 <code>String</code> 追加内容后，编译器会自动根据需要 <code>realloc</code> 字符串所在的堆</p>
+<p>在最后一次使用后，编译器会自动进行 <code>free</code></p>
+</blockquote>
+<p><strong>Data Struct</strong></p>
+<p><em>vector</em></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> v: Vec<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i32</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> Vec::new();
+v.push(<span style="color:#ae81ff">2</span>);
+v.push(<span style="color:#ae81ff">3</span>);
+</code></pre></div><p><em>array</em></p>
+<p>rust 中的数组长度是可变的</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> arr: [<span style="color:#66d9ef">i32</span>; <span style="color:#ae81ff">4</span>] <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">8</span>];
+arr[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>;
+println!(<span style="color:#e6db74">&#34;{}&#34;</span>, arr[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">+</span> arr[<span style="color:#ae81ff">1</span>]);
+</code></pre></div><p><strong>Loop</strong></p>
+<p>可以使用 <code>in</code> 遍历数组内容</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">for</span> i <span style="color:#66d9ef">in</span> v.iter() {
+    println!(<span style="color:#e6db74">&#34;{}&#34;</span>, i);
+}
+</code></pre></div><p><code>While</code> 循环</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">while</span> i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">20</span> {
+    i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+}
+</code></pre></div><p>为 <code>While true</code> 提供了特殊的 <code>loop</code> 循环，这个关键字有助于编译器对变量初始化做一些推测</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">loop</span> {
+    i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">if</span> i <span style="color:#f92672">==</span> <span style="color:#ae81ff">10</span> { <span style="color:#66d9ef">break</span>; }
+}
+</code></pre></div><p><strong>Function</strong></p>
+<ul>
+<li>需要指定函数类型，编译器无法推测</li>
+<li>函数可以没有 <code>return</code> 关键字，最后不加分号即可</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">sum</span>(a: <span style="color:#66d9ef">i32</span>, b: <span style="color:#66d9ef">i32</span>) -&gt; <span style="color:#66d9ef">i32</span> {
+    a <span style="color:#f92672">+</span> b
+}
+
+<span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+    <span style="color:#75715e">// do stuff...
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>rust 中所有东西都是表达式，主要是受到了函数式编程的影响</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">// int x = someBool ? 2 : 4;
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> x <span style="color:#f92672">=</span> <span style="color:#66d9ef">if</span> someBool {<span style="color:#ae81ff">2</span>} <span style="color:#66d9ef">else</span> {<span style="color:#ae81ff">4</span>};
+</code></pre></div><p>在这一思想的影响下，函数是一个由分号分隔的表达式序列，并对最后一个表达式的值进行评估</p>
+<p>所以结尾的 无分号单一表达式 会被认为是返回值</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">fib</span>(n: <span style="color:#66d9ef">i32</span>) -&gt; <span style="color:#66d9ef">i32</span> {
+    <span style="color:#66d9ef">if</span> n <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">1</span> { n } <span style="color:#66d9ef">else</span> { fib(n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> fib(n<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>) }
+}
+</code></pre></div><h3 id="练习">练习</h3>
+<p>实现三个函数</p>
+<p><code>add_n</code>: 输入一个 vec 和数字 n，为 vec 中每个数字加上 n，并返回一个新 vec</p>
+<p><code>add_n_inplace</code>: 直接修改 vec 中的内容，不返回</p>
+<p><code>dedup</code>: 从一个 vec 中删除重复元素，保留第一个出现的元素（使用 HashSet）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">add_n</span>(v: Vec<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i32</span><span style="color:#f92672">&gt;</span>, n: <span style="color:#66d9ef">i32</span>) -&gt; Vec<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i32</span><span style="color:#f92672">&gt;</span> {
+    <span style="color:#75715e">// unimplemented!()
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> ret_v: Vec<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i32</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> Vec::new();
+    <span style="color:#66d9ef">for</span> i <span style="color:#66d9ef">in</span> v.iter() {
+        ret_v.push(i <span style="color:#f92672">+</span> n);
+    }
+    <span style="color:#66d9ef">return</span> ret_v;
+}
+
+<span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">add_n_inplace</span>(v: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> Vec<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i32</span><span style="color:#f92672">&gt;</span>, n: <span style="color:#66d9ef">i32</span>) {
+    <span style="color:#75715e">// unimplemented!()
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">..</span>v.len() {
+        v[i] <span style="color:#f92672">+=</span> n;
+    }
+}
+
+<span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">dedup</span>(v: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">mut</span> Vec<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">i32</span><span style="color:#f92672">&gt;</span>) {
+    <span style="color:#75715e">// unimplemented!()
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> hs <span style="color:#f92672">=</span> HashSet::new();
+    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">let</span> len <span style="color:#f92672">=</span> v.len();
+    <span style="color:#66d9ef">for</span> _ <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">..</span>len {
+        <span style="color:#66d9ef">if</span> hs.contains(<span style="color:#f92672">&amp;</span>(v[x])) {
+            v.remove(x);
+        } <span style="color:#66d9ef">else</span> {
+            hs.insert(v[x]);
+            x <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+        }
+    }
+}
+</code></pre></div><h2 id="part-3-hangman">Part 3: hangman</h2>
+<p>写个猜词游戏的代码，直接放源码了，肯定有更好的写法，不过也没必要</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust"><span style="color:#75715e">// Simple Hangman Program
+</span><span style="color:#75715e">// User gets five incorrect guesses
+</span><span style="color:#75715e">// Word chosen randomly from words.txt
+</span><span style="color:#75715e">// Inspiration from: https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html
+</span><span style="color:#75715e">// This assignment will introduce you to some fundamental syntax in Rust:
+</span><span style="color:#75715e">// - variable declaration
+</span><span style="color:#75715e">// - string manipulation
+</span><span style="color:#75715e">// - conditional statements
+</span><span style="color:#75715e">// - loops
+</span><span style="color:#75715e">// - vectors
+</span><span style="color:#75715e">// - files
+</span><span style="color:#75715e">// - user input
+</span><span style="color:#75715e">// We&#39;ve tried to limit/hide Rust&#39;s quirks since we&#39;ll discuss those details
+</span><span style="color:#75715e">// more in depth in the coming lectures.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">crate</span> rand;
+<span style="color:#66d9ef">use</span> rand::Rng;
+<span style="color:#66d9ef">use</span> std::fs;
+<span style="color:#66d9ef">use</span> std::io;
+<span style="color:#66d9ef">use</span> std::io::Write;
+
+<span style="color:#66d9ef">const</span> NUM_INCORRECT_GUESSES: <span style="color:#66d9ef">u32</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
+<span style="color:#66d9ef">const</span> WORDS_PATH: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">str</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;words.txt&#34;</span>;
+
+<span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">pick_a_random_word</span>() -&gt; String {
+    <span style="color:#66d9ef">let</span> file_string <span style="color:#f92672">=</span> fs::read_to_string(WORDS_PATH).expect(<span style="color:#e6db74">&#34;Unable to read file.&#34;</span>);
+    <span style="color:#66d9ef">let</span> words: Vec<span style="color:#f92672">&lt;&amp;</span><span style="color:#66d9ef">str</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> file_string.split(<span style="color:#e6db74">&#39;\n&#39;</span>).collect();
+    String::from(words[rand::thread_rng().gen_range(<span style="color:#ae81ff">0</span>, words.len())].trim())
+}
+
+<span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">so_far_guess</span>(word: Vec<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;</span>, history_guessed: String) -&gt; String {
+    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> x <span style="color:#f92672">=</span> String::new();
+    <span style="color:#66d9ef">for</span> w <span style="color:#66d9ef">in</span> word {
+        <span style="color:#66d9ef">if</span> history_guessed.contains(w) {
+            x.push(w);
+        } <span style="color:#66d9ef">else</span> {
+            x.push(<span style="color:#e6db74">&#39;-&#39;</span>);
+        }
+    }
+    <span style="color:#66d9ef">return</span> x;
+}
+
+<span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">guess_success</span>(word: Vec<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;</span>, history_guessed: String) -&gt; <span style="color:#66d9ef">bool</span> {
+    <span style="color:#66d9ef">for</span> w <span style="color:#66d9ef">in</span> word {
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">!</span>history_guessed.contains(w) {
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+        }
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+}
+
+<span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+    <span style="color:#66d9ef">let</span> secret_word <span style="color:#f92672">=</span> pick_a_random_word();
+    <span style="color:#75715e">// Note: given what you know about Rust so far, it&#39;s easier to pull characters out of a
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// vector than it is to pull them out of a string. You can get the ith character of
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// secret_word by doing secret_word_chars[i].
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">let</span> secret_word_chars: Vec<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span> secret_word.chars().collect();
+    <span style="color:#75715e">// Uncomment for debugging:
+</span><span style="color:#75715e"></span>    println!(<span style="color:#e6db74">&#34;random word: {}&#34;</span>, secret_word);
+
+    <span style="color:#75715e">// Your code here! :)
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> your_left_guesses <span style="color:#f92672">=</span> NUM_INCORRECT_GUESSES;
+    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> your_guessed_letters <span style="color:#f92672">=</span> String::new();
+
+    <span style="color:#66d9ef">while</span> your_left_guesses <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> {
+
+        println!(<span style="color:#e6db74">&#34;The word so far is {}&#34;</span>, so_far_guess(secret_word_chars.clone(), your_guessed_letters.clone()));
+        println!(<span style="color:#e6db74">&#34;You have guessed the following letters: {}&#34;</span>, your_guessed_letters);
+        println!(<span style="color:#e6db74">&#34;You have {} guesses left&#34;</span>, your_left_guesses);
+        print!(<span style="color:#e6db74">&#34;Please guess a letter: &#34;</span>);
+        io::stdout()
+            .flush()
+            .expect(<span style="color:#e6db74">&#34;Error flushing stdout.&#34;</span>);
+        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> guess <span style="color:#f92672">=</span> String::new();
+        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> cur_guess: <span style="color:#66d9ef">char</span>;
+        <span style="color:#66d9ef">loop</span> {
+            io::stdin()
+                .read_line(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> guess)
+                .expect(<span style="color:#e6db74">&#34;Error reading line.&#34;</span>);
+            <span style="color:#66d9ef">if</span> guess.len() <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
+                cur_guess <span style="color:#f92672">=</span> guess.remove(<span style="color:#ae81ff">0</span>);
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">!</span>your_guessed_letters.contains(cur_guess) {
+                    your_guessed_letters.push(cur_guess);
+                    <span style="color:#66d9ef">break</span>;
+                }
+            }
+        }
+        
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">!</span>secret_word.contains(cur_guess) {
+            your_left_guesses <span style="color:#f92672">-=</span> <span style="color:#ae81ff">1</span>;
+            println!(<span style="color:#e6db74">&#34;Sorry, that letter is not in the word&#34;</span>);
+        }
+
+        <span style="color:#66d9ef">if</span> guess_success(secret_word_chars.clone(), your_guessed_letters.clone()) {
+            <span style="color:#66d9ef">break</span>;
+        }
+        println!();
+    }
+    <span style="color:#66d9ef">if</span> your_left_guesses <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> {
+        println!(<span style="color:#e6db74">&#34;Congratulations you guessed the secret word: {}!&#34;</span>, secret_word);
+    } <span style="color:#66d9ef">else</span> {
+        println!(<span style="color:#e6db74">&#34;Sorry, you ran out of guesses!&#34;</span>);
+    }
+}
+</code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/rust/">Rust</a>
+        
+            <a href="/tags/labs/">Labs</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/post/csapp-labs/">
+        
+        
+            <div class="article-image">
+                <img src="/post/csapp-labs/cover.60f2c68d83d56007c5960ebcac35cd70_hu3b8d692d45d6b215e59701d25ac88074_3319905_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSAPP Labs"
+                        
+                        data-hash="md5-YPLGjYPVYAfFlg68rDXNcA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSAPP Labs</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/angr-ctf-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">angr ctf writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/aitmc-challenge/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AITMC-challenge</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy;
+        
+        2023 s0uthwood&#39;s Blog
+    
+        
+            <br />
+            已运行 <i class="fas fa-bell"></i> <a id="days">0</a> 天
+        
+    
+        
+            &nbsp;&nbsp;
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            ⌨&nbsp;
+            86.19k&nbsp;
+            字
+            &nbsp;&nbsp;
+            🧠&nbsp;
+            38&nbsp;
+            篇文章
+        
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+
+    
+        <script>
+            var s1 = "2020-11-15";
+            s1 = new Date(s1.replace(/-/g, "/"));
+            s2 = new Date();
+            var days = s2.getTime() - s1.getTime();
+            var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+            document.getElementById('days').innerHTML = number_of_days;
+        </script>
+    
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#part-1-getting-oriented">Part 1: Getting oriented</a></li>
+    <li><a href="#part-2-rust-warmup">Part 2: Rust warmup</a>
+      <ul>
+        <li><a href="#语法">语法</a></li>
+        <li><a href="#练习">练习</a></li>
+      </ul>
+    </li>
+    <li><a href="#part-3-hangman">Part 3: hangman</a></li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

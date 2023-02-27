@@ -15,7 +15,7 @@
       <guid>/post/reversing-kr-writeups/</guid>
       <description>CSHOP 按一下回车就通关了
 如果要查看逻辑的话，需要先使用 de4dot 脱壳，然后用 dnSpy 打开
-private void Form1_Load(object sender, EventArgs e) { this.lblSu.Text = &amp;#34; &amp;#34;; this.lblGu.Text = &amp;#34; &amp;#34;; this.lblNu.Text = &amp;#34; &amp;#34;; this.lblKu.Text = &amp;#34; &amp;#34;; this.lblZu.Text = &amp;#34; &amp;#34;; this.lblMu.Text = &amp;#34; &amp;#34;; this.lblTu.Text = &amp;#34; &amp;#34;; this.ppppp.Text = &amp;#34; &amp;#34;; this.lblGu.Text = &amp;#34; &amp;#34;; this.lblQu.Text = &amp;#34; &amp;#34;; this.ppppp.Text = &amp;#34; &amp;#34;; this.lblTu.Text = &amp;#34; &amp;#34;; this.lblXu.Text = &amp;#34; &amp;#34;; } // Token: 0x06000004 RID: 4 RVA: 0x000021B0 File Offset: 0x000003B0 private void btnStart_Click(object sender, EventArgs e) { this.</description>
+private void Form1_Load(object sender, EventArgs e) { this.lblSu.Text = &amp;#34; &amp;#34;; this.lblGu.Text = &amp;#34; &amp;#34;; this.lblNu.Text = &amp;#34; &amp;#34;; this.lblKu.Text = &amp;#34; &amp;#34;; this.lblZu.Text = &amp;#34; &amp;#34;; this.lblMu.Text = &amp;#34; &amp;#34;; this.lblTu.Text = &amp;#34; &amp;#34;; this.ppppp.Text = &amp;#34; &amp;#34;; this.lblGu.Text = &amp;#34; &amp;#34;; this.lblQu.Text = &amp;#34; &amp;#34;; this.ppppp.Text = &amp;#34; &amp;#34;; this.lblTu.Text = &amp;#34; &amp;#34;; this.lblXu.Text = &amp;#34; &amp;#34;; } // Token: 0x06000004 RID: 4 RVA: 0x000021B0 File Offset: 0x000003B0 	private void btnStart_Click(object sender, EventArgs e) { this.</description>
     </item>
     
   </channel>

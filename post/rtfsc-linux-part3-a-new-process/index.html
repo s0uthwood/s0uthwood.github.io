@@ -120,7 +120,7 @@
     <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
 </svg>
                 <time class="article-words">
-                    2273 words
+                    2260 words
                 </time>
             </div>
             <div>
@@ -149,37 +149,37 @@
 <p><del>最近太摆了，拷打我自己</del></p>
 <h2 id="overview">Overview</h2>
 <p>第二部分中了解了每个 <code>init</code> 函数，继续往后看 <code>main</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// init functions
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    
-</span></span><span style="display:flex;"><span>    move_to_user_mode();
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>fork()) {
-</span></span><span style="display:flex;"><span>        init();
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(;;) pause();
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>后续只执行了四个函数</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>) {
+    <span style="color:#75715e">// init functions
+</span><span style="color:#75715e"></span>    
+    move_to_user_mode();
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>fork()) {
+        init();
+    }
+
+    <span style="color:#66d9ef">for</span>(;;) pause();
+}
+</code></pre></div><p>后续只执行了四个函数</p>
 <p><code>move_to_user_mode()</code> 顾名思义就是将系统切换至用户态</p>
 <p><code>fork()</code> 函数是创建一个子进程，这个子进程将会执行 <code>init()</code> 函数，父进程随后将会进入一个死循环，不断重复执行 <code>pause()</code> 函数</p>
 <h2 id="切换到用户态">切换到用户态</h2>
 <p>函数在 <code>include/asm/system.h</code> 文件中定义</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define move_to_user_mode()                                                                     \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">_asm {                                                                                          \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm mov eax, esp                                                                           \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm push 0x00000017    </span><span style="color:#75715e">/* 将堆栈段选择符（SS）入栈                                     */</span><span style="color:#75715e">   \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm push eax           </span><span style="color:#75715e">/* 将保存的 esp 入栈                                           */</span><span style="color:#75715e">   \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm pushfd             </span><span style="color:#75715e">/* 将 eflags 内容入栈                                          */</span><span style="color:#75715e">   \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm push 0x0000000f    </span><span style="color:#75715e">/* 将内核代码段选择符（CS）入栈                                */</span><span style="color:#75715e">   \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm push offset l1     </span><span style="color:#75715e">/* 将下面 LABEL l1 的偏移地址入栈                              */</span><span style="color:#75715e">   \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm iretd              </span><span style="color:#75715e">/* 执行中断返回指令，根据上面这个 push，会跳转到下面的 LABEL l1 */</span><span style="color:#75715e">  \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">_asm l1: mov eax, 0x17      </span><span style="color:#75715e">/* 开始执行任务 0                                              */</span><span style="color:#75715e">   \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm mov ds, ax         </span><span style="color:#75715e">/* 初始化段寄存器指向本局部表的数据                             */</span><span style="color:#75715e">  \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm mov es, ax                                                                             \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm mov fs, ax                                                                             \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    _asm mov gs, ax                                                                             \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">}
-</span></span></span></code></pre></div><p>在系统正常运行的时候，应当以用户态运行，通过中断进入内核态执行内核代码，再通过中断返回退出内核态，整体情况如下图</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define move_to_user_mode()                                                                     \
+</span><span style="color:#75715e">_asm {                                                                                          \
+</span><span style="color:#75715e">    _asm mov eax, esp                                                                           \
+</span><span style="color:#75715e">    _asm push 0x00000017    </span><span style="color:#75715e">/* 将堆栈段选择符（SS）入栈                                     */</span><span style="color:#75715e">   \
+</span><span style="color:#75715e">    _asm push eax           </span><span style="color:#75715e">/* 将保存的 esp 入栈                                           */</span><span style="color:#75715e">   \
+</span><span style="color:#75715e">    _asm pushfd             </span><span style="color:#75715e">/* 将 eflags 内容入栈                                          */</span><span style="color:#75715e">   \
+</span><span style="color:#75715e">    _asm push 0x0000000f    </span><span style="color:#75715e">/* 将内核代码段选择符（CS）入栈                                */</span><span style="color:#75715e">   \
+</span><span style="color:#75715e">    _asm push offset l1     </span><span style="color:#75715e">/* 将下面 LABEL l1 的偏移地址入栈                              */</span><span style="color:#75715e">   \
+</span><span style="color:#75715e">    _asm iretd              </span><span style="color:#75715e">/* 执行中断返回指令，根据上面这个 push，会跳转到下面的 LABEL l1 */</span><span style="color:#75715e">  \
+</span><span style="color:#75715e">_asm l1: mov eax, 0x17      </span><span style="color:#75715e">/* 开始执行任务 0                                              */</span><span style="color:#75715e">   \
+</span><span style="color:#75715e">    _asm mov ds, ax         </span><span style="color:#75715e">/* 初始化段寄存器指向本局部表的数据                             */</span><span style="color:#75715e">  \
+</span><span style="color:#75715e">    _asm mov es, ax                                                                             \
+</span><span style="color:#75715e">    _asm mov fs, ax                                                                             \
+</span><span style="color:#75715e">    _asm mov gs, ax                                                                             \
+</span><span style="color:#75715e">}
+</span></code></pre></div><p>在系统正常运行的时候，应当以用户态运行，通过中断进入内核态执行内核代码，再通过中断返回退出内核态，整体情况如下图</p>
 <p><figure 
 	
 		class="gallery-image" 
@@ -226,104 +226,104 @@ high addr
 <h3 id="design">Design</h3>
 <p>一个现代操作系统势必是要同时执行多个任务的，这就需要一个“第三方”的程序来专门进行调度（毕竟你不能要求每个程序自觉暂停），一个通用且简易的方案就是时间片流转算法，这一点可以用定时器的时钟中断实现</p>
 <p>思路明确了，那么肯定需要为每个进程设计一个数据结构，方便进行切换</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> task_struct {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Some attrs
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
-</span></span></code></pre></div><p><strong>一、保存上下文</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> task_struct {
+    <span style="color:#75715e">// Some attrs
+</span><span style="color:#75715e"></span>};
+</code></pre></div><p><strong>一、保存上下文</strong></p>
 <p>进程的切换和恢复，需要做的其实就是保存此前的状态，然后再从这个状态开始继续执行，所以这个结构体中必然要存储所有寄存器的信息，这件事情专门定义了一个新的结构体 <code>tss_struct</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> task_struct {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> tss_struct tss;
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Some other attrs
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> tss_struct {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    back_link;      <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    esp0;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    ss0;            <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    esp1;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    ss1;            <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    esp2;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    ss2;            <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    cr3;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    eip;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    eflags;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    eax,ecx,edx,ebx;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    esp;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    ebp;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    esi;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    edi;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    es;             <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    cs;             <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    ss;             <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    ds;             <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    fs;             <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    gs;             <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    ldt;            <span style="color:#75715e">/* 16 high bits zero */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span>    trace_bitmap;   <span style="color:#75715e">/* bits: trace 0, bitmap 16-31 */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> i387_struct i387;
-</span></span><span style="display:flex;"><span>};
-</span></span></code></pre></div><p><strong>二、运行时间</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> task_struct {
+    <span style="color:#66d9ef">struct</span> tss_struct tss;
+    <span style="color:#75715e">// Some other attrs
+</span><span style="color:#75715e"></span>}
+
+<span style="color:#66d9ef">struct</span> tss_struct {
+    <span style="color:#66d9ef">long</span>    back_link;      <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    esp0;
+    <span style="color:#66d9ef">long</span>    ss0;            <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    esp1;
+    <span style="color:#66d9ef">long</span>    ss1;            <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    esp2;
+    <span style="color:#66d9ef">long</span>    ss2;            <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    cr3;
+    <span style="color:#66d9ef">long</span>    eip;
+    <span style="color:#66d9ef">long</span>    eflags;
+    <span style="color:#66d9ef">long</span>    eax,ecx,edx,ebx;
+    <span style="color:#66d9ef">long</span>    esp;
+    <span style="color:#66d9ef">long</span>    ebp;
+    <span style="color:#66d9ef">long</span>    esi;
+    <span style="color:#66d9ef">long</span>    edi;
+    <span style="color:#66d9ef">long</span>    es;             <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    cs;             <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    ss;             <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    ds;             <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    fs;             <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    gs;             <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    ldt;            <span style="color:#75715e">/* 16 high bits zero */</span>
+    <span style="color:#66d9ef">long</span>    trace_bitmap;   <span style="color:#75715e">/* bits: trace 0, bitmap 16-31 */</span>
+    <span style="color:#66d9ef">struct</span> i387_struct i387;
+};
+</code></pre></div><p><strong>二、运行时间</strong></p>
 <p>既然根据运行时间进行切换，肯定要记录一些相关的内容，这里采用的方法是存储一个“剩余时间片”的参数 <code>counter</code>，每次中断后就来一个自减，最后根据 <code>if ((--current-&gt;counter) &gt; 0)</code> 的结果判断是否进行进程切换</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> task_struct {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> counter;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> tss_struct tss;
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Some other attrs
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
-</span></span></code></pre></div><p><strong>三、优先级</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> task_struct {
+    <span style="color:#66d9ef">long</span> counter;
+    <span style="color:#66d9ef">struct</span> tss_struct tss;
+    <span style="color:#75715e">// Some other attrs
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p><strong>三、优先级</strong></p>
 <p>虽然确定了用 counter 的自减来进行进程的切换，但 counter 的初始值也会对进程调度产生影响，这里用一个 priority 来作为初始值</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> task_struct {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> counter;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> priority;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> tss_struct tss;
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Some other attrs
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
-</span></span></code></pre></div><p><strong>四、进程状态</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> task_struct {
+    <span style="color:#66d9ef">long</span> counter;
+    <span style="color:#66d9ef">long</span> priority;
+    <span style="color:#66d9ef">struct</span> tss_struct tss;
+    <span style="color:#75715e">// Some other attrs
+</span><span style="color:#75715e"></span>};
+</code></pre></div><p><strong>四、进程状态</strong></p>
 <p>考虑到进程状态较多，包括运行、停止等，所以进程状态通常用一个状态机来完成调度，在结构体里使用 <code>state</code> 来保存当前状态，并在宏定义中为每个状态定义一个常量</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define TASK_RUNNING            0
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define TASK_INTERRUPTIBLE      1
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define TASK_UNINTERRUPTIBLE    2
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define TASK_ZOMBIE             3
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define TASK_STOPPED            4
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> task_struct {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> state;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> counter;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> priority;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> tss_struct tss;
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Some other attrs
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
-</span></span></code></pre></div><p>结构体的源码在 <code>include/linux/sched.h</code> 中，剩下的参数直接用注释解释了</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> task_struct {
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* these are hardcoded - don&#39;t touch */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> state; <span style="color:#75715e">/* -1 unrunnable, 0 runnable, &gt;0 stopped */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> counter;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> priority;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> signal;        <span style="color:#75715e">// bitmap 信号（每个 bit 代表一个信号），信号值=位偏移值+1
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> sigaction sigaction[<span style="color:#ae81ff">32</span>]; <span style="color:#75715e">// 信号执行属性结构，对应信号将要执行的操作和标志信息
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> blocked;   <span style="color:#75715e">/* bitmap of masked signals */</span> <span style="color:#75715e">// 信号屏蔽码
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">/* various fields */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> exit_code;  <span style="color:#75715e">// 任务执行停止的退出码，用于返回给父进程
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> start_code,end_code,end_data,brk,start_stack; <span style="color:#75715e">// 分别为：代码段地址、代码长度、代码长度+数据长度、总长度、堆栈段地址
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> pid,father,pgrp,session,leader; <span style="color:#75715e">// 分别为：进程标志号、父进程号、父进程组号、会话号、会话首领
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> uid,euid,suid;   <span style="color:#75715e">// 用户id、有效用户id、保存的用户id
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> gid,egid,sgid;   <span style="color:#75715e">// 组id、有效组id、保存的组id
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> alarm; <span style="color:#75715e">// 报警计时器
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> utime,stime,cutime,cstime,start_time;  <span style="color:#75715e">// 分别为：用户态运行时间，系统态运行时间，子进程用户态运行时间，子进程系统态运行时间，进程开始运行时间
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> used_math;   <span style="color:#75715e">// 标志：是否使用了协处理器
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">/* file system info */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> tty;        <span style="color:#75715e">/* -1 if no tty, so it must be signed */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> umask;   <span style="color:#75715e">// 文件创建属性屏蔽位
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> m_inode <span style="color:#f92672">*</span> pwd;   <span style="color:#75715e">// 当前工作目录
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> m_inode <span style="color:#f92672">*</span> root;  <span style="color:#75715e">// 根目录
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> m_inode <span style="color:#f92672">*</span> executable;    <span style="color:#75715e">// 执行文件
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> close_on_exec;    <span style="color:#75715e">// 执行时关闭文件句柄位图标志
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> file <span style="color:#f92672">*</span> filp[NR_OPEN];    <span style="color:#75715e">// 进程使用的文件表结构
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">/* ldt for this task 0 - zero 1 - cs 2 - ds&amp;ss */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> desc_struct ldt[<span style="color:#ae81ff">3</span>];  <span style="color:#75715e">// 本人无的局部表描述符
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">/* tss for this task */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> tss_struct tss;
-</span></span><span style="display:flex;"><span>};
-</span></span></code></pre></div><h3 id="when-running-out-of-time">When running out of time</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define TASK_RUNNING            0
+</span><span style="color:#75715e">#define TASK_INTERRUPTIBLE      1
+</span><span style="color:#75715e">#define TASK_UNINTERRUPTIBLE    2
+</span><span style="color:#75715e">#define TASK_ZOMBIE             3
+</span><span style="color:#75715e">#define TASK_STOPPED            4
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">struct</span> task_struct {
+    <span style="color:#66d9ef">long</span> state;
+    <span style="color:#66d9ef">long</span> counter;
+    <span style="color:#66d9ef">long</span> priority;
+    <span style="color:#66d9ef">struct</span> tss_struct tss;
+    <span style="color:#75715e">// Some other attrs
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>结构体的源码在 <code>include/linux/sched.h</code> 中，剩下的参数直接用注释解释了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> task_struct {
+<span style="color:#75715e">/* these are hardcoded - don&#39;t touch */</span>
+    <span style="color:#66d9ef">long</span> state; <span style="color:#75715e">/* -1 unrunnable, 0 runnable, &gt;0 stopped */</span>
+    <span style="color:#66d9ef">long</span> counter;
+    <span style="color:#66d9ef">long</span> priority;
+    <span style="color:#66d9ef">long</span> signal;        <span style="color:#75715e">// bitmap 信号（每个 bit 代表一个信号），信号值=位偏移值+1
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> sigaction sigaction[<span style="color:#ae81ff">32</span>]; <span style="color:#75715e">// 信号执行属性结构，对应信号将要执行的操作和标志信息
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> blocked;   <span style="color:#75715e">/* bitmap of masked signals */</span> <span style="color:#75715e">// 信号屏蔽码
+</span><span style="color:#75715e"></span><span style="color:#75715e">/* various fields */</span>
+    <span style="color:#66d9ef">int</span> exit_code;  <span style="color:#75715e">// 任务执行停止的退出码，用于返回给父进程
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> start_code,end_code,end_data,brk,start_stack; <span style="color:#75715e">// 分别为：代码段地址、代码长度、代码长度+数据长度、总长度、堆栈段地址
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> pid,father,pgrp,session,leader; <span style="color:#75715e">// 分别为：进程标志号、父进程号、父进程组号、会话号、会话首领
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> uid,euid,suid;   <span style="color:#75715e">// 用户id、有效用户id、保存的用户id
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> gid,egid,sgid;   <span style="color:#75715e">// 组id、有效组id、保存的组id
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> alarm; <span style="color:#75715e">// 报警计时器
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> utime,stime,cutime,cstime,start_time;  <span style="color:#75715e">// 分别为：用户态运行时间，系统态运行时间，子进程用户态运行时间，子进程系统态运行时间，进程开始运行时间
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> used_math;   <span style="color:#75715e">// 标志：是否使用了协处理器
+</span><span style="color:#75715e"></span><span style="color:#75715e">/* file system info */</span>
+    <span style="color:#66d9ef">int</span> tty;        <span style="color:#75715e">/* -1 if no tty, so it must be signed */</span>
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> umask;   <span style="color:#75715e">// 文件创建属性屏蔽位
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> m_inode <span style="color:#f92672">*</span> pwd;   <span style="color:#75715e">// 当前工作目录
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> m_inode <span style="color:#f92672">*</span> root;  <span style="color:#75715e">// 根目录
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> m_inode <span style="color:#f92672">*</span> executable;    <span style="color:#75715e">// 执行文件
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> close_on_exec;    <span style="color:#75715e">// 执行时关闭文件句柄位图标志
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> file <span style="color:#f92672">*</span> filp[NR_OPEN];    <span style="color:#75715e">// 进程使用的文件表结构
+</span><span style="color:#75715e"></span><span style="color:#75715e">/* ldt for this task 0 - zero 1 - cs 2 - ds&amp;ss */</span>
+    <span style="color:#66d9ef">struct</span> desc_struct ldt[<span style="color:#ae81ff">3</span>];  <span style="color:#75715e">// 本人无的局部表描述符
+</span><span style="color:#75715e"></span><span style="color:#75715e">/* tss for this task */</span>
+    <span style="color:#66d9ef">struct</span> tss_struct tss;
+};
+</code></pre></div><h3 id="when-running-out-of-time">When running out of time</h3>
 <p>根据之前的初始化，计时器每 10ms 会向操作系统发送一次中断信号，中断向量号是 <code>0x20</code>，每次时钟中断，都会执行 <code>kernel/system_call.s</code> 中定义的中断处理函数</p>
 <pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">_timer_interrupt:
     push ds
@@ -352,179 +352,179 @@ high addr
 <pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">    inc dword ptr _jiffies
     call _do_timer
 </code></pre><p><code>jiffies</code> 变量用于存储系统滴答数，进行 <code>+1</code> 的操作之后调用了 <code>do_timer</code> 函数，该函数位于 <code>kernel/sched.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">long</span> <span style="color:#66d9ef">volatile</span> jiffies; <span style="color:#75715e">// 开机后的系统滴答数，volatile 要求 gcc 不对该变量进行优化
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_timer</span>(<span style="color:#66d9ef">long</span> cpl) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">int</span> beepcount;        <span style="color:#75715e">// 扬声器发声时间滴答数(kernel/chr_drv/console.c,697)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">void</span> sysbeepstop (<span style="color:#66d9ef">void</span>);    <span style="color:#75715e">// 关闭扬声器(kernel/chr_drv/console.c,691)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 如果发声计数次数到，则关闭发声。(向0x61 口发送命令，复位位0 和1。位0 控制8253
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#75715e">// 计数器2 的工作，位1 控制扬声器)。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (beepcount)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!--</span>beepcount)
-</span></span><span style="display:flex;"><span>            sysbeepstop ();
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 如果当前特权级(cpl)为0（最高，表示是内核程序在工作），则将超级用户运行时间stime 递增；
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#75715e">// 如果cpl &gt; 0，则表示是一般用户程序在工作，增加utime。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (cpl)
-</span></span><span style="display:flex;"><span>        current<span style="color:#f92672">-&gt;</span>utime<span style="color:#f92672">++</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
-</span></span><span style="display:flex;"><span>        current<span style="color:#f92672">-&gt;</span>stime<span style="color:#f92672">++</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 如果有用户的定时器存在，则将链表第1 个定时器的值减1。如果已等于0，则调用相应的处理
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 程序，并将该处理程序指针置为空。然后去掉该项定时器。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (next_timer)
-</span></span><span style="display:flex;"><span>    {                <span style="color:#75715e">// next_timer 是定时器链表的头指针(见270 行)。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        next_timer<span style="color:#f92672">-&gt;</span>jiffies<span style="color:#f92672">--</span>;
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (next_timer <span style="color:#f92672">&amp;&amp;</span> next_timer<span style="color:#f92672">-&gt;</span>jiffies <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>fn) ();    <span style="color:#75715e">// 这里插入了一个函数指针定义！！！??
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>            fn <span style="color:#f92672">=</span> next_timer<span style="color:#f92672">-&gt;</span>fn;
-</span></span><span style="display:flex;"><span>            next_timer<span style="color:#f92672">-&gt;</span>fn <span style="color:#f92672">=</span> NULL;
-</span></span><span style="display:flex;"><span>            next_timer <span style="color:#f92672">=</span> next_timer<span style="color:#f92672">-&gt;</span>next;
-</span></span><span style="display:flex;"><span>            (fn) ();        <span style="color:#75715e">// 调用处理函数。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 如果当前软盘控制器FDC 的数字输出寄存器中马达启动位有置位的，则执行软盘定时程序(245 行)。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (current_DOR <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xf0</span>)
-</span></span><span style="display:flex;"><span>        do_floppy_timer ();
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">--</span>current<span style="color:#f92672">-&gt;</span>counter) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;            <span style="color:#75715e">// 如果进程运行时间还没完，则退出。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    current<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>cpl)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;            <span style="color:#75715e">// 对于超级用户程序，不依赖counter 值进行调度。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    schedule ();
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>当 <code>current-&gt;counter==0</code> 时，将会进入 <code>schedule()</code> 函数，进行进程调度，源码在 <code>kernel/sched.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">schedule</span> (<span style="color:#66d9ef">void</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i, next, c;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> task_struct <span style="color:#f92672">**</span>p;    <span style="color:#75715e">// 任务结构指针的指针。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 检测alarm（进程的报警定时值），唤醒任何已得到信号的可中断任务 */</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 从任务数组中最后一个任务开始检测alarm。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>LAST_TASK; p <span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>FIRST_TASK; <span style="color:#f92672">--</span>p)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>p) {
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 如果任务的alarm 时间已经过期(alarm&lt;jiffies),则在信号位图中置SIGALRM 信号，然后清alarm。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// jiffies 是系统从开机开始算起的滴答数（10ms/滴答）。定义在sched.h 第139 行。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>alarm <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>alarm <span style="color:#f92672">&lt;</span> jiffies) {
-</span></span><span style="display:flex;"><span>                (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>signal <span style="color:#f92672">|=</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> (SIGALRM <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>                (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>alarm <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 如果信号位图中除被阻塞的信号外还有其它信号，并且任务处于可中断状态，则置任务为就绪状态。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 其中&#39;~(_BLOCKABLE &amp; (*p)-&gt;blocked)&#39;用于忽略被阻塞的信号，但SIGKILL 和SIGSTOP 不能被阻塞。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>signal <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>(_BLOCKABLE <span style="color:#f92672">&amp;</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>blocked)) <span style="color:#f92672">&amp;&amp;</span>
-</span></span><span style="display:flex;"><span>                    (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">==</span> TASK_INTERRUPTIBLE)
-</span></span><span style="display:flex;"><span>                (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">=</span> TASK_RUNNING;    <span style="color:#75715e">//置为就绪（可执行）状态。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e">/* 这里是调度程序的主要部分 */</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>) {
-</span></span><span style="display:flex;"><span>        c <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>        next <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>        i <span style="color:#f92672">=</span> NR_TASKS;
-</span></span><span style="display:flex;"><span>        p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>task[NR_TASKS];
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 这段代码也是从任务数组的最后一个任务开始循环处理，并跳过不含任务的数组槽。比较每个就绪
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 状态任务的counter（任务运行时间的递减滴答计数）值，哪一个值大，运行时间还不长，next 就
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 指向哪个的任务号。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> (<span style="color:#f92672">--</span>i) {
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!*--</span>p)
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">continue</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">==</span> TASK_RUNNING <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">&gt;</span> c)
-</span></span><span style="display:flex;"><span>                c <span style="color:#f92672">=</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter, next <span style="color:#f92672">=</span> i;
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// 如果比较得出有counter 值大于0 的结果，则退出124 行开始的循环，执行任务切换（141 行）。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (c)
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// 否则就根据每个任务的优先权值，更新每一个任务的counter 值，然后回到125 行重新比较。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#75715e">// counter 值的计算方式为counter = counter /2 + priority。[右边counter=0??]
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>LAST_TASK; p <span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>FIRST_TASK; <span style="color:#f92672">--</span>p)
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>p)
-</span></span><span style="display:flex;"><span>                (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">=</span> ((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>priority;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    switch_to (next);        <span style="color:#75715e">// 切换到任务号为next 的任务，并运行之。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
-</span></span></code></pre></div><p>核心部分就是下半部分的 <code>while</code> 循环</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">long</span> <span style="color:#66d9ef">volatile</span> jiffies; <span style="color:#75715e">// 开机后的系统滴答数，volatile 要求 gcc 不对该变量进行优化
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_timer</span>(<span style="color:#66d9ef">long</span> cpl) {
+    <span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">int</span> beepcount;        <span style="color:#75715e">// 扬声器发声时间滴答数(kernel/chr_drv/console.c,697)
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">void</span> sysbeepstop (<span style="color:#66d9ef">void</span>);    <span style="color:#75715e">// 关闭扬声器(kernel/chr_drv/console.c,691)
+</span><span style="color:#75715e"></span>
+  <span style="color:#75715e">// 如果发声计数次数到，则关闭发声。(向0x61 口发送命令，复位位0 和1。位0 控制8253
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// 计数器2 的工作，位1 控制扬声器)。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (beepcount)
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!--</span>beepcount)
+            sysbeepstop ();
+
+  <span style="color:#75715e">// 如果当前特权级(cpl)为0（最高，表示是内核程序在工作），则将超级用户运行时间stime 递增；
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// 如果cpl &gt; 0，则表示是一般用户程序在工作，增加utime。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (cpl)
+        current<span style="color:#f92672">-&gt;</span>utime<span style="color:#f92672">++</span>;
+    <span style="color:#66d9ef">else</span>
+        current<span style="color:#f92672">-&gt;</span>stime<span style="color:#f92672">++</span>;
+
+<span style="color:#75715e">// 如果有用户的定时器存在，则将链表第1 个定时器的值减1。如果已等于0，则调用相应的处理
+</span><span style="color:#75715e">// 程序，并将该处理程序指针置为空。然后去掉该项定时器。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (next_timer)
+    {                <span style="color:#75715e">// next_timer 是定时器链表的头指针(见270 行)。
+</span><span style="color:#75715e"></span>        next_timer<span style="color:#f92672">-&gt;</span>jiffies<span style="color:#f92672">--</span>;
+        <span style="color:#66d9ef">while</span> (next_timer <span style="color:#f92672">&amp;&amp;</span> next_timer<span style="color:#f92672">-&gt;</span>jiffies <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>)
+        {
+            <span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>fn) ();    <span style="color:#75715e">// 这里插入了一个函数指针定义！！！??
+</span><span style="color:#75715e"></span>
+            fn <span style="color:#f92672">=</span> next_timer<span style="color:#f92672">-&gt;</span>fn;
+            next_timer<span style="color:#f92672">-&gt;</span>fn <span style="color:#f92672">=</span> NULL;
+            next_timer <span style="color:#f92672">=</span> next_timer<span style="color:#f92672">-&gt;</span>next;
+            (fn) ();        <span style="color:#75715e">// 调用处理函数。
+</span><span style="color:#75715e"></span>        }
+    }
+<span style="color:#75715e">// 如果当前软盘控制器FDC 的数字输出寄存器中马达启动位有置位的，则执行软盘定时程序(245 行)。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (current_DOR <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xf0</span>)
+        do_floppy_timer ();
+    <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">--</span>current<span style="color:#f92672">-&gt;</span>counter) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
+        <span style="color:#66d9ef">return</span>;            <span style="color:#75715e">// 如果进程运行时间还没完，则退出。
+</span><span style="color:#75715e"></span>    current<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>cpl)
+        <span style="color:#66d9ef">return</span>;            <span style="color:#75715e">// 对于超级用户程序，不依赖counter 值进行调度。
+</span><span style="color:#75715e"></span>    schedule ();
+}
+</code></pre></div><p>当 <code>current-&gt;counter==0</code> 时，将会进入 <code>schedule()</code> 函数，进行进程调度，源码在 <code>kernel/sched.c</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">schedule</span> (<span style="color:#66d9ef">void</span>) {
+    <span style="color:#66d9ef">int</span> i, next, c;
+    <span style="color:#66d9ef">struct</span> task_struct <span style="color:#f92672">**</span>p;    <span style="color:#75715e">// 任务结构指针的指针。
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">/* 检测alarm（进程的报警定时值），唤醒任何已得到信号的可中断任务 */</span>
+
+<span style="color:#75715e">// 从任务数组中最后一个任务开始检测alarm。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>LAST_TASK; p <span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>FIRST_TASK; <span style="color:#f92672">--</span>p)
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>p) {
+<span style="color:#75715e">// 如果任务的alarm 时间已经过期(alarm&lt;jiffies),则在信号位图中置SIGALRM 信号，然后清alarm。
+</span><span style="color:#75715e">// jiffies 是系统从开机开始算起的滴答数（10ms/滴答）。定义在sched.h 第139 行。
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>alarm <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>alarm <span style="color:#f92672">&lt;</span> jiffies) {
+                (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>signal <span style="color:#f92672">|=</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> (SIGALRM <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>));
+                (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>alarm <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+            }
+<span style="color:#75715e">// 如果信号位图中除被阻塞的信号外还有其它信号，并且任务处于可中断状态，则置任务为就绪状态。
+</span><span style="color:#75715e">// 其中&#39;~(_BLOCKABLE &amp; (*p)-&gt;blocked)&#39;用于忽略被阻塞的信号，但SIGKILL 和SIGSTOP 不能被阻塞。
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>signal <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>(_BLOCKABLE <span style="color:#f92672">&amp;</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>blocked)) <span style="color:#f92672">&amp;&amp;</span>
+                    (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">==</span> TASK_INTERRUPTIBLE)
+                (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">=</span> TASK_RUNNING;    <span style="color:#75715e">//置为就绪（可执行）状态。
+</span><span style="color:#75715e"></span>        }
+
+  <span style="color:#75715e">/* 这里是调度程序的主要部分 */</span>
+
+    <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>) {
+        c <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+        next <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        i <span style="color:#f92672">=</span> NR_TASKS;
+        p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>task[NR_TASKS];
+<span style="color:#75715e">// 这段代码也是从任务数组的最后一个任务开始循环处理，并跳过不含任务的数组槽。比较每个就绪
+</span><span style="color:#75715e">// 状态任务的counter（任务运行时间的递减滴答计数）值，哪一个值大，运行时间还不长，next 就
+</span><span style="color:#75715e">// 指向哪个的任务号。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> (<span style="color:#f92672">--</span>i) {
+            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!*--</span>p)
+                <span style="color:#66d9ef">continue</span>;
+            <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">==</span> TASK_RUNNING <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">&gt;</span> c)
+                c <span style="color:#f92672">=</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter, next <span style="color:#f92672">=</span> i;
+        }
+      <span style="color:#75715e">// 如果比较得出有counter 值大于0 的结果，则退出124 行开始的循环，执行任务切换（141 行）。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (c)
+            <span style="color:#66d9ef">break</span>;
+      <span style="color:#75715e">// 否则就根据每个任务的优先权值，更新每一个任务的counter 值，然后回到125 行重新比较。
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// counter 值的计算方式为counter = counter /2 + priority。[右边counter=0??]
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>LAST_TASK; p <span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>FIRST_TASK; <span style="color:#f92672">--</span>p)
+            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>p)
+                (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">=</span> ((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>priority;
+    }
+    switch_to (next);        <span style="color:#75715e">// 切换到任务号为next 的任务，并运行之。
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>核心部分就是下半部分的 <code>while</code> 循环</p>
 <p>首先遍历 task 数组中的所有任务，找到其中<strong>剩余时间片最大的 RUNNABLE 进程</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (<span style="color:#f92672">--</span>i) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!*--</span>p)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">==</span> TASK_RUNNING <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">&gt;</span> c)
-</span></span><span style="display:flex;"><span>        c <span style="color:#f92672">=</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter, next <span style="color:#f92672">=</span> i;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>如果剩余时间片均为 0，则将剩余时间片全部修改为 priority 中的值</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (c)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>LAST_TASK; p <span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>FIRST_TASK; <span style="color:#f92672">--</span>p)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>p)
-</span></span><span style="display:flex;"><span>        (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">=</span> ((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>priority;
-</span></span></code></pre></div><p>上面两段代码将会循环执行，直到找到一个 <code>next</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">while</span> (<span style="color:#f92672">--</span>i) {
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!*--</span>p)
+        <span style="color:#66d9ef">continue</span>;
+    <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">==</span> TASK_RUNNING <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">&gt;</span> c)
+        c <span style="color:#f92672">=</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter, next <span style="color:#f92672">=</span> i;
+}
+</code></pre></div><p>如果剩余时间片均为 0，则将剩余时间片全部修改为 priority 中的值</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">if</span> (c)
+    <span style="color:#66d9ef">break</span>;
+<span style="color:#66d9ef">for</span> (p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>LAST_TASK; p <span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>FIRST_TASK; <span style="color:#f92672">--</span>p)
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>p)
+        (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">=</span> ((<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> (<span style="color:#f92672">*</span>p)<span style="color:#f92672">-&gt;</span>priority;
+</code></pre></div><p>上面两段代码将会循环执行，直到找到一个 <code>next</code></p>
 <p>随后将会 <code>switch_to</code>，该函数由汇编实现，位于 <code>include/linux/sched.h</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define switch_to(n) {\
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">struct {long a,b;} __tmp; \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">__asm__( &#34;cmpl %%ecx,_current\n\t&#34; \    
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#e6db74">&#34;je 1f</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>            
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;movw %%dx,%1</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>        
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;xchgl %%ecx,_current</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>    <span style="color:#960050;background-color:#1e0010">。</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;ljmp %0</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>        <span style="color:#960050;background-color:#1e0010">。</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 在任务切换回来后才会继续执行下面的语句。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#e6db74">&#34;cmpl %%ecx,_last_task_used_math</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>    
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;jne 1f</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>        
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;clts</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>            
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;1:&#34;</span><span style="color:#f92672">::</span><span style="color:#e6db74">&#34;m&#34;</span> (<span style="color:#f92672">*&amp;</span>__tmp.a), <span style="color:#e6db74">&#34;m&#34;</span> (<span style="color:#f92672">*&amp;</span>__tmp.b),
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;d&#34;</span> (_TSS (n)), <span style="color:#e6db74">&#34;c&#34;</span> ((<span style="color:#66d9ef">long</span>) task[n]));
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>有个翻译后的版本：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">_inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">switch_to</span>(<span style="color:#66d9ef">int</span> n) 
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> __tmp;
-</span></span><span style="display:flex;"><span>    __tmp <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span>)_TSS(n);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    _asm {
-</span></span><span style="display:flex;"><span>        mov ebx, offset task
-</span></span><span style="display:flex;"><span>        mov eax, n
-</span></span><span style="display:flex;"><span>        mov ecx, [ebx<span style="color:#f92672">+</span>eax<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span>]
-</span></span><span style="display:flex;"><span>        cmp ecx, current<span style="color:#75715e">/* 任务n 是当前任务吗?(current ==task[n]?) */</span> 
-</span></span><span style="display:flex;"><span>        je l1 <span style="color:#75715e">/* 是，则什么都不做，退出。*/</span> 
-</span></span><span style="display:flex;"><span>        xchg ecx,current<span style="color:#75715e">/* current = task[n]； */</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*执行长跳转，造成任务切换 (头大了很长时间，多多包涵)*/</span>
-</span></span><span style="display:flex;"><span>        mov ax, __tmp
-</span></span><span style="display:flex;"><span>        mov word ptr ds:[lcs],ax
-</span></span><span style="display:flex;"><span>        _emit <span style="color:#ae81ff">0xea</span>
-</span></span><span style="display:flex;"><span>        _emit <span style="color:#ae81ff">0</span>        <span style="color:#75715e">// ip
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        _emit <span style="color:#ae81ff">0</span> 
-</span></span><span style="display:flex;"><span>        _emit <span style="color:#ae81ff">0</span> 
-</span></span><span style="display:flex;"><span>        _emit <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>lcs:    _emit <span style="color:#ae81ff">0</span>        <span style="color:#75715e">// cs
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        _emit <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 在任务切换回来后才会继续执行下面的语句。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        cmp last_task_used_math,ecx <span style="color:#75715e">/* 新任务上次使用过协处理器吗？*/</span>
-</span></span><span style="display:flex;"><span>        jne l1
-</span></span><span style="display:flex;"><span>        clts<span style="color:#75715e">/* 新任务上次使用过协处理器，则清cr0 的TS 标志。*/</span>
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>l1: ;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>最核心的就是 <code>ljmp</code> 到了一个新的 <code>tss</code> 段处，这里利用了 CPU 的硬件操作，执行这条指令时会自动将当前各个寄存器的值保存在当前进程的 <code>tss</code> 中，并将新进程的 <code>tss</code> 信息加载到各个寄存器，这样就完美做到了保存上下文和恢复上下文</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define switch_to(n) {\
+</span><span style="color:#75715e">struct {long a,b;} __tmp; \
+</span><span style="color:#75715e">__asm__( &#34;cmpl %%ecx,_current\n\t&#34; \    
+</span><span style="color:#75715e"></span>  <span style="color:#e6db74">&#34;je 1f</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>            
+  <span style="color:#e6db74">&#34;movw %%dx,%1</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>        
+  <span style="color:#e6db74">&#34;xchgl %%ecx,_current</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>    <span style="color:#960050;background-color:#1e0010">。</span>
+  <span style="color:#e6db74">&#34;ljmp %0</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>        <span style="color:#960050;background-color:#1e0010">。</span>
+<span style="color:#75715e">// 在任务切换回来后才会继续执行下面的语句。
+</span><span style="color:#75715e"></span>  <span style="color:#e6db74">&#34;cmpl %%ecx,_last_task_used_math</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>    
+  <span style="color:#e6db74">&#34;jne 1f</span><span style="color:#ae81ff">\n\t</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>        
+  <span style="color:#e6db74">&#34;clts</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> <span style="color:#960050;background-color:#1e0010">\</span>            
+  <span style="color:#e6db74">&#34;1:&#34;</span><span style="color:#f92672">::</span><span style="color:#e6db74">&#34;m&#34;</span> (<span style="color:#f92672">*&amp;</span>__tmp.a), <span style="color:#e6db74">&#34;m&#34;</span> (<span style="color:#f92672">*&amp;</span>__tmp.b),
+  <span style="color:#e6db74">&#34;d&#34;</span> (_TSS (n)), <span style="color:#e6db74">&#34;c&#34;</span> ((<span style="color:#66d9ef">long</span>) task[n]));
+}
+</code></pre></div><p>有个翻译后的版本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">_inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">switch_to</span>(<span style="color:#66d9ef">int</span> n) 
+{
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> __tmp;
+    __tmp <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span>)_TSS(n);
+
+    _asm {
+        mov ebx, offset task
+        mov eax, n
+        mov ecx, [ebx<span style="color:#f92672">+</span>eax<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span>]
+        cmp ecx, current<span style="color:#75715e">/* 任务n 是当前任务吗?(current ==task[n]?) */</span> 
+        je l1 <span style="color:#75715e">/* 是，则什么都不做，退出。*/</span> 
+        xchg ecx,current<span style="color:#75715e">/* current = task[n]； */</span>
+        <span style="color:#75715e">/*执行长跳转，造成任务切换 (头大了很长时间，多多包涵)*/</span>
+        mov ax, __tmp
+        mov word ptr ds:[lcs],ax
+        _emit <span style="color:#ae81ff">0xea</span>
+        _emit <span style="color:#ae81ff">0</span>        <span style="color:#75715e">// ip
+</span><span style="color:#75715e"></span>        _emit <span style="color:#ae81ff">0</span> 
+        _emit <span style="color:#ae81ff">0</span> 
+        _emit <span style="color:#ae81ff">0</span>
+lcs:    _emit <span style="color:#ae81ff">0</span>        <span style="color:#75715e">// cs
+</span><span style="color:#75715e"></span>        _emit <span style="color:#ae81ff">0</span>
+<span style="color:#75715e">// 在任务切换回来后才会继续执行下面的语句。
+</span><span style="color:#75715e"></span>        cmp last_task_used_math,ecx <span style="color:#75715e">/* 新任务上次使用过协处理器吗？*/</span>
+        jne l1
+        clts<span style="color:#75715e">/* 新任务上次使用过协处理器，则清cr0 的TS 标志。*/</span>
+    }
+l1: ;
+}
+</code></pre></div><p>最核心的就是 <code>ljmp</code> 到了一个新的 <code>tss</code> 段处，这里利用了 CPU 的硬件操作，执行这条指令时会自动将当前各个寄存器的值保存在当前进程的 <code>tss</code> 中，并将新进程的 <code>tss</code> 信息加载到各个寄存器，这样就完美做到了保存上下文和恢复上下文</p>
 <h3 id="definition-of-a-syscall">definition of a syscall</h3>
 <p>接下来就该看 <code>fork()</code> 的源码了</p>
 <p>这个源码位于 <code>init/main.c</code> 和 <code>include/unistd.h</code> 中</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">_inline</span> _syscall0(<span style="color:#66d9ef">int</span>,fork)
-</span></span></code></pre></div><p>而 <code>_syscall0</code> 的定义如下</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define _syscall0(type,name) \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">type name(void) \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">{ \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    long __res; \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    __asm__ volatile (&#34;int $0x80&#34;   </span><span style="color:#75715e">/* 调用系统中断0x80。*/</span><span style="color:#75715e"> \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        : &#34;=a&#34; (__res)              </span><span style="color:#75715e">/* 返回值 eax 赋值给 (__res) */</span><span style="color:#75715e"> \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        : &#34;0&#34; (__NR_##name));       </span><span style="color:#75715e">/* 汇编执行前将 eax 设置为系统中断调用号 __NR_name */</span><span style="color:#75715e"> \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    if (__res &gt;= 0) \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        return (type) __res;        </span><span style="color:#75715e">/* 如果返回值&gt;=0，则直接返回该值。*/</span><span style="color:#75715e"> \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    errno = -__res;                 </span><span style="color:#75715e">/* 否则置出错号，并返回-1。*/</span><span style="color:#75715e"> \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    return -1; \
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">}
-</span></span></span></code></pre></div><p>根据这个宏定义，其实 <code>fork()</code> 就是通过 <code>int 0x80</code> 调用了一个 <code>sys_fork</code> 系统调用</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">_inline</span> _syscall0(<span style="color:#66d9ef">int</span>,fork)
+</code></pre></div><p>而 <code>_syscall0</code> 的定义如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define _syscall0(type,name) \
+</span><span style="color:#75715e">type name(void) \
+</span><span style="color:#75715e">{ \
+</span><span style="color:#75715e">    long __res; \
+</span><span style="color:#75715e">    __asm__ volatile (&#34;int $0x80&#34;   </span><span style="color:#75715e">/* 调用系统中断0x80。*/</span><span style="color:#75715e"> \
+</span><span style="color:#75715e">        : &#34;=a&#34; (__res)              </span><span style="color:#75715e">/* 返回值 eax 赋值给 (__res) */</span><span style="color:#75715e"> \
+</span><span style="color:#75715e">        : &#34;0&#34; (__NR_##name));       </span><span style="color:#75715e">/* 汇编执行前将 eax 设置为系统中断调用号 __NR_name */</span><span style="color:#75715e"> \
+</span><span style="color:#75715e">    if (__res &gt;= 0) \
+</span><span style="color:#75715e">        return (type) __res;        </span><span style="color:#75715e">/* 如果返回值&gt;=0，则直接返回该值。*/</span><span style="color:#75715e"> \
+</span><span style="color:#75715e">    errno = -__res;                 </span><span style="color:#75715e">/* 否则置出错号，并返回-1。*/</span><span style="color:#75715e"> \
+</span><span style="color:#75715e">    return -1; \
+</span><span style="color:#75715e">}
+</span></code></pre></div><p>根据这个宏定义，其实 <code>fork()</code> 就是通过 <code>int 0x80</code> 调用了一个 <code>sys_fork</code> 系统调用</p>
 <p><code>_sys_fork</code> 的定义位于 <code>kernel/system_call.s</code></p>
 <pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">_sys_fork:
     call _find_empty_process ; // 调用find_empty_process()(kernel/fork.c,135)
@@ -542,24 +542,24 @@ high addr
 <p>这里开始看 <code>fork</code> 的具体实现了，根据两个函数名可以猜测出作用，先是寻找空的进程槽位，随后复制当前进程</p>
 <h4 id="find-empty-process">find empty process</h4>
 <p><code>_find_empty_process</code> 位于 <code>kernel/fork.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 为新进程取得不重复的进程号 last_pid，并返回在任务数组中的任务号(数组 index)。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find_empty_process</span> (<span style="color:#66d9ef">void</span>)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>repeat:
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">++</span>last_pid) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>        last_pid <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> NR_TASKS; i<span style="color:#f92672">++</span>)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (task[i] <span style="color:#f92672">&amp;&amp;</span> task[i]<span style="color:#f92672">-&gt;</span>pid <span style="color:#f92672">==</span> last_pid)
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">goto</span> repeat;
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> NR_TASKS; i<span style="color:#f92672">++</span>)    <span style="color:#75715e">// 任务0 排除在外。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>task[i])
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> i;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>EAGAIN;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p><code>task</code> 数组中存放的是 <code>task_struct</code> 结构体的指针</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">// 为新进程取得不重复的进程号 last_pid，并返回在任务数组中的任务号(数组 index)。
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find_empty_process</span> (<span style="color:#66d9ef">void</span>)
+{
+    <span style="color:#66d9ef">int</span> i;
+
+repeat:
+    <span style="color:#66d9ef">if</span> ((<span style="color:#f92672">++</span>last_pid) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>)
+        last_pid <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> NR_TASKS; i<span style="color:#f92672">++</span>)
+        <span style="color:#66d9ef">if</span> (task[i] <span style="color:#f92672">&amp;&amp;</span> task[i]<span style="color:#f92672">-&gt;</span>pid <span style="color:#f92672">==</span> last_pid)
+            <span style="color:#66d9ef">goto</span> repeat;
+    
+    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> NR_TASKS; i<span style="color:#f92672">++</span>)    <span style="color:#75715e">// 任务0 排除在外。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>task[i])
+            <span style="color:#66d9ef">return</span> i;
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>EAGAIN;
+}
+</code></pre></div><p><code>task</code> 数组中存放的是 <code>task_struct</code> 结构体的指针</p>
 <p>这段程序首先判断 <code>last_pid+1</code> 是否小于 0，如果小于 0 说明爆 <code>int</code> 了，此时将其重新赋值为 1，确保了 <code>pid</code> 始终为正数</p>
 <p>随后的 <code>for</code> 循环中，检查所有的 <code>task</code>，如果当前的 <code>last_pid</code> 与某一 <code>task</code> 的 <code>pid</code> 相同，说明被占用了，就跳转回 repeat 标签，生成下一个 <code>last_pid</code> 并判断能否使用，直到找到一个可用的 <code>last_pid</code></p>
 <p>找到可用的 <code>last_pid</code> 之后，就进入到了下一个循环，这里是寻找一个空闲的 <code>task</code> 项，找到后返回索引值</p>
@@ -567,224 +567,224 @@ high addr
 <h4 id="copy-process">copy process</h4>
 <p><code>fork</code> 接下来还要执行一个 <code>copy_process()</code> 函数</p>
 <p>这个函数就需要根据返回的索引将进程放到 <code>task[i]</code> 中了</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* OK，下面是主要的fork 子程序。它复制系统进程信息(task[n])并且设置必要的寄存器。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">* 它还整个地复制数据段。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 复制进程。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">copy_process</span> (<span style="color:#66d9ef">int</span> nr, <span style="color:#66d9ef">long</span> ebp, <span style="color:#66d9ef">long</span> edi, <span style="color:#66d9ef">long</span> esi, <span style="color:#66d9ef">long</span> gs, <span style="color:#66d9ef">long</span> none,
-</span></span><span style="display:flex;"><span>                  <span style="color:#66d9ef">long</span> ebx, <span style="color:#66d9ef">long</span> ecx, <span style="color:#66d9ef">long</span> edx,
-</span></span><span style="display:flex;"><span>                  <span style="color:#66d9ef">long</span> fs, <span style="color:#66d9ef">long</span> es, <span style="color:#66d9ef">long</span> ds,
-</span></span><span style="display:flex;"><span>                  <span style="color:#66d9ef">long</span> eip, <span style="color:#66d9ef">long</span> cs, <span style="color:#66d9ef">long</span> eflags, <span style="color:#66d9ef">long</span> esp, <span style="color:#66d9ef">long</span> ss)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> task_struct <span style="color:#f92672">*</span>p;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> file <span style="color:#f92672">*</span>f;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> i387_struct <span style="color:#f92672">*</span>p_i387;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> task_struct <span style="color:#f92672">*</span>) get_free_page ();    <span style="color:#75715e">// 为新任务数据结构分配内存。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>p)            <span style="color:#75715e">// 如果内存分配出错，则返回出错码并退出。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>EAGAIN;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    task[nr] <span style="color:#f92672">=</span> p;            <span style="color:#75715e">// 将新任务结构指针放入任务数组中。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 其中nr 为任务号，由前面find_empty_process()返回。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>current;        <span style="color:#75715e">/* NOTE! this doesn&#39;t copy the supervisor stack */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 注意！这样做不会复制超级用户的堆栈 （只复制当前进程内容）。*/</span> 
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">=</span> TASK_UNINTERRUPTIBLE;    <span style="color:#75715e">// 将新进程的状态先置为不可中断等待状态。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>pid <span style="color:#f92672">=</span> last_pid;        <span style="color:#75715e">// 新进程号。由前面调用find_empty_process()得到。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>father <span style="color:#f92672">=</span> current<span style="color:#f92672">-&gt;</span>pid;    <span style="color:#75715e">// 设置父进程号。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>priority;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>signal <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;        <span style="color:#75715e">// 信号位图置0。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>alarm <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>leader <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;        <span style="color:#75715e">/* process leadership doesn&#39;t inherit */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 进程的领导权是不能继承的 */</span>
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>utime <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>stime <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;    <span style="color:#75715e">// 初始化用户态时间和核心态时间。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>cutime <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>cstime <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;    <span style="color:#75715e">// 初始化子进程用户态和核心态时间。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>start_time <span style="color:#f92672">=</span> jiffies;    <span style="color:#75715e">// 当前滴答数时间。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 以下设置任务状态段TSS 所需的数据（参见列表后说明）。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.back_link <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.esp0 <span style="color:#f92672">=</span> PAGE_SIZE <span style="color:#f92672">+</span> (<span style="color:#66d9ef">long</span>) p;    <span style="color:#75715e">// 堆栈指针（由于是给任务结构p 分配了1 页
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 新内存，所以此时esp0 正好指向该页顶端）。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.ss0 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x10</span>;        <span style="color:#75715e">// 堆栈段选择符（内核数据段）[??]。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.eip <span style="color:#f92672">=</span> eip;        <span style="color:#75715e">// 指令代码指针。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.eflags <span style="color:#f92672">=</span> eflags;    <span style="color:#75715e">// 标志寄存器。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.eax <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.ecx <span style="color:#f92672">=</span> ecx;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.edx <span style="color:#f92672">=</span> edx;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.ebx <span style="color:#f92672">=</span> ebx;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.esp <span style="color:#f92672">=</span> esp;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.ebp <span style="color:#f92672">=</span> ebp;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.esi <span style="color:#f92672">=</span> esi;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.edi <span style="color:#f92672">=</span> edi;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.es <span style="color:#f92672">=</span> es <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;    <span style="color:#75715e">// 段寄存器仅16 位有效。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.cs <span style="color:#f92672">=</span> cs <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.ss <span style="color:#f92672">=</span> ss <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.ds <span style="color:#f92672">=</span> ds <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.fs <span style="color:#f92672">=</span> fs <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.gs <span style="color:#f92672">=</span> gs <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>tss.ldt <span style="color:#f92672">=</span> _LDT (nr);    <span style="color:#75715e">// 该新任务nr 的局部描述符表选择符（LDT 的描述符在GDT 中）。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.trace_bitmap <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80000000</span>;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 如果当前任务使用了协处理器，就保存其上下文。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p_i387 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>p<span style="color:#f92672">-&gt;</span>tss.i387;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (last_task_used_math <span style="color:#f92672">==</span> current)
-</span></span><span style="display:flex;"><span>    _asm{
-</span></span><span style="display:flex;"><span>        mov ebx, p_i387
-</span></span><span style="display:flex;"><span>        clts
-</span></span><span style="display:flex;"><span>        fnsave [p_i387]
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//    __asm__ (&#34;clts ; fnsave %0&#34;::&#34;m&#34; (p-&gt;tss.i387));
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 设置新任务的代码和数据段基址、限长并复制页表。如果出错（返回值不是0），则复位任务数组中相应项并释放为该新任务分配的内存页。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (copy_mem (nr, p))
-</span></span><span style="display:flex;"><span>    {                <span style="color:#75715e">// 返回不为0 表示出错。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        task[nr] <span style="color:#f92672">=</span> NULL;
-</span></span><span style="display:flex;"><span>        free_page ((<span style="color:#66d9ef">long</span>) p);
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>EAGAIN;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 如果父进程中有文件是打开的，则将对应文件的打开次数增1。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> NR_OPEN; i<span style="color:#f92672">++</span>)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (f <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>filp[i])
-</span></span><span style="display:flex;"><span>            f<span style="color:#f92672">-&gt;</span>f_count<span style="color:#f92672">++</span>;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 将当前进程（父进程）的pwd, root 和executable 引用次数均增1。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (current<span style="color:#f92672">-&gt;</span>pwd)
-</span></span><span style="display:flex;"><span>        current<span style="color:#f92672">-&gt;</span>pwd<span style="color:#f92672">-&gt;</span>i_count<span style="color:#f92672">++</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (current<span style="color:#f92672">-&gt;</span>root)
-</span></span><span style="display:flex;"><span>        current<span style="color:#f92672">-&gt;</span>root<span style="color:#f92672">-&gt;</span>i_count<span style="color:#f92672">++</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (current<span style="color:#f92672">-&gt;</span>executable)
-</span></span><span style="display:flex;"><span>        current<span style="color:#f92672">-&gt;</span>executable<span style="color:#f92672">-&gt;</span>i_count<span style="color:#f92672">++</span>;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 在GDT 中设置新任务的TSS 和LDT 描述符项，数据从task 结构中取。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 在任务切换时，任务寄存器tr 由CPU 自动加载。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    set_tss_desc (gdt <span style="color:#f92672">+</span> (nr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> FIRST_TSS_ENTRY, <span style="color:#f92672">&amp;</span>(p<span style="color:#f92672">-&gt;</span>tss));
-</span></span><span style="display:flex;"><span>    set_ldt_desc (gdt <span style="color:#f92672">+</span> (nr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> FIRST_LDT_ENTRY, <span style="color:#f92672">&amp;</span>(p<span style="color:#f92672">-&gt;</span>ldt));
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">=</span> TASK_RUNNING;    <span style="color:#75715e">/* do this last, just in case */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 最后再将新任务设置成可运行状态，以防万一 */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> last_pid;        <span style="color:#75715e">// 返回新进程号（与任务号是不同的）。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
-</span></span></code></pre></div><p>第一部分调用了 <code>get_free_page()</code> 函数是申请一个空闲页面，初始化的时候维护了一个数组 <code>mem_map</code>，这个函数就是从数组中找到一个值为 <code>0</code> 的项（表示该项对应的页处于空闲状态），接下来将该项赋为 <code>1</code> 并返回该项对应的页的内存起始地址</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/*
+</span><span style="color:#75715e">* OK，下面是主要的fork 子程序。它复制系统进程信息(task[n])并且设置必要的寄存器。
+</span><span style="color:#75715e">* 它还整个地复制数据段。
+</span><span style="color:#75715e">*/</span>
+<span style="color:#75715e">// 复制进程。
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">copy_process</span> (<span style="color:#66d9ef">int</span> nr, <span style="color:#66d9ef">long</span> ebp, <span style="color:#66d9ef">long</span> edi, <span style="color:#66d9ef">long</span> esi, <span style="color:#66d9ef">long</span> gs, <span style="color:#66d9ef">long</span> none,
+                  <span style="color:#66d9ef">long</span> ebx, <span style="color:#66d9ef">long</span> ecx, <span style="color:#66d9ef">long</span> edx,
+                  <span style="color:#66d9ef">long</span> fs, <span style="color:#66d9ef">long</span> es, <span style="color:#66d9ef">long</span> ds,
+                  <span style="color:#66d9ef">long</span> eip, <span style="color:#66d9ef">long</span> cs, <span style="color:#66d9ef">long</span> eflags, <span style="color:#66d9ef">long</span> esp, <span style="color:#66d9ef">long</span> ss)
+{
+    <span style="color:#66d9ef">struct</span> task_struct <span style="color:#f92672">*</span>p;
+    <span style="color:#66d9ef">int</span> i;
+    <span style="color:#66d9ef">struct</span> file <span style="color:#f92672">*</span>f;
+    <span style="color:#66d9ef">struct</span> i387_struct <span style="color:#f92672">*</span>p_i387;
+
+    p <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> task_struct <span style="color:#f92672">*</span>) get_free_page ();    <span style="color:#75715e">// 为新任务数据结构分配内存。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>p)            <span style="color:#75715e">// 如果内存分配出错，则返回出错码并退出。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>EAGAIN;
+
+
+    task[nr] <span style="color:#f92672">=</span> p;            <span style="color:#75715e">// 将新任务结构指针放入任务数组中。
+</span><span style="color:#75715e">// 其中nr 为任务号，由前面find_empty_process()返回。
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>current;        <span style="color:#75715e">/* NOTE! this doesn&#39;t copy the supervisor stack */</span>
+<span style="color:#75715e">/* 注意！这样做不会复制超级用户的堆栈 （只复制当前进程内容）。*/</span> 
+
+
+    p<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">=</span> TASK_UNINTERRUPTIBLE;    <span style="color:#75715e">// 将新进程的状态先置为不可中断等待状态。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>pid <span style="color:#f92672">=</span> last_pid;        <span style="color:#75715e">// 新进程号。由前面调用find_empty_process()得到。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>father <span style="color:#f92672">=</span> current<span style="color:#f92672">-&gt;</span>pid;    <span style="color:#75715e">// 设置父进程号。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>counter <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>priority;
+    p<span style="color:#f92672">-&gt;</span>signal <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;        <span style="color:#75715e">// 信号位图置0。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>alarm <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    p<span style="color:#f92672">-&gt;</span>leader <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;        <span style="color:#75715e">/* process leadership doesn&#39;t inherit */</span>
+<span style="color:#75715e">/* 进程的领导权是不能继承的 */</span>
+    p<span style="color:#f92672">-&gt;</span>utime <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>stime <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;    <span style="color:#75715e">// 初始化用户态时间和核心态时间。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>cutime <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>cstime <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;    <span style="color:#75715e">// 初始化子进程用户态和核心态时间。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>start_time <span style="color:#f92672">=</span> jiffies;    <span style="color:#75715e">// 当前滴答数时间。
+</span><span style="color:#75715e">// 以下设置任务状态段TSS 所需的数据（参见列表后说明）。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.back_link <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    p<span style="color:#f92672">-&gt;</span>tss.esp0 <span style="color:#f92672">=</span> PAGE_SIZE <span style="color:#f92672">+</span> (<span style="color:#66d9ef">long</span>) p;    <span style="color:#75715e">// 堆栈指针（由于是给任务结构p 分配了1 页
+</span><span style="color:#75715e">// 新内存，所以此时esp0 正好指向该页顶端）。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.ss0 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x10</span>;        <span style="color:#75715e">// 堆栈段选择符（内核数据段）[??]。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.eip <span style="color:#f92672">=</span> eip;        <span style="color:#75715e">// 指令代码指针。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.eflags <span style="color:#f92672">=</span> eflags;    <span style="color:#75715e">// 标志寄存器。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.eax <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    p<span style="color:#f92672">-&gt;</span>tss.ecx <span style="color:#f92672">=</span> ecx;
+    p<span style="color:#f92672">-&gt;</span>tss.edx <span style="color:#f92672">=</span> edx;
+    p<span style="color:#f92672">-&gt;</span>tss.ebx <span style="color:#f92672">=</span> ebx;
+    p<span style="color:#f92672">-&gt;</span>tss.esp <span style="color:#f92672">=</span> esp;
+    p<span style="color:#f92672">-&gt;</span>tss.ebp <span style="color:#f92672">=</span> ebp;
+    p<span style="color:#f92672">-&gt;</span>tss.esi <span style="color:#f92672">=</span> esi;
+    p<span style="color:#f92672">-&gt;</span>tss.edi <span style="color:#f92672">=</span> edi;
+    p<span style="color:#f92672">-&gt;</span>tss.es <span style="color:#f92672">=</span> es <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;    <span style="color:#75715e">// 段寄存器仅16 位有效。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.cs <span style="color:#f92672">=</span> cs <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;
+    p<span style="color:#f92672">-&gt;</span>tss.ss <span style="color:#f92672">=</span> ss <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;
+    p<span style="color:#f92672">-&gt;</span>tss.ds <span style="color:#f92672">=</span> ds <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;
+    p<span style="color:#f92672">-&gt;</span>tss.fs <span style="color:#f92672">=</span> fs <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;
+    p<span style="color:#f92672">-&gt;</span>tss.gs <span style="color:#f92672">=</span> gs <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffff</span>;
+    p<span style="color:#f92672">-&gt;</span>tss.ldt <span style="color:#f92672">=</span> _LDT (nr);    <span style="color:#75715e">// 该新任务nr 的局部描述符表选择符（LDT 的描述符在GDT 中）。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>tss.trace_bitmap <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80000000</span>;
+<span style="color:#75715e">// 如果当前任务使用了协处理器，就保存其上下文。
+</span><span style="color:#75715e"></span>    p_i387 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>p<span style="color:#f92672">-&gt;</span>tss.i387;
+    <span style="color:#66d9ef">if</span> (last_task_used_math <span style="color:#f92672">==</span> current)
+    _asm{
+        mov ebx, p_i387
+        clts
+        fnsave [p_i387]
+    }
+<span style="color:#75715e">//    __asm__ (&#34;clts ; fnsave %0&#34;::&#34;m&#34; (p-&gt;tss.i387));
+</span><span style="color:#75715e">// 设置新任务的代码和数据段基址、限长并复制页表。如果出错（返回值不是0），则复位任务数组中相应项并释放为该新任务分配的内存页。
+</span><span style="color:#75715e"></span>
+
+    <span style="color:#66d9ef">if</span> (copy_mem (nr, p))
+    {                <span style="color:#75715e">// 返回不为0 表示出错。
+</span><span style="color:#75715e"></span>        task[nr] <span style="color:#f92672">=</span> NULL;
+        free_page ((<span style="color:#66d9ef">long</span>) p);
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>EAGAIN;
+    }
+<span style="color:#75715e">// 如果父进程中有文件是打开的，则将对应文件的打开次数增1。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> NR_OPEN; i<span style="color:#f92672">++</span>)
+        <span style="color:#66d9ef">if</span> (f <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>filp[i])
+            f<span style="color:#f92672">-&gt;</span>f_count<span style="color:#f92672">++</span>;
+<span style="color:#75715e">// 将当前进程（父进程）的pwd, root 和executable 引用次数均增1。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (current<span style="color:#f92672">-&gt;</span>pwd)
+        current<span style="color:#f92672">-&gt;</span>pwd<span style="color:#f92672">-&gt;</span>i_count<span style="color:#f92672">++</span>;
+    <span style="color:#66d9ef">if</span> (current<span style="color:#f92672">-&gt;</span>root)
+        current<span style="color:#f92672">-&gt;</span>root<span style="color:#f92672">-&gt;</span>i_count<span style="color:#f92672">++</span>;
+    <span style="color:#66d9ef">if</span> (current<span style="color:#f92672">-&gt;</span>executable)
+        current<span style="color:#f92672">-&gt;</span>executable<span style="color:#f92672">-&gt;</span>i_count<span style="color:#f92672">++</span>;
+<span style="color:#75715e">// 在GDT 中设置新任务的TSS 和LDT 描述符项，数据从task 结构中取。
+</span><span style="color:#75715e">// 在任务切换时，任务寄存器tr 由CPU 自动加载。
+</span><span style="color:#75715e"></span>    set_tss_desc (gdt <span style="color:#f92672">+</span> (nr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> FIRST_TSS_ENTRY, <span style="color:#f92672">&amp;</span>(p<span style="color:#f92672">-&gt;</span>tss));
+    set_ldt_desc (gdt <span style="color:#f92672">+</span> (nr <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> FIRST_LDT_ENTRY, <span style="color:#f92672">&amp;</span>(p<span style="color:#f92672">-&gt;</span>ldt));
+    p<span style="color:#f92672">-&gt;</span>state <span style="color:#f92672">=</span> TASK_RUNNING;    <span style="color:#75715e">/* do this last, just in case */</span>
+<span style="color:#75715e">/* 最后再将新任务设置成可运行状态，以防万一 */</span>
+    <span style="color:#66d9ef">return</span> last_pid;        <span style="color:#75715e">// 返回新进程号（与任务号是不同的）。
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>第一部分调用了 <code>get_free_page()</code> 函数是申请一个空闲页面，初始化的时候维护了一个数组 <code>mem_map</code>，这个函数就是从数组中找到一个值为 <code>0</code> 的项（表示该项对应的页处于空闲状态），接下来将该项赋为 <code>1</code> 并返回该项对应的页的内存起始地址</p>
 <p>随后，在进程管理结构 <code>task[nr]</code> 中放入新的 <code>task_struct</code> 结构体指针，并将指针指向当前进程，也就是将当前进程的所有内容复制了出来</p>
 <p>此后很长一大串内容都是在为当前进程的一部分信息进行特殊的赋值，比如将状态设置为 <code>TASK_UNINTERRUPTIBLE</code>，<code>pid</code> 设置为之前获取的 <code>last_pid</code>，等等</p>
 <p>接下来进行进程页表和段表的复制，主要调用了 <code>copy_mem()</code> 函数</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 设置新任务的代码和数据段基址、限长并复制页表。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// nr 为新任务号；p 是新任务数据结构的指针。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">copy_mem</span> (<span style="color:#66d9ef">int</span> nr, <span style="color:#66d9ef">struct</span> task_struct <span style="color:#f92672">*</span>p)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> old_data_base, new_data_base, data_limit;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> old_code_base, new_code_base, code_limit;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    code_limit <span style="color:#f92672">=</span> get_limit (<span style="color:#ae81ff">0x0f</span>);    <span style="color:#75715e">// 取局部描述符表中代码段描述符项中段限长。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    data_limit <span style="color:#f92672">=</span> get_limit (<span style="color:#ae81ff">0x17</span>);    <span style="color:#75715e">// 取局部描述符表中数据段描述符项中段限长。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    old_code_base <span style="color:#f92672">=</span> get_base (current<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">1</span>]);    <span style="color:#75715e">// 取原代码段基址。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    old_data_base <span style="color:#f92672">=</span> get_base (current<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">2</span>]);    <span style="color:#75715e">// 取原数据段基址。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (old_data_base <span style="color:#f92672">!=</span> old_code_base)    <span style="color:#75715e">// 0.11 版不支持代码和数据段分立的情况。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        panic (<span style="color:#e6db74">&#34;We don&#39;t support separate I&amp;D&#34;</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (data_limit <span style="color:#f92672">&lt;</span> code_limit)    <span style="color:#75715e">// 如果数据段长度 &lt; 代码段长度也不对。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        panic (<span style="color:#e6db74">&#34;Bad data_limit&#34;</span>);
-</span></span><span style="display:flex;"><span>    new_data_base <span style="color:#f92672">=</span> new_code_base <span style="color:#f92672">=</span> nr <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x4000000</span>;    <span style="color:#75715e">// 新基址=任务号*64Mb(任务大小)。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>start_code <span style="color:#f92672">=</span> new_code_base;
-</span></span><span style="display:flex;"><span>    set_base (p<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">1</span>], new_code_base);    <span style="color:#75715e">// 设置代码段描述符中基址域。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    set_base (p<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">2</span>], new_data_base);    <span style="color:#75715e">// 设置数据段描述符中基址域。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (copy_page_tables (old_data_base, new_data_base, data_limit))
-</span></span><span style="display:flex;"><span>    {                <span style="color:#75715e">// 复制代码和数据段。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        free_page_tables (new_data_base, data_limit);    <span style="color:#75715e">// 如果出错则释放申请的内存。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>ENOMEM;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>主要的任务就是 <strong>LDT 表项的赋值</strong>和<strong>页表的拷贝</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">// 设置新任务的代码和数据段基址、限长并复制页表。
+</span><span style="color:#75715e">// nr 为新任务号；p 是新任务数据结构的指针。
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">copy_mem</span> (<span style="color:#66d9ef">int</span> nr, <span style="color:#66d9ef">struct</span> task_struct <span style="color:#f92672">*</span>p)
+{
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> old_data_base, new_data_base, data_limit;
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> old_code_base, new_code_base, code_limit;
+
+    code_limit <span style="color:#f92672">=</span> get_limit (<span style="color:#ae81ff">0x0f</span>);    <span style="color:#75715e">// 取局部描述符表中代码段描述符项中段限长。
+</span><span style="color:#75715e"></span>    data_limit <span style="color:#f92672">=</span> get_limit (<span style="color:#ae81ff">0x17</span>);    <span style="color:#75715e">// 取局部描述符表中数据段描述符项中段限长。
+</span><span style="color:#75715e"></span>    old_code_base <span style="color:#f92672">=</span> get_base (current<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">1</span>]);    <span style="color:#75715e">// 取原代码段基址。
+</span><span style="color:#75715e"></span>    old_data_base <span style="color:#f92672">=</span> get_base (current<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">2</span>]);    <span style="color:#75715e">// 取原数据段基址。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (old_data_base <span style="color:#f92672">!=</span> old_code_base)    <span style="color:#75715e">// 0.11 版不支持代码和数据段分立的情况。
+</span><span style="color:#75715e"></span>        panic (<span style="color:#e6db74">&#34;We don&#39;t support separate I&amp;D&#34;</span>);
+    <span style="color:#66d9ef">if</span> (data_limit <span style="color:#f92672">&lt;</span> code_limit)    <span style="color:#75715e">// 如果数据段长度 &lt; 代码段长度也不对。
+</span><span style="color:#75715e"></span>        panic (<span style="color:#e6db74">&#34;Bad data_limit&#34;</span>);
+    new_data_base <span style="color:#f92672">=</span> new_code_base <span style="color:#f92672">=</span> nr <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x4000000</span>;    <span style="color:#75715e">// 新基址=任务号*64Mb(任务大小)。
+</span><span style="color:#75715e"></span>    p<span style="color:#f92672">-&gt;</span>start_code <span style="color:#f92672">=</span> new_code_base;
+    set_base (p<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">1</span>], new_code_base);    <span style="color:#75715e">// 设置代码段描述符中基址域。
+</span><span style="color:#75715e"></span>    set_base (p<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">2</span>], new_data_base);    <span style="color:#75715e">// 设置数据段描述符中基址域。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (copy_page_tables (old_data_base, new_data_base, data_limit))
+    {                <span style="color:#75715e">// 复制代码和数据段。
+</span><span style="color:#75715e"></span>        free_page_tables (new_data_base, data_limit);    <span style="color:#75715e">// 如果出错则释放申请的内存。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>ENOMEM;
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p>主要的任务就是 <strong>LDT 表项的赋值</strong>和<strong>页表的拷贝</strong></p>
 <p><strong>LDT 表项的赋值</strong></p>
 <p>在复制当前进程到新进程到时候，还需要对新进程的 <code>LDT</code> 表项进行赋值，这样在执行这个进程的时候才能正常进行寻址</p>
 <p>首先读取代码段和数据段的段限长，随后设置段基地址为 <code>进程号 * 0x4000000</code> 也就是每个进程分别在逻辑地址中占用 <code>64 MB</code> 的空间</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>new_code_base <span style="color:#f92672">=</span> nr <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x4000000</span>;
-</span></span><span style="display:flex;"><span>new_data_base <span style="color:#f92672">=</span> nr <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x4000000</span>;
-</span></span></code></pre></div><p>接下来将上述设置的内容写入 <code>LDT</code> 表中</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>set_base(p<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">1</span>], new_code_base);
-</span></span><span style="display:flex;"><span>set_base(p<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">2</span>], new_data_base);
-</span></span></code></pre></div><p><strong>页表拷贝</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">new_code_base <span style="color:#f92672">=</span> nr <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x4000000</span>;
+new_data_base <span style="color:#f92672">=</span> nr <span style="color:#f92672">*</span> <span style="color:#ae81ff">0x4000000</span>;
+</code></pre></div><p>接下来将上述设置的内容写入 <code>LDT</code> 表中</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">set_base(p<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">1</span>], new_code_base);
+set_base(p<span style="color:#f92672">-&gt;</span>ldt[<span style="color:#ae81ff">2</span>], new_data_base);
+</code></pre></div><p><strong>页表拷贝</strong></p>
 <p>由于内存采用的是段页式结构，在设置完段之后，就需要设置页表了</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// old = 0, new = 64M, limit = 640K
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>copy_page_table(old_data_base, new_data_base, data_limit);
-</span></span></code></pre></div><p>这个函数位于 <code>mm/memory.c</code>，具体实现如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 好了，下面是内存管理mm 中最为复杂的程序之一。它通过只复制内存页面
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 来拷贝一定范围内线性地址中的内容。希望代码中没有错误，因为我不想
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 再调试这块代码了 :-)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 注意！我们并不是仅复制任何内存块- 内存块的地址需要是4Mb 的倍数（正好
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 一个页目录项对应的内存大小），因为这样处理可使函数很简单。不管怎样，
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 它仅被fork()使用（fork.c）
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 注意!!当from==0 时，是在为第一次fork()调用复制内核空间。此时我们
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 不想复制整个页目录项对应的内存，因为这样做会导致内存严重的浪费- 我们
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 只复制头160 个页面- 对应640kB。即使是复制这些页面也已经超出我们的需求，
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 但这不会占用更多的内存- 在低1Mb 内存范围内我们不执行写时复制操作，所以
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 这些页面可以与内核共享。因此这是nr=xxxx 的特殊情况（nr 在程序中指页面数）。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//// 复制指定线性地址和长度（页表个数）内存对应的页目录项和页表，从而被复制的页目录和
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//// 页表对应的原物理内存区被共享使用。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 复制指定地址和长度的内存对应的页目录项和页表项。需申请页面来存放新页表，原内存区被共享；
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 此后两个进程将共享内存区，直到有一个进程执行写操作时，才分配新的内存页（写时复制机制）。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">copy_page_tables</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> from,<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> to,<span style="color:#66d9ef">long</span> size)
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span> from_page_table;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span> to_page_table;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> this_page;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span> from_dir, <span style="color:#f92672">*</span> to_dir;
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> nr;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 源地址和目的地址都需要是在4Mb 的内存边界地址上。否则出错，死机。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> ((from<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0x3fffff</span>) <span style="color:#f92672">||</span> (to<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0x3fffff</span>))
-</span></span><span style="display:flex;"><span>		panic(<span style="color:#e6db74">&#34;copy_page_tables called with wrong alignment&#34;</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 取得源地址和目的地址的目录项(from_dir 和to_dir)。参见对115 句的注释。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	from_dir <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>) ((from<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">20</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffc</span>); <span style="color:#75715e">/* _pg_dir = 0 */</span>
-</span></span><span style="display:flex;"><span>	to_dir <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>) ((to<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">20</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffc</span>);
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 计算要复制的内存块占用的页表数（也即目录项数）。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	size <span style="color:#f92672">=</span> ((<span style="color:#66d9ef">unsigned</span>) (size<span style="color:#f92672">+</span><span style="color:#ae81ff">0x3fffff</span>)) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">22</span>;
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 下面开始对每个占用的页表依次进行复制操作。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span>( ; size<span style="color:#f92672">--&gt;</span><span style="color:#ae81ff">0</span> ; from_dir<span style="color:#f92672">++</span>,to_dir<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;</span> <span style="color:#f92672">*</span>to_dir)<span style="color:#75715e">// 如果目的目录项指定的页表已经存在(P=1)，则出错，死机。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			panic(<span style="color:#e6db74">&#34;copy_page_tables: already exist&#34;</span>);
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(<span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;</span> <span style="color:#f92672">*</span>from_dir))<span style="color:#75715e">// 如果此源目录项未被使用，则不用复制对应页表，跳过。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#66d9ef">continue</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 取当前源目录项中页表的地址 -&gt; from_page_table。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		from_page_table <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>) (<span style="color:#ae81ff">0xfffff000</span> <span style="color:#f92672">&amp;</span> <span style="color:#f92672">*</span>from_dir);
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 为目的页表取一页空闲内存，如果返回是0 则说明没有申请到空闲内存页面。返回值=-1，退出。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(to_page_table <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>) get_free_page()))
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;	<span style="color:#75715e">/* Out of memory, see freeing */</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 设置目的目录项信息。7 是标志信息，表示(Usr, R/W, Present)。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#f92672">*</span>to_dir <span style="color:#f92672">=</span> ((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>) to_page_table) <span style="color:#f92672">|</span> <span style="color:#ae81ff">7</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 针对当前处理的页表，设置需复制的页面数。如果是在内核空间，则仅需复制头160 页，
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#75715e">// 否则需要复制1 个页表中的所有1024 页面。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		nr <span style="color:#f92672">=</span> (from<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)<span style="color:#f92672">?</span><span style="color:#ae81ff">0xA0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1024</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 对于当前页表，开始复制指定数目nr 个内存页面。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">for</span> ( ; nr<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> ; from_page_table<span style="color:#f92672">++</span>,to_page_table<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>			this_page <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>from_page_table;<span style="color:#75715e">// 取源页表项内容。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(<span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;</span> this_page))<span style="color:#75715e">// 如果当前源页面没有使用，则不用复制。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>				<span style="color:#66d9ef">continue</span>;
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 复位页表项中R/W 标志(置0)。(如果U/S 位是0，则R/W 就没有作用。如果U/S 是1，而R/W 是0，
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 那么运行在用户层的代码就只能读页面。如果U/S 和R/W 都置位，则就有写的权限。)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			this_page <span style="color:#f92672">&amp;=</span> <span style="color:#f92672">~</span><span style="color:#ae81ff">2</span>;
-</span></span><span style="display:flex;"><span>			<span style="color:#f92672">*</span>to_page_table <span style="color:#f92672">=</span> this_page;<span style="color:#75715e">// 将该页表项复制到目的页表中。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 如果该页表项所指页面的地址在1M 以上，则需要设置内存页面映射数组mem_map[]，于是计算
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 页面号，并以它为索引在页面映射数组相应项中增加引用次数。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> (this_page <span style="color:#f92672">&gt;</span> LOW_MEM) {
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 下面这句的含义是令源页表项所指内存页也为只读。因为现在开始有两个进程共用内存区了。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 若其中一个内存需要进行写操作，则可以通过页异常的写保护处理，为执行写操作的进程分配
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 一页新的空闲页面，也即进行写时复制的操作。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>				<span style="color:#f92672">*</span>from_page_table <span style="color:#f92672">=</span> this_page;<span style="color:#75715e">// 令源页表项也只读。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>				this_page <span style="color:#f92672">-=</span> LOW_MEM;
-</span></span><span style="display:flex;"><span>				this_page <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#ae81ff">12</span>;
-</span></span><span style="display:flex;"><span>				mem_map[this_page]<span style="color:#f92672">++</span>;
-</span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	invalidate();<span style="color:#75715e">// 刷新页变换高速缓冲。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>根据 <code>fork</code> 的特性，这个函数执行之后的预期是两个进程的页表都指向同一个物理地址空间</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">// old = 0, new = 64M, limit = 640K
+</span><span style="color:#75715e"></span>copy_page_table(old_data_base, new_data_base, data_limit);
+</code></pre></div><p>这个函数位于 <code>mm/memory.c</code>，具体实现如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/*
+</span><span style="color:#75715e"> * 好了，下面是内存管理mm 中最为复杂的程序之一。它通过只复制内存页面
+</span><span style="color:#75715e"> * 来拷贝一定范围内线性地址中的内容。希望代码中没有错误，因为我不想
+</span><span style="color:#75715e"> * 再调试这块代码了 :-)
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * 注意！我们并不是仅复制任何内存块- 内存块的地址需要是4Mb 的倍数（正好
+</span><span style="color:#75715e"> * 一个页目录项对应的内存大小），因为这样处理可使函数很简单。不管怎样，
+</span><span style="color:#75715e"> * 它仅被fork()使用（fork.c）
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * 注意!!当from==0 时，是在为第一次fork()调用复制内核空间。此时我们
+</span><span style="color:#75715e"> * 不想复制整个页目录项对应的内存，因为这样做会导致内存严重的浪费- 我们
+</span><span style="color:#75715e"> * 只复制头160 个页面- 对应640kB。即使是复制这些页面也已经超出我们的需求，
+</span><span style="color:#75715e"> * 但这不会占用更多的内存- 在低1Mb 内存范围内我们不执行写时复制操作，所以
+</span><span style="color:#75715e"> * 这些页面可以与内核共享。因此这是nr=xxxx 的特殊情况（nr 在程序中指页面数）。
+</span><span style="color:#75715e"> */</span>
+<span style="color:#75715e">//// 复制指定线性地址和长度（页表个数）内存对应的页目录项和页表，从而被复制的页目录和
+</span><span style="color:#75715e">//// 页表对应的原物理内存区被共享使用。
+</span><span style="color:#75715e">// 复制指定地址和长度的内存对应的页目录项和页表项。需申请页面来存放新页表，原内存区被共享；
+</span><span style="color:#75715e">// 此后两个进程将共享内存区，直到有一个进程执行写操作时，才分配新的内存页（写时复制机制）。
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">copy_page_tables</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> from,<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> to,<span style="color:#66d9ef">long</span> size)
+{
+	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span> from_page_table;
+	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span> to_page_table;
+	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> this_page;
+	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span> from_dir, <span style="color:#f92672">*</span> to_dir;
+	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> nr;
+
+	<span style="color:#75715e">// 源地址和目的地址都需要是在4Mb 的内存边界地址上。否则出错，死机。
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> ((from<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0x3fffff</span>) <span style="color:#f92672">||</span> (to<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0x3fffff</span>))
+		panic(<span style="color:#e6db74">&#34;copy_page_tables called with wrong alignment&#34;</span>);
+	<span style="color:#75715e">// 取得源地址和目的地址的目录项(from_dir 和to_dir)。参见对115 句的注释。
+</span><span style="color:#75715e"></span>	from_dir <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>) ((from<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">20</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffc</span>); <span style="color:#75715e">/* _pg_dir = 0 */</span>
+	to_dir <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>) ((to<span style="color:#f92672">&gt;&gt;</span><span style="color:#ae81ff">20</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xffc</span>);
+	<span style="color:#75715e">// 计算要复制的内存块占用的页表数（也即目录项数）。
+</span><span style="color:#75715e"></span>	size <span style="color:#f92672">=</span> ((<span style="color:#66d9ef">unsigned</span>) (size<span style="color:#f92672">+</span><span style="color:#ae81ff">0x3fffff</span>)) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">22</span>;
+	<span style="color:#75715e">// 下面开始对每个占用的页表依次进行复制操作。
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span>( ; size<span style="color:#f92672">--&gt;</span><span style="color:#ae81ff">0</span> ; from_dir<span style="color:#f92672">++</span>,to_dir<span style="color:#f92672">++</span>) {
+		<span style="color:#66d9ef">if</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;</span> <span style="color:#f92672">*</span>to_dir)<span style="color:#75715e">// 如果目的目录项指定的页表已经存在(P=1)，则出错，死机。
+</span><span style="color:#75715e"></span>			panic(<span style="color:#e6db74">&#34;copy_page_tables: already exist&#34;</span>);
+		<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(<span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;</span> <span style="color:#f92672">*</span>from_dir))<span style="color:#75715e">// 如果此源目录项未被使用，则不用复制对应页表，跳过。
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">continue</span>;
+		<span style="color:#75715e">// 取当前源目录项中页表的地址 -&gt; from_page_table。
+</span><span style="color:#75715e"></span>		from_page_table <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>) (<span style="color:#ae81ff">0xfffff000</span> <span style="color:#f92672">&amp;</span> <span style="color:#f92672">*</span>from_dir);
+<span style="color:#75715e">// 为目的页表取一页空闲内存，如果返回是0 则说明没有申请到空闲内存页面。返回值=-1，退出。
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(to_page_table <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>) get_free_page()))
+			<span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;	<span style="color:#75715e">/* Out of memory, see freeing */</span>
+		<span style="color:#75715e">// 设置目的目录项信息。7 是标志信息，表示(Usr, R/W, Present)。
+</span><span style="color:#75715e"></span>		<span style="color:#f92672">*</span>to_dir <span style="color:#f92672">=</span> ((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>) to_page_table) <span style="color:#f92672">|</span> <span style="color:#ae81ff">7</span>;
+		<span style="color:#75715e">// 针对当前处理的页表，设置需复制的页面数。如果是在内核空间，则仅需复制头160 页，
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 否则需要复制1 个页表中的所有1024 页面。
+</span><span style="color:#75715e"></span>		nr <span style="color:#f92672">=</span> (from<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)<span style="color:#f92672">?</span><span style="color:#ae81ff">0xA0</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1024</span>;
+		<span style="color:#75715e">// 对于当前页表，开始复制指定数目nr 个内存页面。
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">for</span> ( ; nr<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> ; from_page_table<span style="color:#f92672">++</span>,to_page_table<span style="color:#f92672">++</span>) {
+			this_page <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>from_page_table;<span style="color:#75715e">// 取源页表项内容。
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(<span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;</span> this_page))<span style="color:#75715e">// 如果当前源页面没有使用，则不用复制。
+</span><span style="color:#75715e"></span>				<span style="color:#66d9ef">continue</span>;
+<span style="color:#75715e">// 复位页表项中R/W 标志(置0)。(如果U/S 位是0，则R/W 就没有作用。如果U/S 是1，而R/W 是0，
+</span><span style="color:#75715e">// 那么运行在用户层的代码就只能读页面。如果U/S 和R/W 都置位，则就有写的权限。)
+</span><span style="color:#75715e"></span>			this_page <span style="color:#f92672">&amp;=</span> <span style="color:#f92672">~</span><span style="color:#ae81ff">2</span>;
+			<span style="color:#f92672">*</span>to_page_table <span style="color:#f92672">=</span> this_page;<span style="color:#75715e">// 将该页表项复制到目的页表中。
+</span><span style="color:#75715e">// 如果该页表项所指页面的地址在1M 以上，则需要设置内存页面映射数组mem_map[]，于是计算
+</span><span style="color:#75715e">// 页面号，并以它为索引在页面映射数组相应项中增加引用次数。
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> (this_page <span style="color:#f92672">&gt;</span> LOW_MEM) {
+<span style="color:#75715e">// 下面这句的含义是令源页表项所指内存页也为只读。因为现在开始有两个进程共用内存区了。
+</span><span style="color:#75715e">// 若其中一个内存需要进行写操作，则可以通过页异常的写保护处理，为执行写操作的进程分配
+</span><span style="color:#75715e">// 一页新的空闲页面，也即进行写时复制的操作。
+</span><span style="color:#75715e"></span>				<span style="color:#f92672">*</span>from_page_table <span style="color:#f92672">=</span> this_page;<span style="color:#75715e">// 令源页表项也只读。
+</span><span style="color:#75715e"></span>				this_page <span style="color:#f92672">-=</span> LOW_MEM;
+				this_page <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#ae81ff">12</span>;
+				mem_map[this_page]<span style="color:#f92672">++</span>;
+			}
+		}
+	}
+	invalidate();<span style="color:#75715e">// 刷新页变换高速缓冲。
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p>根据 <code>fork</code> 的特性，这个函数执行之后的预期是两个进程的页表都指向同一个物理地址空间</p>
 <p>具体的实现比较复杂，主要看注释了</p>
 
 </section>
@@ -1050,13 +1050,15 @@ high addr
             
                 
             
+                
+            
             
             ⌨&nbsp;
-            85.58k&nbsp;
+            86.19k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            37&nbsp;
+            38&nbsp;
             篇文章
         
     </section>
