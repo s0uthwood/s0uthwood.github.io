@@ -6,7 +6,251 @@
         <description>Recent content on s0uthwood&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Thu, 10 Nov 2022 10:28:09 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 28 Feb 2023 01:55:25 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>CS110L week1 writeup</title>
+        <link>/post/cs110l-week1-writeup/</link>
+        <pubDate>Tue, 28 Feb 2023 01:55:25 +0800</pubDate>
+        
+        <guid>/post/cs110l-week1-writeup/</guid>
+        <description>&lt;img src="/post/cs110l-week1-writeup/cover.jpg" alt="Featured image of post CS110L week1 writeup" /&gt;&lt;h2 id=&#34;part-1-getting-oriented&#34;&gt;Part 1: Getting oriented&lt;/h2&gt;
+&lt;p&gt;Rust 源码文件基本结构&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;|- src
+|  |- main.rs
+|- Cargo.toml
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中 &lt;code&gt;Cargo.toml&lt;/code&gt; 文件内容&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[package]
+name = &amp;quot;hello-world&amp;quot;
+version = &amp;quot;0.1.0&amp;quot;
+authors = [&amp;quot;Ryan Eberhardt &amp;lt;reberhardt7@gmail.com&amp;gt;&amp;quot;]
+edition = &amp;quot;2018&amp;quot;
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;main.rs&lt;/code&gt; 文件内容&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+    println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello, world!&amp;#34;&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;编译命令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ cargo build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;生成二进制文件为 &lt;code&gt;target/debug/hello-world&lt;/code&gt;，文件名称由 &lt;code&gt;toml&lt;/code&gt; 文件中的 &lt;code&gt;name&lt;/code&gt; 设置&lt;/p&gt;
+&lt;p&gt;运行命令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ cargo run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;part-2-rust-warmup&#34;&gt;Part 2: Rust warmup&lt;/h2&gt;
+&lt;h3 id=&#34;语法&#34;&gt;语法&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Numeric types&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;有符号类型为 &lt;code&gt;i8&lt;/code&gt;, &lt;code&gt;i16&lt;/code&gt;, &lt;code&gt;i32&lt;/code&gt;, &lt;code&gt;i64&lt;/code&gt;，&lt;code&gt;i&lt;/code&gt; 表示 &lt;code&gt;int&lt;/code&gt;，数字表示 bit 长度&lt;/p&gt;
+&lt;p&gt;对应的无符号类型为 &lt;code&gt;u8&lt;/code&gt;, &lt;code&gt;u16&lt;/code&gt;, &lt;code&gt;u32&lt;/code&gt;, &lt;code&gt;u64&lt;/code&gt;，&lt;code&gt;u&lt;/code&gt; 表示 &lt;code&gt;unsigned&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;使用 &lt;code&gt;let&lt;/code&gt; 声明变量&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// int n = 1;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; n: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Type inference&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;编译器可以自动识别变量类型，只有无法确定时，才需要显式声明&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;&lt;em&gt;variable&lt;/em&gt; and &lt;em&gt;constants&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;数据类型默认是 &lt;code&gt;const&lt;/code&gt;，定义变量时需要使用 &lt;code&gt;mut&lt;/code&gt; 关键字&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+n &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Strings&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;字符串有两种类型，分别为 &lt;code&gt;&amp;amp;str&lt;/code&gt; 和 &lt;code&gt;String&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;amp;str&lt;/code&gt; 指向内存中不可变的字符串（可以缺省），例如定义一个只读字符串：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; s: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;str&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello world&amp;#34;&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;String&lt;/code&gt; 类型保存在 heap 中，需要使用 &lt;code&gt;mut&lt;/code&gt;，&lt;code&gt;String&lt;/code&gt; 可缺省&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; s: String &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; String::from(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello&amp;#34;&lt;/span&gt;);
+s.push_str(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;world!&amp;#34;&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;在 &lt;code&gt;String&lt;/code&gt; 追加内容后，编译器会自动根据需要 &lt;code&gt;realloc&lt;/code&gt; 字符串所在的堆&lt;/p&gt;
+&lt;p&gt;在最后一次使用后，编译器会自动进行 &lt;code&gt;free&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Data Struct&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;vector&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; v: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Vec::new();
+v.push(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;);
+v.push(&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;array&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;rust 中的数组长度是可变的&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; arr: [&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;];
+arr[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;
+println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{}&amp;#34;&lt;/span&gt;, arr[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; arr[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Loop&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;可以使用 &lt;code&gt;in&lt;/code&gt; 遍历数组内容&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; v.iter() {
+    println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{}&amp;#34;&lt;/span&gt;, i);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;While&lt;/code&gt; 循环&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt; {
+    i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;为 &lt;code&gt;While true&lt;/code&gt; 提供了特殊的 &lt;code&gt;loop&lt;/code&gt; 循环，这个关键字有助于编译器对变量初始化做一些推测&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;loop&lt;/span&gt; {
+    i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; { &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;; }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Function&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要指定函数类型，编译器无法推测&lt;/li&gt;
+&lt;li&gt;函数可以没有 &lt;code&gt;return&lt;/code&gt; 关键字，最后不加分号即可&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sum&lt;/span&gt;(a: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;, b: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;) -&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt; {
+    a &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; b
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// do stuff...
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;rust 中所有东西都是表达式，主要是受到了函数式编程的影响&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// int x = someBool ? 2 : 4;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; someBool {&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;} &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在这一思想的影响下，函数是一个由分号分隔的表达式序列，并对最后一个表达式的值进行评估&lt;/p&gt;
+&lt;p&gt;所以结尾的 无分号单一表达式 会被认为是返回值&lt;/p&gt;
+&lt;p&gt;例如：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fib&lt;/span&gt;(n: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;) -&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; { n } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; { fib(n&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; fib(n&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;练习&#34;&gt;练习&lt;/h3&gt;
+&lt;p&gt;实现三个函数&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;add_n&lt;/code&gt;: 输入一个 vec 和数字 n，为 vec 中每个数字加上 n，并返回一个新 vec&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;add_n_inplace&lt;/code&gt;: 直接修改 vec 中的内容，不返回&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;dedup&lt;/code&gt;: 从一个 vec 中删除重复元素，保留第一个出现的元素（使用 HashSet）&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;add_n&lt;/span&gt;(v: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;, n: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;) -&amp;gt; Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// unimplemented!()
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; ret_v: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Vec::new();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; v.iter() {
+        ret_v.push(i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; n);
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ret_v;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;add_n_inplace&lt;/span&gt;(v: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;mut&lt;/span&gt; Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;, n: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;) {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// unimplemented!()
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;..&lt;/span&gt;v.len() {
+        v[i] &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; n;
+    }
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dedup&lt;/span&gt;(v: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;mut&lt;/span&gt; Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// unimplemented!()
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; hs &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; HashSet::new();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; len &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v.len();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; _ &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;..&lt;/span&gt;len {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; hs.contains(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;(v[x])) {
+            v.remove(x);
+        } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+            hs.insert(v[x]);
+            x &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;part-3-hangman&#34;&gt;Part 3: hangman&lt;/h2&gt;
+&lt;p&gt;写个猜词游戏的代码，直接放源码了，肯定有更好的写法，不过也没必要&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// Simple Hangman Program
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// User gets five incorrect guesses
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// Word chosen randomly from words.txt
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// Inspiration from: https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// This assignment will introduce you to some fundamental syntax in Rust:
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - variable declaration
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - string manipulation
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - conditional statements
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - loops
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - vectors
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - files
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - user input
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// We&amp;#39;ve tried to limit/hide Rust&amp;#39;s quirks since we&amp;#39;ll discuss those details
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// more in depth in the coming lectures.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;extern&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;crate&lt;/span&gt; rand;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; rand::Rng;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; std::fs;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; std::io;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; std::io::Write;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; NUM_INCORRECT_GUESSES: &lt;span style=&#34;color:#66d9ef&#34;&gt;u32&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; WORDS_PATH: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;str&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;words.txt&amp;#34;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pick_a_random_word&lt;/span&gt;() -&amp;gt; String {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; file_string &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; fs::read_to_string(WORDS_PATH).expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Unable to read file.&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; words: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;str&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; file_string.split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\n&amp;#39;&lt;/span&gt;).collect();
+    String::from(words[rand::thread_rng().gen_range(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, words.len())].trim())
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;so_far_guess&lt;/span&gt;(word: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;, history_guessed: String) -&amp;gt; String {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; String::new();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; w &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; word {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; history_guessed.contains(w) {
+            x.push(w);
+        } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+            x.push(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;-&amp;#39;&lt;/span&gt;);
+        }
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; x;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;guess_success&lt;/span&gt;(word: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;, history_guessed: String) -&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; w &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; word {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;history_guessed.contains(w) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+        }
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; secret_word &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pick_a_random_word();
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Note: given what you know about Rust so far, it&amp;#39;s easier to pull characters out of a
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// vector than it is to pull them out of a string. You can get the ith character of
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// secret_word by doing secret_word_chars[i].
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; secret_word_chars: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; secret_word.chars().collect();
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Uncomment for debugging:
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;random word: {}&amp;#34;&lt;/span&gt;, secret_word);
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Your code here! :)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; your_left_guesses &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NUM_INCORRECT_GUESSES;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; your_guessed_letters &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; String::new();
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; your_left_guesses &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; {
+
+        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;The word so far is {}&amp;#34;&lt;/span&gt;, so_far_guess(secret_word_chars.clone(), your_guessed_letters.clone()));
+        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;You have guessed the following letters: {}&amp;#34;&lt;/span&gt;, your_guessed_letters);
+        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;You have {} guesses left&amp;#34;&lt;/span&gt;, your_left_guesses);
+        print!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Please guess a letter: &amp;#34;&lt;/span&gt;);
+        io::stdout()
+            .flush()
+            .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Error flushing stdout.&amp;#34;&lt;/span&gt;);
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; guess &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; String::new();
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; cur_guess: &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;;
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;loop&lt;/span&gt; {
+            io::stdin()
+                .read_line(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; guess)
+                .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Error reading line.&amp;#34;&lt;/span&gt;);
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; guess.len() &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; {
+                cur_guess &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; guess.remove(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;your_guessed_letters.contains(cur_guess) {
+                    your_guessed_letters.push(cur_guess);
+                    &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+                }
+            }
+        }
+        
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;secret_word.contains(cur_guess) {
+            your_left_guesses &lt;span style=&#34;color:#f92672&#34;&gt;-=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+            println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sorry, that letter is not in the word&amp;#34;&lt;/span&gt;);
+        }
+
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; guess_success(secret_word_chars.clone(), your_guessed_letters.clone()) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
+        }
+        println!();
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; your_left_guesses &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; {
+        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Congratulations you guessed the secret word: {}!&amp;#34;&lt;/span&gt;, secret_word);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sorry, you ran out of guesses!&amp;#34;&lt;/span&gt;);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
         <title>RTFSC-Linux0.11 Part3: A new process</title>
         <link>/post/rtfsc-linux-part3-a-new-process/</link>
         <pubDate>Thu, 10 Nov 2022 10:28:09 +0800</pubDate>
@@ -22181,250 +22425,6 @@ print long_to_bytes(flag)
     &gt;https://texample.net/tikz/examples/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;找到个网站。要用的时候到里面找吧。&lt;/p&gt;
 </description>
-        </item>
-        <item>
-        <title>CS110L week1 writeup</title>
-        <link>/post/cs110l-week1-writeup/</link>
-        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-        
-        <guid>/post/cs110l-week1-writeup/</guid>
-        <description>&lt;img src="/post/cs110l-week1-writeup/cover.jpg" alt="Featured image of post CS110L week1 writeup" /&gt;&lt;h2 id=&#34;part-1-getting-oriented&#34;&gt;Part 1: Getting oriented&lt;/h2&gt;
-&lt;p&gt;Rust 源码文件基本结构&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;|- src
-|  |- main.rs
-|- Cargo.toml
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中 &lt;code&gt;Cargo.toml&lt;/code&gt; 文件内容&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[package]
-name = &amp;quot;hello-world&amp;quot;
-version = &amp;quot;0.1.0&amp;quot;
-authors = [&amp;quot;Ryan Eberhardt &amp;lt;reberhardt7@gmail.com&amp;gt;&amp;quot;]
-edition = &amp;quot;2018&amp;quot;
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;main.rs&lt;/code&gt; 文件内容&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
-    println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello, world!&amp;#34;&lt;/span&gt;);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;编译命令&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ cargo build
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;生成二进制文件为 &lt;code&gt;target/debug/hello-world&lt;/code&gt;，文件名称由 &lt;code&gt;toml&lt;/code&gt; 文件中的 &lt;code&gt;name&lt;/code&gt; 设置&lt;/p&gt;
-&lt;p&gt;运行命令&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;$ cargo run
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;part-2-rust-warmup&#34;&gt;Part 2: Rust warmup&lt;/h2&gt;
-&lt;h3 id=&#34;语法&#34;&gt;语法&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Numeric types&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;有符号类型为 &lt;code&gt;i8&lt;/code&gt;, &lt;code&gt;i16&lt;/code&gt;, &lt;code&gt;i32&lt;/code&gt;, &lt;code&gt;i64&lt;/code&gt;，&lt;code&gt;i&lt;/code&gt; 表示 &lt;code&gt;int&lt;/code&gt;，数字表示 bit 长度&lt;/p&gt;
-&lt;p&gt;对应的无符号类型为 &lt;code&gt;u8&lt;/code&gt;, &lt;code&gt;u16&lt;/code&gt;, &lt;code&gt;u32&lt;/code&gt;, &lt;code&gt;u64&lt;/code&gt;，&lt;code&gt;u&lt;/code&gt; 表示 &lt;code&gt;unsigned&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;使用 &lt;code&gt;let&lt;/code&gt; 声明变量&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// int n = 1;
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; n: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Type inference&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;编译器可以自动识别变量类型，只有无法确定时，才需要显式声明&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;&lt;em&gt;variable&lt;/em&gt; and &lt;em&gt;constants&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;数据类型默认是 &lt;code&gt;const&lt;/code&gt;，定义变量时需要使用 &lt;code&gt;mut&lt;/code&gt; 关键字&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
-n &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Strings&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;字符串有两种类型，分别为 &lt;code&gt;&amp;amp;str&lt;/code&gt; 和 &lt;code&gt;String&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;&amp;amp;str&lt;/code&gt; 指向内存中不可变的字符串（可以缺省），例如定义一个只读字符串：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; s: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;str&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello world&amp;#34;&lt;/span&gt;;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;String&lt;/code&gt; 类型保存在 heap 中，需要使用 &lt;code&gt;mut&lt;/code&gt;，&lt;code&gt;String&lt;/code&gt; 可缺省&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; s: String &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; String::from(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello&amp;#34;&lt;/span&gt;);
-s.push_str(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;world!&amp;#34;&lt;/span&gt;);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
-&lt;p&gt;在 &lt;code&gt;String&lt;/code&gt; 追加内容后，编译器会自动根据需要 &lt;code&gt;realloc&lt;/code&gt; 字符串所在的堆&lt;/p&gt;
-&lt;p&gt;在最后一次使用后，编译器会自动进行 &lt;code&gt;free&lt;/code&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Data Struct&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;vector&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; v: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Vec::new();
-v.push(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;);
-v.push(&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;em&gt;array&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;rust 中的数组长度是可变的&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; arr: [&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;; &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt;];
-arr[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;;
-println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{}&amp;#34;&lt;/span&gt;, arr[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; arr[&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;]);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Loop&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;可以使用 &lt;code&gt;in&lt;/code&gt; 遍历数组内容&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; v.iter() {
-    println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{}&amp;#34;&lt;/span&gt;, i);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;While&lt;/code&gt; 循环&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt; {
-    i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;为 &lt;code&gt;While true&lt;/code&gt; 提供了特殊的 &lt;code&gt;loop&lt;/code&gt; 循环，这个关键字有助于编译器对变量初始化做一些推测&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;loop&lt;/span&gt; {
-    i &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt; { &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;; }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Function&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;需要指定函数类型，编译器无法推测&lt;/li&gt;
-&lt;li&gt;函数可以没有 &lt;code&gt;return&lt;/code&gt; 关键字，最后不加分号即可&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sum&lt;/span&gt;(a: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;, b: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;) -&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt; {
-    a &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; b
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
-    &lt;span style=&#34;color:#75715e&#34;&gt;// do stuff...
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;rust 中所有东西都是表达式，主要是受到了函数式编程的影响&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// int x = someBool ? 2 : 4;
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; someBool {&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;} &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;};
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;在这一思想的影响下，函数是一个由分号分隔的表达式序列，并对最后一个表达式的值进行评估&lt;/p&gt;
-&lt;p&gt;所以结尾的 无分号单一表达式 会被认为是返回值&lt;/p&gt;
-&lt;p&gt;例如：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;fib&lt;/span&gt;(n: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;) -&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; n &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; { n } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; { fib(n&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; fib(n&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;) }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;练习&#34;&gt;练习&lt;/h3&gt;
-&lt;p&gt;实现三个函数&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;add_n&lt;/code&gt;: 输入一个 vec 和数字 n，为 vec 中每个数字加上 n，并返回一个新 vec&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;add_n_inplace&lt;/code&gt;: 直接修改 vec 中的内容，不返回&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;dedup&lt;/code&gt;: 从一个 vec 中删除重复元素，保留第一个出现的元素（使用 HashSet）&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;add_n&lt;/span&gt;(v: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;, n: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;) -&amp;gt; Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; {
-    &lt;span style=&#34;color:#75715e&#34;&gt;// unimplemented!()
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; ret_v: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Vec::new();
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; v.iter() {
-        ret_v.push(i &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; n);
-    }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; ret_v;
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;add_n_inplace&lt;/span&gt;(v: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;mut&lt;/span&gt; Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;, n: &lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;) {
-    &lt;span style=&#34;color:#75715e&#34;&gt;// unimplemented!()
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;..&lt;/span&gt;v.len() {
-        v[i] &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; n;
-    }
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dedup&lt;/span&gt;(v: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;mut&lt;/span&gt; Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;i32&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;) {
-    &lt;span style=&#34;color:#75715e&#34;&gt;// unimplemented!()
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; hs &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; HashSet::new();
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; len &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v.len();
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; _ &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;..&lt;/span&gt;len {
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; hs.contains(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;(v[x])) {
-            v.remove(x);
-        } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
-            hs.insert(v[x]);
-            x &lt;span style=&#34;color:#f92672&#34;&gt;+=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-        }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;part-3-hangman&#34;&gt;Part 3: hangman&lt;/h2&gt;
-&lt;p&gt;写个猜词游戏的代码，直接放源码了，肯定有更好的写法，不过也没必要&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// Simple Hangman Program
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// User gets five incorrect guesses
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// Word chosen randomly from words.txt
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// Inspiration from: https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// This assignment will introduce you to some fundamental syntax in Rust:
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - variable declaration
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - string manipulation
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - conditional statements
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - loops
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - vectors
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - files
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// - user input
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// We&amp;#39;ve tried to limit/hide Rust&amp;#39;s quirks since we&amp;#39;ll discuss those details
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// more in depth in the coming lectures.
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;extern&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;crate&lt;/span&gt; rand;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; rand::Rng;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; std::fs;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; std::io;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;use&lt;/span&gt; std::io::Write;
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; NUM_INCORRECT_GUESSES: &lt;span style=&#34;color:#66d9ef&#34;&gt;u32&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;;
-&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; WORDS_PATH: &lt;span style=&#34;color:#66d9ef&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;str&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;words.txt&amp;#34;&lt;/span&gt;;
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;pick_a_random_word&lt;/span&gt;() -&amp;gt; String {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; file_string &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; fs::read_to_string(WORDS_PATH).expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Unable to read file.&amp;#34;&lt;/span&gt;);
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; words: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;str&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; file_string.split(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\n&amp;#39;&lt;/span&gt;).collect();
-    String::from(words[rand::thread_rng().gen_range(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, words.len())].trim())
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;so_far_guess&lt;/span&gt;(word: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;, history_guessed: String) -&amp;gt; String {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; String::new();
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; w &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; word {
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; history_guessed.contains(w) {
-            x.push(w);
-        } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
-            x.push(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;-&amp;#39;&lt;/span&gt;);
-        }
-    }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; x;
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;guess_success&lt;/span&gt;(word: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;, history_guessed: String) -&amp;gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;bool&lt;/span&gt; {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; w &lt;span style=&#34;color:#66d9ef&#34;&gt;in&lt;/span&gt; word {
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;history_guessed.contains(w) {
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
-        }
-    }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;;
-}
-
-&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;() {
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; secret_word &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; pick_a_random_word();
-    &lt;span style=&#34;color:#75715e&#34;&gt;// Note: given what you know about Rust so far, it&amp;#39;s easier to pull characters out of a
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// vector than it is to pull them out of a string. You can get the ith character of
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// secret_word by doing secret_word_chars[i].
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; secret_word_chars: Vec&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; secret_word.chars().collect();
-    &lt;span style=&#34;color:#75715e&#34;&gt;// Uncomment for debugging:
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;random word: {}&amp;#34;&lt;/span&gt;, secret_word);
-
-    &lt;span style=&#34;color:#75715e&#34;&gt;// Your code here! :)
-&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; your_left_guesses &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; NUM_INCORRECT_GUESSES;
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; your_guessed_letters &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; String::new();
-
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; your_left_guesses &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; {
-
-        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;The word so far is {}&amp;#34;&lt;/span&gt;, so_far_guess(secret_word_chars.clone(), your_guessed_letters.clone()));
-        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;You have guessed the following letters: {}&amp;#34;&lt;/span&gt;, your_guessed_letters);
-        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;You have {} guesses left&amp;#34;&lt;/span&gt;, your_left_guesses);
-        print!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Please guess a letter: &amp;#34;&lt;/span&gt;);
-        io::stdout()
-            .flush()
-            .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Error flushing stdout.&amp;#34;&lt;/span&gt;);
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; guess &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; String::new();
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; cur_guess: &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;;
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;loop&lt;/span&gt; {
-            io::stdin()
-                .read_line(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;mut&lt;/span&gt; guess)
-                .expect(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Error reading line.&amp;#34;&lt;/span&gt;);
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; guess.len() &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; {
-                cur_guess &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; guess.remove(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
-                &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;your_guessed_letters.contains(cur_guess) {
-                    your_guessed_letters.push(cur_guess);
-                    &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
-                }
-            }
-        }
-        
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;secret_word.contains(cur_guess) {
-            your_left_guesses &lt;span style=&#34;color:#f92672&#34;&gt;-=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
-            println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sorry, that letter is not in the word&amp;#34;&lt;/span&gt;);
-        }
-
-        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; guess_success(secret_word_chars.clone(), your_guessed_letters.clone()) {
-            &lt;span style=&#34;color:#66d9ef&#34;&gt;break&lt;/span&gt;;
-        }
-        println!();
-    }
-    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; your_left_guesses &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; {
-        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Congratulations you guessed the secret word: {}!&amp;#34;&lt;/span&gt;, secret_word);
-    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
-        println!(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Sorry, you ran out of guesses!&amp;#34;&lt;/span&gt;);
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         </item>
         
     </channel>
