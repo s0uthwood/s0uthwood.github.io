@@ -5,17 +5,16 @@
     <link>/tags/rust/</link>
     <description>Recent content in Rust on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Tue, 28 Feb 2023 01:55:25 +0800</lastBuildDate><atom:link href="/tags/rust/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="/tags/rust/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CS110L week1 writeup</title>
       <link>/post/cs110l-week1-writeup/</link>
-      <pubDate>Tue, 28 Feb 2023 01:55:25 +0800</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/post/cs110l-week1-writeup/</guid>
       <description>Part 1: Getting oriented Rust 源码文件基本结构
-|- src| |- main.rs|- Cargo.toml其中 Cargo.toml 文件内容
-[package]name = &amp;quot;hello-world&amp;quot;version = &amp;quot;0.1.0&amp;quot;authors = [&amp;quot;Ryan Eberhardt &amp;lt;reberhardt7@gmail.com&amp;gt;&amp;quot;]edition = &amp;quot;2018&amp;quot;# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html[dependencies]main.rs 文件内容
+|- src| |- main.rs|- Cargo.toml 其中 Cargo.toml 文件内容
+[package]name = &amp;#34;hello-world&amp;#34;version = &amp;#34;0.1.0&amp;#34;authors = [&amp;#34;Ryan Eberhardt &amp;lt;reberhardt7@gmail.com&amp;gt;&amp;#34;]edition = &amp;#34;2018&amp;#34;# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html[dependencies] main.rs 文件内容
 fn main() { println!(&amp;#34;Hello, world!&amp;#34;); } 编译命令
 $ cargo build 生成二进制文件为 target/debug/hello-world，文件名称由 toml 文件中的 name 设置
 运行命令

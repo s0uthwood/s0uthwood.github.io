@@ -399,9 +399,9 @@ rep movsb
 cli       ; no interrupts allowed
 </code></pre><p>BIOS 中断至此就不再调用了，接下来会用操作系统的中断覆盖此前 BIOS 提供的中断向量表</p>
 <p>不过首先我们需要将操作系统移动到正确的地址</p>
-<pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">; first we move the system to it's rightful place
+<pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">; first we move the system to it&#39;s rightful place
 mov ax, #0x0000
-cld                 ; 'direction'=0, movs moves forward
+cld                 ; &#39;direction&#39;=0, movs moves forward
 do_move:
   mov es, ax        ; destination segment
   add ax, #0x1000
@@ -609,10 +609,10 @@ call empty_8042
 <p>打开 <code>A20</code> 地址线这里其实又是对 CPU 的控制了，32 位 CPU 考虑到兼容性，必须手动设置才能开启 32 位模式，这里就是手动设置环节</p>
 <pre tabindex="0"><code>; Now we have to reprogram the interrupts.
 ; We put them right after the intel-reserved hardware interrupts, at int 0x20-0x2F.
-; There they won't mess up anything.
-; Sadly IBM really messed this up with the original PC, and they haven't been able to rectify it afterwards.
+; There they won&#39;t mess up anything.
+; Sadly IBM really messed this up with the original PC, and they haven&#39;t been able to rectify it afterwards.
 ; Thus th bios puts interrupts at 0x08-0x0F, witch is used for the internal hardware interrupts as well.
-; We just have to reprogram the 8259's, and it isn't fun.
+; We just have to reprogram the 8259&#39;s, and it isn&#39;t fun.
 
   mov al,#0x11        ; initialization sequence
                       ; 其中 0x11 表示初始化命令的开始，ICW1 命令字，表示边沿触发、多片 8259 级连，最后发送 ICW4 命令字
@@ -623,11 +623,11 @@ call empty_8042
   out #0xA0,al        ; and to 8259A-2
                       ; 同样也给 8259A-2 芯片
   .word   0x00eb,0x00eb
-  mov al,#0x20        ; start of hardware int's (0x20)
+  mov al,#0x20        ; start of hardware int&#39;s (0x20)
   out #0x21,al        ; 这里 0x21 是 8259A-1（主芯片），0xA1 是 8259A-2（从芯片）
                       ; 设置起始中断号为 0x20
   .word   0x00eb,0x00eb
-  mov al,#0x28        ; start of hardware int's 2 (0x28)
+  mov al,#0x28        ; start of hardware int&#39;s 2 (0x28)
   out #0xA1,al        ; 设置从芯片起始中断号为 0x28
   .word   0x00eb,0x00eb
   mov al,#0x04        ; 8259-1 is master
@@ -673,13 +673,13 @@ _setartup_32:
 </code></pre><p><code>_pg_dir</code> 表示页目录，设置分页机制的时候会用到</p>
 <p>将 <code>ds</code> 到 <code>gs</code> 四个段寄存器都赋值为 <code>0x10</code>，按照段选择子，这几个段寄存器都指向了此前 <code>gdt</code> 中，描述符索引为 <code>2</code> 的描述符，也就是数据段描述符</p>
 <p><code>lss</code> 指令相当于让 <code>ss:esp</code> 栈顶指针指向 <code>_stack_start</code>，这在 <code>sched.c</code> 中定义</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">long</span> user_stack[<span style="color:#ae81ff">4096</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>];
-
-<span style="color:#66d9ef">struct</span> {
-  <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>a;
-  <span style="color:#66d9ef">short</span> b;
-} stack_start <span style="color:#f92672">=</span> {<span style="color:#f92672">&amp;</span>user_stack[<span style="color:#ae81ff">4096</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>], <span style="color:#ae81ff">0x10</span>};
-</code></pre></div><p>根据这个定义，<code>0x10</code> 将会赋值给 <code>ss</code> 寄存器（依然是数据段描述符，基址为 <code>0</code>），而 <code>user_stack</code> 的最后一个地址的后一个地址将会赋值给 <code>esp</code>，所以这个 <code>user_stack</code> 就是后面用到的栈了</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">long</span> user_stack[<span style="color:#ae81ff">4096</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>a;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">short</span> b;
+</span></span><span style="display:flex;"><span>} stack_start <span style="color:#f92672">=</span> {<span style="color:#f92672">&amp;</span>user_stack[<span style="color:#ae81ff">4096</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>], <span style="color:#ae81ff">0x10</span>};
+</span></span></code></pre></div><p>根据这个定义，<code>0x10</code> 将会赋值给 <code>ss</code> 寄存器（依然是数据段描述符，基址为 <code>0</code>），而 <code>user_stack</code> 的最后一个地址的后一个地址将会赋值给 <code>esp</code>，所以这个 <code>user_stack</code> 就是后面用到的栈了</p>
 <pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">call setup_idt
 call setup_gdt
 mov eax, 0x10
@@ -725,7 +725,7 @@ _idt:
 </code></pre><p>比较简单，就是将 <code>gdt_descr</code> 加载到 <code>gdtr</code></p>
 <p>长这样：</p>
 <pre tabindex="0"><code>gdt_descr:
-  .word 256 * 8 - 1         ; so does gdt (not that that's any
+  .word 256 * 8 - 1         ; so does gdt (not that that&#39;s any
   .long _gdt                ; magic number, but it works for me :^)
 
   .align 3
@@ -736,7 +736,7 @@ _gdt:
   .quad 0x0000000000000000  ; NULL descriptor
   .quad 0x00c09a0000000fff  ; 16Mb
   .quad 0x00c0920000000fff  ; 16Mb
-  .quad 0x0000000000000000  ; TEMPORARY - don't use
+  .quad 0x0000000000000000  ; TEMPORARY - don&#39;t use
   .fill 252, 8, 0
 </code></pre><p>可以看到，给 <code>idt</code> 和 <code>gdt</code> 都预留了 <code>256 * 8</code> 字节的空间，而 <code>gdt</code> 的初始值为 <code>NULL descriptor</code>，共 64 项</p>
 <blockquote>
@@ -752,7 +752,7 @@ _gdt:
   je 1b
 </code></pre><p>检查芯片设置</p>
 <pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">; 486 should set bit 16, to check for wirte-protect in supervisor mode.
-; Then it would be unnecessary with the &quot;verify_area()&quot;-calls.
+; Then it would be unnecessary with the &#34;verify_area()&#34;-calls.
 ; 486 users probably want to set the NE (#5) bit also, so as to use int 16 for math errors.
 movl eax, cr0         ; check math chip
 andl 0x80000011, eax  ; Save PG, ET, PE
@@ -1065,7 +1065,7 @@ setup_paging:
             
             
             ⌨&nbsp;
-            86.19k&nbsp;
+            86.35k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;

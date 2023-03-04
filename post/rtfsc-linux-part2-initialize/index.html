@@ -148,82 +148,82 @@
 <h2 id="一个操作系统的主函数">一个操作系统的主函数</h2>
 <p><code>main</code> 函数在 <code>init/main.c</code></p>
 <p>这里用了 <code>https://github.com/karottc/linux-0.11</code> 中注释过的代码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">// 内核初始化主程序。初始化结束后将以任务0（idle任务即空闲任务）的身份运行。
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>) {
-    <span style="color:#75715e">/* This really IS void, no error here. */</span>
-    <span style="color:#75715e">/* The startup routine assumes (well, ...) this */</span>
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * Interrupts are still disabled. Do necessary setups, then
-</span><span style="color:#75715e">     * enable them
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#75715e">// 下面这段代码用于保存：
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 根设备号 -&gt;ROOT_DEV；高速缓存末端地址-&gt;buffer_memory_end;
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 机器内存数-&gt;memory_end；主内存开始地址-&gt;main_memory_start；
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 其中ROOT_DEV已在前面包含进的fs.h文件中声明为extern int
-</span><span style="color:#75715e"></span>    ROOT_DEV <span style="color:#f92672">=</span> ORIG_ROOT_DEV;
-    drive_info <span style="color:#f92672">=</span> DRIVE_INFO;                    <span style="color:#75715e">// 复制0x90080处的硬盘参数
-</span><span style="color:#75715e"></span>    memory_end <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">20</span>) <span style="color:#f92672">+</span> (EXT_MEM_K<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">10</span>);     <span style="color:#75715e">// 内存大小=1Mb + 扩展内存(k)*1024 byte
-</span><span style="color:#75715e"></span>    memory_end <span style="color:#f92672">&amp;=</span> <span style="color:#ae81ff">0xfffff000</span>;                   <span style="color:#75715e">// 忽略不到4kb(1页)的内存数
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">16</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)              <span style="color:#75715e">// 内存超过16Mb，则按16Mb计
-</span><span style="color:#75715e"></span>        memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
-    <span style="color:#66d9ef">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">12</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)              <span style="color:#75715e">// 如果内存&gt;12Mb,则设置缓冲区末端=4Mb 
-</span><span style="color:#75715e"></span>        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
-    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">6</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)          <span style="color:#75715e">// 否则若内存&gt;6Mb,则设置缓冲区末端=2Mb
-</span><span style="color:#75715e"></span>        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
-    <span style="color:#66d9ef">else</span>
-        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;        <span style="color:#75715e">// 否则设置缓冲区末端=1Mb
-</span><span style="color:#75715e"></span>    main_memory_start <span style="color:#f92672">=</span> buffer_memory_end;
-    <span style="color:#75715e">// 如果在Makefile文件中定义了内存虚拟盘符号RAMDISK,则初始化虚拟盘。此时主内存将减少。
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">// 以下是内核进行所有方面的初始化工作
-</span><span style="color:#75715e"></span>    mem_init(main_memory_start,memory_end); <span style="color:#75715e">// 主内存区初始化。mm/memory.c
-</span><span style="color:#75715e"></span>    trap_init();                            <span style="color:#75715e">// 陷阱门(硬件中断向量)初始化，kernel/traps.c
-</span><span style="color:#75715e"></span>    blk_dev_init();                         <span style="color:#75715e">// 块设备初始化,kernel/blk_drv/ll_rw_blk.c
-</span><span style="color:#75715e"></span>    chr_dev_init();                         <span style="color:#75715e">// 字符设备初始化, kernel/chr_drv/tty_io.c
-</span><span style="color:#75715e"></span>    tty_init();                             <span style="color:#75715e">// tty初始化， kernel/chr_drv/tty_io.c
-</span><span style="color:#75715e"></span>    time_init();                            <span style="color:#75715e">// 设置开机启动时间 startup_time
-</span><span style="color:#75715e"></span>    sched_init();                           <span style="color:#75715e">// 调度程序初始化(加载任务0的tr,ldtr)(kernel/sched.c)
-</span><span style="color:#75715e"></span>    buffer_init(buffer_memory_end);         <span style="color:#75715e">// 缓冲管理初始化，建内存链表等。(fs/buffer.c)
-</span><span style="color:#75715e"></span>    hd_init();                              <span style="color:#75715e">// 硬盘初始化，kernel/blk_drv/hd.c
-</span><span style="color:#75715e"></span>    floppy_init();                          <span style="color:#75715e">// 软驱初始化，kernel/blk_drv/floppy.c，后面直接忽略了
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">// 完成初始化工作，切换到用户态模式
-</span><span style="color:#75715e"></span>    sti();                                  <span style="color:#75715e">// 所有初始化工作都做完了，开启中断
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 下面过程通过在堆栈中设置的参数，利用中断返回指令启动任务0执行。
-</span><span style="color:#75715e"></span>    move_to_user_mode();                    <span style="color:#75715e">// 移到用户模式下执行
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>fork()) {        <span style="color:#75715e">/* we count on this going ok */</span>
-        init();                             <span style="color:#75715e">// 在新建的子进程(任务1)中执行。
-</span><span style="color:#75715e"></span>    }
-
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     *   NOTE!!   For any other task &#39;pause()&#39; would mean we have to get a
-</span><span style="color:#75715e">     * signal to awaken, but task0 is the sole exception (see &#39;schedule()&#39;)
-</span><span style="color:#75715e">     * as task 0 gets activated at every idle moment (when no other tasks
-</span><span style="color:#75715e">     * can run). For task0 &#39;pause()&#39; just means we go check if some other
-</span><span style="color:#75715e">     * task can run, and if not we return here.
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#75715e">// pause系统调用会把任务0转换成可中断等待状态，再执行调度函数。但是调度函数只要发现系统中
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 没有其他任务可以运行是就会切换到任务0，而不依赖于任务0的状态。
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span>(;;) pause();
-}
-</code></pre></div><p>整个 <code>main</code> 函数可以分为四个部分，第一个部分是内存的一些计算和参数设置，第二个部分是内核所有方面的初始化，第三个部分负责切换到用户态，最后则是将这个程序作为 <code>idle</code> 程序，陷入死循环</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 内核初始化主程序。初始化结束后将以任务0（idle任务即空闲任务）的身份运行。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* This really IS void, no error here. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* The startup routine assumes (well, ...) this */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Interrupts are still disabled. Do necessary setups, then
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * enable them
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 下面这段代码用于保存：
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 根设备号 -&gt;ROOT_DEV；高速缓存末端地址-&gt;buffer_memory_end;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 机器内存数-&gt;memory_end；主内存开始地址-&gt;main_memory_start；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 其中ROOT_DEV已在前面包含进的fs.h文件中声明为extern int
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    ROOT_DEV <span style="color:#f92672">=</span> ORIG_ROOT_DEV;
+</span></span><span style="display:flex;"><span>    drive_info <span style="color:#f92672">=</span> DRIVE_INFO;                    <span style="color:#75715e">// 复制0x90080处的硬盘参数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    memory_end <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">20</span>) <span style="color:#f92672">+</span> (EXT_MEM_K<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">10</span>);     <span style="color:#75715e">// 内存大小=1Mb + 扩展内存(k)*1024 byte
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    memory_end <span style="color:#f92672">&amp;=</span> <span style="color:#ae81ff">0xfffff000</span>;                   <span style="color:#75715e">// 忽略不到4kb(1页)的内存数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">16</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)              <span style="color:#75715e">// 内存超过16Mb，则按16Mb计
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">12</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)              <span style="color:#75715e">// 如果内存&gt;12Mb,则设置缓冲区末端=4Mb 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">6</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)          <span style="color:#75715e">// 否则若内存&gt;6Mb,则设置缓冲区末端=2Mb
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;        <span style="color:#75715e">// 否则设置缓冲区末端=1Mb
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    main_memory_start <span style="color:#f92672">=</span> buffer_memory_end;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 如果在Makefile文件中定义了内存虚拟盘符号RAMDISK,则初始化虚拟盘。此时主内存将减少。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 以下是内核进行所有方面的初始化工作
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    mem_init(main_memory_start,memory_end); <span style="color:#75715e">// 主内存区初始化。mm/memory.c
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    trap_init();                            <span style="color:#75715e">// 陷阱门(硬件中断向量)初始化，kernel/traps.c
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    blk_dev_init();                         <span style="color:#75715e">// 块设备初始化,kernel/blk_drv/ll_rw_blk.c
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    chr_dev_init();                         <span style="color:#75715e">// 字符设备初始化, kernel/chr_drv/tty_io.c
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    tty_init();                             <span style="color:#75715e">// tty初始化， kernel/chr_drv/tty_io.c
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    time_init();                            <span style="color:#75715e">// 设置开机启动时间 startup_time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    sched_init();                           <span style="color:#75715e">// 调度程序初始化(加载任务0的tr,ldtr)(kernel/sched.c)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer_init(buffer_memory_end);         <span style="color:#75715e">// 缓冲管理初始化，建内存链表等。(fs/buffer.c)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    hd_init();                              <span style="color:#75715e">// 硬盘初始化，kernel/blk_drv/hd.c
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    floppy_init();                          <span style="color:#75715e">// 软驱初始化，kernel/blk_drv/floppy.c，后面直接忽略了
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 完成初始化工作，切换到用户态模式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    sti();                                  <span style="color:#75715e">// 所有初始化工作都做完了，开启中断
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 下面过程通过在堆栈中设置的参数，利用中断返回指令启动任务0执行。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    move_to_user_mode();                    <span style="color:#75715e">// 移到用户模式下执行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>fork()) {        <span style="color:#75715e">/* we count on this going ok */</span>
+</span></span><span style="display:flex;"><span>        init();                             <span style="color:#75715e">// 在新建的子进程(任务1)中执行。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *   NOTE!!   For any other task &#39;pause()&#39; would mean we have to get a
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * signal to awaken, but task0 is the sole exception (see &#39;schedule()&#39;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * as task 0 gets activated at every idle moment (when no other tasks
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * can run). For task0 &#39;pause()&#39; just means we go check if some other
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * task can run, and if not we return here.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// pause系统调用会把任务0转换成可中断等待状态，再执行调度函数。但是调度函数只要发现系统中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 没有其他任务可以运行是就会切换到任务0，而不依赖于任务0的状态。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span>(;;) pause();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>整个 <code>main</code> 函数可以分为四个部分，第一个部分是内存的一些计算和参数设置，第二个部分是内核所有方面的初始化，第三个部分负责切换到用户态，最后则是将这个程序作为 <code>idle</code> 程序，陷入死循环</p>
 <h2 id="变量计算规划内存">变量计算（规划内存）</h2>
 <p>第一部分的代码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    ROOT_DEV <span style="color:#f92672">=</span> ORIG_ROOT_DEV;                   <span style="color:#75715e">// ORIG_ROOT_DEV = *(0x901FC)
-</span><span style="color:#75715e"></span>    drive_info <span style="color:#f92672">=</span> DRIVE_INFO;                    <span style="color:#75715e">// DRIVE_INFO    = *(0x90080)         复制0x90080处的硬盘参数
-</span><span style="color:#75715e"></span>    memory_end <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">20</span>) <span style="color:#f92672">+</span> (EXT_MEM_K<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">10</span>);     <span style="color:#75715e">// EXT_MEM_K     = *(0x90002)         内存大小=1Mb + 扩展内存(k)*1024 byte
-</span><span style="color:#75715e"></span>    memory_end <span style="color:#f92672">&amp;=</span> <span style="color:#ae81ff">0xfffff000</span>;                   <span style="color:#75715e">// 忽略不到 4kb(1 page) 的内存数
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">16</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)              <span style="color:#75715e">// 内存超过 16Mb，则按 16Mb 计
-</span><span style="color:#75715e"></span>        memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
-
-    <span style="color:#66d9ef">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">12</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)              <span style="color:#75715e">// 如果内存 &gt;12Mb，则设置缓冲区末端为 4Mb 
-</span><span style="color:#75715e"></span>        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
-    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">6</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)          <span style="color:#75715e">// 否则若内存 &gt;6Mb,则设置缓冲区末端为 2Mb
-</span><span style="color:#75715e"></span>        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
-    <span style="color:#66d9ef">else</span>
-        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;        <span style="color:#75715e">// 否则设置缓冲区末端为 1Mb
-</span><span style="color:#75715e"></span>    main_memory_start <span style="color:#f92672">=</span> buffer_memory_end;
-</code></pre></div><p>这里的代码很乱，主要是计算了几个值：<code>ROOT_DEV</code>, <code>drive_info</code>, <code>memory_end</code>, <code>buffer_memory_end</code>, <code>main_memory_start</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    ROOT_DEV <span style="color:#f92672">=</span> ORIG_ROOT_DEV;                   <span style="color:#75715e">// ORIG_ROOT_DEV = *(0x901FC)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    drive_info <span style="color:#f92672">=</span> DRIVE_INFO;                    <span style="color:#75715e">// DRIVE_INFO    = *(0x90080)         复制0x90080处的硬盘参数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    memory_end <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">20</span>) <span style="color:#f92672">+</span> (EXT_MEM_K<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">10</span>);     <span style="color:#75715e">// EXT_MEM_K     = *(0x90002)         内存大小=1Mb + 扩展内存(k)*1024 byte
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    memory_end <span style="color:#f92672">&amp;=</span> <span style="color:#ae81ff">0xfffff000</span>;                   <span style="color:#75715e">// 忽略不到 4kb(1 page) 的内存数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">16</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)              <span style="color:#75715e">// 内存超过 16Mb，则按 16Mb 计
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">12</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)              <span style="color:#75715e">// 如果内存 &gt;12Mb，则设置缓冲区末端为 4Mb 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (memory_end <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">6</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>)          <span style="color:#75715e">// 否则若内存 &gt;6Mb,则设置缓冲区末端为 2Mb
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>        buffer_memory_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1024</span>;        <span style="color:#75715e">// 否则设置缓冲区末端为 1Mb
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    main_memory_start <span style="color:#f92672">=</span> buffer_memory_end;
+</span></span></code></pre></div><p>这里的代码很乱，主要是计算了几个值：<code>ROOT_DEV</code>, <code>drive_info</code>, <code>memory_end</code>, <code>buffer_memory_end</code>, <code>main_memory_start</code></p>
 <p>把直接赋值的去掉就只剩下 <code>memory_end</code> 和 <code>buffer_memory_end</code> 了</p>
 <p>首先算的是 <code>memory_end</code>，<code>EXT_MEM_K</code> 是从内存 <code>0x90002</code> 处取值，根据之前对 <code>boot</code> 部分的分析，可以知道这里存的是 <code>扩展内存数（Kb）</code>，所以这里得到的就是 <code>内存+1Mb</code> 的大小（单位为字节）</p>
 <p>在初始计算完成后，做了一个 <code>&amp; 0xfffff000</code>，因为分页机制需要对其到 <code>4Kb</code>，所以需要忽略多余的大小</p>
@@ -242,35 +242,35 @@
 | {Unused  Memory} |
 +------------------+
 </code></pre><p>后面内存的初始化需要根据这几个内存进行</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#75715e">// ...
-</span><span style="color:#75715e"></span>    mem_init(main_memory_start, memory_end);
-    <span style="color:#75715e">// ...
-</span><span style="color:#75715e"></span>    buffer_init(buffer_memory_end);
-    <span style="color:#75715e">// ...
-</span></code></pre></div><h2 id="所有东西都需要初始化">所有东西都需要初始化</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    mem_init(main_memory_start, memory_end);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    buffer_init(buffer_memory_end);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span></code></pre></div><h2 id="所有东西都需要初始化">所有东西都需要初始化</h2>
 <h3 id="主内存初始化-mem_init">主内存初始化 (mem_init)</h3>
 <p><code>mem_init</code> 在 <code>mm/memory.c</code> 中</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">// 物理内存管理初始化
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mem_init</span>(<span style="color:#66d9ef">long</span> start_mem, <span style="color:#66d9ef">long</span> end_mem)
-{
-    <span style="color:#66d9ef">int</span> i;
-
-    HIGH_MEMORY <span style="color:#f92672">=</span> end_mem;                    <span style="color:#75715e">// 设置内存最高端
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> PAGING_PAGES; i<span style="color:#f92672">++</span>)        <span style="color:#75715e">// (15 * 1024 * 1024) &gt;&gt; 12
-</span><span style="color:#75715e"></span>        mem_map[i] <span style="color:#f92672">=</span> USED;                    <span style="color:#75715e">// USED = 100
-</span><span style="color:#75715e"></span>    
-    i <span style="color:#f92672">=</span> MAP_NR(start_mem);                    <span style="color:#75715e">// MAP_NR(addr) (((addr)-LOW_MEM)&gt;&gt;12)
-</span><span style="color:#75715e"></span>                                              <span style="color:#75715e">// 主内存区其实位置处页面号
-</span><span style="color:#75715e"></span>    end_mem <span style="color:#f92672">-=</span> start_mem;
-    end_mem <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#ae81ff">12</span>;                           <span style="color:#75715e">// 主内存区中的总页面数
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (end_mem<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
-        mem_map[i<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;                     <span style="color:#75715e">// 主内存区页面对应字节值清零
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>之前的注释太多了，不如自己看，其实整个函数都是在对页表进行初始化</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 物理内存管理初始化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mem_init</span>(<span style="color:#66d9ef">long</span> start_mem, <span style="color:#66d9ef">long</span> end_mem)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    HIGH_MEMORY <span style="color:#f92672">=</span> end_mem;                    <span style="color:#75715e">// 设置内存最高端
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> PAGING_PAGES; i<span style="color:#f92672">++</span>)        <span style="color:#75715e">// (15 * 1024 * 1024) &gt;&gt; 12
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        mem_map[i] <span style="color:#f92672">=</span> USED;                    <span style="color:#75715e">// USED = 100
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    
+</span></span><span style="display:flex;"><span>    i <span style="color:#f92672">=</span> MAP_NR(start_mem);                    <span style="color:#75715e">// MAP_NR(addr) (((addr)-LOW_MEM)&gt;&gt;12)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                                              <span style="color:#75715e">// 主内存区其实位置处页面号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    end_mem <span style="color:#f92672">-=</span> start_mem;
+</span></span><span style="display:flex;"><span>    end_mem <span style="color:#f92672">&gt;&gt;=</span> <span style="color:#ae81ff">12</span>;                           <span style="color:#75715e">// 主内存区中的总页面数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (end_mem<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        mem_map[i<span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;                     <span style="color:#75715e">// 主内存区页面对应字节值清零
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>之前的注释太多了，不如自己看，其实整个函数都是在对页表进行初始化</p>
 <p>主内存初始化，传入的参数为 <code>main_memory_start</code>, <code>memory_end</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">HIGH_MEMORY <span style="color:#f92672">=</span> end_mem;
-</code></pre></div><p><code>HIGH_MEMORY</code> 是一个静态的全局变量，这里将其初始化为 <code>memory_end</code>，也就是内存的最大值</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>HIGH_MEMORY <span style="color:#f92672">=</span> end_mem;
+</span></span></code></pre></div><p><code>HIGH_MEMORY</code> 是一个静态的全局变量，这里将其初始化为 <code>memory_end</code>，也就是内存的最大值</p>
 <p><code>PAGING_MEMORY</code> 设置为 <code>15Mb</code> （为所有可能作为主内存的内存都需要留一个位置，<code>1Mb~16Mb</code>），按照 1 页大小为 4Kb，可以计算得到总页数的理论最大可能，然后按照这个大小设置一个内存空间 <code>mem_map[PAGING_PAGES]</code>，用于记录对应的页是否被占用</p>
 <p>先用一个 <code>for</code> 循环对该数组的每一项都标记为 <code>USED=100</code>，然后</p>
 <p>首先把主内存开头的第一个页对应的编号计算一下，使用宏定义 <code>MAP_NR</code>，将 <code>start_mem</code> 换算为页的编号（这个宏定义还是比较好理解的，就不说了）</p>
@@ -292,77 +292,77 @@
 <h3 id="中断初始化-trap_init">中断初始化 (trap_init)</h3>
 <p>之前初始化了中断，但只有默认中断，这里就逐渐往里加操作系统中断了</p>
 <p>初始化函数在 <code>kernel/traps.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">// 异常(陷阱)中断程序初始化子程序。设置他们的中断调用门(中断向量)。
-</span><span style="color:#75715e">// set_trap_gate()与set_system_gate()都使用了中断描述符表IDT中的陷阱门(Trap Gate),
-</span><span style="color:#75715e">// 他们之间的主要区别在于前者设置的特权级为0，后者是3.因此断点陷阱中断int3、溢出中断
-</span><span style="color:#75715e">// overflow和边界出错中断bounds可以由任何程序产生。
-</span><span style="color:#75715e">// 这两个函数均是嵌入式汇编宏程序(include/asm/system.h中)
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">trap_init</span>(<span style="color:#66d9ef">void</span>) {
-    <span style="color:#66d9ef">int</span> i;
-
-    <span style="color:#75715e">// 设置除操作出错的中断向量值。
-</span><span style="color:#75715e"></span>    set_trap_gate(<span style="color:#ae81ff">0</span>,<span style="color:#f92672">&amp;</span>divide_error);
-    set_trap_gate(<span style="color:#ae81ff">1</span>,<span style="color:#f92672">&amp;</span>debug);
-    set_trap_gate(<span style="color:#ae81ff">2</span>,<span style="color:#f92672">&amp;</span>nmi);
-    set_system_gate(<span style="color:#ae81ff">3</span>,<span style="color:#f92672">&amp;</span>int3);	<span style="color:#75715e">/* int3-5 can be called from all */</span>
-    set_system_gate(<span style="color:#ae81ff">4</span>,<span style="color:#f92672">&amp;</span>overflow);
-    set_system_gate(<span style="color:#ae81ff">5</span>,<span style="color:#f92672">&amp;</span>bounds);
-    set_trap_gate(<span style="color:#ae81ff">6</span>,<span style="color:#f92672">&amp;</span>invalid_op);
-    set_trap_gate(<span style="color:#ae81ff">7</span>,<span style="color:#f92672">&amp;</span>device_not_available);
-    set_trap_gate(<span style="color:#ae81ff">8</span>,<span style="color:#f92672">&amp;</span>double_fault);
-    set_trap_gate(<span style="color:#ae81ff">9</span>,<span style="color:#f92672">&amp;</span>coprocessor_segment_overrun);
-    set_trap_gate(<span style="color:#ae81ff">10</span>,<span style="color:#f92672">&amp;</span>invalid_TSS);
-    set_trap_gate(<span style="color:#ae81ff">11</span>,<span style="color:#f92672">&amp;</span>segment_not_present);
-    set_trap_gate(<span style="color:#ae81ff">12</span>,<span style="color:#f92672">&amp;</span>stack_segment);
-    set_trap_gate(<span style="color:#ae81ff">13</span>,<span style="color:#f92672">&amp;</span>general_protection);
-    set_trap_gate(<span style="color:#ae81ff">14</span>,<span style="color:#f92672">&amp;</span>page_fault);
-    set_trap_gate(<span style="color:#ae81ff">15</span>,<span style="color:#f92672">&amp;</span>reserved);
-    set_trap_gate(<span style="color:#ae81ff">16</span>,<span style="color:#f92672">&amp;</span>coprocessor_error);
-    
-    <span style="color:#75715e">// 下面把int17-47的陷阱门先均设置为reserved,以后各硬件初始化时会重新设置自己的陷阱门。
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">17</span>;i<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">48</span>;i<span style="color:#f92672">++</span>)
-        set_trap_gate(i,<span style="color:#f92672">&amp;</span>reserved);
-    
-    <span style="color:#75715e">// 设置协处理器中断0x2d(45)陷阱门描述符，并允许其产生中断请求。设置并行口中断描述符。
-</span><span style="color:#75715e"></span>    set_trap_gate(<span style="color:#ae81ff">45</span>,<span style="color:#f92672">&amp;</span>irq13);
-    
-    outb_p(inb_p(<span style="color:#ae81ff">0x21</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xfb</span>,<span style="color:#ae81ff">0x21</span>);  <span style="color:#75715e">// 允许8259A主芯片的IRQ2中断请求。
-</span><span style="color:#75715e"></span>    outb(inb_p(<span style="color:#ae81ff">0xA1</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xdf</span>,<span style="color:#ae81ff">0xA1</span>);    <span style="color:#75715e">// 允许8259A从芯片的IRQ3中断请求。
-</span><span style="color:#75715e"></span>    
-    set_trap_gate(<span style="color:#ae81ff">39</span>,<span style="color:#f92672">&amp;</span>parallel_interrupt); <span style="color:#75715e">// 设置并行口1的中断0x27陷阱门的描述符。
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>主要利用了 <code>set_trap_gate</code> 和 <code>set_system_gate</code> 两个函数来设置中断，很明显的规律，第一个参数是中断号，第二个参数是中断处理函数的地址</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 异常(陷阱)中断程序初始化子程序。设置他们的中断调用门(中断向量)。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// set_trap_gate()与set_system_gate()都使用了中断描述符表IDT中的陷阱门(Trap Gate),
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 他们之间的主要区别在于前者设置的特权级为0，后者是3.因此断点陷阱中断int3、溢出中断
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// overflow和边界出错中断bounds可以由任何程序产生。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 这两个函数均是嵌入式汇编宏程序(include/asm/system.h中)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">trap_init</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 设置除操作出错的中断向量值。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    set_trap_gate(<span style="color:#ae81ff">0</span>,<span style="color:#f92672">&amp;</span>divide_error);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">1</span>,<span style="color:#f92672">&amp;</span>debug);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">2</span>,<span style="color:#f92672">&amp;</span>nmi);
+</span></span><span style="display:flex;"><span>    set_system_gate(<span style="color:#ae81ff">3</span>,<span style="color:#f92672">&amp;</span>int3);	<span style="color:#75715e">/* int3-5 can be called from all */</span>
+</span></span><span style="display:flex;"><span>    set_system_gate(<span style="color:#ae81ff">4</span>,<span style="color:#f92672">&amp;</span>overflow);
+</span></span><span style="display:flex;"><span>    set_system_gate(<span style="color:#ae81ff">5</span>,<span style="color:#f92672">&amp;</span>bounds);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">6</span>,<span style="color:#f92672">&amp;</span>invalid_op);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">7</span>,<span style="color:#f92672">&amp;</span>device_not_available);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">8</span>,<span style="color:#f92672">&amp;</span>double_fault);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">9</span>,<span style="color:#f92672">&amp;</span>coprocessor_segment_overrun);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">10</span>,<span style="color:#f92672">&amp;</span>invalid_TSS);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">11</span>,<span style="color:#f92672">&amp;</span>segment_not_present);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">12</span>,<span style="color:#f92672">&amp;</span>stack_segment);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">13</span>,<span style="color:#f92672">&amp;</span>general_protection);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">14</span>,<span style="color:#f92672">&amp;</span>page_fault);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">15</span>,<span style="color:#f92672">&amp;</span>reserved);
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">16</span>,<span style="color:#f92672">&amp;</span>coprocessor_error);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 下面把int17-47的陷阱门先均设置为reserved,以后各硬件初始化时会重新设置自己的陷阱门。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (i<span style="color:#f92672">=</span><span style="color:#ae81ff">17</span>;i<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">48</span>;i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>        set_trap_gate(i,<span style="color:#f92672">&amp;</span>reserved);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 设置协处理器中断0x2d(45)陷阱门描述符，并允许其产生中断请求。设置并行口中断描述符。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    set_trap_gate(<span style="color:#ae81ff">45</span>,<span style="color:#f92672">&amp;</span>irq13);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    outb_p(inb_p(<span style="color:#ae81ff">0x21</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xfb</span>,<span style="color:#ae81ff">0x21</span>);  <span style="color:#75715e">// 允许8259A主芯片的IRQ2中断请求。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    outb(inb_p(<span style="color:#ae81ff">0xA1</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xdf</span>,<span style="color:#ae81ff">0xA1</span>);    <span style="color:#75715e">// 允许8259A从芯片的IRQ3中断请求。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    
+</span></span><span style="display:flex;"><span>    set_trap_gate(<span style="color:#ae81ff">39</span>,<span style="color:#f92672">&amp;</span>parallel_interrupt); <span style="color:#75715e">// 设置并行口1的中断0x27陷阱门的描述符。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>主要利用了 <code>set_trap_gate</code> 和 <code>set_system_gate</code> 两个函数来设置中断，很明显的规律，第一个参数是中断号，第二个参数是中断处理函数的地址</p>
 <p>中断处理函数主要在 <code>asm.s</code>, <code>system_call.s</code> 中定义，暂时先不管，主要看一下两个 <code>set</code> 函数的定义</p>
 <p>在 <code>include/asm/system.h</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define set_trap_gate(n,addr) \
-</span><span style="color:#75715e">	_set_gate(&amp;idt[n],15,0,addr)
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">#define set_system_gate(n,addr) \
-</span><span style="color:#75715e">	_set_gate(&amp;idt[n],15,3,addr)
-</span></code></pre></div><p>都是调用了 <code>_set_gate</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define _set_gate(gate_addr,type,dpl,addr) \
-</span><span style="color:#75715e">__asm__ (&#34;movw %%dx,%%ax\n\t&#34; \
-</span><span style="color:#75715e">	&#34;movw %0,%%dx\n\t&#34; \
-</span><span style="color:#75715e">	&#34;movl %%eax,%1\n\t&#34; \
-</span><span style="color:#75715e">	&#34;movl %%edx,%2&#34; \
-</span><span style="color:#75715e">	: \                                               </span><span style="color:#75715e">// 输出
-</span><span style="color:#75715e"></span>                                                    <span style="color:#75715e">// 输入
-</span><span style="color:#75715e"></span>	<span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;i&#34;</span> ((<span style="color:#66d9ef">short</span>) (<span style="color:#ae81ff">0x8000</span><span style="color:#f92672">+</span>(dpl<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">13</span>)<span style="color:#f92672">+</span>(type<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">8</span>))), <span style="color:#960050;background-color:#1e0010">\</span>   <span style="color:#75715e">// %0 i: 立即数
-</span><span style="color:#75715e"></span>	  <span style="color:#e6db74">&#34;o&#34;</span> (<span style="color:#f92672">*</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>) (gate_addr))), <span style="color:#960050;background-color:#1e0010">\</span>                <span style="color:#75715e">// %1 o: 内存单元
-</span><span style="color:#75715e"></span>	  <span style="color:#e6db74">&#34;o&#34;</span> (<span style="color:#f92672">*</span>(<span style="color:#ae81ff">4</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>) (gate_addr))), <span style="color:#960050;background-color:#1e0010">\</span>              <span style="color:#75715e">// %2
-</span><span style="color:#75715e"></span>	  <span style="color:#e6db74">&#34;d&#34;</span> ((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>) (addr)), <span style="color:#960050;background-color:#1e0010">\</span>                        <span style="color:#75715e">// dx = addr
-</span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#34;a&#34;</span> (<span style="color:#ae81ff">0x00080000</span>)                                <span style="color:#75715e">// ax = 0x80000
-</span><span style="color:#75715e"></span>)
-</code></pre></div><p>用内联汇编实现的 <code>_set_gate</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define set_trap_gate(n,addr) \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">	_set_gate(&amp;idt[n],15,0,addr)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define set_system_gate(n,addr) \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">	_set_gate(&amp;idt[n],15,3,addr)
+</span></span></span></code></pre></div><p>都是调用了 <code>_set_gate</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define _set_gate(gate_addr,type,dpl,addr) \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">__asm__ (&#34;movw %%dx,%%ax\n\t&#34; \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">	&#34;movw %0,%%dx\n\t&#34; \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">	&#34;movl %%eax,%1\n\t&#34; \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">	&#34;movl %%edx,%2&#34; \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">	: \                                               </span><span style="color:#75715e">// 输出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                                                    <span style="color:#75715e">// 输入
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;i&#34;</span> ((<span style="color:#66d9ef">short</span>) (<span style="color:#ae81ff">0x8000</span><span style="color:#f92672">+</span>(dpl<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">13</span>)<span style="color:#f92672">+</span>(type<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">8</span>))), <span style="color:#960050;background-color:#1e0010">\</span>   <span style="color:#75715e">// %0 i: 立即数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	  <span style="color:#e6db74">&#34;o&#34;</span> (<span style="color:#f92672">*</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>) (gate_addr))), <span style="color:#960050;background-color:#1e0010">\</span>                <span style="color:#75715e">// %1 o: 内存单元
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	  <span style="color:#e6db74">&#34;o&#34;</span> (<span style="color:#f92672">*</span>(<span style="color:#ae81ff">4</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>) (gate_addr))), <span style="color:#960050;background-color:#1e0010">\</span>              <span style="color:#75715e">// %2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	  <span style="color:#e6db74">&#34;d&#34;</span> ((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>) (addr)), <span style="color:#960050;background-color:#1e0010">\</span>                        <span style="color:#75715e">// dx = addr
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#34;a&#34;</span> (<span style="color:#ae81ff">0x00080000</span>)                                <span style="color:#75715e">// ax = 0x80000
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>)
+</span></span></code></pre></div><p>用内联汇编实现的 <code>_set_gate</code></p>
 <p>大概猜测了一下</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">_EAX <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80000</span>;
-_EDX <span style="color:#f92672">=</span> addr;
-
-_EAX <span style="color:#f92672">=</span> _EDX;
-_EDX <span style="color:#f92672">=</span> (<span style="color:#66d9ef">short</span>) (<span style="color:#ae81ff">0x8000</span> <span style="color:#f92672">+</span> (dpl<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">13</span>) <span style="color:#f92672">+</span> (type <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>));
-<span style="color:#f92672">*</span>((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)(gate_addr)) <span style="color:#f92672">=</span> _EAX;
-<span style="color:#f92672">*</span>((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)(gate_addr)<span style="color:#f92672">+</span><span style="color:#ae81ff">4</span>) <span style="color:#f92672">=</span> _EDX;
-</code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>_EAX <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x80000</span>;
+</span></span><span style="display:flex;"><span>_EDX <span style="color:#f92672">=</span> addr;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>_EAX <span style="color:#f92672">=</span> _EDX;
+</span></span><span style="display:flex;"><span>_EDX <span style="color:#f92672">=</span> (<span style="color:#66d9ef">short</span>) (<span style="color:#ae81ff">0x8000</span> <span style="color:#f92672">+</span> (dpl<span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">13</span>) <span style="color:#f92672">+</span> (type <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>));
+</span></span><span style="display:flex;"><span><span style="color:#f92672">*</span>((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)(gate_addr)) <span style="color:#f92672">=</span> _EAX;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">*</span>((<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)(gate_addr)<span style="color:#f92672">+</span><span style="color:#ae81ff">4</span>) <span style="color:#f92672">=</span> _EDX;
+</span></span></code></pre></div><blockquote>
 <p>不太懂为什么一开始初始化了 <code>eax</code>，可能是为了在调用这段汇编前，编译器会自动把 <code>eax</code> 的值保存下来？</p>
 </blockquote>
 <p>其实就是对 <code>gate_addr</code>，按照提供的 <code>dpl</code>, <code>type</code> 已经中断处理函数的地址 <code>addr</code> 进行赋值</p>
@@ -370,101 +370,101 @@ _EDX <span style="color:#f92672">=</span> (<span style="color:#66d9ef">short</sp
 <h3 id="块设备请求项初始化-blk_dev_init">块设备请求项初始化 (blk_dev_init)</h3>
 <p>要将硬盘中的数据读取到内存，需要使用块设备驱动程序</p>
 <p>初始化函数在 <code>kernel/blk_drv/ll_rw_blk.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">
-<span style="color:#66d9ef">struct</span> request request[NR_REQUEST];
-
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">blk_dev_init</span>(<span style="color:#66d9ef">void</span>) {
-    <span style="color:#66d9ef">int</span> i;
-    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> NR_REQUEST; i<span style="color:#f92672">++</span>) {
-        request[i].dev <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-        request[i].next <span style="color:#f92672">=</span> NULL;
-    }
-}
-</code></pre></div><p>整个初始化的流程只有一个 <code>for</code> 循环，将 <code>request</code> 结构体的 <code>dev</code> 设置为 <code>-1</code>，<code>next</code>设置为空</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> request request[NR_REQUEST];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">blk_dev_init</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> NR_REQUEST; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        request[i].dev <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        request[i].next <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>整个初始化的流程只有一个 <code>for</code> 循环，将 <code>request</code> 结构体的 <code>dev</code> 设置为 <code>-1</code>，<code>next</code>设置为空</p>
 <p>结构体的定义在 <code>kernel/blk_drv/blk.h</code> 文件</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define NR_BLK_DEV      7
-</span><span style="color:#75715e">#define NR_REQUEST      64
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Ok, this is an expanded form so that we can use the same 
-</span><span style="color:#75715e"> * request for apging requests when that is implemented.
-</span><span style="color:#75715e"> * In paging, &#39;bh&#39; is NULL, and &#39;waiting&#39; is used to wait for
-</span><span style="color:#75715e"> * read/write completion.
-</span><span style="color:#75715e"> */</span>
-
-<span style="color:#66d9ef">struct</span> request {
-    <span style="color:#66d9ef">int</span> dev;                        <span style="color:#75715e">// 设备号，-1 for no request
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> cmd;                        <span style="color:#75715e">// READ or WRITE
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> errors;                     <span style="color:#75715e">// 错误次数
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> sector;           <span style="color:#75715e">// 起始扇区
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> nr_sectors;       <span style="color:#75715e">// 扇区数量
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> buffer;                  <span style="color:#75715e">// 数据缓冲区，硬盘中的数据读取到内存的位置
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> task_struct <span style="color:#f92672">*</span> waiting;   <span style="color:#75715e">// 发起请求的进程
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> buffer_head <span style="color:#f92672">*</span> bh;        <span style="color:#75715e">// 缓冲区头指针
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> request <span style="color:#f92672">*</span> next;          <span style="color:#75715e">// 下一个请求项
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>所以，一个 <code>request</code> 结构体完整描述了一次操作，而初始化做的事情就是在为结构体赋初值</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define NR_BLK_DEV      7
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define NR_REQUEST      64
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Ok, this is an expanded form so that we can use the same 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * request for apging requests when that is implemented.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * In paging, &#39;bh&#39; is NULL, and &#39;waiting&#39; is used to wait for
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * read/write completion.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> request {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> dev;                        <span style="color:#75715e">// 设备号，-1 for no request
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> cmd;                        <span style="color:#75715e">// READ or WRITE
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> errors;                     <span style="color:#75715e">// 错误次数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> sector;           <span style="color:#75715e">// 起始扇区
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> nr_sectors;       <span style="color:#75715e">// 扇区数量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> buffer;                  <span style="color:#75715e">// 数据缓冲区，硬盘中的数据读取到内存的位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> task_struct <span style="color:#f92672">*</span> waiting;   <span style="color:#75715e">// 发起请求的进程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> buffer_head <span style="color:#f92672">*</span> bh;        <span style="color:#75715e">// 缓冲区头指针
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> request <span style="color:#f92672">*</span> next;          <span style="color:#75715e">// 下一个请求项
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>所以，一个 <code>request</code> 结构体完整描述了一次操作，而初始化做的事情就是在为结构体赋初值</p>
 <h3 id="控制台初始化-tty_init">控制台初始化 (tty_init)</h3>
 <p>这个函数执行后，就能够将键盘的输入输出到显示器上了</p>
 <p>函数在 <code>kernel/chr_drv/tty_io.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">tty_init</span>(<span style="color:#66d9ef">void</span>) {
-    rs_init();
-    con_init();
-}
-</code></pre></div><p>整个初始化流程又能够分成两个部分</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">tty_init</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    rs_init();
+</span></span><span style="display:flex;"><span>    con_init();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>整个初始化流程又能够分成两个部分</p>
 <p>第一个函数在 <code>kernel/chr_drv/serial.h</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">rs_init</span>(<span style="color:#66d9ef">void</span>) {
-    set_intr_gate(<span style="color:#ae81ff">0x24</span>, rs1_interrupt);
-    set_intr_gate(<span style="color:#ae81ff">0x23</span>, rs2_interrupt);
-    init(tty_table[<span style="color:#ae81ff">1</span>].read_q.data);
-    init(tty_table[<span style="color:#ae81ff">2</span>].read_q.data);
-    outb(inb_p(<span style="color:#ae81ff">0x21</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xE7</span>, <span style="color:#ae81ff">0x21</span>);
-}
-</code></pre></div><p><code>set_intr_gate</code> 是设置中断程序，这里设置的主要是串口中断，由于已经很少用到，此处可以忽略</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">rs_init</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    set_intr_gate(<span style="color:#ae81ff">0x24</span>, rs1_interrupt);
+</span></span><span style="display:flex;"><span>    set_intr_gate(<span style="color:#ae81ff">0x23</span>, rs2_interrupt);
+</span></span><span style="display:flex;"><span>    init(tty_table[<span style="color:#ae81ff">1</span>].read_q.data);
+</span></span><span style="display:flex;"><span>    init(tty_table[<span style="color:#ae81ff">2</span>].read_q.data);
+</span></span><span style="display:flex;"><span>    outb(inb_p(<span style="color:#ae81ff">0x21</span>)<span style="color:#f92672">&amp;</span><span style="color:#ae81ff">0xE7</span>, <span style="color:#ae81ff">0x21</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>set_intr_gate</code> 是设置中断程序，这里设置的主要是串口中断，由于已经很少用到，此处可以忽略</p>
 <p>第二个函数在 <code>kernel/chr_drv/console.c</code>，这里就是初始化控制台了</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">con_init</span>(<span style="color:#66d9ef">void</span>) {
-    <span style="color:#66d9ef">register</span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> a;
-    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>display_desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;????&#34;</span>;
-    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>display_ptr;
-
-    video_num_columns <span style="color:#f92672">=</span> ORIG_VIDEO_COLS;            <span style="color:#75715e">// 显示器显示字符列数
-</span><span style="color:#75715e"></span>    video_size_row <span style="color:#f92672">=</span> video_num_columns <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>;         <span style="color:#75715e">// 每行需要使用的字节数（一个字符需要两个字节）
-</span><span style="color:#75715e"></span>    video_page <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)ORIG_VIDEO_PAGE;    <span style="color:#75715e">// 显示器显示字符行数
-</span><span style="color:#75715e"></span>    cideo_erase_char <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0720</span>;                      <span style="color:#75715e">// 擦除字符（0x20显示字符，0x07是属性）
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">// 判断是单色还是彩色显示器，如果原始显示模式为7，说明是单色
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (ORIG_VIDEO_MODE <span style="color:#f92672">==</span> <span style="color:#ae81ff">7</span>) {     <span style="color:#75715e">/* IS this a monochrome display? */</span>
-        video_mem_start <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xb0000</span>;      <span style="color:#75715e">// 设置单显映像内存起始地址
-</span><span style="color:#75715e"></span>        video_port_reg <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3b4</span>;         <span style="color:#75715e">// 设置单显索引寄存器端口
-</span><span style="color:#75715e"></span>        video_port_val <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3b5</span>;         <span style="color:#75715e">// 设置单显数据寄存器端口
-</span><span style="color:#75715e"></span>
-        <span style="color:#75715e">// 判断显示类型是 EGA 还是 MDA
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> ((ORIG_VIDEO_EGA_BX <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x10</span>) {
-            video_type <span style="color:#f92672">=</span> VIDEO_TYPE_EGAM;   <span style="color:#75715e">// 设置显示类型
-</span><span style="color:#75715e"></span>            video_mem_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xb8000</span>;        <span style="color:#75715e">// 设置显示内存末端地址
-</span><span style="color:#75715e"></span>            display_desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;EGAm&#34;</span>;          <span style="color:#75715e">// 设置显示描述字符串
-</span><span style="color:#75715e"></span>        } <span style="color:#66d9ef">else</span> {
-            video_type <span style="color:#f92672">=</span> VIDEO_TYPE_MDA;
-            video_mem_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xb2000</span>;
-            display_desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;*MDA&#34;</span>;
-        }
-    } <span style="color:#66d9ef">else</span> {                        <span style="color:#75715e">/* IF not, it is color. */</span>
-        video_mem_start <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xb8000</span>;
-        video_port_reg <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3d4</span>;
-        video_port_val <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3d5</span>;
-        
-        <span style="color:#75715e">// 判断显示类型是 EGA 还是 CGA
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> ((ORIG_VIDEO_EGA_BX <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x10</span>) {
-            video_type <span style="color:#f92672">=</span> VIDEO_TYPE_EGAC;
-            video_mem_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xbc000</span>;
-            display_desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;EGAc&#34;</span>;
-        } <span style="color:#66d9ef">else</span> {
-            video_type <span style="color:#f92672">=</span> VIDEO_TYPE_CGA;
-            video_mem_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xba000</span>;
-            display_desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;*CGA&#34;</span>;
-        }
-    }
-</code></pre></div><p>一开始的 <code>if else</code> 是根据此前从 BIOS 中断中读取到的数据，将显示器分为单色 or 彩色，EGA or MDA/CGA 四种情况，主要部分是设置了内存，结果如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">con_init</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">register</span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> a;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>display_desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;????&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>display_ptr;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    video_num_columns <span style="color:#f92672">=</span> ORIG_VIDEO_COLS;            <span style="color:#75715e">// 显示器显示字符列数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    video_size_row <span style="color:#f92672">=</span> video_num_columns <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>;         <span style="color:#75715e">// 每行需要使用的字节数（一个字符需要两个字节）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    video_page <span style="color:#f92672">=</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)ORIG_VIDEO_PAGE;    <span style="color:#75715e">// 显示器显示字符行数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    cideo_erase_char <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x0720</span>;                      <span style="color:#75715e">// 擦除字符（0x20显示字符，0x07是属性）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 判断是单色还是彩色显示器，如果原始显示模式为7，说明是单色
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (ORIG_VIDEO_MODE <span style="color:#f92672">==</span> <span style="color:#ae81ff">7</span>) {     <span style="color:#75715e">/* IS this a monochrome display? */</span>
+</span></span><span style="display:flex;"><span>        video_mem_start <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xb0000</span>;      <span style="color:#75715e">// 设置单显映像内存起始地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        video_port_reg <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3b4</span>;         <span style="color:#75715e">// 设置单显索引寄存器端口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        video_port_val <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3b5</span>;         <span style="color:#75715e">// 设置单显数据寄存器端口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 判断显示类型是 EGA 还是 MDA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> ((ORIG_VIDEO_EGA_BX <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x10</span>) {
+</span></span><span style="display:flex;"><span>            video_type <span style="color:#f92672">=</span> VIDEO_TYPE_EGAM;   <span style="color:#75715e">// 设置显示类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            video_mem_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xb8000</span>;        <span style="color:#75715e">// 设置显示内存末端地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            display_desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;EGAm&#34;</span>;          <span style="color:#75715e">// 设置显示描述字符串
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            video_type <span style="color:#f92672">=</span> VIDEO_TYPE_MDA;
+</span></span><span style="display:flex;"><span>            video_mem_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xb2000</span>;
+</span></span><span style="display:flex;"><span>            display_desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;*MDA&#34;</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {                        <span style="color:#75715e">/* IF not, it is color. */</span>
+</span></span><span style="display:flex;"><span>        video_mem_start <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xb8000</span>;
+</span></span><span style="display:flex;"><span>        video_port_reg <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3d4</span>;
+</span></span><span style="display:flex;"><span>        video_port_val <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x3d5</span>;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 判断显示类型是 EGA 还是 CGA
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> ((ORIG_VIDEO_EGA_BX <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0x10</span>) {
+</span></span><span style="display:flex;"><span>            video_type <span style="color:#f92672">=</span> VIDEO_TYPE_EGAC;
+</span></span><span style="display:flex;"><span>            video_mem_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xbc000</span>;
+</span></span><span style="display:flex;"><span>            display_desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;EGAc&#34;</span>;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            video_type <span style="color:#f92672">=</span> VIDEO_TYPE_CGA;
+</span></span><span style="display:flex;"><span>            video_mem_end <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xba000</span>;
+</span></span><span style="display:flex;"><span>            display_desc <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;*CGA&#34;</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>一开始的 <code>if else</code> 是根据此前从 BIOS 中断中读取到的数据，将显示器分为单色 or 彩色，EGA or MDA/CGA 四种情况，主要部分是设置了内存，结果如下：</p>
 <pre tabindex="0"><code>+-------------+ &lt;- 0xA0000
 |  EGA color  |
 |             |
@@ -474,96 +474,96 @@ _EDX <span style="color:#f92672">=</span> (<span style="color:#66d9ef">short</sp
 |  video buf  |
 +-------------+ &lt;- 0xC0000
 </code></pre><p>第二部分的代码是将类型字符串输出到屏幕右上角</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#75715e">/* Let the user known what kind of display driver we are using */</span>
-    <span style="color:#75715e">// 在屏幕右上角输出 显示描述字符串（display_desc）
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 首先将显示指针 display_ptr 指到屏幕第一行右端差 4 字符处（一个字符对应两个字节）
-</span><span style="color:#75715e"></span>    display_ptr <span style="color:#f92672">=</span> ((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>) video_mem_start) <span style="color:#f92672">+</span> video_size_row <span style="color:#f92672">-</span> <span style="color:#ae81ff">8</span>;
-    <span style="color:#75715e">//循环复制，每次循环后字符串指针+1，屏幕指针+2（空开属性字符的位置）
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">*</span>display_desc) {
-        <span style="color:#f92672">*</span>display_ptr<span style="color:#f92672">++</span> <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>display_desc<span style="color:#f92672">++</span>;
-        display_ptr<span style="color:#f92672">++</span>;
-    }
-</code></pre></div><p>根据这一部分代码，就可以得知屏幕输出字符的逻辑</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#75715e">/* Let the user known what kind of display driver we are using */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 在屏幕右上角输出 显示描述字符串（display_desc）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// 首先将显示指针 display_ptr 指到屏幕第一行右端差 4 字符处（一个字符对应两个字节）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    display_ptr <span style="color:#f92672">=</span> ((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>) video_mem_start) <span style="color:#f92672">+</span> video_size_row <span style="color:#f92672">-</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//循环复制，每次循环后字符串指针+1，屏幕指针+2（空开属性字符的位置）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (<span style="color:#f92672">*</span>display_desc) {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">*</span>display_ptr<span style="color:#f92672">++</span> <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>display_desc<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        display_ptr<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>根据这一部分代码，就可以得知屏幕输出字符的逻辑</p>
 <p>简单的说，想在显示器上输出一个字符，只需要修改 <code>video buf</code> 部分的内存即可，例如</p>
-<pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">mov [0xB8000], 'a'
-mov [0xB8002], 'b'
-mov [0xB8004], 'c'
+<pre tabindex="0"><code class="language-x86asm" data-lang="x86asm">mov [0xB8000], &#39;a&#39;
+mov [0xB8002], &#39;b&#39;
+mov [0xB8004], &#39;c&#39;
 </code></pre><p>这句话的效果就是在显示器第一行第一个字符处输出字符 <code>abc</code>，需要隔着放就是因为显示一个字符需要两个字节，第一个为显示的字符，第二个为属性</p>
 <p>最后一部分</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">
-    <span style="color:#75715e">// 初始化用于滚屏的变量（主要用于 EGA/VGA）
-</span><span style="color:#75715e"></span>    origin <span style="color:#f92672">=</span> video_mem_start;                   <span style="color:#75715e">// 滚屏起始显示内存地址
-</span><span style="color:#75715e"></span>    scr_end <span style="color:#f92672">=</span> video_mem_start <span style="color:#f92672">+</span> video_num_lines <span style="color:#f92672">*</span> video_size_row;   <span style="color:#75715e">// 滚屏结束内存地址
-</span><span style="color:#75715e"></span>    top <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;                                    <span style="color:#75715e">// 最顶行号
-</span><span style="color:#75715e"></span>    bottom <span style="color:#f92672">=</span> video_num_lines;                   <span style="color:#75715e">// 最底行号
-</span><span style="color:#75715e"></span>    gotoxy(ORIG_X, ORIG_Y);                     <span style="color:#75715e">// 初始化光标位置
-</span><span style="color:#75715e"></span>    set_trap_gate(<span style="color:#ae81ff">0x21</span>, <span style="color:#f92672">&amp;</span>keyboard_interrupt);   <span style="color:#75715e">// 设置键盘中断处理函数
-</span><span style="color:#75715e"></span>    outb_p((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)(inb_p(<span style="color:#ae81ff">0x21</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xfd</span>), <span style="color:#ae81ff">0x21</span>);  <span style="color:#75715e">// 取消 8259A 中对键盘中断的屏蔽，允许 IRQ1
-</span><span style="color:#75715e"></span>    a <span style="color:#f92672">=</span> inb_p(<span style="color:#ae81ff">0x61</span>);                            <span style="color:#75715e">// 延迟读取键盘端口 0x61（8255A 端口 PB）
-</span><span style="color:#75715e"></span>    outb_p((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)(a <span style="color:#f92672">|</span> <span style="color:#ae81ff">0x80</span>), <span style="color:#ae81ff">0x61</span>);    <span style="color:#75715e">// 设置禁止键盘工作（位 7 设置为 1）
-</span><span style="color:#75715e"></span>    outb(a, <span style="color:#ae81ff">0x61</span>);                              <span style="color:#75715e">// 再允许键盘工作，用以复位键盘操作
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>先设置了滚屏用的一些变量，包括顶部行号和末尾行号等内容</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 初始化用于滚屏的变量（主要用于 EGA/VGA）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    origin <span style="color:#f92672">=</span> video_mem_start;                   <span style="color:#75715e">// 滚屏起始显示内存地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    scr_end <span style="color:#f92672">=</span> video_mem_start <span style="color:#f92672">+</span> video_num_lines <span style="color:#f92672">*</span> video_size_row;   <span style="color:#75715e">// 滚屏结束内存地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    top <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;                                    <span style="color:#75715e">// 最顶行号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    bottom <span style="color:#f92672">=</span> video_num_lines;                   <span style="color:#75715e">// 最底行号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    gotoxy(ORIG_X, ORIG_Y);                     <span style="color:#75715e">// 初始化光标位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    set_trap_gate(<span style="color:#ae81ff">0x21</span>, <span style="color:#f92672">&amp;</span>keyboard_interrupt);   <span style="color:#75715e">// 设置键盘中断处理函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    outb_p((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)(inb_p(<span style="color:#ae81ff">0x21</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xfd</span>), <span style="color:#ae81ff">0x21</span>);  <span style="color:#75715e">// 取消 8259A 中对键盘中断的屏蔽，允许 IRQ1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    a <span style="color:#f92672">=</span> inb_p(<span style="color:#ae81ff">0x61</span>);                            <span style="color:#75715e">// 延迟读取键盘端口 0x61（8255A 端口 PB）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    outb_p((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)(a <span style="color:#f92672">|</span> <span style="color:#ae81ff">0x80</span>), <span style="color:#ae81ff">0x61</span>);    <span style="color:#75715e">// 设置禁止键盘工作（位 7 设置为 1）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    outb(a, <span style="color:#ae81ff">0x61</span>);                              <span style="color:#75715e">// 再允许键盘工作，用以复位键盘操作
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>先设置了滚屏用的一些变量，包括顶部行号和末尾行号等内容</p>
 <p>随后将光标定位到此前保存的光标位置（内存 <code>0x90000</code> 处）</p>
 <p>最后设置了键盘的中断处理函数，重启键盘工作</p>
 <p>在完成这个初始化后，屏幕上就能显示输入的内容了</p>
 <p>简单看一下键盘中断的处理：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">_keyboard_interrupt:
-  ...
-  call _do_tty_interrupt
-  ...
-
-<span style="color:#66d9ef">void</span> do_tty_interrupt(<span style="color:#66d9ef">int</span> tty) {
-    copy_to_cooked(tty_table<span style="color:#f92672">+</span>tty);
-}
-
-<span style="color:#66d9ef">void</span> copy_to_cooked(<span style="color:#66d9ef">struct</span> tty_struct <span style="color:#f92672">*</span> tty) {
-    ...
-    tty<span style="color:#f92672">-&gt;</span>write(tty);
-    ...
-}
-
-<span style="color:#66d9ef">void</span> con_write(strct tty_struct <span style="color:#f92672">*</span> tty) {
-    _asm{
-        mov al, c;
-        mov ah, attr;
-        mov ebx, pos;
-        mov [ebx], ax;
-    }
-    pos <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
-    x<span style="color:#f92672">++</span>;
-}
-</code></pre></div><p>根据调用连，发现最后在屏幕上输出是通过 <code>con_write</code> 函数实现的，这段汇编其实就是在 <code>pos</code> 地址存入字符 <code>c</code>，随后 <code>pos+=2</code> 和 <code>x++</code>，用于调整光标</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>_keyboard_interrupt:
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>  call _do_tty_interrupt
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> do_tty_interrupt(<span style="color:#66d9ef">int</span> tty) {
+</span></span><span style="display:flex;"><span>    copy_to_cooked(tty_table<span style="color:#f92672">+</span>tty);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> copy_to_cooked(<span style="color:#66d9ef">struct</span> tty_struct <span style="color:#f92672">*</span> tty) {
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    tty<span style="color:#f92672">-&gt;</span>write(tty);
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> con_write(strct tty_struct <span style="color:#f92672">*</span> tty) {
+</span></span><span style="display:flex;"><span>    _asm{
+</span></span><span style="display:flex;"><span>        mov al, c;
+</span></span><span style="display:flex;"><span>        mov ah, attr;
+</span></span><span style="display:flex;"><span>        mov ebx, pos;
+</span></span><span style="display:flex;"><span>        mov [ebx], ax;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    pos <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>    x<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>根据调用连，发现最后在屏幕上输出是通过 <code>con_write</code> 函数实现的，这段汇编其实就是在 <code>pos</code> 地址存入字符 <code>c</code>，随后 <code>pos+=2</code> 和 <code>x++</code>，用于调整光标</p>
 <h3 id="时间初始化-time_init">时间初始化 (time_init)</h3>
 <p>时间初始化函数位于 <code>init/main.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">time_init</span>(<span style="color:#66d9ef">void</span>) {
-    <span style="color:#66d9ef">struct</span> tm time;
-
-    <span style="color:#66d9ef">do</span> {
-        time.tm_sec <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">0</span>);
-        time.tm_min <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">2</span>);
-        time.tm_hour <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">4</span>);
-        time.tm_mday <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">7</span>);
-        time.tm_mon <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">8</span>);
-        time.tm_year <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">9</span>);
-    } <span style="color:#66d9ef">while</span> (time.tm_sec <span style="color:#f92672">!=</span> CMOS_READ(<span style="color:#ae81ff">0</span>));
-
-    BCD_TO_BIN(time.tm_sec);
-    BCD_TO_BIN(time.tm_min);
-    BCD_TO_BIN(time.tm_hour);
-    BCD_TO_BIN(time.tm_mday);
-    BCD_TO_BIN(time.tm_mon);
-    BCD_TO_BIN(time.tm_year);
-
-    time.tm_mon<span style="color:#f92672">--</span>;
-    startup_time <span style="color:#f92672">=</span> kernel_mktime(<span style="color:#f92672">&amp;</span>time);
-}
-</code></pre></div><p>这段代码主要使用了两个宏定义</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define CMOS_READ(addr) ({      \
-</span><span style="color:#75715e">    outb_p(0x80 | addr, 0x70);  \
-</span><span style="color:#75715e">    inb_p(0x71);                \
-</span><span style="color:#75715e">})
-</span></code></pre></div><p>CPU 通过端口与外设交换数据，向端口写入数据表示要进行的操作，随后从另一个端口读取外设返回的数据，这样操作系统就不需要考虑外设的具体实现</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">time_init</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> tm time;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>        time.tm_sec <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        time.tm_min <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>        time.tm_hour <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>        time.tm_mday <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">7</span>);
+</span></span><span style="display:flex;"><span>        time.tm_mon <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">8</span>);
+</span></span><span style="display:flex;"><span>        time.tm_year <span style="color:#f92672">=</span> CMOS_READ(<span style="color:#ae81ff">9</span>);
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">while</span> (time.tm_sec <span style="color:#f92672">!=</span> CMOS_READ(<span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    BCD_TO_BIN(time.tm_sec);
+</span></span><span style="display:flex;"><span>    BCD_TO_BIN(time.tm_min);
+</span></span><span style="display:flex;"><span>    BCD_TO_BIN(time.tm_hour);
+</span></span><span style="display:flex;"><span>    BCD_TO_BIN(time.tm_mday);
+</span></span><span style="display:flex;"><span>    BCD_TO_BIN(time.tm_mon);
+</span></span><span style="display:flex;"><span>    BCD_TO_BIN(time.tm_year);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    time.tm_mon<span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>    startup_time <span style="color:#f92672">=</span> kernel_mktime(<span style="color:#f92672">&amp;</span>time);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这段代码主要使用了两个宏定义</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define CMOS_READ(addr) ({      \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    outb_p(0x80 | addr, 0x70);  \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">    inb_p(0x71);                \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">})
+</span></span></span></code></pre></div><p>CPU 通过端口与外设交换数据，向端口写入数据表示要进行的操作，随后从另一个端口读取外设返回的数据，这样操作系统就不需要考虑外设的具体实现</p>
 <p>原文是以键盘为例</p>
 <table>
 <thead>
@@ -677,83 +677,83 @@ mov [0xB8004], 'c'
 </blockquote>
 <p>所以初始化过程中，第一部分的代码就是根据 CMOS 的端口，获取当前的时间信息</p>
 <p>随后的 <code>BCD_TO_BIN</code> 是将 CMOS 使用的 BCD 码转换为数字</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define BCD_TO_BIN(val) ((val)=((val)&amp;15) + ((val)&gt;&gt;4)*10)
-</span></code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define BCD_TO_BIN(val) ((val)=((val)&amp;15) + ((val)&gt;&gt;4)*10)
+</span></span></span></code></pre></div><blockquote>
 <p>BCD 码：用 4 位二进制数表示 1 位十进制数中 0~9 这 10 个数码，例如 <code>0=0b0000</code>, <code>1=0b0001</code>, <code>10=0b00010000</code></p>
 </blockquote>
 <p>这一部分就很好理解了</p>
 <p>随后 <code>tm_mon--</code> 是因为此处结构体的设计是以 <code>0-11</code> 的形式来存储月份，而获取到的结果为 <code>1-12</code></p>
 <p>最后是执行了 <code>kernel_mktime(&amp;time)</code> 函数，位于 <code>kernel/mktime.c</code>，这个函数用于计算从 1970 年 1 月 1 日至今的秒数</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#define MINUTE 60
-</span><span style="color:#75715e">#define HOUR (60 * MINUTE)
-</span><span style="color:#75715e">#define DAY (24 * HOUR)
-</span><span style="color:#75715e">#define YEAR (365 * DAY)
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> month[<span style="color:#ae81ff">12</span>] <span style="color:#f92672">=</span> {
-    <span style="color:#ae81ff">0</span>,
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span>),
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>),
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>),
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>),
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>),
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>),
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>),
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>),
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>),
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>),
-    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>),
-};
-
-<span style="color:#66d9ef">long</span> <span style="color:#a6e22e">kernel_mktime</span>(<span style="color:#66d9ef">struct</span> tm <span style="color:#f92672">*</span> tm) {
-    <span style="color:#66d9ef">long</span> res;
-    <span style="color:#66d9ef">int</span> year;
-    year <span style="color:#f92672">=</span> tm<span style="color:#f92672">-&gt;</span>tm_year <span style="color:#f92672">-</span> <span style="color:#ae81ff">70</span>;                        <span style="color:#75715e">// 从 70 年至今经过的年数
-</span><span style="color:#75715e"></span>    res <span style="color:#f92672">=</span> YEAR <span style="color:#f92672">*</span> year <span style="color:#f92672">+</span> DAY <span style="color:#f92672">*</span> ((year <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>);     <span style="color:#75715e">// 年数 * 365 + 闰年的数量 = 这些年经过的秒数
-</span><span style="color:#75715e"></span>    res <span style="color:#f92672">+=</span> month[tm<span style="color:#f92672">-&gt;</span>tm_mon];                       <span style="color:#75715e">// 本年到本月经过的秒数（先按闰年计算，随后判断是否需要减少）
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (tm<span style="color:#f92672">-&gt;</span>tm_mon <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> ((year <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">4</span>))         <span style="color:#75715e">// 非闰年且大于 2 月的话需要减少 1 天
-</span><span style="color:#75715e"></span>        res <span style="color:#f92672">-=</span> DAY;
-    res <span style="color:#f92672">+=</span> DAY <span style="color:#f92672">*</span> (tm<span style="color:#f92672">-&gt;</span>tm_mday <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);                 <span style="color:#75715e">// 照常加上就行本月、当天、上一小时、上一分钟经过的秒数即可
-</span><span style="color:#75715e"></span>    res <span style="color:#f92672">+=</span> HOUR <span style="color:#f92672">*</span> tm<span style="color:#f92672">-&gt;</span>tm_hour;
-    res <span style="color:#f92672">+=</span> MINUTE <span style="color:#f92672">*</span> tm<span style="color:#f92672">-&gt;</span>tm_min;
-    res <span style="color:#f92672">+=</span> tm<span style="color:#f92672">-&gt;</span>tm_sec;
-    <span style="color:#66d9ef">return</span> res;
-}
-</code></pre></div><p>这个闰年的计算略有些抽象，没有考虑 <code>2000</code> 年的问题</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#define MINUTE 60
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define HOUR (60 * MINUTE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define DAY (24 * HOUR)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define YEAR (365 * DAY)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> month[<span style="color:#ae81ff">12</span>] <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span>),
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span>),
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>),
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>),
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>),
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>),
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>),
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>),
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>),
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span>),
+</span></span><span style="display:flex;"><span>    DAY <span style="color:#f92672">*</span> (<span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">29</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">31</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>),
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">long</span> <span style="color:#a6e22e">kernel_mktime</span>(<span style="color:#66d9ef">struct</span> tm <span style="color:#f92672">*</span> tm) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> res;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> year;
+</span></span><span style="display:flex;"><span>    year <span style="color:#f92672">=</span> tm<span style="color:#f92672">-&gt;</span>tm_year <span style="color:#f92672">-</span> <span style="color:#ae81ff">70</span>;                        <span style="color:#75715e">// 从 70 年至今经过的年数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    res <span style="color:#f92672">=</span> YEAR <span style="color:#f92672">*</span> year <span style="color:#f92672">+</span> DAY <span style="color:#f92672">*</span> ((year <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>);     <span style="color:#75715e">// 年数 * 365 + 闰年的数量 = 这些年经过的秒数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    res <span style="color:#f92672">+=</span> month[tm<span style="color:#f92672">-&gt;</span>tm_mon];                       <span style="color:#75715e">// 本年到本月经过的秒数（先按闰年计算，随后判断是否需要减少）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (tm<span style="color:#f92672">-&gt;</span>tm_mon <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> ((year <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">4</span>))         <span style="color:#75715e">// 非闰年且大于 2 月的话需要减少 1 天
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        res <span style="color:#f92672">-=</span> DAY;
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">+=</span> DAY <span style="color:#f92672">*</span> (tm<span style="color:#f92672">-&gt;</span>tm_mday <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);                 <span style="color:#75715e">// 照常加上就行本月、当天、上一小时、上一分钟经过的秒数即可
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    res <span style="color:#f92672">+=</span> HOUR <span style="color:#f92672">*</span> tm<span style="color:#f92672">-&gt;</span>tm_hour;
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">+=</span> MINUTE <span style="color:#f92672">*</span> tm<span style="color:#f92672">-&gt;</span>tm_min;
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">+=</span> tm<span style="color:#f92672">-&gt;</span>tm_sec;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> res;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这个闰年的计算略有些抽象，没有考虑 <code>2000</code> 年的问题</p>
 <h3 id="进程调度初始化-sched_init">进程调度初始化 (sched_init)</h3>
 <p>位于 <code>kernel/sched.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sched_init</span>(<span style="color:#66d9ef">void</span>) {
-    <span style="color:#66d9ef">int</span> i;
-    <span style="color:#66d9ef">struct</span> desc_struct <span style="color:#f92672">*</span>p;
-    
-    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> sigaction) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">16</span>) 
-        panic(<span style="color:#e6db74">&#34;Struct sigaction MUST be 16 bytes&#34;</span>);
-    
-    set_tss_desc(gdt <span style="color:#f92672">+</span> FIRST_TSS_ENTRY, <span style="color:#f92672">&amp;</span>(init_task.task.tss));
-    set_ldt_desc(gdt <span style="color:#f92672">+</span> FIRST_LDT_ENTRY, <span style="color:#f92672">&amp;</span>(init_task.task.ldt));
-
-    p <span style="color:#f92672">=</span> gdt <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> FIRST_TSS_ENTRY;
-    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> NR_TASKS; i<span style="color:#f92672">++</span>) {
-        task[i] <span style="color:#f92672">=</span> NULL;
-        p<span style="color:#f92672">-&gt;</span>a <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-        p<span style="color:#f92672">++</span>;
-        p<span style="color:#f92672">-&gt;</span>a <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-        p<span style="color:#f92672">++</span>;
-    }
-
-    __asm__(<span style="color:#e6db74">&#34;pushfl; andl $0xffffbfff, (%esp); popfl&#34;</span>); <span style="color:#75715e">// 复位 NT 标志
-</span><span style="color:#75715e"></span>    ltr(<span style="color:#ae81ff">0</span>);                                             <span style="color:#75715e">// 将任务 0 的 TSS 加载到任务寄存器 tr
-</span><span style="color:#75715e"></span>    lldt(<span style="color:#ae81ff">0</span>);                                            <span style="color:#75715e">// 将局部描述符加载到局部描述符寄存器
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">// 初始化 8253 定时器
-</span><span style="color:#75715e"></span>    outb_p(<span style="color:#ae81ff">0x36</span>, <span style="color:#ae81ff">0x43</span>);                     <span style="color:#75715e">// binary, mode 3, LSB/MSB, ch 0
-</span><span style="color:#75715e"></span>    outb_p(LATCH <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>, <span style="color:#ae81ff">0x40</span>);             <span style="color:#75715e">// LSB, 定时值低字节
-</span><span style="color:#75715e"></span>    outb(LATCH <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">0x40</span>);                 <span style="color:#75715e">// MSB，定时值高字节
-</span><span style="color:#75715e"></span>
-    set_intr_gate(<span style="color:#ae81ff">0x20</span>, <span style="color:#f92672">&amp;</span>timer_interrupt);  <span style="color:#75715e">// 设置时钟中断处理程序
-</span><span style="color:#75715e"></span>    outb(inb_p(<span style="color:#ae81ff">0x21</span>) <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span><span style="color:#ae81ff">0x01</span>, <span style="color:#ae81ff">0x21</span>);        <span style="color:#75715e">// 修改中断控制器屏蔽码，允许时钟中断
-</span><span style="color:#75715e"></span>    set_system_gate(<span style="color:#ae81ff">0x80</span>, <span style="color:#f92672">&amp;</span>system_call);    <span style="color:#75715e">// 设置系统调用中断
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>代码首先初始化了 TSS 和 LDT，此前 GDT 全局描述符表共初始化了 256 个项，这里在此前的末尾追加了 TSS 和 LDT，后续的 252 个项都是为 TSS 和 LDT 留的</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sched_init</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> desc_struct <span style="color:#f92672">*</span>p;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> sigaction) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">16</span>) 
+</span></span><span style="display:flex;"><span>        panic(<span style="color:#e6db74">&#34;Struct sigaction MUST be 16 bytes&#34;</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    set_tss_desc(gdt <span style="color:#f92672">+</span> FIRST_TSS_ENTRY, <span style="color:#f92672">&amp;</span>(init_task.task.tss));
+</span></span><span style="display:flex;"><span>    set_ldt_desc(gdt <span style="color:#f92672">+</span> FIRST_LDT_ENTRY, <span style="color:#f92672">&amp;</span>(init_task.task.ldt));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> gdt <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> FIRST_TSS_ENTRY;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span> NR_TASKS; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        task[i] <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">-&gt;</span>a <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">-&gt;</span>a <span style="color:#f92672">=</span> p<span style="color:#f92672">-&gt;</span>b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        p<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    __asm__(<span style="color:#e6db74">&#34;pushfl; andl $0xffffbfff, (%esp); popfl&#34;</span>); <span style="color:#75715e">// 复位 NT 标志
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    ltr(<span style="color:#ae81ff">0</span>);                                             <span style="color:#75715e">// 将任务 0 的 TSS 加载到任务寄存器 tr
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    lldt(<span style="color:#ae81ff">0</span>);                                            <span style="color:#75715e">// 将局部描述符加载到局部描述符寄存器
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 初始化 8253 定时器
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    outb_p(<span style="color:#ae81ff">0x36</span>, <span style="color:#ae81ff">0x43</span>);                     <span style="color:#75715e">// binary, mode 3, LSB/MSB, ch 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    outb_p(LATCH <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xff</span>, <span style="color:#ae81ff">0x40</span>);             <span style="color:#75715e">// LSB, 定时值低字节
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    outb(LATCH <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">0x40</span>);                 <span style="color:#75715e">// MSB，定时值高字节
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    set_intr_gate(<span style="color:#ae81ff">0x20</span>, <span style="color:#f92672">&amp;</span>timer_interrupt);  <span style="color:#75715e">// 设置时钟中断处理程序
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    outb(inb_p(<span style="color:#ae81ff">0x21</span>) <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span><span style="color:#ae81ff">0x01</span>, <span style="color:#ae81ff">0x21</span>);        <span style="color:#75715e">// 修改中断控制器屏蔽码，允许时钟中断
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    set_system_gate(<span style="color:#ae81ff">0x80</span>, <span style="color:#f92672">&amp;</span>system_call);    <span style="color:#75715e">// 设置系统调用中断
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>代码首先初始化了 TSS 和 LDT，此前 GDT 全局描述符表共初始化了 256 个项，这里在此前的末尾追加了 TSS 和 LDT，后续的 252 个项都是为 TSS 和 LDT 留的</p>
 <blockquote>
 <p>TSS（任务状态段）：用于保存和恢复进程的上下文</p>
 <p>LDT（局部描述符表）：与 GDT 对应，用于为用户态进程提供数据段和代码段</p>
@@ -770,55 +770,55 @@ mov [0xB8004], 'c'
 <p>开启计时器后，计时器发送的中断设置了一个中断程序 <code>timer_interrupt</code>，最后这是了系统调用中断（0x80），也就是 <code>orw</code> 里日常用的 <code>int 0x80</code></p>
 <h3 id="缓冲区初始化-buffer_init">缓冲区初始化 (buffer_init)</h3>
 <p>位于 <code>fs/buffer.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> buffer_head <span style="color:#f92672">*</span> start_buffer <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> buffer_head <span style="color:#f92672">*</span>)(<span style="color:#f92672">&amp;</span>end);
-
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">buffer_init</span>(<span style="color:#66d9ef">long</span> buffer_end) { <span style="color:#75715e">// buffer_init(buffer_memory_end)
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> b;
-    <span style="color:#66d9ef">if</span> (buffer_end <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">20</span>)
-        b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)(<span style="color:#ae81ff">640</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1024</span>);
-    <span style="color:#66d9ef">else</span>
-        b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)buffer_end;
-    
-    <span style="color:#66d9ef">struct</span> buffer_head <span style="color:#f92672">*</span> h  <span style="color:#f92672">=</span> start_buffer;
-    <span style="color:#66d9ef">while</span> ((b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)b <span style="color:#f92672">-</span> BLOCK_SIZE) <span style="color:#f92672">&gt;=</span> ((<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)(h <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))) {
-        h<span style="color:#f92672">-&gt;</span>b_dev <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-        h<span style="color:#f92672">-&gt;</span>b_dirt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-        h<span style="color:#f92672">-&gt;</span>b_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-        h<span style="color:#f92672">-&gt;</span>b_lock <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-        h<span style="color:#f92672">-&gt;</span>b_uptodate <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-        h<span style="color:#f92672">-&gt;</span>b_wait <span style="color:#f92672">=</span> NULL;
-        h<span style="color:#f92672">-&gt;</span>b_next <span style="color:#f92672">=</span> NULL;
-        h<span style="color:#f92672">-&gt;</span>b_prev <span style="color:#f92672">=</span> NULL;
-        h<span style="color:#f92672">-&gt;</span>b_data <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)b;
-        h<span style="color:#f92672">-&gt;</span>b_prev_free <span style="color:#f92672">=</span> h <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
-        h<span style="color:#f92672">-&gt;</span>b_next_free <span style="color:#f92672">=</span> h <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-        h<span style="color:#f92672">++</span>;
-        NR_BUFFERS<span style="color:#f92672">++</span>;
-        <span style="color:#66d9ef">if</span> (b <span style="color:#f92672">==</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#ae81ff">0x100000</span>)
-            b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#ae81ff">0xA0000</span>;
-    }
-    h<span style="color:#f92672">--</span>;
-    free_list <span style="color:#f92672">=</span> start_buffer;
-    free_list<span style="color:#f92672">-&gt;</span>b_prev_free <span style="color:#f92672">=</span> h;
-    h<span style="color:#f92672">-&gt;</span>b_next_free <span style="color:#f92672">=</span> free_list;
-
-    <span style="color:#66d9ef">int</span> i;
-    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> NR_HASH; i<span style="color:#f92672">++</span>)
-        hash_table[i] <span style="color:#f92672">=</span> NULL;
-}
-</code></pre></div><p>文章里讲的第一行代码其实是定义在全局变量的，<code>end</code> 是一个外部变量，是由链接程序 <code>ld</code> 生成的位于程序末端的变量，而缓冲区变量的开始位置就被定义在了这个地址，也就是内核程序的末尾</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> buffer_head <span style="color:#f92672">*</span> start_buffer <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> buffer_head <span style="color:#f92672">*</span>)(<span style="color:#f92672">&amp;</span>end);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">buffer_init</span>(<span style="color:#66d9ef">long</span> buffer_end) { <span style="color:#75715e">// buffer_init(buffer_memory_end)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> b;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (buffer_end <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>        b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)(<span style="color:#ae81ff">640</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1024</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>        b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)buffer_end;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> buffer_head <span style="color:#f92672">*</span> h  <span style="color:#f92672">=</span> start_buffer;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ((b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)b <span style="color:#f92672">-</span> BLOCK_SIZE) <span style="color:#f92672">&gt;=</span> ((<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)(h <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))) {
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_dev <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_dirt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_lock <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_uptodate <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_wait <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_next <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_prev <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_data <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)b;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_prev_free <span style="color:#f92672">=</span> h <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">-&gt;</span>b_next_free <span style="color:#f92672">=</span> h <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        h<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        NR_BUFFERS<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (b <span style="color:#f92672">==</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#ae81ff">0x100000</span>)
+</span></span><span style="display:flex;"><span>            b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#ae81ff">0xA0000</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    h<span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>    free_list <span style="color:#f92672">=</span> start_buffer;
+</span></span><span style="display:flex;"><span>    free_list<span style="color:#f92672">-&gt;</span>b_prev_free <span style="color:#f92672">=</span> h;
+</span></span><span style="display:flex;"><span>    h<span style="color:#f92672">-&gt;</span>b_next_free <span style="color:#f92672">=</span> free_list;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> NR_HASH; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>        hash_table[i] <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>文章里讲的第一行代码其实是定义在全局变量的，<code>end</code> 是一个外部变量，是由链接程序 <code>ld</code> 生成的位于程序末端的变量，而缓冲区变量的开始位置就被定义在了这个地址，也就是内核程序的末尾</p>
 <p>整个初始化函数可以大致分成三段</p>
 <p>第一段仍然是一个参数的定义，设置了 <code>buffer</code> 的内存末尾，如果缓冲区末尾在 1Mb 处，此时 640KB-1MB 的内存被显示内存和 BIOS 占用了，需要手动将末尾地址修改为 640KB，所以是对缓冲区末尾的设置（原文中假设了总内存为 8MB，所以这里的 <code>b</code> 就是 <code>buffer_end</code>）</p>
 <p>接下来的 <code>while</code> 循环是对结构体的设置，先看一下整个循环的结构</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> buffer_head <span style="color:#f92672">*</span> h <span style="color:#f92672">=</span> start_buffer;
-<span style="color:#66d9ef">while</span> ((b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)b <span style="color:#f92672">-</span> BLOCK_SIZE) <span style="color:#f92672">&gt;=</span> ((<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)(h <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))) {  <span style="color:#75715e">// BLOCK_SIZE = 1024
-</span><span style="color:#75715e"></span>    h<span style="color:#f92672">++</span>;
-    NR_BUFFERS<span style="color:#f92672">++</span>;               <span style="color:#75715e">// counter
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (b <span style="color:#f92672">==</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#ae81ff">0x100000</span>)
-        b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#ae81ff">0xA0000</span>;
-}
-</code></pre></div><p>这里的循环每次 <code>b -= 1024</code> 和 <code>h++</code>，画个图吧</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> buffer_head <span style="color:#f92672">*</span> h <span style="color:#f92672">=</span> start_buffer;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> ((b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>)b <span style="color:#f92672">-</span> BLOCK_SIZE) <span style="color:#f92672">&gt;=</span> ((<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)(h <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))) {  <span style="color:#75715e">// BLOCK_SIZE = 1024
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    h<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    NR_BUFFERS<span style="color:#f92672">++</span>;               <span style="color:#75715e">// counter
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (b <span style="color:#f92672">==</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#ae81ff">0x100000</span>)
+</span></span><span style="display:flex;"><span>        b <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#ae81ff">0xA0000</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里的循环每次 <code>b -= 1024</code> 和 <code>h++</code>，画个图吧</p>
 <pre tabindex="0"><code>low
 +---------------+ &lt;- 0
 |    Kernel     |
@@ -833,41 +833,41 @@ high
 </code></pre><p>所以这里其实是将 Buffer 拆分成了两种空间，第一种用 <code>h</code> 指针遍历，第二种用 <code>b</code> 指针遍历，直到两种结构体出现重合为止</p>
 <p>此外，当 <code>b</code> 遍历到 1Mb 时，会直接跳到 640Kb，原因上面解释过了，需要将显示内存和 BIOS 占用的空间空出来</p>
 <p>中间部分代码其实就比较好理解了</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">h<span style="color:#f92672">-&gt;</span>b_dev <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;               <span style="color:#75715e">// 使用该缓冲区的设备号
-</span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_dirt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;              <span style="color:#75715e">// 脏版本，缓冲区修改标识
-</span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;             <span style="color:#75715e">// 该缓冲区的引用计数
-</span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_lock <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;              <span style="color:#75715e">// 缓冲区锁定标识
-</span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_uptodate <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;          <span style="color:#75715e">// 缓冲区更新标识（数据有效标识）
-</span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_wait <span style="color:#f92672">=</span> NULL;           <span style="color:#75715e">// 指向等待该缓冲区解锁的进程
-</span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_next <span style="color:#f92672">=</span> NULL;           <span style="color:#75715e">// 指向具有相同 hash 值的下一个缓冲头
-</span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_prev <span style="color:#f92672">=</span> NULL;           <span style="color:#75715e">// 指向具有相同 hash 值的上一个缓冲头
-</span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_data <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)b;
-h<span style="color:#f92672">-&gt;</span>b_prev_free <span style="color:#f92672">=</span> h <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
-h<span style="color:#f92672">-&gt;</span>b_next_free <span style="color:#f92672">=</span> h <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
-</code></pre></div><p>对所有 <code>h</code> 结构体进行了设置，<code>h-&gt;b_data = (char*)b</code> 这里就解释了 <code>b</code> 是什么，简单的说，<code>h</code> 是 <code>buffer_head</code> 的结构体，代表了缓冲头，而 <code>b</code> 是缓冲块，每个大小为 1024 Byte，所以每一项 <code>h</code> 都指向了一个对应的 <code>b</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>h<span style="color:#f92672">-&gt;</span>b_dev <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;               <span style="color:#75715e">// 使用该缓冲区的设备号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_dirt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;              <span style="color:#75715e">// 脏版本，缓冲区修改标识
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;             <span style="color:#75715e">// 该缓冲区的引用计数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_lock <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;              <span style="color:#75715e">// 缓冲区锁定标识
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_uptodate <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;          <span style="color:#75715e">// 缓冲区更新标识（数据有效标识）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_wait <span style="color:#f92672">=</span> NULL;           <span style="color:#75715e">// 指向等待该缓冲区解锁的进程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_next <span style="color:#f92672">=</span> NULL;           <span style="color:#75715e">// 指向具有相同 hash 值的下一个缓冲头
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_prev <span style="color:#f92672">=</span> NULL;           <span style="color:#75715e">// 指向具有相同 hash 值的上一个缓冲头
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>h<span style="color:#f92672">-&gt;</span>b_data <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)b;
+</span></span><span style="display:flex;"><span>h<span style="color:#f92672">-&gt;</span>b_prev_free <span style="color:#f92672">=</span> h <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>h<span style="color:#f92672">-&gt;</span>b_next_free <span style="color:#f92672">=</span> h <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span></code></pre></div><p>对所有 <code>h</code> 结构体进行了设置，<code>h-&gt;b_data = (char*)b</code> 这里就解释了 <code>b</code> 是什么，简单的说，<code>h</code> 是 <code>buffer_head</code> 的结构体，代表了缓冲头，而 <code>b</code> 是缓冲块，每个大小为 1024 Byte，所以每一项 <code>h</code> 都指向了一个对应的 <code>b</code></p>
 <p>此外一个比较重要的就是 <code>b_prev_free</code> 和 <code>b_next_free</code>，这两个结构体将所有的空闲块串成了一个双向链表，其余部分暂时不是很重要，直接把注释抄过来了</p>
 <p>在循环结束后还有几行代码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">h<span style="color:#f92672">--</span>;
-free_list <span style="color:#f92672">=</span> start_buffer;
-free_list<span style="color:#f92672">-&gt;</span>b_prev_free <span style="color:#f92672">=</span> h;
-h<span style="color:#f92672">-&gt;</span>b_next_free <span style="color:#f92672">=</span> free_list;
-</code></pre></div><p>这就比较好理解了，就是把双向链表的头和尾连上，并且用 <code>free_list</code> 指向链表的开头</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>h<span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>free_list <span style="color:#f92672">=</span> start_buffer;
+</span></span><span style="display:flex;"><span>free_list<span style="color:#f92672">-&gt;</span>b_prev_free <span style="color:#f92672">=</span> h;
+</span></span><span style="display:flex;"><span>h<span style="color:#f92672">-&gt;</span>b_next_free <span style="color:#f92672">=</span> free_list;
+</span></span></code></pre></div><p>这就比较好理解了，就是把双向链表的头和尾连上，并且用 <code>free_list</code> 指向链表的开头</p>
 <p>在 <code>while</code> 循环结束后还有一个 <code>for</code> 循环</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> NR_HASH; i<span style="color:#f92672">++</span>)   <span style="color:#75715e">// NR_HASH = 307
-</span><span style="color:#75715e"></span>        hash_table[i] <span style="color:#f92672">=</span> NULL;
-</code></pre></div><p>这里有一个 307 项的 <code>hash_table</code>，每一项都被赋值为 <code>NULL</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> NR_HASH; i<span style="color:#f92672">++</span>)   <span style="color:#75715e">// NR_HASH = 307
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        hash_table[i] <span style="color:#f92672">=</span> NULL;
+</span></span></code></pre></div><p>这里有一个 307 项的 <code>hash_table</code>，每一项都被赋值为 <code>NULL</code></p>
 <p>在读取块设备（硬盘）中的数据时，需要先将数据读到缓冲区中，如果缓冲区中已经存有数据，将不再从块设备读取，而是直接从缓冲区取数据，为了加快查找的速度，这里用到了 <code>hash_table</code> 这个 <code>hashmap</code> 结构</p>
 <p>在需要读取某个块设备的数据时，通过 <code>(dev ^ block) % 307</code> 来找到 <code>hash_table</code> 里的索引下标，找到后就加到 <code>hash_table[index]</code> 这个链表中，<code>h-&gt;b_next</code> 和 <code>h-&gt;b_prev</code> 就构成了 <code>hash_table</code> 中双向链表</p>
 <p>所以这里涉及到的整个结构就是哈希表+双向链表，后续可以在这个基础上实现 <code>LRU</code> 算法</p>
 <h3 id="硬盘初始化-hd_init">硬盘初始化 hd_init</h3>
 <p>位于 <code>kernel/blk_drv/hd.c</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hd_init</span>(<span style="color:#66d9ef">void</span>) {
-    blk_dev[MAJOR_NR].request_fn <span style="color:#f92672">=</span> do_hd_request;   <span style="color:#75715e">// MAJOR_NR = 3, 硬盘主设备号
-</span><span style="color:#75715e"></span>    set_intr_gate(<span style="color:#ae81ff">0x2E</span>, <span style="color:#f92672">&amp;</span>hd_interrupt);
-    outb_p(inb_p(<span style="color:#ae81ff">0x21</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xfb</span>, <span style="color:#ae81ff">0x21</span>);   <span style="color:#75715e">// 复位接联的主 8259A int2 的屏蔽位，允许从片发出中断请求
-</span><span style="color:#75715e"></span>    outb(inb_p(<span style="color:#ae81ff">0xA1</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xbf</span>, <span style="color:#ae81ff">0xA1</span>);     <span style="color:#75715e">// 复位硬盘的中断请求屏蔽位（在从片上），允许硬盘控制器发送中断请求信号
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>第一行是把 <code>blk_dev</code> 数组中硬盘主设备位置的块设备管理结构 <code>blk_dev_struct</code> 的 <code>request_fn</code> 赋值为 <code>do_hd_request</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hd_init</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    blk_dev[MAJOR_NR].request_fn <span style="color:#f92672">=</span> do_hd_request;   <span style="color:#75715e">// MAJOR_NR = 3, 硬盘主设备号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    set_intr_gate(<span style="color:#ae81ff">0x2E</span>, <span style="color:#f92672">&amp;</span>hd_interrupt);
+</span></span><span style="display:flex;"><span>    outb_p(inb_p(<span style="color:#ae81ff">0x21</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xfb</span>, <span style="color:#ae81ff">0x21</span>);   <span style="color:#75715e">// 复位接联的主 8259A int2 的屏蔽位，允许从片发出中断请求
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    outb(inb_p(<span style="color:#ae81ff">0xA1</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xbf</span>, <span style="color:#ae81ff">0xA1</span>);     <span style="color:#75715e">// 复位硬盘的中断请求屏蔽位（在从片上），允许硬盘控制器发送中断请求信号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>第一行是把 <code>blk_dev</code> 数组中硬盘主设备位置的块设备管理结构 <code>blk_dev_struct</code> 的 <code>request_fn</code> 赋值为 <code>do_hd_request</code></p>
 <p>这里 <code>blk_dev</code> 用于管理所有的块设备，每一个索引代表了一个块设备，包括 <code>mem</code>, <code>fd</code>, <code>hd</code>, <code>ttyx</code>, <code>tty</code>, <code>lp</code>，每个块设备执行的读写请求都由单独的函数实现，都由 <code>request_fn</code> 指向函数，所以上层可以屏蔽底层的差异（相当于多态，父类引用 <code>request_fn</code> 指向子类 <code>do_hd_request</code>）</p>
 <p>第二行是熟悉的设置中断，将中断号 <code>0x2E</code> 的处理函数设置为 <code>hd_interrupt</code></p>
 <p>最后两行也是经典的 IO 端口，效果是<strong>允许硬盘控制器发送中断请求信号</strong></p>
@@ -1113,7 +1113,7 @@ h<span style="color:#f92672">-&gt;</span>b_next_free <span style="color:#f92672"
             
             
             ⌨&nbsp;
-            86.19k&nbsp;
+            86.35k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
