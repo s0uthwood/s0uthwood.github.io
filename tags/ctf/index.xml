@@ -6,7 +6,17 @@
     <description>Recent content in CTF on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Aug 2022 23:23:23 +0800</lastBuildDate><atom:link href="/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 04 Apr 2023 00:06:59 +0800</lastBuildDate><atom:link href="/tags/ctf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>pwn.college embryoio writeups</title>
+      <link>/post/pwn-college-embryoio/</link>
+      <pubDate>Tue, 04 Apr 2023 00:06:59 +0800</pubDate>
+      
+      <guid>/post/pwn-college-embryoio/</guid>
+      <description>已完成：level 7 - level 59
+level7 launch this program with 0 environment variables env -i command level8 non-interactive shell hacker@embryoio_level8:~$ bash tmp.sh hB [INFO] This challenge will now perform a bunch of checks. [INFO] If you pass these checks, you will receive the flag. [TEST] Performing checks on the parent process of this process. [TEST] Checking to make sure the process is a non-interactive shell script. [GOOD] You have passed the checks on the parent process!</description>
+    </item>
+    
     <item>
       <title>qwb 2022 rev writeups</title>
       <link>/post/qwb2022-rev-writeups/</link>

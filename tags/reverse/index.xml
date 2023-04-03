@@ -181,7 +181,7 @@ v4 = (unsigned __int8 *)&amp;amp;key + a2; v5 = v4[2]; v6 = 1; while ( (unsigned
     <item>
       <title>angr ctf writeup</title>
       <link>/post/angr-ctf-writeup/</link>
-      <pubDate>Mon, 27 Sep 2021 21:03:03 +0000</pubDate>
+      <pubDate>Mon, 27 Sep 2021 21:03:03 +0800</pubDate>
       
       <guid>/post/angr-ctf-writeup/</guid>
       <description>&lt;p&gt;开始学angr&lt;/p&gt;

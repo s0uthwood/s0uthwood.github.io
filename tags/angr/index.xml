@@ -27,7 +27,7 @@ from angr import * import claripy import binascii input_length = 56 base_addr = 
     <item>
       <title>angr ctf writeup</title>
       <link>/post/angr-ctf-writeup/</link>
-      <pubDate>Mon, 27 Sep 2021 21:03:03 +0000</pubDate>
+      <pubDate>Mon, 27 Sep 2021 21:03:03 +0800</pubDate>
       
       <guid>/post/angr-ctf-writeup/</guid>
       <description>&lt;p&gt;开始学angr&lt;/p&gt;
