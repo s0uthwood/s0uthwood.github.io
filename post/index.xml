@@ -6,7 +6,17 @@
     <description>Recent content in Posts on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Apr 2023 00:06:59 +0800</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 04 Apr 2023 00:20:12 +0800</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>pwn.college embryoasm writeups</title>
+      <link>/post/pwn-college-embryoasm/</link>
+      <pubDate>Tue, 04 Apr 2023 00:20:12 +0800</pubDate>
+      
+      <guid>/post/pwn-college-embryoasm/</guid>
+      <description>level 6 - level 23
+level 6 from pwn import * context(os=&amp;#39;linux&amp;#39;, arch=&amp;#39;amd64&amp;#39;) p = process(&amp;#39;./embryoasm_level6&amp;#39;) p.recvuntil(b&amp;#39;bytes): \n&amp;#39;) p.send(asm(&amp;#39;movb al, dil\nmovw bx, si&amp;#39;)) p.interactive() level 7 from pwn import * context(os=&amp;#39;linux&amp;#39;, arch=&amp;#39;amd64&amp;#39;) p = process(&amp;#39;./embryoasm_level7&amp;#39;) p.recvuntil(b&amp;#39;bytes): \n&amp;#39;) p.send(asm(&amp;#39;shr rdi, 24\nmovb al, dil&amp;#39;)) p.interactive() level 8 from pwn import * context(os=&amp;#39;linux&amp;#39;, arch=&amp;#39;amd64&amp;#39;) p = process(&amp;#39;./embryoasm_level8&amp;#39;) p.recvuntil(b&amp;#39;bytes): \n&amp;#39;) p.send(asm(&amp;#39;and rdi, rsi\nxor rax, rax\nor rax, rdi&amp;#39;)) p.interactive() level 9 from pwn import * context(os=&amp;#39;linux&amp;#39;, arch=&amp;#39;amd64&amp;#39;) p = process(&amp;#39;.</description>
+    </item>
+    
     <item>
       <title>pwn.college embryoio writeups</title>
       <link>/post/pwn-college-embryoio/</link>
