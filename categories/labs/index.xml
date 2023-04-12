@@ -6,7 +6,17 @@
     <description>Recent content in Labs on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Apr 2023 00:26:43 +0800</lastBuildDate><atom:link href="/categories/labs/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Apr 2023 00:04:31 +0800</lastBuildDate><atom:link href="/categories/labs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>pwn.college embryoio writeups</title>
+      <link>/post/pwn-college-babyheap/</link>
+      <pubDate>Thu, 13 Apr 2023 00:04:31 +0800</pubDate>
+      
+      <guid>/post/pwn-college-babyheap/</guid>
+      <description>主要的考点是 tcache
+level 1.0 ###### Welcome to ./babyheap_level1.0!###This challenge allows you to perform various heap operations, some of which may involve the flag. Through this series ofchallenges, you will become familiar with the concept of heap exploitation.This challenge can manage up to 1 unique allocations.[*] Function (malloc/free/puts/read_flag/quit): mallocSize: 550[*] allocations[0] = malloc(550)[*] allocations[0] = 0x55706c8782c0[*] Function (malloc/free/puts/read_flag/quit): free[*] free(allocations[0])+====================+========================+==============+============================+============================+| TCACHE BIN #33 | SIZE: 537 - 552 | COUNT: 1 | HEAD: 0x55706c8782c0 | KEY: 0x55706c878010 |+====================+========================+==============+============================+============================+| ADDRESS | PREV_SIZE (-0x10) | SIZE (-0x08) | next (+0x00) | key (+0x08) |+---------------------+---------------------+------------------------------+---------------------+---------------------+| 0x55706c8782c0 | 0 | 0x231 (P) | (nil) | 0x55706c878010 |+----------------------------------------------------------------------------------------------------------------------+[*] Function (malloc/free/puts/read_flag/quit): read_flag[*] flag_buffer = malloc(549)[*] flag_buffer = 0x55706c8782c0[*] read the flag!</description>
+    </item>
+    
     <item>
       <title>pwn.college embryosuid writeups</title>
       <link>/post/pwn-college-babysuid/</link>

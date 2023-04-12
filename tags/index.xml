@@ -6,11 +6,11 @@
     <description>Recent content in Tags on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Apr 2023 00:26:43 +0800</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Apr 2023 00:04:31 +0800</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CTF</title>
       <link>/tags/ctf/</link>
-      <pubDate>Tue, 04 Apr 2023 00:26:43 +0800</pubDate>
+      <pubDate>Thu, 13 Apr 2023 00:04:31 +0800</pubDate>
       
       <guid>/tags/ctf/</guid>
       <description></description>
@@ -19,9 +19,18 @@
     <item>
       <title>Labs</title>
       <link>/tags/labs/</link>
-      <pubDate>Tue, 04 Apr 2023 00:26:43 +0800</pubDate>
+      <pubDate>Thu, 13 Apr 2023 00:04:31 +0800</pubDate>
       
       <guid>/tags/labs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pwn</title>
+      <link>/tags/pwn/</link>
+      <pubDate>Thu, 13 Apr 2023 00:04:31 +0800</pubDate>
+      
+      <guid>/tags/pwn/</guid>
       <description></description>
     </item>
     
@@ -85,15 +94,6 @@
       <pubDate>Thu, 10 Nov 2022 10:28:09 +0800</pubDate>
       
       <guid>/tags/system/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Pwn</title>
-      <link>/tags/pwn/</link>
-      <pubDate>Wed, 12 Oct 2022 00:19:32 +0800</pubDate>
-      
-      <guid>/tags/pwn/</guid>
       <description></description>
     </item>
     
