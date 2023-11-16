@@ -341,7 +341,7 @@ seg000:00000000000000B0                 jmp     short loc_75
 <p>随后是这个</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  v1013 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">__int64</span>)input;
 </span></span><span style="display:flex;"><span>  v1012 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">__int64</span>)v20;
-</span></span><span style="display:flex;"><span>  v1011 <span style="color:#f92672">=</span> strlen(input);
+</span></span><span style="display:flex;"><span>  v1011 <span style="color:#f92672">=</span> <span style="color:#a6e22e">strlen</span>(input);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i31 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i31 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">65</span>; <span style="color:#f92672">++</span>i31 )
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    v978 <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">823</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">5</span>; <span style="color:#75715e">// 12345
@@ -442,7 +442,7 @@ seg000:00000000000000B0                 jmp     short loc_75
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)v21 <span style="color:#f92672">+</span> v1272) <span style="color:#f92672">!=</span> <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)off_7FF7D3D02010 <span style="color:#f92672">+</span> v1272) )
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      print((<span style="color:#66d9ef">__int64</span>)<span style="color:#e6db74">&#34;No</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">print</span>((<span style="color:#66d9ef">__int64</span>)<span style="color:#e6db74">&#34;No</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* 从内存中取出的数据
@@ -1050,21 +1050,13 @@ seg000:00000000000000B0                 jmp     short loc_75
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

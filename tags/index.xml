@@ -6,58 +6,13 @@
     <description>Recent content in Tags on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Apr 2023 00:04:31 +0800</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>CTF</title>
-      <link>/tags/ctf/</link>
-      <pubDate>Thu, 13 Apr 2023 00:04:31 +0800</pubDate>
-      
-      <guid>/tags/ctf/</guid>
-      <description></description>
-    </item>
-    
+    <lastBuildDate>Tue, 28 Feb 2023 01:55:25 +0800</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Labs</title>
       <link>/tags/labs/</link>
-      <pubDate>Thu, 13 Apr 2023 00:04:31 +0800</pubDate>
+      <pubDate>Tue, 28 Feb 2023 01:55:25 +0800</pubDate>
       
       <guid>/tags/labs/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Pwn</title>
-      <link>/tags/pwn/</link>
-      <pubDate>Thu, 13 Apr 2023 00:04:31 +0800</pubDate>
-      
-      <guid>/tags/pwn/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>SUID</title>
-      <link>/tags/suid/</link>
-      <pubDate>Tue, 04 Apr 2023 00:26:43 +0800</pubDate>
-      
-      <guid>/tags/suid/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ASM</title>
-      <link>/tags/asm/</link>
-      <pubDate>Tue, 04 Apr 2023 00:20:12 +0800</pubDate>
-      
-      <guid>/tags/asm/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Linux</title>
-      <link>/tags/linux/</link>
-      <pubDate>Tue, 04 Apr 2023 00:06:59 +0800</pubDate>
-      
-      <guid>/tags/linux/</guid>
       <description></description>
     </item>
     
@@ -98,11 +53,29 @@
     </item>
     
     <item>
+      <title>Pwn</title>
+      <link>/tags/pwn/</link>
+      <pubDate>Wed, 12 Oct 2022 00:19:32 +0800</pubDate>
+      
+      <guid>/tags/pwn/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Reverse</title>
       <link>/tags/reverse/</link>
       <pubDate>Wed, 12 Oct 2022 00:19:32 +0800</pubDate>
       
       <guid>/tags/reverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CTF</title>
+      <link>/tags/ctf/</link>
+      <pubDate>Tue, 02 Aug 2022 23:23:23 +0800</pubDate>
+      
+      <guid>/tags/ctf/</guid>
       <description></description>
     </item>
     

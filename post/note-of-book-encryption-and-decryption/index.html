@@ -216,8 +216,8 @@
 <h5 id="wm_command">WM_COMMAND</h5>
 <p>当用户从菜单或按钮中选择一条命令或者一个控件时该消息被发送给它的父窗口，或者当一个快捷键被释放时发送该消息。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>WM_COMMAND
-</span></span><span style="display:flex;"><span>	wNotifyCode <span style="color:#f92672">=</span> HIWORD(wParam);		 <span style="color:#75715e">// 通告函数
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	wID <span style="color:#f92672">=</span> LOWORD(wParam);				<span style="color:#75715e">// 菜单条目、控件或快捷键的标识符
+</span></span><span style="display:flex;"><span>	wNotifyCode <span style="color:#f92672">=</span> <span style="color:#a6e22e">HIWORD</span>(wParam);		 <span style="color:#75715e">// 通告函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	wID <span style="color:#f92672">=</span> <span style="color:#a6e22e">LOWORD</span>(wParam);				<span style="color:#75715e">// 菜单条目、控件或快捷键的标识符
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	hwndCtl <span style="color:#f92672">=</span> (HWND) lParam;			<span style="color:#75715e">// 控件句柄
 </span></span></span></code></pre></div><p><strong>返回值</strong>：如果应用程序处理这条消息，则返回值为零</p>
 <h5 id="wm_destory">WM_DESTORY</h5>
@@ -240,8 +240,8 @@
 <p>对应 <code>0x201</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>WM_LBUTTONDOWN
 </span></span><span style="display:flex;"><span>	fwkeys <span style="color:#f92672">=</span> wParam;			<span style="color:#75715e">// key旗帜
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	xPos <span style="color:#f92672">=</span> LOWORD(lParam);		<span style="color:#75715e">// 光标的水平位置
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	yPos <span style="color:#f92672">=</span> HIWORD(lParam);		<span style="color:#75715e">// 光标的垂直位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	xPos <span style="color:#f92672">=</span> <span style="color:#a6e22e">LOWORD</span>(lParam);		<span style="color:#75715e">// 光标的水平位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	yPos <span style="color:#f92672">=</span> <span style="color:#a6e22e">HIWORD</span>(lParam);		<span style="color:#75715e">// 光标的垂直位置
 </span></span></span></code></pre></div><p><strong>返回值</strong>：如果应用程序处理了这条消息，返回值为零</p>
 <h4 id="虚拟内存">虚拟内存</h4>
 <ul>
@@ -793,13 +793,13 @@ jz (jnz)
 <p>当注册版和正式版文件相同，只是部分功能被限制无法使用时，可以恢复正式版的功能</p>
 <h4 id="相关函数">相关函数</h4>
 <h5 id="enablemenuitem">EnableMenuItem()</h5>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>BOOL EnableMenuItem(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>BOOL <span style="color:#a6e22e">EnableMenuItem</span>(
 </span></span><span style="display:flex;"><span>    HMENU hMenu,        <span style="color:#75715e">// 菜单句柄
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    UINT uIDEnableItem, <span style="color:#75715e">// 欲允许或禁止的一个菜单条目的标识符
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    UINT uEnable,       <span style="color:#75715e">// 控制标志，包括允许、灰化、禁止等
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>)
 </span></span></code></pre></div><h5 id="enablewindow">EnableWindow()</h5>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>BOOL EnableWindow(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>BOOL <span style="color:#a6e22e">EnableWindow</span>(
 </span></span><span style="display:flex;"><span>    HWND hWnd,    <span style="color:#75715e">// 窗口句柄
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    BOOL bEnable  <span style="color:#75715e">// True为允许，False为禁止
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>)
@@ -1193,21 +1193,13 @@ jz (jnz)
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

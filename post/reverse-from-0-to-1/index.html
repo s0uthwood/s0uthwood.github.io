@@ -234,7 +234,7 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">32</span>; i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1</span>; <span style="color:#f92672">--</span>i) {
 </span></span><span style="display:flex;"><span>        flag[i] <span style="color:#f92672">^=</span> flag[i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>];
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;%s&#34;</span>, flag);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%s&#34;</span>, flag);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
@@ -280,23 +280,23 @@
 <p>编程枚举求解</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> main{
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> text[<span style="color:#ae81ff">25</span>];
-</span></span><span style="display:flex;"><span>    strcpy(text, <span style="color:#e6db74">&#34;killshadow&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">strcpy</span>(text, <span style="color:#e6db74">&#34;killshadow&#34;</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> key[<span style="color:#ae81ff">25</span>];
-</span></span><span style="display:flex;"><span>    strcpy(key, <span style="color:#e6db74">&#34;adsfkndcls&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">strcpy</span>(key, <span style="color:#e6db74">&#34;adsfkndcls&#34;</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> str2[<span style="color:#ae81ff">25</span>];
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> textlen <span style="color:#f92672">=</span> strlen(text);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> textlen <span style="color:#f92672">=</span> <span style="color:#a6e22e">strlen</span>(text);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> textlen; <span style="color:#f92672">++</span>i) {
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;A&#39;</span>; c <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;z&#39;</span>; <span style="color:#f92672">++</span>c) {
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (c <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">96</span> <span style="color:#f92672">||</span> c <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">122</span>) {
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (c <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">64</span> <span style="color:#f92672">&amp;&amp;</span> c <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">90</span>) {
 </span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span>(text[i] <span style="color:#f92672">==</span> (c <span style="color:#f92672">-</span> <span style="color:#ae81ff">39</span> <span style="color:#f92672">-</span> key[i] <span style="color:#f92672">+</span> <span style="color:#ae81ff">97</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">26</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">97</span>) {
-</span></span><span style="display:flex;"><span>                        printf(<span style="color:#e6db74">&#34;%d%c &#34;</span>, i, c);
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%d%c &#34;</span>, i, c);
 </span></span><span style="display:flex;"><span>                    }
 </span></span><span style="display:flex;"><span>                }
 </span></span><span style="display:flex;"><span>            }
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> {
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span>(text[i] <span style="color:#f92672">==</span> (c <span style="color:#f92672">-</span> <span style="color:#ae81ff">39</span> <span style="color:#f92672">-</span> key[i] <span style="color:#f92672">+</span> <span style="color:#ae81ff">97</span>) <span style="color:#f92672">%</span> <span style="color:#ae81ff">26</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">97</span>) {
-</span></span><span style="display:flex;"><span>                    printf(<span style="color:#e6db74">&#34;%d%c &#34;</span>, i, c);
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%d%c &#34;</span>, i, c);
 </span></span><span style="display:flex;"><span>                }
 </span></span><span style="display:flex;"><span>            }
 </span></span><span style="display:flex;"><span>        }
@@ -356,12 +356,12 @@
 <p>flag: <code>wctf2020{cpp_@nd_r3verse_@re_fun}</code></p>
 <h2 id="wustctf2020level1">[WUSTCTF2020]level1</h2>
 <p>拖入ida</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>stream <span style="color:#f92672">=</span> fopen(<span style="color:#e6db74">&#34;flag&#34;</span>, <span style="color:#e6db74">&#34;r&#34;</span>);
-</span></span><span style="display:flex;"><span>fread(ptr, <span style="color:#ae81ff">1uLL</span>, <span style="color:#ae81ff">0x14uLL</span>, stream);
-</span></span><span style="display:flex;"><span>fclose(stream);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>stream <span style="color:#f92672">=</span> <span style="color:#a6e22e">fopen</span>(<span style="color:#e6db74">&#34;flag&#34;</span>, <span style="color:#e6db74">&#34;r&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fread</span>(ptr, <span style="color:#ae81ff">1uLL</span>, <span style="color:#ae81ff">0x14uLL</span>, stream);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fclose</span>(stream);
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">19</span>; <span style="color:#f92672">++</span>i ) {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( i <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> )
-</span></span><span style="display:flex;"><span>        printf(<span style="color:#e6db74">&#34;%ld</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(ptr[i] <span style="color:#f92672">&lt;&lt;</span> i));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%ld</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(ptr[i] <span style="color:#f92672">&lt;&lt;</span> i));
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%ld</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(i <span style="color:#f92672">*</span> ptr[i]));
 </span></span><span style="display:flex;"><span>}
@@ -448,14 +448,14 @@ retn
 <p>看到主函数中输出的是type1和type2函数的结果</p>
 <p>查看type1和type2</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( a1 ) {
-</span></span><span style="display:flex;"><span>    type1(<span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>    putchar(<span style="color:#f92672">*</span>a1);
-</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> type1(<span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">type1</span>(<span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">putchar</span>(<span style="color:#f92672">*</span>a1);
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> <span style="color:#a6e22e">type1</span>(<span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>));
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( a1 ) {
-</span></span><span style="display:flex;"><span>    type2(<span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>    type2(<span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>));
-</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> putchar(<span style="color:#f92672">*</span>a1);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">type2</span>(<span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">type2</span>(<span style="color:#f92672">*</span>((_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>));
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> <span style="color:#a6e22e">putchar</span>(<span style="color:#f92672">*</span>a1);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>明显是二叉树的中序遍历和后序遍历</p>
 <p>反推出前序遍历，得到flag: <code>wctf2020{This_IS_A_7reE}</code></p>
@@ -470,12 +470,12 @@ retn
 </span></span></code></pre></div><p>除此之外，还有一些错误代码标红</p>
 <p>以及JUMPOUT函数</p>
 <p>例如：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    JUMPOUT(<span style="color:#ae81ff">1</span>, (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>loc_400B81 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
-</span></span><span style="display:flex;"><span>    JUMPOUT(<span style="color:#ae81ff">0</span>, (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>loc_400B81 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#a6e22e">JUMPOUT</span>(<span style="color:#ae81ff">1</span>, (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>loc_400B81 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">JUMPOUT</span>(<span style="color:#ae81ff">0</span>, (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>loc_400B81 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>    v89 <span style="color:#f92672">=</span> MEMORY[<span style="color:#ae81ff">0xFFFFFFFF81003D16</span>](v6);
-</span></span><span style="display:flex;"><span>    JUMPOUT(v91, (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>loc_400B88 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">JUMPOUT</span>(v91, (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>loc_400B88 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(v89 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1065138106</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">125LL</span>) <span style="color:#f92672">+=</span> v92;
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(a3 <span style="color:#f92672">-</span> <span style="color:#ae81ff">15</span>) <span style="color:#f92672">&amp;=</span> BYTE1(v90);
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(a3 <span style="color:#f92672">-</span> <span style="color:#ae81ff">15</span>) <span style="color:#f92672">&amp;=</span> <span style="color:#a6e22e">BYTE1</span>(v90);
 </span></span></code></pre></div><p>经过学习后发现JUMPOUT函数是经典花指令，需要patch去除</p>
 <pre tabindex="0"><code class="language-assembly" data-lang="assembly">.text:0000000000400607 loc_400607:                             ; CODE XREF: main+64↓j
 .text:0000000000400607                 xor     byte ptr [rdx+rax+5], 91h
@@ -529,8 +529,8 @@ retn
 .text:000000000040062F
 </code></pre><p>在ida汇编模式中将后面几个标红的部分进行同样的修改，随后再F5即可查看到正确的代码</p>
 <p>找到函数结尾</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( memcmp(v5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span>, <span style="color:#f92672">&amp;</span>unk_4025C0, <span style="color:#ae81ff">0x20uLL</span>) )
-</span></span><span style="display:flex;"><span>      JUMPOUT(<span style="color:#f92672">&amp;</span>loc_4005BB);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">memcmp</span>(v5 <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span>, <span style="color:#f92672">&amp;</span>unk_4025C0, <span style="color:#ae81ff">0x20uLL</span>) )
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">JUMPOUT</span>(<span style="color:#f92672">&amp;</span>loc_4005BB);
 </span></span></code></pre></div><p>发现unk字符串，将其进行如上函数的逆变换，即可得到最终结果</p>
 <p>我选择的方法是复制到vscode然后利用快捷键进行快速复制，最终得到答案</p>
 <p>代码如下：</p>
@@ -589,42 +589,42 @@ finish
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> x;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x21</span>; x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x7f</span>; x<span style="color:#f92672">++</span>){
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#ae81ff">14479500</span> <span style="color:#f92672">*</span> x <span style="color:#f92672">==</span> <span style="color:#ae81ff">1404511500</span>){
-</span></span><span style="display:flex;"><span>            printf(<span style="color:#e6db74">&#34;%c</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, x);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%c</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, x);
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;finish</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;finish</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><h2 id="guetctf2019number-game">[GUETCTF2019]number game</h2>
 <p>先拖入ida进行静态分析，查看main函数核心代码</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  __isoc99_scanf(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>v5, a3);
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)check_input((<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v5) )<span style="color:#75715e">// 长度为10且只能是&#34;01234&#34;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#a6e22e">__isoc99_scanf</span>(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>v5, a3);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)<span style="color:#a6e22e">check_input</span>((<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v5) )<span style="color:#75715e">// 长度为10且只能是&#34;01234&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  {
-</span></span><span style="display:flex;"><span>    v3 <span style="color:#f92672">=</span> sub_400758((<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v5, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">10</span>);
-</span></span><span style="display:flex;"><span>    sub_400807((<span style="color:#66d9ef">__int64</span>)v3, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v7);
+</span></span><span style="display:flex;"><span>    v3 <span style="color:#f92672">=</span> <span style="color:#a6e22e">sub_400758</span>((<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v5, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">sub_400807</span>((<span style="color:#66d9ef">__int64</span>)v3, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v7);
 </span></span><span style="display:flex;"><span>    v9 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>    sub_400881((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v7);                    <span style="color:#75715e">// v7 = &#34;0421421430&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)sub_400917() )
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">sub_400881</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v7);                    <span style="color:#75715e">// v7 = &#34;0421421430&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)<span style="color:#a6e22e">sub_400917</span>() )
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      puts(<span style="color:#e6db74">&#34;TQL!&#34;</span>);
-</span></span><span style="display:flex;"><span>      printf(<span style="color:#e6db74">&#34;flag{&#34;</span>, <span style="color:#f92672">&amp;</span>v7);
-</span></span><span style="display:flex;"><span>      printf(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>v5);
-</span></span><span style="display:flex;"><span>      puts(<span style="color:#e6db74">&#34;}&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;TQL!&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;flag{&#34;</span>, <span style="color:#f92672">&amp;</span>v7);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>v5);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;}&#34;</span>);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      puts(<span style="color:#e6db74">&#34;your are cxk!!&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;your are cxk!!&#34;</span>);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
 </span></span></code></pre></div><p>输入的字符串需要通过两个if语句</p>
 <p>先看第一个if语句对应的函数</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( strlen(a1) <span style="color:#f92672">==</span> <span style="color:#ae81ff">10</span> )
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">strlen</span>(a1) <span style="color:#f92672">==</span> <span style="color:#ae81ff">10</span> )
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">9</span>; <span style="color:#f92672">++</span>i )
 </span></span><span style="display:flex;"><span>    {
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( a1[i] <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">52</span> <span style="color:#f92672">||</span> a1[i] <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">47</span> )
 </span></span><span style="display:flex;"><span>      {
-</span></span><span style="display:flex;"><span>        puts(<span style="color:#e6db74">&#34;Wrong!&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Wrong!&#34;</span>);
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0LL</span>;
 </span></span><span style="display:flex;"><span>      }
 </span></span><span style="display:flex;"><span>    }
@@ -632,7 +632,7 @@ finish
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;Wrong!&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Wrong!&#34;</span>);
 </span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
 </span></span><span style="display:flex;"><span>  }
 </span></span></code></pre></div><p>这是对输入数据的简单要求，要求是10个0-4自成的字符串</p>
@@ -773,23 +773,23 @@ finish
 </span></span><span style="display:flex;"><span>flag<span style="color:#f92672">{</span>1134240024<span style="color:#f92672">}</span>
 </span></span></code></pre></div><h2 id="guetctf2019encrypt">[GUETCTF2019]encrypt</h2>
 <p>拖入ida，查看主函数</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  printf(<span style="color:#e6db74">&#34;please input your flag:&#34;</span>, a2, v19);
-</span></span><span style="display:flex;"><span>  scanf(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>s);
-</span></span><span style="display:flex;"><span>  memset(<span style="color:#f92672">&amp;</span>v9, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x408uLL</span>);
-</span></span><span style="display:flex;"><span>  sub_4006B6(<span style="color:#f92672">&amp;</span>v9, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v10, <span style="color:#ae81ff">8</span>);
-</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> strlen(<span style="color:#f92672">&amp;</span>s);
-</span></span><span style="display:flex;"><span>  sub_4007DB(<span style="color:#f92672">&amp;</span>v9, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>s, v3);
-</span></span><span style="display:flex;"><span>  v4 <span style="color:#f92672">=</span> strlen(<span style="color:#f92672">&amp;</span>s);
-</span></span><span style="display:flex;"><span>  sub_4008FA((<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>s, v4, v19, <span style="color:#f92672">&amp;</span>v6);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;please input your flag:&#34;</span>, a2, v19);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scanf</span>(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>s);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">memset</span>(<span style="color:#f92672">&amp;</span>v9, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x408uLL</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_4006B6</span>(<span style="color:#f92672">&amp;</span>v9, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v10, <span style="color:#ae81ff">8</span>);
+</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> <span style="color:#a6e22e">strlen</span>(<span style="color:#f92672">&amp;</span>s);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_4007DB</span>(<span style="color:#f92672">&amp;</span>v9, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>s, v3);
+</span></span><span style="display:flex;"><span>  v4 <span style="color:#f92672">=</span> <span style="color:#a6e22e">strlen</span>(<span style="color:#f92672">&amp;</span>s);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_4008FA</span>((<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>s, v4, v19, <span style="color:#f92672">&amp;</span>v6);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">50</span>; <span style="color:#f92672">++</span>i )
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( v19[i] <span style="color:#f92672">!=</span> byte_602080[i] )
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      puts(<span style="color:#e6db74">&#34;Wrong&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Wrong&#34;</span>);
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0LL</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  puts(<span style="color:#e6db74">&#34;Good&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Good&#34;</span>);
 </span></span></code></pre></div><p>在进行判断前执行了三个函数</p>
 <p>最后一个函数是一个类base64</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( v20 <span style="color:#f92672">&lt;</span> a2 )
@@ -1256,21 +1256,13 @@ finish
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

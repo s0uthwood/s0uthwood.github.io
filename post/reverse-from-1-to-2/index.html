@@ -385,17 +385,17 @@
 </span></span></code></pre></div><h2 id="watevrctf-2019esrever">[watevrCTF 2019]esreveR</h2>
 <p>用ida打开后，发现大量与输入无关的计算，于是决定先静态跟踪一下输入，然后再动调看过程数据</p>
 <p>和输入有关的大概是这些（动调后写的wp，所以基地址改变了）</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    fgets(s, n[<span style="color:#ae81ff">0</span>], stdin);
-</span></span><span style="display:flex;"><span>    v8 <span style="color:#f92672">=</span> sub_5578E4A20943(n[<span style="color:#ae81ff">0</span>]);
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(_QWORD <span style="color:#f92672">*</span>)n <span style="color:#f92672">=</span> sub_5578E4A20996(v14);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#a6e22e">fgets</span>(s, n[<span style="color:#ae81ff">0</span>], stdin);
+</span></span><span style="display:flex;"><span>    v8 <span style="color:#f92672">=</span> <span style="color:#a6e22e">sub_5578E4A20943</span>(n[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(_QWORD <span style="color:#f92672">*</span>)n <span style="color:#f92672">=</span> <span style="color:#a6e22e">sub_5578E4A20996</span>(v14);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>(_QWORD <span style="color:#f92672">*</span>)n <span style="color:#f92672">!=</span> v8 )
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      v11 <span style="color:#f92672">=</span> sub_5578E4A209E9(<span style="color:#ae81ff">4521</span>);
+</span></span><span style="display:flex;"><span>      v11 <span style="color:#f92672">=</span> <span style="color:#a6e22e">sub_5578E4A209E9</span>(<span style="color:#ae81ff">4521</span>);
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( s <span style="color:#f92672">!=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)v11 )
 </span></span><span style="display:flex;"><span>      {
-</span></span><span style="display:flex;"><span>        v4 <span style="color:#f92672">=</span> sub_5578E4A212D8((<span style="color:#66d9ef">__int64</span>)s, v15, v10, v9, v11, v13);
+</span></span><span style="display:flex;"><span>        v4 <span style="color:#f92672">=</span> <span style="color:#a6e22e">sub_5578E4A212D8</span>((<span style="color:#66d9ef">__int64</span>)s, v15, v10, v9, v11, v13);
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ( v4 <span style="color:#f92672">!=</span> v15 <span style="color:#f92672">*</span> ((v12 <span style="color:#f92672">^</span> v13) <span style="color:#f92672">-</span> <span style="color:#f92672">*</span>(_QWORD <span style="color:#f92672">*</span>)n) )
-</span></span><span style="display:flex;"><span>          puts(<span style="color:#e6db74">&#34;Congratulations! You reversed the reversed reverse!&#34;</span>);
+</span></span><span style="display:flex;"><span>          <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Congratulations! You reversed the reversed reverse!&#34;</span>);
 </span></span><span style="display:flex;"><span>      }
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>发现输入只要输入的地址不等于一个数，然后通过某个判断就行，于是再进到判断前的函数</p>
@@ -440,10 +440,10 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v5; <span style="color:#75715e">// [esp+20h] [ebp-8h]
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span>  v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> strlen(a1); i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">4</span> )
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">strlen</span>(a1); i <span style="color:#f92672">+=</span> <span style="color:#ae81ff">4</span> )
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    v4 <span style="color:#f92672">=</span> __ROR4__(a1[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>] <span style="color:#f92672">|</span> (a1[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">|</span> (a1[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">|</span> (a1[i] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">24</span>), dword_DA5034[i <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>]);
-</span></span><span style="display:flex;"><span>    v5 <span style="color:#f92672">=</span> ((v4 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">|</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int16</span>)<span style="color:#f92672">~</span>HIWORD(v4)) <span style="color:#f92672">^</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> dword_DA5034[i <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>]);
+</span></span><span style="display:flex;"><span>    v4 <span style="color:#f92672">=</span> <span style="color:#a6e22e">__ROR4__</span>(a1[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>] <span style="color:#f92672">|</span> (a1[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">|</span> (a1[i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">|</span> (a1[i] <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">24</span>), dword_DA5034[i <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>]);
+</span></span><span style="display:flex;"><span>    v5 <span style="color:#f92672">=</span> ((v4 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">16</span>) <span style="color:#f92672">|</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int16</span>)<span style="color:#f92672">~</span><span style="color:#a6e22e">HIWORD</span>(v4)) <span style="color:#f92672">^</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> dword_DA5034[i <span style="color:#f92672">/</span> <span style="color:#ae81ff">4</span>]);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( i <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> )
 </span></span><span style="display:flex;"><span>      v5 <span style="color:#f92672">^=</span> v2;
 </span></span><span style="display:flex;"><span>    v2 <span style="color:#f92672">=</span> v5;
@@ -564,8 +564,8 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// printf(&#34;加密前原始数据：%u %u\n&#34;,v[0],v[1]);  
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// encrypt(v, k);  
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// printf(&#34;加密后的数据：%u %u\n&#34;,v[0],v[1]);  
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    decrypt(v, k);  
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;解密后的数据：%x %x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v[<span style="color:#ae81ff">0</span>],v[<span style="color:#ae81ff">1</span>]);  
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">decrypt</span>(v, k);  
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;解密后的数据：%x %x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v[<span style="color:#ae81ff">0</span>],v[<span style="color:#ae81ff">1</span>]);  
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;  
 </span></span><span style="display:flex;"><span>}  
 </span></span></code></pre></div><h2 id="fbctfgo_get_the_flag">[FBCTF]go_get_the_flag</h2>
@@ -959,29 +959,29 @@ _245: judge
 <h2 id="rctf2019babyre1">[RCTF2019]babyre1</h2>
 <p>这题其实出的挺好，就是flag的校验差一字节没写好，可惜了</p>
 <p>先要输入flag，并长度不能超过 <code>0x10</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  __printf_chk(<span style="color:#ae81ff">1LL</span>, <span style="color:#e6db74">&#34;Input right flag you can got &#39;Bingo!&#39; :&#34;</span>);
-</span></span><span style="display:flex;"><span>  __isoc99_scanf(<span style="color:#e6db74">&#34;%31s&#34;</span>, v11);
-</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>v11[strlen(v11)];
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#a6e22e">__printf_chk</span>(<span style="color:#ae81ff">1LL</span>, <span style="color:#e6db74">&#34;Input right flag you can got &#39;Bingo!&#39; :&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">__isoc99_scanf</span>(<span style="color:#e6db74">&#34;%31s&#34;</span>, v11);
+</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>v11[<span style="color:#a6e22e">strlen</span>(v11)];
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)(v3 <span style="color:#f92672">-</span> v11) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x10</span> )
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;input is too long!&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;input is too long!&#34;</span>);
 </span></span><span style="display:flex;"><span>  }
 </span></span></code></pre></div><p>然后在else里进行的第一个函数中，将16位输入（按照十六进制）压缩成了8个字节，这里还没有要求大小写</p>
 <p>中间经过的加解密函数先略过，后面的验证是需要输出一个 Bingo!，要求CRC16的校验结果为0x69E2，然后就会对运算结果再异或 <code>0x17</code> 并输出，程序如下</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( v4
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&amp;&amp;</span> (v5 <span style="color:#f92672">=</span> sub_180(ptr, v4, <span style="color:#f92672">&amp;</span>key_202010, <span style="color:#ae81ff">16</span>, <span style="color:#f92672">&amp;</span>a5), (v6 <span style="color:#f92672">=</span> v5) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0LL</span>)
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&amp;&amp;</span> (v5 <span style="color:#f92672">=</span> <span style="color:#a6e22e">sub_180</span>(ptr, v4, <span style="color:#f92672">&amp;</span>key_202010, <span style="color:#ae81ff">16</span>, <span style="color:#f92672">&amp;</span>a5), (v6 <span style="color:#f92672">=</span> v5) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0LL</span>)
 </span></span><span style="display:flex;"><span>      <span style="color:#f92672">&amp;&amp;</span> a5 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&amp;&amp;</span> CRC16_3D0(v5, a5) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x69E2</span> )
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">CRC16_3D0</span>(v5, a5) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0x69E2</span> )
 </span></span><span style="display:flex;"><span>    {
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>; a5 <span style="color:#f92672">&gt;</span> (<span style="color:#66d9ef">int</span>)i; <span style="color:#f92672">++</span>i )
 </span></span><span style="display:flex;"><span>        v6[i] <span style="color:#f92672">^=</span> <span style="color:#ae81ff">0x17u</span>;
-</span></span><span style="display:flex;"><span>      puts(v6);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(v6);
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( ptr )
-</span></span><span style="display:flex;"><span>        free(ptr);
-</span></span><span style="display:flex;"><span>      free(v6);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">free</span>(ptr);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">free</span>(v6);
 </span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>在知道运算结果后，看一下中间的运算，核心逻辑为</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>        xxtea_CE0((<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>)v8, <span style="color:#f92672">-</span>(v10 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>), a3);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>        <span style="color:#a6e22e">xxtea_CE0</span>((<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>)v8, <span style="color:#f92672">-</span>(v10 <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>), a3);
 </span></span><span style="display:flex;"><span>        v11 <span style="color:#f92672">=</span> v8[a2 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>];
 </span></span><span style="display:flex;"><span>        v8[a2] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>        <span style="color:#f92672">*</span>a5 <span style="color:#f92672">=</span> a2;
@@ -1645,21 +1645,13 @@ _245: judge
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

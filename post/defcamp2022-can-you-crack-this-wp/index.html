@@ -320,13 +320,13 @@
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">check_arm</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> x) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (countSetBits(x) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (<span style="color:#a6e22e">countSetBits</span>(x) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">next</span>(<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> <span style="color:#f92672">*</span>v5) {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span> {
 </span></span><span style="display:flex;"><span>        <span style="color:#f92672">--*</span>v5;
-</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span>check_arm(<span style="color:#f92672">*</span>v5));
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">while</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">check_arm</span>(<span style="color:#f92672">*</span>v5));
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
@@ -336,9 +336,9 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> serial[<span style="color:#ae81ff">105</span>];
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> public[<span style="color:#ae81ff">105</span>];
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">20</span>; i<span style="color:#f92672">++</span>){
-</span></span><span style="display:flex;"><span>        next(<span style="color:#f92672">&amp;</span>v5);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">next</span>(<span style="color:#f92672">&amp;</span>v5);
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>; j <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x1000</span>; j<span style="color:#f92672">++</span>){
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> tmp <span style="color:#f92672">=</span> (fib(j) <span style="color:#f92672">-</span> v5) <span style="color:#f92672">%</span> <span style="color:#ae81ff">100</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> tmp <span style="color:#f92672">=</span> (<span style="color:#a6e22e">fib</span>(j) <span style="color:#f92672">-</span> v5) <span style="color:#f92672">%</span> <span style="color:#ae81ff">100</span>;
 </span></span><span style="display:flex;"><span>            <span style="color:#75715e">// add constraints of fib(j) &gt; 0x10E47F4C575565LL is better
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (tmp <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x20</span>){
 </span></span><span style="display:flex;"><span>                serial[i] <span style="color:#f92672">=</span> j;
@@ -347,14 +347,14 @@
 </span></span><span style="display:flex;"><span>            }
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;Public Key: &#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Public Key: &#34;</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">20</span>; i<span style="color:#f92672">++</span>)
-</span></span><span style="display:flex;"><span>        printf(<span style="color:#e6db74">&#34;%c&#34;</span>, public[i]);
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;Serial Key: &#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%c&#34;</span>, public[i]);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Serial Key: &#34;</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">19</span>; i<span style="color:#f92672">++</span>)
-</span></span><span style="display:flex;"><span>        printf(<span style="color:#e6db74">&#34;%03x-&#34;</span>, serial[i]);
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;bss</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%03x-&#34;</span>, serial[i]);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;bss</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span><span style="color:#75715e">// Public Key: ;=&gt;ABDGH#%&amp;(+-.12479
@@ -600,21 +600,13 @@
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

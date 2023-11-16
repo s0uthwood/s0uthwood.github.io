@@ -152,11 +152,11 @@ cipher = [0xA3, 0x1A, 0xE3, 0x69, 0x2F, 0xBB, 0x1A, 0x84, 0x65, 0xC2, 0xAD, 0xAD
 <p>安卓逆向，使用jeb打开，发现在java层仅进行了简单的输入，然后进入so层判断</p>
 <p>用ida打开so层，直接搜索java，进入判断函数</p>
 <p>下面的字符串应该是密钥</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>qmemcpy(v6, <span style="color:#e6db74">&#34;12345678&#34;</span>, <span style="color:#66d9ef">sizeof</span>(v6));
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">qmemcpy</span>(v6, <span style="color:#e6db74">&#34;12345678&#34;</span>, <span style="color:#66d9ef">sizeof</span>(v6));
 </span></span></code></pre></div><p>然后调用了三个函数</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>sub_FFC(v7, v6, v4);
-</span></span><span style="display:flex;"><span>sub_1088(v7, flag, <span style="color:#ae81ff">39</span>);
-</span></span><span style="display:flex;"><span>sub_10D4(flag, <span style="color:#ae81ff">39</span>, v6, v4);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">sub_FFC</span>(v7, v6, v4);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub_1088</span>(v7, flag, <span style="color:#ae81ff">39</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sub_10D4</span>(flag, <span style="color:#ae81ff">39</span>, v6, v4);
 </span></span></code></pre></div><p>进入查看，第一个是RC4密钥初始化，第二个是RC4加密，第三个是对密文进行简单的运算</p>
 <p>从字符串里拿密文，写脚本进行求解，先对简单运算进行反向运算，然后找个RC4密码的脚本，跑一下就可以找到flag</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cipher <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0xA3</span>, <span style="color:#ae81ff">0x1A</span>, <span style="color:#ae81ff">0xE3</span>, <span style="color:#ae81ff">0x69</span>, <span style="color:#ae81ff">0x2F</span>, <span style="color:#ae81ff">0xBB</span>, <span style="color:#ae81ff">0x1A</span>, <span style="color:#ae81ff">0x84</span>, <span style="color:#ae81ff">0x65</span>, <span style="color:#ae81ff">0xC2</span>, <span style="color:#ae81ff">0xAD</span>, <span style="color:#ae81ff">0xAD</span>, <span style="color:#ae81ff">0x9E</span>, <span style="color:#ae81ff">0x96</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">0x1F</span>, <span style="color:#ae81ff">0x8E</span>, <span style="color:#ae81ff">0x36</span>, <span style="color:#ae81ff">0x4F</span>, <span style="color:#ae81ff">0xE1</span>, <span style="color:#ae81ff">0xEB</span>, <span style="color:#ae81ff">0xAF</span>, <span style="color:#ae81ff">0xF0</span>, <span style="color:#ae81ff">0xEA</span>, <span style="color:#ae81ff">0xC4</span>, <span style="color:#ae81ff">0xA8</span>, <span style="color:#ae81ff">0x2D</span>, <span style="color:#ae81ff">0x42</span>, <span style="color:#ae81ff">0xC7</span>, <span style="color:#ae81ff">0x6E</span>, <span style="color:#ae81ff">0x3F</span>, <span style="color:#ae81ff">0xB0</span>, <span style="color:#ae81ff">0xD3</span>, <span style="color:#ae81ff">0xCC</span>, <span style="color:#ae81ff">0x78</span>, <span style="color:#ae81ff">0xF9</span>, <span style="color:#ae81ff">0x98</span>, <span style="color:#ae81ff">0x3F</span>, <span style="color:#ae81ff">0</span>]
@@ -418,7 +418,7 @@ cipher = [0xA3, 0x1A, 0xE3, 0x69, 0x2F, 0xBB, 0x1A, 0x84, 0x65, 0xC2, 0xAD, 0xAD
 </span></span><span style="display:flex;"><span>print (finalop)
 </span></span></code></pre></div><p>然后找了个脚本，这是核心部分：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> cur <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ((c <span style="color:#f92672">=</span> getc(in)) <span style="color:#f92672">!=</span> EOF) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ((c <span style="color:#f92672">=</span> <span style="color:#a6e22e">getc</span>(in)) <span style="color:#f92672">!=</span> EOF) {
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">switch</span> (c) {
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;&gt;&#39;</span><span style="color:#f92672">:</span> 
 </span></span><span style="display:flex;"><span>                <span style="color:#75715e">// fprintf(out, &#34;\t\t++c;\n&#34;); 
@@ -427,12 +427,12 @@ cipher = [0xA3, 0x1A, 0xE3, 0x69, 0x2F, 0xBB, 0x1A, 0x84, 0x65, 0xC2, 0xAD, 0xAD
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;&lt;&#39;</span><span style="color:#f92672">:</span> 
 </span></span><span style="display:flex;"><span>                <span style="color:#75715e">// fprintf(out, &#34;\t\t--c;\n&#34;); 
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                cur<span style="color:#f92672">--</span>; <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;+&#39;</span><span style="color:#f92672">:</span> fprintf(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">++a[%d];</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cur); <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;-&#39;</span><span style="color:#f92672">:</span> fprintf(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">--a[%d];</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cur); <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">:</span> fprintf(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">putchar(a[%d]);</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cur); <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">:</span> fprintf(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">a[%d] = getchar();</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cur); <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;[&#39;</span><span style="color:#f92672">:</span> fprintf(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">while (a[%d]) {</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cur); <span style="color:#66d9ef">break</span>;
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;]&#39;</span><span style="color:#f92672">:</span> fprintf(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;+&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">fprintf</span>(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">++a[%d];</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cur); <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;-&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">fprintf</span>(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">--a[%d];</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cur); <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">fprintf</span>(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">putchar(a[%d]);</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cur); <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">fprintf</span>(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">a[%d] = getchar();</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cur); <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;[&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">fprintf</span>(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">while (a[%d]) {</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, cur); <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;]&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">fprintf</span>(out, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">}</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
@@ -441,7 +441,7 @@ cipher = [0xA3, 0x1A, 0xE3, 0x69, 0x2F, 0xBB, 0x1A, 0x84, 0x65, 0xC2, 0xAD, 0xAD
 <p>接下来就是痛苦的 Brainfuck 代码阅读环节了，虽然代码已经有了最简单的美化，但看起来还是像混淆过的汇编。</p>
 <p>自己做的时候是一点一点美化代码，然后阅读的。但最后找到验证函数才搞明白。</p>
 <p>所以先去最下面找到验证函数，看到最下面有两个<code>putchar</code>，猜测就是通过验证了，于是找进入的条件</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>		a[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> getchar();
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>		a[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">getchar</span>();
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">// several code
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">2</span>]) {
 </span></span><span style="display:flex;"><span>		<span style="color:#75715e">// several code
@@ -458,16 +458,16 @@ cipher = [0xA3, 0x1A, 0xE3, 0x69, 0x2F, 0xBB, 0x1A, 0x84, 0x65, 0xC2, 0xAD, 0xAD
 </span></span><span style="display:flex;"><span>	    <span style="color:#75715e">// several code
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">2</span>]) {
 </span></span><span style="display:flex;"><span>		<span style="color:#75715e">// several code
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		putchar(a[<span style="color:#ae81ff">4</span>]);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">putchar</span>(a[<span style="color:#ae81ff">4</span>]);
 </span></span><span style="display:flex;"><span>		<span style="color:#75715e">// several code
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		putchar(a[<span style="color:#ae81ff">4</span>]);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">putchar</span>(a[<span style="color:#ae81ff">4</span>]);
 </span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>	}
 </span></span></code></pre></div><p>进入的条件是要 <code>a[2] &gt; 0</code>，网上看就知道需要让 <code>a[1] &gt; 0</code>，所以在编辑器里选中一下，就能找到所有 <code>a[1]</code> 出现的地方（这就体现出这种输出方法的优势了）</p>
 <p>然后发现 <code>a[1]</code> 会在一开始赋值为 <code>1</code>，但一旦进入 <code>while(a[2])</code> 这种大循环，就会出现 <code>a[1]=0</code> 的赋值，所以我们的目标就是在进入循环前让 <code>a[2]==0</code></p>
 <p>查看一下从 <code>getchar</code> 到 <code>while</code> 之间的代码，把重复出现的 <code>++</code> 都合并一下</p>
 <p>这里以第一次 <code>getchar</code> 的代码为例，（剩下几次形式几乎完全一致，就是参数有点小变化而已）</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>		a[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> getchar();
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>		a[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">getchar</span>();
 </span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">3</span>]) {
 </span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">3</span>];
 </span></span><span style="display:flex;"><span>	}
@@ -526,7 +526,7 @@ cipher = [0xA3, 0x1A, 0xE3, 0x69, 0x2F, 0xBB, 0x1A, 0x84, 0x65, 0xC2, 0xAD, 0xAD
 </span></span><span style="display:flex;"><span>		<span style="color:#f92672">--</span>a[<span style="color:#ae81ff">2</span>];
 </span></span><span style="display:flex;"><span>	}
 </span></span></code></pre></div><p>美化一下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>		a[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> getchar();
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>		a[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">getchar</span>();
 </span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">3</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>		a[<span style="color:#ae81ff">4</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">7</span>;
 </span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">while</span> (a[<span style="color:#ae81ff">4</span>]) {
@@ -788,37 +788,37 @@ time=2639.569345s
 <h2 id="gift">gift</h2>
 <p>新版本的GO对magic number以及一些结构上都做了修改，所以老版本的符号表修复脚本就不能用了，好在免费的ida7.6正好支持GO的符号表恢复，可以直接做了。</p>
 <p>主函数主要部分如下</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  main_CISCN6666666();
-</span></span><span style="display:flex;"><span>  main_CISCN66666666();
-</span></span><span style="display:flex;"><span>  main_CISCN6666666666();
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#a6e22e">main_CISCN6666666</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">main_CISCN66666666</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">main_CISCN6666666666</span>();
 </span></span><span style="display:flex;"><span>  max_len_v2 <span style="color:#f92672">=</span> qword_928238; <span style="color:#75715e">// 0x20
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  index_v3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( (<span style="color:#66d9ef">__int64</span>)index_v3 <span style="color:#f92672">&lt;</span> max_len_v2 )
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    qword_9720E8 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( qword_928238 <span style="color:#f92672">&lt;=</span> index_v3 )
-</span></span><span style="display:flex;"><span>      runtime_panicIndex();
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">runtime_panicIndex</span>();
 </span></span><span style="display:flex;"><span>    v14 <span style="color:#f92672">=</span> off_928230[index_v3];
-</span></span><span style="display:flex;"><span>    runtime_makeslice((<span style="color:#66d9ef">__int64</span>)<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\b</span><span style="color:#e6db74">&#34;</span>, v14, v14, v10);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">runtime_makeslice</span>((<span style="color:#66d9ef">__int64</span>)<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\b</span><span style="color:#e6db74">&#34;</span>, v14, v14, v10);
 </span></span><span style="display:flex;"><span>    v5 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">__int64</span> <span style="color:#f92672">*</span>)v11;
 </span></span><span style="display:flex;"><span>    v19 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">__int64</span> <span style="color:#f92672">*</span>)v11;
 </span></span><span style="display:flex;"><span>    v4 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1LL</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ( v4 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">4</span> )
 </span></span><span style="display:flex;"><span>    {
 </span></span><span style="display:flex;"><span>      v12 <span style="color:#f92672">=</span> v4;
-</span></span><span style="display:flex;"><span>      main_wtf(<span style="color:#ae81ff">0LL</span>, v4, v5, v14, v14);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">main_wtf</span>(<span style="color:#ae81ff">0LL</span>, v4, v5, v14, v14);
 </span></span><span style="display:flex;"><span>      v4 <span style="color:#f92672">=</span> v12 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>      v5 <span style="color:#f92672">=</span> v19;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)qword_9720E8 <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0x11</span> )
-</span></span><span style="display:flex;"><span>      runtime_panicIndex();
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">runtime_panicIndex</span>();
 </span></span><span style="display:flex;"><span>    v6 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v16 <span style="color:#f92672">+</span> qword_9720E8);
 </span></span><span style="display:flex;"><span>    v22[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>unk_8765E0;                       <span style="color:#75715e">// output_length
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    v22[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>qword_9239C0[v6 <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x66u</span>];         <span style="color:#75715e">// output
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    v8 <span style="color:#f92672">=</span> qword_92EAB0;
 </span></span><span style="display:flex;"><span>    v10 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2LL</span>;
 </span></span><span style="display:flex;"><span>    v1 <span style="color:#f92672">=</span> v22;
-</span></span><span style="display:flex;"><span>    fmt_Fprintf(v0, (<span style="color:#66d9ef">__int64</span>)v22, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)qword_9239C0);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt_Fprintf</span>(v0, (<span style="color:#66d9ef">__int64</span>)v22, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)qword_9239C0);
 </span></span><span style="display:flex;"><span>    index_v3 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>  }
 </span></span></code></pre></div><p>开头的三个CISCN函数是简单的输出，中间生成空的slice然后扔到了wtf函数中，输出是根据索引，从<code>qword_9239C0</code>中选择一个字符。</p>
@@ -1066,21 +1066,13 @@ CISCN{45b3247c45b3247c4
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

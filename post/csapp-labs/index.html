@@ -625,8 +625,8 @@ Halfway there!
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> ecx <span style="color:#f92672">=</span> a3 <span style="color:#f92672">-</span> a2;
 </span></span><span style="display:flex;"><span>    ecx <span style="color:#f92672">+=</span> ecx <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">0x1f</span>;
 </span></span><span style="display:flex;"><span>    ecx <span style="color:#f92672">=</span> (ecx <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> a2;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (ecx <span style="color:#f92672">&gt;</span> a1) <span style="color:#66d9ef">return</span> func4(a1, a2, a3 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (ecx <span style="color:#f92672">&lt;</span> a1) <span style="color:#66d9ef">return</span> func4(a1, a2, a3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (ecx <span style="color:#f92672">&gt;</span> a1) <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">func4</span>(a1, a2, a3 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (ecx <span style="color:#f92672">&lt;</span> a1) <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">func4</span>(a1, a2, a3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Our target is <code>func(input[0], 0, 14) == 0</code>, therefore <code>input[0]</code> should be <code>0</code> or <code>1</code>.</p>
@@ -694,7 +694,7 @@ So you got that one.  Try this one.
 </span></span><span style="display:flex;"><span>    edx <span style="color:#f92672">=</span> maduiersnfotvbyl[edx];
 </span></span><span style="display:flex;"><span>    var_10h[i] <span style="color:#f92672">=</span> edx;
 </span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>strings_not_equal(var_10h[i], <span style="color:#e6db74">&#34;flyers&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">strings_not_equal</span>(var_10h[i], <span style="color:#e6db74">&#34;flyers&#34;</span>);
 </span></span></code></pre></div><p>So our input should be:</p>
 <pre tabindex="0"><code>0x?9 0x?f 0x?e 0x?5 0x?6 0x?7
 </code></pre><p>For easy to input, we can simply set <code>?</code> as <code>6</code>.</p>
@@ -815,9 +815,9 @@ Good work!  On to the next...
 </code></pre><p><code>read_six_numbers()</code> from input string.</p>
 <p>A loop:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> r12d <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; r12d <span style="color:#f92672">!=</span> <span style="color:#ae81ff">6</span>; r12d<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>r13 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>) explode_bomb();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>r13 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>) <span style="color:#a6e22e">explode_bomb</span>();
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> ebx <span style="color:#f92672">=</span> r12d; ebx <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">5</span>; ebx<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>r13 <span style="color:#f92672">==</span> rsp[ebx]) explode_bomb();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span>r13 <span style="color:#f92672">==</span> rsp[ebx]) <span style="color:#a6e22e">explode_bomb</span>();
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    r13 <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>}
@@ -887,7 +887,7 @@ node6
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (ebp <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>; ebp <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>; ebp<span style="color:#f92672">--</span>) {
 </span></span><span style="display:flex;"><span>    rax <span style="color:#f92672">=</span> rbx.next;
 </span></span><span style="display:flex;"><span>    eax <span style="color:#f92672">=</span> rax.value;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (rbx.value <span style="color:#f92672">&lt;</span> eax) explode_bomb();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (rbx.value <span style="color:#f92672">&lt;</span> eax) <span style="color:#a6e22e">explode_bomb</span>();
 </span></span><span style="display:flex;"><span>    rbx <span style="color:#f92672">=</span> rbx.next;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>node3 &gt; node4 &gt; node5 &gt; node6 &gt; node1 &gt; node2</p>
@@ -1069,7 +1069,7 @@ v---|---v    v---|---v    v---|---v    v---|---v
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span> {
 </span></span><span style="display:flex;"><span>    rdi <span style="color:#f92672">=</span> rdi.rchild;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> fun7(rdi, rsi);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">fun7</span>(rdi, rsi);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>The target is 2, so we need:</p>
 <pre tabindex="0"><code>ret 0
@@ -1518,33 +1518,33 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> valid_bit;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> tag;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> lru;
-</span></span><span style="display:flex;"><span>} cache_line_t, <span style="color:#f92672">*</span>cache_set_t, <span style="color:#f92672">**</span>cache_t;
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">cache_line_t</span>, <span style="color:#f92672">*</span><span style="color:#66d9ef">cache_set_t</span>, <span style="color:#f92672">**</span><span style="color:#66d9ef">cache_t</span>;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cache_t cache;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">cache_t</span> cache;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>} Node;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printUsage</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>name){
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;./%s [-hv] -s &lt;s&gt; -E &lt;E&gt; -b &lt;b&gt; -t &lt;tracefile&gt;&#34;</span>, name);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;Options:&#34;</span>);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;  -h         Print this help message.&#34;</span>);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;  -v         Optional verbose flag.&#34;</span>);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;  -s &lt;num&gt;   Number of set index bits.&#34;</span>);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;  -E &lt;num&gt;   Number of lines per set.&#34;</span>);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;  -b &lt;num&gt;   Number of block offset bits.&#34;</span>);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;  -t &lt;file&gt;  Trace file.&#34;</span>);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;&#34;</span>);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;Examples:&#34;</span>);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;  linux&gt;  ./csim-ref -s 4 -E 1 -b 4 -t traces/yi.trace&#34;</span>);
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;  linux&gt;  ./csim-ref -v -s 8 -E 2 -b 4 -t traces/yi.trace&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;./%s [-hv] -s &lt;s&gt; -E &lt;E&gt; -b &lt;b&gt; -t &lt;tracefile&gt;&#34;</span>, name);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Options:&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;  -h         Print this help message.&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;  -v         Optional verbose flag.&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;  -s &lt;num&gt;   Number of set index bits.&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;  -E &lt;num&gt;   Number of lines per set.&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;  -b &lt;num&gt;   Number of block offset bits.&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;  -t &lt;file&gt;  Trace file.&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;Examples:&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;  linux&gt;  ./csim-ref -s 4 -E 1 -b 4 -t traces/yi.trace&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;  linux&gt;  ./csim-ref -v -s 8 -E 2 -b 4 -t traces/yi.trace&#34;</span>);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">initCache</span>() {
-</span></span><span style="display:flex;"><span>    cache <span style="color:#f92672">=</span> (cache_t)malloc(<span style="color:#66d9ef">sizeof</span>(cache_set_t) <span style="color:#f92672">*</span> S);
+</span></span><span style="display:flex;"><span>    cache <span style="color:#f92672">=</span> (<span style="color:#66d9ef">cache_t</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">cache_set_t</span>) <span style="color:#f92672">*</span> S);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> S; i<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>        cache[i] <span style="color:#f92672">=</span> (cache_set_t)malloc(<span style="color:#66d9ef">sizeof</span>(cache_line_t) <span style="color:#f92672">*</span> E);
+</span></span><span style="display:flex;"><span>        cache[i] <span style="color:#f92672">=</span> (<span style="color:#66d9ef">cache_set_t</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">cache_line_t</span>) <span style="color:#f92672">*</span> E);
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> E; j<span style="color:#f92672">++</span>) {
 </span></span><span style="display:flex;"><span>            cache[i][j].valid_bit <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>            cache[i][j].tag <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
@@ -1557,10 +1557,10 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">releaseCache</span>() {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> S; i<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>        free(cache[i]);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">free</span>(cache[i]);
 </span></span><span style="display:flex;"><span>        cache[i] <span style="color:#f92672">=</span> NULL;
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    free(cache);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">free</span>(cache);
 </span></span><span style="display:flex;"><span>    cache <span style="color:#f92672">=</span> NULL;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>}
@@ -1569,13 +1569,13 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> eviction_lru <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1LL</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> eviction_line <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> tag <span style="color:#f92672">=</span> address <span style="color:#f92672">&gt;&gt;</span> (s <span style="color:#f92672">+</span> b);
-</span></span><span style="display:flex;"><span>    cache_set_t cache_set <span style="color:#f92672">=</span> cache[(address <span style="color:#f92672">&gt;&gt;</span> b) <span style="color:#f92672">&amp;</span> set_index_mask];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">cache_set_t</span> cache_set <span style="color:#f92672">=</span> cache[(address <span style="color:#f92672">&gt;&gt;</span> b) <span style="color:#f92672">&amp;</span> set_index_mask];
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; ; <span style="color:#f92672">++</span>i) {
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">&gt;=</span> E) {
 </span></span><span style="display:flex;"><span>            <span style="color:#f92672">++</span>miss_count;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (v)
-</span></span><span style="display:flex;"><span>                printf(<span style="color:#e6db74">&#34;miss &#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;miss &#34;</span>);
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> E; <span style="color:#f92672">++</span>j) {
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (cache_set[j].lru <span style="color:#f92672">&lt;</span> eviction_lru) {
 </span></span><span style="display:flex;"><span>                    eviction_line <span style="color:#f92672">=</span> j;
@@ -1585,7 +1585,7 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (cache_set[eviction_line].valid_bit) {
 </span></span><span style="display:flex;"><span>                <span style="color:#f92672">++</span>eviction_count;
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (v) 
-</span></span><span style="display:flex;"><span>                    printf(<span style="color:#e6db74">&#34;eviction &#34;</span>);
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;eviction &#34;</span>);
 </span></span><span style="display:flex;"><span>            }
 </span></span><span style="display:flex;"><span>            cache_set[eviction_line].valid_bit <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>            cache_set[eviction_line].tag <span style="color:#f92672">=</span> tag;
@@ -1598,7 +1598,7 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">++</span>hit_count;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (v) 
-</span></span><span style="display:flex;"><span>        printf(<span style="color:#e6db74">&#34;hit &#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;hit &#34;</span>);
 </span></span><span style="display:flex;"><span>    cache_set[i].lru <span style="color:#f92672">=</span> lru_counter<span style="color:#f92672">++</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>}
@@ -1607,68 +1607,68 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> address;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> size;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> buf[<span style="color:#ae81ff">1024</span>];
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (fgets(buf, <span style="color:#ae81ff">1023</span>, f)) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">fgets</span>(buf, <span style="color:#ae81ff">1023</span>, f)) {
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (buf[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;M&#39;</span> <span style="color:#f92672">&amp;&amp;</span> buf[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;L&#39;</span> <span style="color:#f92672">&amp;&amp;</span> buf[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;S&#39;</span>) {
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>;
 </span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        sscanf(buf <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#34;%llx,%u &#34;</span>, <span style="color:#f92672">&amp;</span>address, <span style="color:#f92672">&amp;</span>size);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">sscanf</span>(buf <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#34;%llx,%u &#34;</span>, <span style="color:#f92672">&amp;</span>address, <span style="color:#f92672">&amp;</span>size);
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (v)
-</span></span><span style="display:flex;"><span>            printf(<span style="color:#e6db74">&#34;%c %llx,%u &#34;</span>, buf[<span style="color:#ae81ff">1</span>], address, size);
-</span></span><span style="display:flex;"><span>        accessData(address);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%c %llx,%u &#34;</span>, buf[<span style="color:#ae81ff">1</span>], address, size);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">accessData</span>(address);
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (buf[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;M&#39;</span>) {
-</span></span><span style="display:flex;"><span>            accessData(address);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">accessData</span>(address);
 </span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (v) putchar(<span style="color:#e6db74">&#39;\n&#39;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (v) <span style="color:#a6e22e">putchar</span>(<span style="color:#e6db74">&#39;\n&#39;</span>);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> argv[]) {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> o;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ((o <span style="color:#f92672">=</span> getopt(argc, argv, <span style="color:#e6db74">&#34;hvs:E:b:t:&#34;</span>)) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ((o <span style="color:#f92672">=</span> <span style="color:#a6e22e">getopt</span>(argc, argv, <span style="color:#e6db74">&#34;hvs:E:b:t:&#34;</span>)) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) {
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">switch</span> (o) {
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;h&#39;</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>                printUsage(argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printUsage</span>(argv[<span style="color:#ae81ff">0</span>]);
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;v&#39;</span><span style="color:#f92672">:</span>
 </span></span><span style="display:flex;"><span>                v <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;s&#39;</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>                s <span style="color:#f92672">=</span> atoi(optarg);
+</span></span><span style="display:flex;"><span>                s <span style="color:#f92672">=</span> <span style="color:#a6e22e">atoi</span>(optarg);
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;E&#39;</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>                E <span style="color:#f92672">=</span> atoi(optarg);
+</span></span><span style="display:flex;"><span>                E <span style="color:#f92672">=</span> <span style="color:#a6e22e">atoi</span>(optarg);
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;b&#39;</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>                b <span style="color:#f92672">=</span> atoi(optarg);
+</span></span><span style="display:flex;"><span>                b <span style="color:#f92672">=</span> <span style="color:#a6e22e">atoi</span>(optarg);
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;t&#39;</span><span style="color:#f92672">:</span>
 </span></span><span style="display:flex;"><span>                tracefile <span style="color:#f92672">=</span> optarg;
-</span></span><span style="display:flex;"><span>                fp <span style="color:#f92672">=</span> fopen(tracefile, <span style="color:#e6db74">&#34;r&#34;</span>);
+</span></span><span style="display:flex;"><span>                fp <span style="color:#f92672">=</span> <span style="color:#a6e22e">fopen</span>(tracefile, <span style="color:#e6db74">&#34;r&#34;</span>);
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (fp <span style="color:#f92672">==</span> NULL) {
-</span></span><span style="display:flex;"><span>                    printf(<span style="color:#e6db74">&#34;File %s open failed.&#34;</span>, tracefile);
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;File %s open failed.&#34;</span>, tracefile);
 </span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>                }
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>                printUsage(argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printUsage</span>(argv[<span style="color:#ae81ff">0</span>]);
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (s <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> E <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>tracefile <span style="color:#f92672">||</span> b <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>) {
-</span></span><span style="display:flex;"><span>        printUsage(argv[<span style="color:#ae81ff">0</span>]);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printUsage</span>(argv[<span style="color:#ae81ff">0</span>]);
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    S <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> s;
 </span></span><span style="display:flex;"><span>    B <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> b;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    initCache();
-</span></span><span style="display:flex;"><span>    replayTrace(fp);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">initCache</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">replayTrace</span>(fp);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    printSummary(hit_count, miss_count, eviction_count);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printSummary</span>(hit_count, miss_count, eviction_count);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    releaseCache();
-</span></span><span style="display:flex;"><span>    fclose(fp);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">releaseCache</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fclose</span>(fp);
 </span></span><span style="display:flex;"><span>    
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
@@ -1729,33 +1729,33 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * coalesce - Coalesce free block next by
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coalesce</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp) {
-</span></span><span style="display:flex;"><span>    size_t prev_alloc <span style="color:#f92672">=</span> GET_ALLOC(FTRP(PREV_BLKP(bp)));
-</span></span><span style="display:flex;"><span>    size_t next_alloc <span style="color:#f92672">=</span> GET_ALLOC(HDRP(NEXT_BLKP(bp)));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> prev_alloc <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_ALLOC</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> next_alloc <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_ALLOC</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)));
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    size_t size <span style="color:#f92672">=</span> GET_SIZE(HDRP(bp));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(bp));
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (prev_alloc <span style="color:#f92672">&amp;&amp;</span> next_alloc)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bp;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>next_alloc <span style="color:#f92672">&amp;&amp;</span> prev_alloc) {
-</span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> GET_SIZE(HDRP(NEXT_BLKP(bp)));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>prev_alloc <span style="color:#f92672">&amp;&amp;</span> next_alloc) {
-</span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> GET_SIZE(FTRP(PREV_BLKP(bp)));
-</span></span><span style="display:flex;"><span>        PUT(HDRP(PREV_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        bp <span style="color:#f92672">=</span> PREV_BLKP(bp);
+</span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        bp <span style="color:#f92672">=</span> <span style="color:#a6e22e">PREV_BLKP</span>(bp);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>prev_alloc <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>next_alloc) {
-</span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> GET_SIZE(FTRP(PREV_BLKP(bp)));
-</span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> GET_SIZE(HDRP(NEXT_BLKP(bp)));
-</span></span><span style="display:flex;"><span>        PUT(HDRP(PREV_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        bp <span style="color:#f92672">=</span> PREV_BLKP(bp);
+</span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        bp <span style="color:#f92672">=</span> <span style="color:#a6e22e">PREV_BLKP</span>(bp);
 </span></span><span style="display:flex;"><span>    };
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#if FIT_ALGO == NEXT_FIT
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (cur_listp <span style="color:#f92672">&gt;</span> bp <span style="color:#f92672">&amp;&amp;</span> cur_listp <span style="color:#f92672">&lt;</span> NEXT_BLKP(bp))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (cur_listp <span style="color:#f92672">&gt;</span> bp <span style="color:#f92672">&amp;&amp;</span> cur_listp <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">NEXT_BLKP</span>(bp))
 </span></span><span style="display:flex;"><span>        cur_listp <span style="color:#f92672">=</span> bp;
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
@@ -1765,21 +1765,21 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span><span style="display:flex;"><span><span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * extend_heap - extend heap with a free block
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">extend_heap</span>(size_t words) {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">extend_heap</span>(<span style="color:#66d9ef">size_t</span> words) {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>bp;
-</span></span><span style="display:flex;"><span>    size_t size;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> size;
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Allocate and even number of words to maintain alignment */</span>
 </span></span><span style="display:flex;"><span>    size <span style="color:#f92672">=</span> (words <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">?</span> (words <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> WSIZE : words <span style="color:#f92672">*</span> WSIZE;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((<span style="color:#66d9ef">long</span>)(bp <span style="color:#f92672">=</span> mem_sbrk(size)) <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((<span style="color:#66d9ef">long</span>)(bp <span style="color:#f92672">=</span> <span style="color:#a6e22e">mem_sbrk</span>(size)) <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Initialize free block header/footer and the epilogue header */</span>
-</span></span><span style="display:flex;"><span>    PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>    PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>    PUT(HDRP(NEXT_BLKP(bp)), PACK(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Coalesce if the previous block was free */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> coalesce(bp);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">coalesce</span>(bp);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">/* 
@@ -1788,19 +1788,19 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">mm_init</span>(<span style="color:#66d9ef">void</span>)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Create the initial empty heap */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((heap_listp <span style="color:#f92672">=</span> mem_sbrk(<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> WSIZE)) <span style="color:#f92672">==</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)   <span style="color:#75715e">/* sbrk() function returns the start address of the new area. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((heap_listp <span style="color:#f92672">=</span> <span style="color:#a6e22e">mem_sbrk</span>(<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> WSIZE)) <span style="color:#f92672">==</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)   <span style="color:#75715e">/* sbrk() function returns the start address of the new area. */</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    PUT(heap_listp, <span style="color:#ae81ff">0</span>);                                     <span style="color:#75715e">/* Alignment */</span>
-</span></span><span style="display:flex;"><span>    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> WSIZE), PACK(DSIZE, <span style="color:#ae81ff">1</span>));          <span style="color:#75715e">/* Prologue block&#39;s size is 8 and is always alloced */</span>
-</span></span><span style="display:flex;"><span>    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> WSIZE), PACK(DSIZE, <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> WSIZE), PACK(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));              <span style="color:#75715e">/* Epilogue header */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(heap_listp, <span style="color:#ae81ff">0</span>);                                     <span style="color:#75715e">/* Alignment */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> WSIZE), <span style="color:#a6e22e">PACK</span>(DSIZE, <span style="color:#ae81ff">1</span>));          <span style="color:#75715e">/* Prologue block&#39;s size is 8 and is always alloced */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> WSIZE), <span style="color:#a6e22e">PACK</span>(DSIZE, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> WSIZE), <span style="color:#a6e22e">PACK</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));              <span style="color:#75715e">/* Epilogue header */</span>
 </span></span><span style="display:flex;"><span>    heap_listp <span style="color:#f92672">+=</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> WSIZE);
 </span></span><span style="display:flex;"><span>    
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#if FIT_ALGO == NEXT_FIT
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    cur_listp <span style="color:#f92672">=</span> heap_listp;
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (extend_heap(CHUNKSIZE<span style="color:#f92672">/</span>WSIZE) <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">extend_heap</span>(CHUNKSIZE<span style="color:#f92672">/</span>WSIZE) <span style="color:#f92672">==</span> NULL)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
@@ -1809,24 +1809,24 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * mm_malloc - Allocate a block by incrementing the brk pointer.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *     Always allocate a block whose size is a multiple of the alignment.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_malloc</span>(size_t size)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_malloc</span>(<span style="color:#66d9ef">size_t</span> size)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Ignore spurious requests */</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> DSIZE)
 </span></span><span style="display:flex;"><span>        size <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> DSIZE;
-</span></span><span style="display:flex;"><span>    size_t newsize <span style="color:#f92672">=</span> size <span style="color:#f92672">+</span> DSIZE <span style="color:#f92672">+</span> ((<span style="color:#f92672">-</span>size) <span style="color:#f92672">%</span> DSIZE);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> newsize <span style="color:#f92672">=</span> size <span style="color:#f92672">+</span> DSIZE <span style="color:#f92672">+</span> ((<span style="color:#f92672">-</span>size) <span style="color:#f92672">%</span> DSIZE);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> bp;
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">// int newsize = ALIGN(size + SIZE_T_SIZE);
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> find_fit(newsize)) <span style="color:#f92672">!=</span> NULL) {
-</span></span><span style="display:flex;"><span>        place(bp, newsize);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> <span style="color:#a6e22e">find_fit</span>(newsize)) <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">place</span>(bp, newsize);
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bp;
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    size_t extendsize <span style="color:#f92672">=</span> MAX(newsize, CHUNKSIZE);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> extend_heap(extendsize<span style="color:#f92672">/</span>WSIZE)) <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> extendsize <span style="color:#f92672">=</span> <span style="color:#a6e22e">MAX</span>(newsize, CHUNKSIZE);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> <span style="color:#a6e22e">extend_heap</span>(extendsize<span style="color:#f92672">/</span>WSIZE)) <span style="color:#f92672">==</span> NULL)
 </span></span><span style="display:flex;"><span>	   <span style="color:#66d9ef">return</span> NULL;
-</span></span><span style="display:flex;"><span>    place(bp, newsize);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">place</span>(bp, newsize);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> bp;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
@@ -1835,47 +1835,47 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mm_free</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    size_t size <span style="color:#f92672">=</span> GET_SIZE(HDRP(ptr));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(ptr));
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    PUT(HDRP(ptr), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>    PUT(FTRP(ptr), PACK(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(ptr), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(ptr), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    coalesce(ptr);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">coalesce</span>(ptr);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * mm_realloc - Implemented simply in terms of mm_malloc and mm_free
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_realloc</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr, size_t size)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_realloc</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr, <span style="color:#66d9ef">size_t</span> size)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>oldptr <span style="color:#f92672">=</span> ptr;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>newptr;
-</span></span><span style="display:flex;"><span>    size_t copySize;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> copySize;
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    newptr <span style="color:#f92672">=</span> mm_malloc(size);
+</span></span><span style="display:flex;"><span>    newptr <span style="color:#f92672">=</span> <span style="color:#a6e22e">mm_malloc</span>(size);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (newptr <span style="color:#f92672">==</span> NULL)
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> NULL;
-</span></span><span style="display:flex;"><span>    size <span style="color:#f92672">=</span> GET_SIZE(HDRP(oldptr));
+</span></span><span style="display:flex;"><span>    size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(oldptr));
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">// copySize = *(size_t *)((char *)oldptr - SIZE_T_SIZE);
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    copySize <span style="color:#f92672">=</span> GET_SIZE(HDRP(newptr));
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    copySize <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(newptr));
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;</span> copySize)
 </span></span><span style="display:flex;"><span>      copySize <span style="color:#f92672">=</span> size;
-</span></span><span style="display:flex;"><span>    memcpy(newptr, oldptr, copySize <span style="color:#f92672">-</span> WSIZE);
-</span></span><span style="display:flex;"><span>    mm_free(oldptr);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">memcpy</span>(newptr, oldptr, copySize <span style="color:#f92672">-</span> WSIZE);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mm_free</span>(oldptr);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> newptr;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>书上最后留了两个函数作为例题</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">place</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, size_t size){
-</span></span><span style="display:flex;"><span>    size_t origin_size <span style="color:#f92672">=</span> GET_SIZE(HDRP(bp));
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">place</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, <span style="color:#66d9ef">size_t</span> size){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> origin_size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(bp));
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (origin_size <span style="color:#f92672">-</span> size <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> DSIZE) {
-</span></span><span style="display:flex;"><span>        PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">1</span>));
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        PUT(HDRP(NEXT_BLKP(bp)), PACK(origin_size <span style="color:#f92672">-</span> size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(NEXT_BLKP(bp)), PACK(origin_size <span style="color:#f92672">-</span> size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(origin_size <span style="color:#f92672">-</span> size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(origin_size <span style="color:#f92672">-</span> size, <span style="color:#ae81ff">0</span>));
 </span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>        PUT(HDRP(bp), PACK(origin_size, <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(bp), PACK(origin_size, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(bp), <span style="color:#a6e22e">PACK</span>(origin_size, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(bp), <span style="color:#a6e22e">PACK</span>(origin_size, <span style="color:#ae81ff">1</span>));
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>}
@@ -1886,13 +1886,13 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Perf index = 44 (util) + 16 (thru) = 61 / 100
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#if FIT_ALGO == FIRST_FIT
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(size_t size) {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(<span style="color:#66d9ef">size_t</span> size) {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>tmp_listp <span style="color:#f92672">=</span> heap_listp;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">&lt;</span> size <span style="color:#f92672">||</span> GET_ALLOC(HDRP(tmp_listp))) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp)) <span style="color:#f92672">&lt;</span> size <span style="color:#f92672">||</span> <span style="color:#a6e22e">GET_ALLOC</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp))) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp)) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        tmp_listp <span style="color:#f92672">=</span> NEXT_BLKP(tmp_listp);
+</span></span><span style="display:flex;"><span>        tmp_listp <span style="color:#f92672">=</span> <span style="color:#a6e22e">NEXT_BLKP</span>(tmp_listp);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> tmp_listp;
 </span></span><span style="display:flex;"><span>}
@@ -1902,16 +1902,16 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Perf index = 44 (util) + 40 (thru) = 84/100
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># elif FIT_ALGO == NEXT_FIT
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(size_t size) {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(<span style="color:#66d9ef">size_t</span> size) {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>tmp_listp;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (tmp_listp <span style="color:#f92672">=</span> cur_listp; GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>; tmp_listp <span style="color:#f92672">=</span> NEXT_BLKP(tmp_listp)) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>GET_ALLOC(HDRP(tmp_listp)) <span style="color:#f92672">&amp;&amp;</span> GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">&gt;=</span> size) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (tmp_listp <span style="color:#f92672">=</span> cur_listp; <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>; tmp_listp <span style="color:#f92672">=</span> <span style="color:#a6e22e">NEXT_BLKP</span>(tmp_listp)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">GET_ALLOC</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp)) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp)) <span style="color:#f92672">&gt;=</span> size) {
 </span></span><span style="display:flex;"><span>            cur_listp <span style="color:#f92672">=</span> tmp_listp;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> tmp_listp;
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (tmp_listp <span style="color:#f92672">=</span> heap_listp; tmp_listp <span style="color:#f92672">!=</span> cur_listp; tmp_listp <span style="color:#f92672">=</span> NEXT_BLKP(tmp_listp)) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>GET_ALLOC(HDRP(tmp_listp)) <span style="color:#f92672">&amp;&amp;</span> GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">&gt;=</span> size) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (tmp_listp <span style="color:#f92672">=</span> heap_listp; tmp_listp <span style="color:#f92672">!=</span> cur_listp; tmp_listp <span style="color:#f92672">=</span> <span style="color:#a6e22e">NEXT_BLKP</span>(tmp_listp)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">GET_ALLOC</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp)) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp)) <span style="color:#f92672">&gt;=</span> size) {
 </span></span><span style="display:flex;"><span>            cur_listp <span style="color:#f92672">=</span> tmp_listp;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> tmp_listp;
 </span></span><span style="display:flex;"><span>        }
@@ -1924,12 +1924,12 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Perf index = 45 (util) + 16 (thru) = 61/100
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># elif FIT_ALGO == BEST_FIT
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(size_t size) {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(<span style="color:#66d9ef">size_t</span> size) {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>best_listp <span style="color:#f92672">=</span> NULL;
-</span></span><span style="display:flex;"><span>    size_t best_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x7fffffff</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>tmp_listp <span style="color:#f92672">=</span> heap_listp; GET_SIZE(HDRP(tmp_listp)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>; tmp_listp <span style="color:#f92672">=</span> NEXT_BLKP(tmp_listp)) {
-</span></span><span style="display:flex;"><span>        size_t cur_size <span style="color:#f92672">=</span> GET_SIZE(HDRP(tmp_listp));
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>GET_ALLOC(HDRP(tmp_listp)) <span style="color:#f92672">&amp;&amp;</span> cur_size <span style="color:#f92672">&gt;=</span> size) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> best_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x7fffffff</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>tmp_listp <span style="color:#f92672">=</span> heap_listp; <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>; tmp_listp <span style="color:#f92672">=</span> <span style="color:#a6e22e">NEXT_BLKP</span>(tmp_listp)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">size_t</span> cur_size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp));
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">GET_ALLOC</span>(<span style="color:#a6e22e">HDRP</span>(tmp_listp)) <span style="color:#f92672">&amp;&amp;</span> cur_size <span style="color:#f92672">&gt;=</span> size) {
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (cur_size <span style="color:#f92672">==</span> size) {
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> tmp_listp;
 </span></span><span style="display:flex;"><span>            }
@@ -1976,8 +1976,8 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>free_lists[FREE_LIST_SIZE] <span style="color:#f92672">=</span> {NULL};
 </span></span></code></pre></div><p>操作链表的函数</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">/* Following funcions was method of free_lists */</span>
-</span></span><span style="display:flex;"><span>size_t <span style="color:#a6e22e">size_to_type</span>(size_t size) {
-</span></span><span style="display:flex;"><span>    size_t x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">size_t</span> <span style="color:#a6e22e">size_to_type</span>(<span style="color:#66d9ef">size_t</span> size) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>   (size <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16</span>)        ;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">32</span>)    x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">64</span>)    x <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
@@ -1991,53 +1991,53 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insert_node_to_free_list</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, size_t size){
-</span></span><span style="display:flex;"><span>    size_t list_num <span style="color:#f92672">=</span> size_to_type(size);
-</span></span><span style="display:flex;"><span>    size_t last_head <span style="color:#f92672">=</span> (size_t)free_lists[list_num];
-</span></span><span style="display:flex;"><span>    SET_BK(bp, last_head);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insert_node_to_free_list</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, <span style="color:#66d9ef">size_t</span> size){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> list_num <span style="color:#f92672">=</span> <span style="color:#a6e22e">size_to_type</span>(size);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> last_head <span style="color:#f92672">=</span> (<span style="color:#66d9ef">size_t</span>)free_lists[list_num];
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SET_BK</span>(bp, last_head);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (last_head <span style="color:#f92672">!=</span> NULL) {
-</span></span><span style="display:flex;"><span>        SET_FD(last_head, bp);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">SET_FD</span>(last_head, bp);
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    SET_FD(bp, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SET_FD</span>(bp, <span style="color:#ae81ff">0</span>);
 </span></span><span style="display:flex;"><span>    free_lists[list_num] <span style="color:#f92672">=</span> bp;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">delete_node_from_free_list</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, size_t size) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (FD(bp) <span style="color:#f92672">!=</span> NULL)
-</span></span><span style="display:flex;"><span>        SET_BK(FD(bp), BK(bp));
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">delete_node_from_free_list</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, <span style="color:#66d9ef">size_t</span> size) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">FD</span>(bp) <span style="color:#f92672">!=</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">SET_BK</span>(<span style="color:#a6e22e">FD</span>(bp), <span style="color:#a6e22e">BK</span>(bp));
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
-</span></span><span style="display:flex;"><span>        free_lists[size_to_type(size)] <span style="color:#f92672">=</span> BK(bp);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (BK(bp) <span style="color:#f92672">!=</span> NULL)
-</span></span><span style="display:flex;"><span>        SET_FD(BK(bp), FD(bp));
+</span></span><span style="display:flex;"><span>        free_lists[<span style="color:#a6e22e">size_to_type</span>(size)] <span style="color:#f92672">=</span> <span style="color:#a6e22e">BK</span>(bp);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">BK</span>(bp) <span style="color:#f92672">!=</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">SET_FD</span>(<span style="color:#a6e22e">BK</span>(bp), <span style="color:#a6e22e">FD</span>(bp));
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>其他函数都需要更改</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">/* place the block to a free block */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">place</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, size_t size){
-</span></span><span style="display:flex;"><span>    size_t origin_size <span style="color:#f92672">=</span> GET_SIZE(HDRP(bp));
-</span></span><span style="display:flex;"><span>    delete_node_from_free_list(bp, origin_size);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">place</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp, <span style="color:#66d9ef">size_t</span> size){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> origin_size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(bp));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">delete_node_from_free_list</span>(bp, origin_size);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (origin_size <span style="color:#f92672">-</span> size <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> DSIZE) {
-</span></span><span style="display:flex;"><span>        PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>        size_t remain_size <span style="color:#f92672">=</span> origin_size <span style="color:#f92672">-</span> size;
-</span></span><span style="display:flex;"><span>        PUT(HDRP(NEXT_BLKP(bp)), PACK(remain_size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(NEXT_BLKP(bp)), PACK(remain_size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        insert_node_to_free_list(NEXT_BLKP(bp), remain_size);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">size_t</span> remain_size <span style="color:#f92672">=</span> origin_size <span style="color:#f92672">-</span> size;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(remain_size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(remain_size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">insert_node_to_free_list</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp), remain_size);
 </span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>        PUT(HDRP(bp), PACK(origin_size, <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(bp), PACK(origin_size, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(bp), <span style="color:#a6e22e">PACK</span>(origin_size, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(bp), <span style="color:#a6e22e">PACK</span>(origin_size, <span style="color:#ae81ff">1</span>));
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">/* find a fit free block (first fit) */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(size_t size) {
-</span></span><span style="display:flex;"><span>    size_t list_num <span style="color:#f92672">=</span> size_to_type(size);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">find_fit</span>(<span style="color:#66d9ef">size_t</span> size) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> list_num <span style="color:#f92672">=</span> <span style="color:#a6e22e">size_to_type</span>(size);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> list_num; i <span style="color:#f92672">&lt;</span> FREE_LIST_SIZE; <span style="color:#f92672">++</span>i)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (free_lists[i] <span style="color:#f92672">!=</span> NULL)
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> tmp_ptr <span style="color:#f92672">=</span> free_lists[i]; tmp_ptr <span style="color:#f92672">!=</span> NULL; tmp_ptr <span style="color:#f92672">=</span> BK(tmp_ptr))
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (GET_SIZE(HDRP(tmp_ptr)) <span style="color:#f92672">&gt;=</span> size)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> tmp_ptr <span style="color:#f92672">=</span> free_lists[i]; tmp_ptr <span style="color:#f92672">!=</span> NULL; tmp_ptr <span style="color:#f92672">=</span> <span style="color:#a6e22e">BK</span>(tmp_ptr))
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(tmp_ptr)) <span style="color:#f92672">&gt;=</span> size)
 </span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span> tmp_ptr;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>}
@@ -2046,70 +2046,70 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * coalesce - Coalesce free block next by
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">coalesce</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>bp) {
-</span></span><span style="display:flex;"><span>    size_t prev_alloc <span style="color:#f92672">=</span> GET_ALLOC(FTRP(PREV_BLKP(bp)));
-</span></span><span style="display:flex;"><span>    size_t next_alloc <span style="color:#f92672">=</span> GET_ALLOC(HDRP(NEXT_BLKP(bp)));
-</span></span><span style="display:flex;"><span>    size_t size <span style="color:#f92672">=</span> GET_SIZE(HDRP(bp));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> prev_alloc <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_ALLOC</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> next_alloc <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_ALLOC</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(bp));
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (prev_alloc <span style="color:#f92672">&amp;&amp;</span> next_alloc)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bp;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* coalesce with next block */</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>next_alloc <span style="color:#f92672">&amp;&amp;</span> prev_alloc) {
-</span></span><span style="display:flex;"><span>        size_t next_size <span style="color:#f92672">=</span> GET_SIZE(HDRP(NEXT_BLKP(bp)));
-</span></span><span style="display:flex;"><span>        delete_node_from_free_list(bp, size);
-</span></span><span style="display:flex;"><span>        delete_node_from_free_list(NEXT_BLKP(bp), next_size);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">size_t</span> next_size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">delete_node_from_free_list</span>(bp, size);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">delete_node_from_free_list</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp), next_size);
 </span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> next_size;
-</span></span><span style="display:flex;"><span>        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* coalesce with prev block */</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>prev_alloc <span style="color:#f92672">&amp;&amp;</span> next_alloc) {
-</span></span><span style="display:flex;"><span>        size_t prev_size <span style="color:#f92672">=</span> GET_SIZE(FTRP(PREV_BLKP(bp)));
-</span></span><span style="display:flex;"><span>        delete_node_from_free_list(bp, size);
-</span></span><span style="display:flex;"><span>        delete_node_from_free_list(PREV_BLKP(bp), prev_size);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">size_t</span> prev_size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">delete_node_from_free_list</span>(bp, size);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">delete_node_from_free_list</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp), prev_size);
 </span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> prev_size;
-</span></span><span style="display:flex;"><span>        PUT(HDRP(PREV_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        bp <span style="color:#f92672">=</span> PREV_BLKP(bp);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        bp <span style="color:#f92672">=</span> <span style="color:#a6e22e">PREV_BLKP</span>(bp);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* coalesce with prev and next block */</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>prev_alloc <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>next_alloc) {
-</span></span><span style="display:flex;"><span>        size_t prev_size <span style="color:#f92672">=</span> GET_SIZE(FTRP(PREV_BLKP(bp)));
-</span></span><span style="display:flex;"><span>        size_t next_size <span style="color:#f92672">=</span> GET_SIZE(HDRP(NEXT_BLKP(bp)));
-</span></span><span style="display:flex;"><span>        delete_node_from_free_list(bp, size);
-</span></span><span style="display:flex;"><span>        delete_node_from_free_list(PREV_BLKP(bp), prev_size);
-</span></span><span style="display:flex;"><span>        delete_node_from_free_list(NEXT_BLKP(bp), next_size);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">size_t</span> prev_size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">size_t</span> next_size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">delete_node_from_free_list</span>(bp, size);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">delete_node_from_free_list</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp), prev_size);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">delete_node_from_free_list</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp), next_size);
 </span></span><span style="display:flex;"><span>        size <span style="color:#f92672">+=</span> prev_size <span style="color:#f92672">+</span> next_size;
-</span></span><span style="display:flex;"><span>        PUT(HDRP(PREV_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>        bp <span style="color:#f92672">=</span> PREV_BLKP(bp);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">PREV_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>        bp <span style="color:#f92672">=</span> <span style="color:#a6e22e">PREV_BLKP</span>(bp);
 </span></span><span style="display:flex;"><span>    };
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    insert_node_to_free_list(bp, size);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">insert_node_to_free_list</span>(bp, size);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> bp;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * extend_heap - extend heap with a free block
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">extend_heap</span>(size_t words) {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">extend_heap</span>(<span style="color:#66d9ef">size_t</span> words) {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>bp;
-</span></span><span style="display:flex;"><span>    size_t size;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> size;
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Allocate and even number of words to maintain alignment */</span>
 </span></span><span style="display:flex;"><span>    size <span style="color:#f92672">=</span> (words <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">?</span> (words <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> WSIZE : words <span style="color:#f92672">*</span> WSIZE;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((<span style="color:#66d9ef">long</span>)(bp <span style="color:#f92672">=</span> mem_sbrk(size)) <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((<span style="color:#66d9ef">long</span>)(bp <span style="color:#f92672">=</span> <span style="color:#a6e22e">mem_sbrk</span>(size)) <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Initialize free block header/footer and the epilogue header */</span>
-</span></span><span style="display:flex;"><span>    PUT(HDRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>    PUT(FTRP(bp), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>    insert_node_to_free_list(bp, size);
-</span></span><span style="display:flex;"><span>    PUT(HDRP(NEXT_BLKP(bp)), PACK(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(bp), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">insert_node_to_free_list</span>(bp, size);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(bp)), <span style="color:#a6e22e">PACK</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Coalesce if the previous block was free */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> coalesce(bp);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">coalesce</span>(bp);
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">/* 
@@ -2118,17 +2118,17 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">mm_init</span>(<span style="color:#66d9ef">void</span>)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Create the initial empty heap */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((heap_listp <span style="color:#f92672">=</span> mem_sbrk(<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> WSIZE)) <span style="color:#f92672">==</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)   <span style="color:#75715e">/* sbrk() function returns the start address of the new area. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((heap_listp <span style="color:#f92672">=</span> <span style="color:#a6e22e">mem_sbrk</span>(<span style="color:#ae81ff">4</span> <span style="color:#f92672">*</span> WSIZE)) <span style="color:#f92672">==</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)   <span style="color:#75715e">/* sbrk() function returns the start address of the new area. */</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> FREE_LIST_SIZE; <span style="color:#f92672">++</span>i)
 </span></span><span style="display:flex;"><span>        free_lists[i] <span style="color:#f92672">=</span> NULL;
-</span></span><span style="display:flex;"><span>    PUT(heap_listp, <span style="color:#ae81ff">0</span>);                                     <span style="color:#75715e">/* Alignment */</span>
-</span></span><span style="display:flex;"><span>    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> WSIZE), PACK(DSIZE, <span style="color:#ae81ff">1</span>));          <span style="color:#75715e">/* Prologue block&#39;s size is 8 and is always alloced */</span>
-</span></span><span style="display:flex;"><span>    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> WSIZE), PACK(DSIZE, <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>    PUT(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> WSIZE), PACK(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));              <span style="color:#75715e">/* Epilogue header */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(heap_listp, <span style="color:#ae81ff">0</span>);                                     <span style="color:#75715e">/* Alignment */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">*</span> WSIZE), <span style="color:#a6e22e">PACK</span>(DSIZE, <span style="color:#ae81ff">1</span>));          <span style="color:#75715e">/* Prologue block&#39;s size is 8 and is always alloced */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> WSIZE), <span style="color:#a6e22e">PACK</span>(DSIZE, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(heap_listp <span style="color:#f92672">+</span> (<span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> WSIZE), <span style="color:#a6e22e">PACK</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>));              <span style="color:#75715e">/* Epilogue header */</span>
 </span></span><span style="display:flex;"><span>    heap_listp <span style="color:#f92672">+=</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> WSIZE);
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (extend_heap(CHUNKSIZE<span style="color:#f92672">/</span>WSIZE) <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">extend_heap</span>(CHUNKSIZE<span style="color:#f92672">/</span>WSIZE) <span style="color:#f92672">==</span> NULL)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
@@ -2137,24 +2137,24 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * mm_malloc - Allocate a block by incrementing the brk pointer.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *     Always allocate a block whose size is a multiple of the alignment.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_malloc</span>(size_t size)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_malloc</span>(<span style="color:#66d9ef">size_t</span> size)
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Ignore spurious requests */</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> DSIZE)
 </span></span><span style="display:flex;"><span>        size <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> DSIZE;
-</span></span><span style="display:flex;"><span>    size_t newsize <span style="color:#f92672">=</span> size <span style="color:#f92672">+</span> DSIZE <span style="color:#f92672">+</span> ((<span style="color:#f92672">-</span>size) <span style="color:#f92672">%</span> DSIZE);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> newsize <span style="color:#f92672">=</span> size <span style="color:#f92672">+</span> DSIZE <span style="color:#f92672">+</span> ((<span style="color:#f92672">-</span>size) <span style="color:#f92672">%</span> DSIZE);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> bp;
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">// int newsize = ALIGN(size + SIZE_T_SIZE);
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> find_fit(newsize)) <span style="color:#f92672">!=</span> NULL) {
-</span></span><span style="display:flex;"><span>        place(bp, newsize);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> <span style="color:#a6e22e">find_fit</span>(newsize)) <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">place</span>(bp, newsize);
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> bp;
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    size_t extendsize <span style="color:#f92672">=</span> MAX(newsize, CHUNKSIZE);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> extend_heap(extendsize<span style="color:#f92672">/</span>WSIZE)) <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> extendsize <span style="color:#f92672">=</span> <span style="color:#a6e22e">MAX</span>(newsize, CHUNKSIZE);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((bp <span style="color:#f92672">=</span> <span style="color:#a6e22e">extend_heap</span>(extendsize<span style="color:#f92672">/</span>WSIZE)) <span style="color:#f92672">==</span> NULL)
 </span></span><span style="display:flex;"><span>	   <span style="color:#66d9ef">return</span> NULL;
-</span></span><span style="display:flex;"><span>    place(bp, newsize);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">place</span>(bp, newsize);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> bp;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
@@ -2163,12 +2163,12 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mm_free</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    size_t size <span style="color:#f92672">=</span> GET_SIZE(HDRP(ptr));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">size_t</span> size <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(ptr));
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    PUT(HDRP(ptr), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>    PUT(FTRP(ptr), PACK(size, <span style="color:#ae81ff">0</span>));
-</span></span><span style="display:flex;"><span>    insert_node_to_free_list(ptr, size);
-</span></span><span style="display:flex;"><span>    coalesce(ptr);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(ptr), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(ptr), <span style="color:#a6e22e">PACK</span>(size, <span style="color:#ae81ff">0</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">insert_node_to_free_list</span>(ptr, size);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">coalesce</span>(ptr);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>在不优化 realloc 的情况下可以拿到 84 左右的分数，和 next fit 接近</p>
 <p>简单优化一下 realloc，但由于 bug 实在太多，还是选择抄了一个只向后合并空闲块的 realloc（可以增加向前合并，但又得继续 debug，润了）</p>
@@ -2178,29 +2178,29 @@ bool set_cc = icode in { IOPQ, IIADDQ };
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * mm_realloc - Implemented simply in terms of mm_malloc and mm_free
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_realloc</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr, size_t size){
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">mm_realloc</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr, <span style="color:#66d9ef">size_t</span> size){
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>nblock <span style="color:#f92672">=</span> ptr;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> reamin;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">&lt;=</span> DSIZE) size <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> DSIZE;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> size <span style="color:#f92672">=</span> ALIGN(size <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((reamin <span style="color:#f92672">=</span> GET_SIZE(HDRP(ptr)) <span style="color:#f92672">-</span> size) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> size <span style="color:#f92672">=</span> <span style="color:#a6e22e">ALIGN</span>(size <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((reamin <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(ptr)) <span style="color:#f92672">-</span> size) <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>){
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> ptr;
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>GET_ALLOC(HDRP(NEXT_BLKP(ptr))) <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>GET_SIZE(HDRP(NEXT_BLKP(ptr)))){
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ((reamin <span style="color:#f92672">=</span> GET_SIZE(HDRP(ptr)) <span style="color:#f92672">+</span> GET_SIZE(HDRP(NEXT_BLKP(ptr))) <span style="color:#f92672">-</span> size) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>){
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (extend_heap(MAX(<span style="color:#f92672">-</span>reamin, CHUNKSIZE)<span style="color:#f92672">/</span>WSIZE) <span style="color:#f92672">==</span> NULL)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">GET_ALLOC</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(ptr))) <span style="color:#f92672">||</span> <span style="color:#f92672">!</span><span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(ptr)))){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ((reamin <span style="color:#f92672">=</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(ptr)) <span style="color:#f92672">+</span> <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(ptr))) <span style="color:#f92672">-</span> size) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">extend_heap</span>(<span style="color:#a6e22e">MAX</span>(<span style="color:#f92672">-</span>reamin, CHUNKSIZE)<span style="color:#f92672">/</span>WSIZE) <span style="color:#f92672">==</span> NULL)
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> NULL;
-</span></span><span style="display:flex;"><span>            reamin <span style="color:#f92672">+=</span> MAX(<span style="color:#f92672">-</span>reamin, CHUNKSIZE);
+</span></span><span style="display:flex;"><span>            reamin <span style="color:#f92672">+=</span> <span style="color:#a6e22e">MAX</span>(<span style="color:#f92672">-</span>reamin, CHUNKSIZE);
 </span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        delete_node_from_free_list(NEXT_BLKP(ptr), GET_SIZE(HDRP(NEXT_BLKP(ptr))));
-</span></span><span style="display:flex;"><span>        PUT(HDRP(ptr), PACK(size <span style="color:#f92672">+</span> reamin, <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>        PUT(FTRP(ptr), PACK(size <span style="color:#f92672">+</span> reamin, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">delete_node_from_free_list</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(ptr), <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(<span style="color:#a6e22e">NEXT_BLKP</span>(ptr))));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">HDRP</span>(ptr), <span style="color:#a6e22e">PACK</span>(size <span style="color:#f92672">+</span> reamin, <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PUT</span>(<span style="color:#a6e22e">FTRP</span>(ptr), <span style="color:#a6e22e">PACK</span>(size <span style="color:#f92672">+</span> reamin, <span style="color:#ae81ff">1</span>));
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>{
-</span></span><span style="display:flex;"><span>        nblock <span style="color:#f92672">=</span> mm_malloc(size);
-</span></span><span style="display:flex;"><span>        memcpy(nblock, ptr, GET_SIZE(HDRP(ptr)));
-</span></span><span style="display:flex;"><span>        mm_free(ptr);
+</span></span><span style="display:flex;"><span>        nblock <span style="color:#f92672">=</span> <span style="color:#a6e22e">mm_malloc</span>(size);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">memcpy</span>(nblock, ptr, <span style="color:#a6e22e">GET_SIZE</span>(<span style="color:#a6e22e">HDRP</span>(ptr)));
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">mm_free</span>(ptr);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> nblock;
 </span></span><span style="display:flex;"><span>}
@@ -2500,21 +2500,13 @@ Perf index = 49 (util) + 40 (thru) = 89/100
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

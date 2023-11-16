@@ -241,7 +241,7 @@
 <p><code>main</code> 函数</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0804897</span><span style="color:#a6e22e">B</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">get_user_input</span>
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">08048980</span>                 <span style="color:#a6e22e">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_14</span>], <span style="color:#66d9ef">eax</span>    <span style="color:#75715e">; state starts here
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">08048983</span>                 <span style="color:#66d9ef">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_10</span>], <span style="color:#66d9ef">ebx</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">08048983</span>                 <span style="color:#a6e22e">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_10</span>], <span style="color:#66d9ef">ebx</span>
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">08048986</span>                 <span style="color:#a6e22e">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_C</span>], <span style="color:#66d9ef">edx</span>
 </span></span></code></pre></div><p><code>get_user_input</code> 内部实现</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0804892</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">___isoc99_scanf</span>
@@ -258,14 +258,14 @@
 <h2 id="symbolic-stack">symbolic stack</h2>
 <p>这题的输入直接存到了 <code>stack</code> 中，因此需要把符号注入到 <code>stack</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-asm" data-lang="asm"><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">08048682</span>                 <span style="color:#a6e22e">lea</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_10</span>]     <span style="color:#75715e">; 2nd input stores here
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">08048685</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">eax</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">08048685</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">eax</span>
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">08048686</span>                 <span style="color:#a6e22e">lea</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_C</span>]      <span style="color:#75715e">; 1st input stores here
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">08048689</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">eax</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">08048689</span>                 <span style="color:#a6e22e">push</span>    <span style="color:#66d9ef">eax</span>
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">0804868</span><span style="color:#a6e22e">A</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">aUU</span>      <span style="color:#75715e">; &#34;%u %u&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">0804868</span><span style="color:#66d9ef">F</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">___isoc99_scanf</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0804868</span><span style="color:#a6e22e">F</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">___isoc99_scanf</span>
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">08048694</span>                 <span style="color:#a6e22e">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">10</span><span style="color:#66d9ef">h</span>
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">08048697</span>                 <span style="color:#a6e22e">mov</span>     <span style="color:#66d9ef">eax</span>, [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_C</span>]      <span style="color:#75715e">; state starts here
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">0804869</span><span style="color:#66d9ef">A</span>                 <span style="color:#66d9ef">sub</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">Ch</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">0804869</span><span style="color:#a6e22e">A</span>                 <span style="color:#66d9ef">sub</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">0</span><span style="color:#66d9ef">Ch</span>
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> claripy
 </span></span><span style="display:flex;"><span>
@@ -302,10 +302,10 @@
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">EA</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">unk_A1BA1C8</span>
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">EF</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">user_input</span>
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">F4</span>                 <span style="color:#66d9ef">push</span>    <span style="color:#66d9ef">offset</span> <span style="color:#66d9ef">a8s8s8s8s</span> <span style="color:#75715e">; &#34;%8s %8s %8s %8s&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">080485</span><span style="color:#66d9ef">F9</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">___isoc99_scanf</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">F9</span>                 <span style="color:#66d9ef">call</span>    <span style="color:#66d9ef">___isoc99_scanf</span>
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">080485</span><span style="color:#a6e22e">FE</span>                 <span style="color:#66d9ef">add</span>     <span style="color:#66d9ef">esp</span>, <span style="color:#ae81ff">20</span><span style="color:#66d9ef">h</span>
 </span></span><span style="display:flex;"><span>.text:<span style="color:#960050;background-color:#1e0010">08048601</span>                 <span style="color:#a6e22e">mov</span>     [<span style="color:#66d9ef">ebp</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#66d9ef">var_C</span>], <span style="color:#ae81ff">0</span>       <span style="color:#75715e">; state starts here
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">.text</span>:<span style="color:#ae81ff">08048608</span>                 <span style="color:#66d9ef">jmp</span>     <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_8048637</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>.text:<span style="color:#960050;background-color:#1e0010">08048608</span>                 <span style="color:#a6e22e">jmp</span>     <span style="color:#66d9ef">short</span> <span style="color:#66d9ef">loc_8048637</span>
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> claripy
 </span></span><span style="display:flex;"><span>
@@ -341,12 +341,12 @@
 </span></span><span style="display:flex;"><span>    print (<span style="color:#e6db74">&#34;no result&#34;</span>)
 </span></span></code></pre></div><p>用的是 <code>memory.store(store_addr, store_symbolic)</code> 方法</p>
 <h2 id="symbolic-dynamic-memory">symbolic dynamic memory</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  buffer0 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)malloc(<span style="color:#ae81ff">9u</span>);
-</span></span><span style="display:flex;"><span>  buffer1 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)malloc(<span style="color:#ae81ff">9u</span>);
-</span></span><span style="display:flex;"><span>  memset(buffer0, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">9u</span>);
-</span></span><span style="display:flex;"><span>  memset(buffer1, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">9u</span>);
-</span></span><span style="display:flex;"><span>  printf(<span style="color:#e6db74">&#34;Enter the password: &#34;</span>);
-</span></span><span style="display:flex;"><span>  __isoc99_scanf(<span style="color:#e6db74">&#34;%8s %8s&#34;</span>, buffer0, buffer1, v6);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  buffer0 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#ae81ff">9u</span>);
+</span></span><span style="display:flex;"><span>  buffer1 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#ae81ff">9u</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">memset</span>(buffer0, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">9u</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">memset</span>(buffer1, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">9u</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Enter the password: &#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">__isoc99_scanf</span>(<span style="color:#e6db74">&#34;%8s %8s&#34;</span>, buffer0, buffer1, v6);
 </span></span></code></pre></div><p>这题的输入存储到了 <code>malloc</code> 中，这个地址动态的，如果仅仅使用 <code>memory.store()</code> 无法确定存储的地址</p>
 <p>因此先将 <code>buffer</code> 的地址修改为一个自定义的虚假地址（因为 <code>buffer</code> 在 <code>.bss</code> 段上，地址是固定的），然后往这个地址中写入数据，后续程序的模拟执行会使用这个虚假地址</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
@@ -383,10 +383,10 @@
 </span></span><span style="display:flex;"><span>    print (<span style="color:#e6db74">&#34;no result&#34;</span>)
 </span></span></code></pre></div><h2 id="symbolic-file">symbolic file</h2>
 <p>这题没有用预期做法来做</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  fp <span style="color:#f92672">=</span> fopen(<span style="color:#e6db74">&#34;OJKSQYDP.txt&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>);
-</span></span><span style="display:flex;"><span>  fread(buffer, <span style="color:#ae81ff">1u</span>, <span style="color:#ae81ff">0x40u</span>, fp);
-</span></span><span style="display:flex;"><span>  fclose(fp);
-</span></span><span style="display:flex;"><span>  unlink(<span style="color:#e6db74">&#34;OJKSQYDP.txt&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  fp <span style="color:#f92672">=</span> <span style="color:#a6e22e">fopen</span>(<span style="color:#e6db74">&#34;OJKSQYDP.txt&#34;</span>, <span style="color:#e6db74">&#34;rb&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">fread</span>(buffer, <span style="color:#ae81ff">1u</span>, <span style="color:#ae81ff">0x40u</span>, fp);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">fclose</span>(fp);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">unlink</span>(<span style="color:#e6db74">&#34;OJKSQYDP.txt&#34;</span>);
 </span></span></code></pre></div><p>既然这里有个从文件读取，那么可以直接把初始状态设置到文件读取后面，那么这道题就和之前做过的 <code>symbolic memory</code> 一样了</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> claripy
@@ -442,15 +442,15 @@
 </span></span></code></pre></div><p>仅模拟了for循环（加密部分），运行结束后直接使用 <code>add_constraints</code> 手动添加约束条件</p>
 <h2 id="hook">hook</h2>
 <p>又来了次非预期</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  printf(<span style="color:#e6db74">&#34;Enter the password: &#34;</span>);
-</span></span><span style="display:flex;"><span>  __isoc99_scanf(<span style="color:#e6db74">&#34;%16s&#34;</span>, buffer);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Enter the password: &#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">__isoc99_scanf</span>(<span style="color:#e6db74">&#34;%16s&#34;</span>, buffer);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">15</span>; <span style="color:#f92672">++</span>i )
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(i <span style="color:#f92672">+</span> <span style="color:#ae81ff">134520916</span>) <span style="color:#f92672">=</span> complex_function(<span style="color:#f92672">*</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)(i <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x804A054</span>), <span style="color:#ae81ff">18</span> <span style="color:#f92672">-</span> i);
-</span></span><span style="display:flex;"><span>  equals <span style="color:#f92672">=</span> check_equals_XYMKBKUHNIQYNQXE(buffer, <span style="color:#ae81ff">16</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(i <span style="color:#f92672">+</span> <span style="color:#ae81ff">134520916</span>) <span style="color:#f92672">=</span> <span style="color:#a6e22e">complex_function</span>(<span style="color:#f92672">*</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)(i <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x804A054</span>), <span style="color:#ae81ff">18</span> <span style="color:#f92672">-</span> i);
+</span></span><span style="display:flex;"><span>  equals <span style="color:#f92672">=</span> <span style="color:#a6e22e">check_equals_XYMKBKUHNIQYNQXE</span>(buffer, <span style="color:#ae81ff">16</span>);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">15</span>; <span style="color:#f92672">++</span>j )
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(j <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x804A044</span>) <span style="color:#f92672">=</span> complex_function(<span style="color:#f92672">*</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)(j <span style="color:#f92672">+</span> <span style="color:#ae81ff">134520900</span>), j <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span>);
-</span></span><span style="display:flex;"><span>  __isoc99_scanf(<span style="color:#e6db74">&#34;%16s&#34;</span>, buffer);
-</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> equals <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>strncmp(buffer, password, <span style="color:#ae81ff">0x10u</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(j <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x804A044</span>) <span style="color:#f92672">=</span> <span style="color:#a6e22e">complex_function</span>(<span style="color:#f92672">*</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)(j <span style="color:#f92672">+</span> <span style="color:#ae81ff">134520900</span>), j <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">__isoc99_scanf</span>(<span style="color:#e6db74">&#34;%16s&#34;</span>, buffer);
+</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> equals <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span><span style="color:#a6e22e">strncmp</span>(buffer, password, <span style="color:#ae81ff">0x10u</span>);
 </span></span></code></pre></div><p>显然，这道题可以拆成两部分来做，第一部分使用 <code>constraints</code> 求解第一次输入；第二部分直接获取 password 的运算结果</p>
 <p>于是相当于写了两次 <code>angr</code>（感觉完全可以合并起来，但稳妥起见，后面再试试）</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> angr <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
@@ -510,7 +510,7 @@ Good Job.
 </span></span><span style="display:flex;"><span>choose_hook <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> choose_hook <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@proj</span><span style="color:#f92672">.</span>hook(check_addr, length <span style="color:#f92672">=</span> instraction_len)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@proj.hook</span>(check_addr, length <span style="color:#f92672">=</span> instraction_len)
 </span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">replace_check_equal</span>(state):
 </span></span><span style="display:flex;"><span>		target <span style="color:#f92672">=</span> <span style="color:#e6db74">b</span><span style="color:#e6db74">&#39;XYMKBKUHNIQYNQXE&#39;</span> <span style="color:#75715e"># claripy will convert it to bytes if it is str.</span>
 </span></span><span style="display:flex;"><span>		input_addr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x804A054</span>
@@ -688,7 +688,7 @@ Good Job.
 </span></span><span style="display:flex;"><span>    print (<span style="color:#e6db74">&#39;No result&#39;</span>)
 </span></span></code></pre></div><p>简单学习了一下 <code>veritesting</code> 的原理，在本题目的验证环节，代码为</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">32</span>; <span style="color:#f92672">++</span>i) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (buffer[i] <span style="color:#f92672">==</span> complex_function(<span style="color:#960050;background-color:#1e0010">$</span>{ write(<span style="color:#e6db74">&#39;\&#39;&#39;</span> <span style="color:#f92672">+</span> letter0 <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;\&#39;&#39;</span> ) }<span style="color:#960050;background-color:#1e0010">$</span>, i <span style="color:#f92672">+</span> <span style="color:#960050;background-color:#1e0010">$</span>{ write(integer) }<span style="color:#960050;background-color:#1e0010">$</span>) ) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (buffer[i] <span style="color:#f92672">==</span> <span style="color:#a6e22e">complex_function</span>(<span style="color:#960050;background-color:#1e0010">$</span>{ <span style="color:#a6e22e">write</span>(<span style="color:#e6db74">&#39;\&#39;&#39;</span> <span style="color:#f92672">+</span> letter0 <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;\&#39;&#39;</span> ) }<span style="color:#960050;background-color:#1e0010">$</span>, i <span style="color:#f92672">+</span> <span style="color:#960050;background-color:#1e0010">$</span>{ <span style="color:#a6e22e">write</span>(integer) }<span style="color:#960050;background-color:#1e0010">$</span>) ) {
 </span></span><span style="display:flex;"><span>      counter0<span style="color:#f92672">++</span>;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
@@ -1085,21 +1085,13 @@ Good Job.
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

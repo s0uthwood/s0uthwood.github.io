@@ -159,8 +159,8 @@
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( (<span style="color:#66d9ef">signed</span> <span style="color:#66d9ef">int</span>)v1 <span style="color:#f92672">&lt;</span> (<span style="color:#66d9ef">signed</span> <span style="color:#66d9ef">int</span>)<span style="color:#f92672">&amp;</span>unk_403504 );
 </span></span></code></pre></div><p>上面的代码是主函数开头的初始化部分</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  sub_401020(<span style="color:#e6db74">&#34;You need a flag to get out of this:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, a1);
-</span></span><span style="display:flex;"><span>  scan(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>input);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_401020</span>(<span style="color:#e6db74">&#34;You need a flag to get out of this:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, a1);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scan</span>(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>input);
 </span></span><span style="display:flex;"><span>  v4 <span style="color:#f92672">=</span> dword_403370;                            <span style="color:#75715e">// 0
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  v5 <span style="color:#f92672">=</span> byte_403374;                             <span style="color:#75715e">// 48
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  v6 <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
@@ -176,9 +176,9 @@
 </span></span><span style="display:flex;"><span>    {
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( v5 <span style="color:#f92672">-</span> <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)v7 <span style="color:#f92672">!=</span> v11 )
 </span></span><span style="display:flex;"><span>      {
-</span></span><span style="display:flex;"><span>        sub_401020(<span style="color:#e6db74">&#34;This is not flag~</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, v10);
-</span></span><span style="display:flex;"><span>        system(<span style="color:#e6db74">&#34;pause&#34;</span>);
-</span></span><span style="display:flex;"><span>        exit(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">sub_401020</span>(<span style="color:#e6db74">&#34;This is not flag~</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, v10);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#34;pause&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>      }
 </span></span><span style="display:flex;"><span>      v7 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)(v7 <span style="color:#f92672">+</span> <span style="color:#ae81ff">8</span>);
 </span></span><span style="display:flex;"><span>    }
@@ -203,8 +203,8 @@
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    v8 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Congratulations!!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  sub_401020(v8, v11);
-</span></span><span style="display:flex;"><span>  system(<span style="color:#e6db74">&#34;pause&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_401020</span>(v8, v11);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#34;pause&#34;</span>);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span></code></pre></div><p>上面的代码就是最后的验证环节</p>
 <p>一开始尝试直接看代码，发现自己被绕进去了，完全不知道各个地址是什么东西，所以考虑通过动态调试来得到初始化后的结果</p>
@@ -327,8 +327,8 @@
 </span></span><span style="display:flex;"><span>  v22 <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">&#39;</span>IAZ yb d<span style="color:#960050;background-color:#1e0010">&#39;</span>;
 </span></span><span style="display:flex;"><span>  v23 <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">&#39;\</span>nA<span style="color:#960050;background-color:#1e0010">&#39;</span>;
 </span></span><span style="display:flex;"><span>  v24 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>  strcpy(v20, <span style="color:#e6db74">&#34;%s&#34;</span>);
-</span></span><span style="display:flex;"><span>  strcpy(Format, <span style="color:#e6db74">&#34;%20s&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">strcpy</span>(v20, <span style="color:#e6db74">&#34;%s&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">strcpy</span>(Format, <span style="color:#e6db74">&#34;%20s&#34;</span>);
 </span></span><span style="display:flex;"><span>  v1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">17</span>;
 </span></span><span style="display:flex;"><span>  v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">8</span>;
 </span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">6</span>;
@@ -347,23 +347,23 @@
 </span></span><span style="display:flex;"><span>  v16 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>  v17 <span style="color:#f92672">=</span> <span style="color:#ae81ff">7</span>;
 </span></span><span style="display:flex;"><span>  v18 <span style="color:#f92672">=</span> <span style="color:#ae81ff">16</span>;
-</span></span><span style="display:flex;"><span>  scanf(Format, Str);
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( strlen(Str) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">18</span> )
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scanf</span>(Format, Str);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">strlen</span>(Str) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">18</span> )
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    printf(v20, <span style="color:#f92672">&amp;</span>v25);
-</span></span><span style="display:flex;"><span>    exit(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(v20, <span style="color:#f92672">&amp;</span>v25);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">17</span>; <span style="color:#f92672">++</span>i )
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    v43 <span style="color:#f92672">=</span> <span style="color:#f92672">~</span>(Str[i] <span style="color:#f92672">&amp;</span> <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v39 <span style="color:#f92672">+</span> i <span style="color:#f92672">%</span> <span style="color:#ae81ff">14</span>)) <span style="color:#f92672">&amp;</span> (Str[i] <span style="color:#f92672">|</span> <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v39 <span style="color:#f92672">+</span> i <span style="color:#f92672">%</span> <span style="color:#ae81ff">14</span>));
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( v43 <span style="color:#f92672">!=</span> <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>v1 <span style="color:#f92672">+</span> i) )
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      printf(v20, <span style="color:#f92672">&amp;</span>v25);
-</span></span><span style="display:flex;"><span>      exit(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">printf</span>(v20, <span style="color:#f92672">&amp;</span>v25);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  printf(v20, <span style="color:#f92672">&amp;</span>v31);
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> printf(v20, <span style="color:#f92672">&amp;</span>v21);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(v20, <span style="color:#f92672">&amp;</span>v31);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">printf</span>(v20, <span style="color:#f92672">&amp;</span>v21);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>找到最后的判断条件 <code>v43 != *(&amp;v1 + i)</code>，而 v43 是通过一个异或来生成的，因此只需要通过 v1 数组和 v39 数组反向求解得到输入的 Str 即可。</p>
 <p>下面是求解代码</p>
@@ -395,8 +395,8 @@ Input the flag to hijack the ability of Hiden Intelligence:
 <p>在 ida 的汇编页面中浏览 <code>Data</code> 部分，发现在 <code>0x10040164D</code> 位置有一长串未被 ida 解析的二进制数据，推测这部分是被加密过的代码，按 <code>x</code> 交叉引用找到加密的代码</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">__int64</span> <span style="color:#a6e22e">sub_100401A6C</span>()
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  sub_100401506(byte_10040164D, <span style="color:#ae81ff">1045</span>i64, Str);
-</span></span><span style="display:flex;"><span>  sub_10040162B();
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_100401506</span>(byte_10040164D, <span style="color:#ae81ff">1045</span>i64, Str);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_10040162B</span>();
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> (<span style="color:#f92672">*</span>(<span style="color:#66d9ef">__int64</span> (<span style="color:#f92672">**</span>)(<span style="color:#66d9ef">void</span>))byte_10040164D)();
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>发现先用一个函数调用了这段二进制数据，随后调用以这个地址为开头的函数。</p>
@@ -413,15 +413,15 @@ Input the flag to hijack the ability of Hiden Intelligence:
 </span></span><span style="display:flex;"><span>  lpAddress <span style="color:#f92672">=</span> a1; <span style="color:#75715e">// bytes
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  v7 <span style="color:#f92672">=</span> a2;        <span style="color:#75715e">// 1045
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  v8 <span style="color:#f92672">=</span> a3;        <span style="color:#75715e">// Str
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> ( strlen(Str) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">18</span> )
-</span></span><span style="display:flex;"><span>    exit(<span style="color:#ae81ff">1</span>);
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>VirtualProtect(lpAddress, v7, <span style="color:#ae81ff">0x40u</span>, <span style="color:#f92672">&amp;</span>flOldProtect) )
-</span></span><span style="display:flex;"><span>    exit(<span style="color:#ae81ff">1</span>);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">strlen</span>(Str) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">18</span> )
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span><span style="color:#a6e22e">VirtualProtect</span>(lpAddress, v7, <span style="color:#ae81ff">0x40u</span>, <span style="color:#f92672">&amp;</span>flOldProtect) )
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> v7; <span style="color:#f92672">++</span>i )
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>((_BYTE <span style="color:#f92672">*</span>)lpAddress <span style="color:#f92672">+</span> i) <span style="color:#f92672">^=</span> <span style="color:#f92672">*</span>(_BYTE <span style="color:#f92672">*</span>)(i <span style="color:#f92672">%</span> <span style="color:#ae81ff">18</span> <span style="color:#f92672">+</span> v8); <span style="color:#75715e">// 关键代码
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  result <span style="color:#f92672">=</span> VirtualProtect(lpAddress, v7, flOldProtect, <span style="color:#f92672">&amp;</span>flOldProtect);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  result <span style="color:#f92672">=</span> <span style="color:#a6e22e">VirtualProtect</span>(lpAddress, v7, flOldProtect, <span style="color:#f92672">&amp;</span>flOldProtect);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>result )
-</span></span><span style="display:flex;"><span>    exit(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> result;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>把关键代码美化一下：</p>
@@ -526,21 +526,21 @@ Input the flag to hijack the ability of Hiden Intelligence:
 </span></span><span style="display:flex;"><span>  v57 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2165130</span>;
 </span></span><span style="display:flex;"><span>  v58 <span style="color:#f92672">=</span> <span style="color:#ae81ff">1987983</span>;
 </span></span><span style="display:flex;"><span>  v59 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2460375</span>;
-</span></span><span style="display:flex;"><span>  strcpy(Format, <span style="color:#e6db74">&#34;Input the flag to hijack the ability of Hiden Intelligence:&#34;</span>);
-</span></span><span style="display:flex;"><span>  strcpy(v7, <span style="color:#e6db74">&#34;Progrise Key confirmed. Ready to break.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>  strcpy(v6, <span style="color:#e6db74">&#34;Jacking Break! Zaia Enterprise.&#34;</span>);
-</span></span><span style="display:flex;"><span>  strcpy(v5, <span style="color:#e6db74">&#34;%59s&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">strcpy</span>(Format, <span style="color:#e6db74">&#34;Input the flag to hijack the ability of Hiden Intelligence:&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">strcpy</span>(v7, <span style="color:#e6db74">&#34;Progrise Key confirmed. Ready to break.</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">strcpy</span>(v6, <span style="color:#e6db74">&#34;Jacking Break! Zaia Enterprise.&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">strcpy</span>(v5, <span style="color:#e6db74">&#34;%59s&#34;</span>);
 </span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">29477</span>;
 </span></span><span style="display:flex;"><span>  v4 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>  strcpy(v2, <span style="color:#e6db74">&#34;Not verified!&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">strcpy</span>(v2, <span style="color:#e6db74">&#34;Not verified!&#34;</span>);
 </span></span><span style="display:flex;"><span>  v62 <span style="color:#f92672">=</span> <span style="color:#ae81ff">2147483659</span>;
-</span></span><span style="display:flex;"><span>  printf(Format);
-</span></span><span style="display:flex;"><span>  scanf(v5, Str);
-</span></span><span style="display:flex;"><span>  printf(v7);
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( strlen(Str) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">51</span> )
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(Format);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scanf</span>(v5, Str);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(v7);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">strlen</span>(Str) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">51</span> )
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    printf(v2);
-</span></span><span style="display:flex;"><span>    exit(<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(v2);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">0</span>);
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  v61 <span style="color:#f92672">=</span> <span style="color:#ae81ff">19683</span>;
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0x32</span>; <span style="color:#f92672">++</span>i )
@@ -548,13 +548,13 @@ Input the flag to hijack the ability of Hiden Intelligence:
 </span></span><span style="display:flex;"><span>    v60 <span style="color:#f92672">=</span> v61 <span style="color:#f92672">*</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)Str[i] <span style="color:#f92672">%</span> v62; <span style="color:#75715e">// 关键代码
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> ( v60 <span style="color:#f92672">!=</span> <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>v9 <span style="color:#f92672">+</span> i) ) <span style="color:#75715e">// 验证
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    {
-</span></span><span style="display:flex;"><span>      printf(v2);
-</span></span><span style="display:flex;"><span>      exit(<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">printf</span>(v2);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">0</span>);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  printf(v6);
-</span></span><span style="display:flex;"><span>  getchar();
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> getchar();
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">printf</span>(v6);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">getchar</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">getchar</span>();
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>将关键代码美化一下</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> ( <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>v9 <span style="color:#f92672">+</span> i) <span style="color:#f92672">!=</span> v61 <span style="color:#f92672">*</span> Str[i] <span style="color:#f92672">%</span> v62 )
@@ -576,12 +576,12 @@ Input the flag to hijack the ability of Hiden Intelligence:
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0x32</span>; <span style="color:#f92672">++</span>i){
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(res <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; res <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0x80</span>; res<span style="color:#f92672">++</span>){
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (v[i] <span style="color:#f92672">==</span> v61 <span style="color:#f92672">*</span> res <span style="color:#f92672">%</span> <span style="color:#ae81ff">2147483659</span>){
-</span></span><span style="display:flex;"><span>                printf(<span style="color:#e6db74">&#34;%c&#34;</span>, res);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%c&#34;</span>, res);
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>            }
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span><span style="color:#75715e">// flag{Thousandriver_is_1000%_stronger_than_zero-one}
@@ -863,21 +863,13 @@ Jacking Break! Zaia Enterprise.
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

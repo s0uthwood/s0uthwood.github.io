@@ -261,14 +261,14 @@ key length: 32
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">__int64</span> v0; <span style="color:#75715e">// rax
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> Dst; <span style="color:#75715e">// [esp+0h] [ebp-108h]
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>  memset(<span style="color:#f92672">&amp;</span>Dst, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xFFu</span>);
-</span></span><span style="display:flex;"><span>  dword_403378 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)malloc(<span style="color:#ae81ff">8u</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">memset</span>(<span style="color:#f92672">&amp;</span>Dst, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xFFu</span>);
+</span></span><span style="display:flex;"><span>  dword_403378 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#ae81ff">8u</span>);
 </span></span><span style="display:flex;"><span>  Memory <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)dword_403378;
 </span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>(_DWORD <span style="color:#f92672">*</span>)(dword_403378 <span style="color:#f92672">+</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>  sub_401020(<span style="color:#e6db74">&#34;plz input right num:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, Dst);
-</span></span><span style="display:flex;"><span>  sub_401060(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>Dst, <span style="color:#ae81ff">32</span>);
-</span></span><span style="display:flex;"><span>  v0 <span style="color:#f92672">=</span> atoi64(<span style="color:#f92672">&amp;</span>Dst);
-</span></span><span style="display:flex;"><span>  sub_401120(v0);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_401020</span>(<span style="color:#e6db74">&#34;plz input right num:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, Dst);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_401060</span>(<span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>Dst, <span style="color:#ae81ff">32</span>);
+</span></span><span style="display:flex;"><span>  v0 <span style="color:#f92672">=</span> <span style="color:#a6e22e">atoi64</span>(<span style="color:#f92672">&amp;</span>Dst);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_401120</span>(v0);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>输入一个数字，将其传入 <code>sub_401120</code> 函数。</p>
 <p>进入这个函数</p>
@@ -279,20 +279,20 @@ key length: 32
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">int</span> v3; <span style="color:#75715e">// edx
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">char</span> v4; <span style="color:#75715e">// cl
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>  v1 <span style="color:#f92672">=</span> __PAIR__(a1, HIDWORD(a1));
+</span></span><span style="display:flex;"><span>  v1 <span style="color:#f92672">=</span> <span style="color:#a6e22e">__PAIR__</span>(a1, <span style="color:#a6e22e">HIDWORD</span>(a1));
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( a1 )
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">do</span>
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      v2 <span style="color:#f92672">=</span> sub_401F00(__PAIR__(v1, HIDWORD(v1)), <span style="color:#ae81ff">0x1Au</span>, <span style="color:#ae81ff">0</span>);
-</span></span><span style="display:flex;"><span>      LODWORD(v1) <span style="color:#f92672">=</span> v3;
-</span></span><span style="display:flex;"><span>      v4 <span style="color:#f92672">=</span> byte_402194[HIDWORD(v1) <span style="color:#f92672">-</span> <span style="color:#ae81ff">26</span> <span style="color:#f92672">*</span> v2];  <span style="color:#75715e">// 2163qwe)(*&amp;^%489$!057@#&gt;&lt;A
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      HIDWORD(v1) <span style="color:#f92672">=</span> v2;
-</span></span><span style="display:flex;"><span>      sub_401160(v4 <span style="color:#f92672">^</span> <span style="color:#ae81ff">7</span>);
+</span></span><span style="display:flex;"><span>      v2 <span style="color:#f92672">=</span> <span style="color:#a6e22e">sub_401F00</span>(<span style="color:#a6e22e">__PAIR__</span>(v1, <span style="color:#a6e22e">HIDWORD</span>(v1)), <span style="color:#ae81ff">0x1Au</span>, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">LODWORD</span>(v1) <span style="color:#f92672">=</span> v3;
+</span></span><span style="display:flex;"><span>      v4 <span style="color:#f92672">=</span> byte_402194[<span style="color:#a6e22e">HIDWORD</span>(v1) <span style="color:#f92672">-</span> <span style="color:#ae81ff">26</span> <span style="color:#f92672">*</span> v2];  <span style="color:#75715e">// 2163qwe)(*&amp;^%489$!057@#&gt;&lt;A
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#a6e22e">HIDWORD</span>(v1) <span style="color:#f92672">=</span> v2;
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">sub_401160</span>(v4 <span style="color:#f92672">^</span> <span style="color:#ae81ff">7</span>);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> ( v1 );
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  sub_401190();
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_401190</span>();
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>根据题目信息的提示，这是把输入数字转换成为26进制，随后进行一个异或运算，然后存到一个地址里。</p>
 <p>进入 <code>sub_401190</code> 函数</p>
@@ -314,7 +314,7 @@ key length: 32
 </span></span><span style="display:flex;"><span>  v1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>  v10 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>  v2 <span style="color:#f92672">=</span> Memory;
-</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> strlen(aFb726);
+</span></span><span style="display:flex;"><span>  v3 <span style="color:#f92672">=</span> <span style="color:#a6e22e">strlen</span>(aFb726);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v3 )
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    v4 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
@@ -343,7 +343,7 @@ key length: 32
 </span></span><span style="display:flex;"><span>      v9 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>)v0[<span style="color:#ae81ff">1</span>];
 </span></span><span style="display:flex;"><span>      dword_403378 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)v0;
 </span></span><span style="display:flex;"><span>      Memory <span style="color:#f92672">=</span> v9;
-</span></span><span style="display:flex;"><span>      free(v0);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">free</span>(v0);
 </span></span><span style="display:flex;"><span>      v0 <span style="color:#f92672">=</span> Memory;
 </span></span><span style="display:flex;"><span>      <span style="color:#f92672">--</span>v8;
 </span></span><span style="display:flex;"><span>    }
@@ -353,14 +353,14 @@ key length: 32
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    v8 <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v10 <span style="color:#f92672">!=</span> strlen(aFb726) ) <span style="color:#75715e">// 根据之间计算的相同字母数量，判断两个字符串是否相同
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v10 <span style="color:#f92672">!=</span> <span style="color:#a6e22e">strlen</span>(aFb726) ) <span style="color:#75715e">// 根据之间计算的相同字母数量，判断两个字符串是否相同
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  {
-</span></span><span style="display:flex;"><span>    puts(<span style="color:#e6db74">&#34;flag is Error!!!&#34;</span>);
-</span></span><span style="display:flex;"><span>    exit(v8);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;flag is Error!!!&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exit</span>(v8);
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  puts(<span style="color:#e6db74">&#34;flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag&#34;</span>);
-</span></span><span style="display:flex;"><span>  system(<span style="color:#e6db74">&#34;pause&#34;</span>);
-</span></span><span style="display:flex;"><span>  exit(v8);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">system</span>(<span style="color:#e6db74">&#34;pause&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">exit</span>(v8);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>所以只需要将 aFb726 字符串进行反向计算即可</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> flag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Fb72&gt;&amp;6&#39;</span>
@@ -429,9 +429,9 @@ flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag
 <p>找到 <code>native-lib.so</code> 文件，拖入ida，找到函数名里搜索 <code>java</code> 或 <code>verify</code> 之类的，找到这个判断函数</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  v4 <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)(<span style="color:#f92672">*</span>(<span style="color:#66d9ef">__int64</span> (<span style="color:#66d9ef">__fastcall</span> <span style="color:#f92672">**</span>)(<span style="color:#66d9ef">__int64</span>, <span style="color:#66d9ef">__int64</span>, _QWORD))(<span style="color:#f92672">*</span>(_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1352LL</span>))(a1, a3, <span style="color:#ae81ff">0LL</span>);
 </span></span><span style="display:flex;"><span>  v5 <span style="color:#f92672">=</span> (<span style="color:#f92672">*</span>(<span style="color:#66d9ef">__int64</span> (<span style="color:#66d9ef">__fastcall</span> <span style="color:#f92672">**</span>)(<span style="color:#66d9ef">__int64</span>, <span style="color:#66d9ef">__int64</span>))(<span style="color:#f92672">*</span>(_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1344LL</span>))(a1, v3);
-</span></span><span style="display:flex;"><span>  memset(<span style="color:#f92672">&amp;</span>s, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x3E8uLL</span>);
-</span></span><span style="display:flex;"><span>  sub_710(v4, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>s, v5 <span style="color:#f92672">-</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> (((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)(<span style="color:#960050;background-color:#1e0010">&#39;</span>UUUV<span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#f92672">*</span> v5) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">63</span>) <span style="color:#f92672">+</span> ((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)(<span style="color:#960050;background-color:#1e0010">&#39;</span>UUUV<span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#f92672">*</span> v5) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">32</span>)));
-</span></span><span style="display:flex;"><span>  sub_820(<span style="color:#f92672">&amp;</span>s, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v22);                   <span style="color:#75715e">// s=&#39;th1s_1s_k3ya!!!!&#39;
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">memset</span>(<span style="color:#f92672">&amp;</span>s, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x3E8uLL</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_710</span>(v4, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>s, v5 <span style="color:#f92672">-</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> (((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)(<span style="color:#960050;background-color:#1e0010">&#39;</span>UUUV<span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#f92672">*</span> v5) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">63</span>) <span style="color:#f92672">+</span> ((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)(<span style="color:#960050;background-color:#1e0010">&#39;</span>UUUV<span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#f92672">*</span> v5) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">32</span>)));
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sub_820</span>(<span style="color:#f92672">&amp;</span>s, (<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v22);                   <span style="color:#75715e">// s=&#39;th1s_1s_k3ya!!!!&#39;
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> ( v5 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> )
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">goto</span> LABEL_10;
 </span></span><span style="display:flex;"><span>  v6 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
@@ -459,7 +459,7 @@ flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">goto</span> LABEL_10;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>LABEL_4:
-</span></span><span style="display:flex;"><span>    v10 <span style="color:#f92672">=</span> __OFADD__(<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>, v5);
+</span></span><span style="display:flex;"><span>    v10 <span style="color:#f92672">=</span> <span style="color:#a6e22e">__OFADD__</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>, v5);
 </span></span><span style="display:flex;"><span>    v8 <span style="color:#f92672">=</span> v5 <span style="color:#f92672">==</span> <span style="color:#ae81ff">3</span>;
 </span></span><span style="display:flex;"><span>    v9 <span style="color:#f92672">=</span> v5 <span style="color:#f92672">-</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>    v5 <span style="color:#f92672">-=</span> <span style="color:#ae81ff">3</span>;
@@ -471,15 +471,15 @@ flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag
 </span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>(_WORD <span style="color:#f92672">*</span>)((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v15 <span style="color:#f92672">+</span> v6 <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#f92672">==</span><span style="color:#960050;background-color:#1e0010">&#39;</span>;
 </span></span><span style="display:flex;"><span>LABEL_10:
 </span></span><span style="display:flex;"><span>  (<span style="color:#f92672">*</span>(<span style="color:#66d9ef">void</span> (<span style="color:#66d9ef">__fastcall</span> <span style="color:#f92672">**</span>)(<span style="color:#66d9ef">__int64</span>, <span style="color:#66d9ef">__int64</span>, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>))(<span style="color:#f92672">*</span>(_QWORD <span style="color:#f92672">*</span>)a1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1360LL</span>))(a1, v3, v4);
-</span></span><span style="display:flex;"><span>  v12 <span style="color:#f92672">=</span> _mm_movemask_epi8(
-</span></span><span style="display:flex;"><span>          _mm_and_si128(
-</span></span><span style="display:flex;"><span>            _mm_cmpeq_epi8(_mm_load_si128((<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">__m128i</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v15), (<span style="color:#66d9ef">__m128i</span>)xmmword_BE0),
-</span></span><span style="display:flex;"><span>            _mm_cmpeq_epi8(_mm_loadu_si128((<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">__m128i</span> <span style="color:#f92672">*</span>)((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v15 <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span>)), (<span style="color:#66d9ef">__m128i</span>)xmmword_BD0)));<span style="color:#75715e">// 3g6L2PWL2PXFmR+7ise7iq==
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  __android_log_print(<span style="color:#ae81ff">4LL</span>, <span style="color:#e6db74">&#34;nepnep&#34;</span>, <span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>v15);
+</span></span><span style="display:flex;"><span>  v12 <span style="color:#f92672">=</span> <span style="color:#a6e22e">_mm_movemask_epi8</span>(
+</span></span><span style="display:flex;"><span>          <span style="color:#a6e22e">_mm_and_si128</span>(
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">_mm_cmpeq_epi8</span>(<span style="color:#a6e22e">_mm_load_si128</span>((<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">__m128i</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v15), (<span style="color:#66d9ef">__m128i</span>)xmmword_BE0),
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">_mm_cmpeq_epi8</span>(<span style="color:#a6e22e">_mm_loadu_si128</span>((<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">__m128i</span> <span style="color:#f92672">*</span>)((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v15 <span style="color:#f92672">+</span> <span style="color:#ae81ff">9</span>)), (<span style="color:#66d9ef">__m128i</span>)xmmword_BD0)));<span style="color:#75715e">// 3g6L2PWL2PXFmR+7ise7iq==
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">__android_log_print</span>(<span style="color:#ae81ff">4LL</span>, <span style="color:#e6db74">&#34;nepnep&#34;</span>, <span style="color:#e6db74">&#34;%s&#34;</span>, <span style="color:#f92672">&amp;</span>v15);
 </span></span><span style="display:flex;"><span>  result <span style="color:#f92672">=</span> <span style="color:#ae81ff">0LL</span>;
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( v12 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xFFFF</span> )
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    __android_log_print(<span style="color:#ae81ff">4LL</span>, <span style="color:#e6db74">&#34;nepnep&#34;</span>, <span style="color:#e6db74">&#34;key is true!&#34;</span>, v13);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">__android_log_print</span>(<span style="color:#ae81ff">4LL</span>, <span style="color:#e6db74">&#34;nepnep&#34;</span>, <span style="color:#e6db74">&#34;key is true!&#34;</span>, v13);
 </span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> <span style="color:#ae81ff">1LL</span>;
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> result;
@@ -699,7 +699,7 @@ flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> __fd;
-</span></span><span style="display:flex;"><span>  size_t __n;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">size_t</span> __n;
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> iVar1;
 </span></span><span style="display:flex;"><span>  EVP_PKEY_CTX aEStack56 [<span style="color:#ae81ff">20</span>];
 </span></span><span style="display:flex;"><span>  undefined4 local_24;
@@ -717,33 +717,33 @@ flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag
 </span></span><span style="display:flex;"><span>  local_18 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x5f5f6661</span>;
 </span></span><span style="display:flex;"><span>  local_14 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x6b657d0a</span>;
 </span></span><span style="display:flex;"><span>  local_10 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;\0&#39;</span>;
-</span></span><span style="display:flex;"><span>  __fd <span style="color:#f92672">=</span> open(param_1,<span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>  __fd <span style="color:#f92672">=</span> <span style="color:#a6e22e">open</span>(param_1,<span style="color:#ae81ff">2</span>);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (__fd <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) {
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;cannot open&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;cannot open&#34;</span>);
 </span></span><span style="display:flex;"><span>                    <span style="color:#75715e">/* WARNING: Subroutine does not return */</span>
-</span></span><span style="display:flex;"><span>    exit(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exit</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  __n <span style="color:#f92672">=</span> strlen(param_2);
-</span></span><span style="display:flex;"><span>  write(__fd,param_2,__n);
-</span></span><span style="display:flex;"><span>  read(__fd,aEStack56,<span style="color:#ae81ff">0x13</span>);
-</span></span><span style="display:flex;"><span>  encry(aEStack56);
-</span></span><span style="display:flex;"><span>  iVar1 <span style="color:#f92672">=</span> strcmp((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)aEStack56,(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>local_24);
+</span></span><span style="display:flex;"><span>  __n <span style="color:#f92672">=</span> <span style="color:#a6e22e">strlen</span>(param_2);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">write</span>(__fd,param_2,__n);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">read</span>(__fd,aEStack56,<span style="color:#ae81ff">0x13</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">encry</span>(aEStack56);
+</span></span><span style="display:flex;"><span>  iVar1 <span style="color:#f92672">=</span> <span style="color:#a6e22e">strcmp</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)aEStack56,(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>local_24);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (iVar1 <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
-</span></span><span style="display:flex;"><span>    write(__fd,<span style="color:#e6db74">&#34;you get the fake flag</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#ae81ff">0x16</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">write</span>(__fd,<span style="color:#e6db74">&#34;you get the fake flag</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#ae81ff">0x16</span>);
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>    iVar1 <span style="color:#f92672">=</span> strcmp((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)aEStack56,<span style="color:#e6db74">&#34;3_isjA0UeQZcNa</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">`</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">Vf&#34;</span>);
+</span></span><span style="display:flex;"><span>    iVar1 <span style="color:#f92672">=</span> <span style="color:#a6e22e">strcmp</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)aEStack56,<span style="color:#e6db74">&#34;3_isjA0UeQZcNa</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">`</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">Vf&#34;</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (iVar1 <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
-</span></span><span style="display:flex;"><span>      puts(<span style="color:#e6db74">&#34;you_don</span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">t_get_the_flag&#34;</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">puts</span>(<span style="color:#e6db74">&#34;you_don</span><span style="color:#ae81ff">\&#39;</span><span style="color:#e6db74">t_get_the_flag&#34;</span>);
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">goto</span> LAB_00400b48;
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    write(__fd,<span style="color:#e6db74">&#34;good_job!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">write</span>(__fd,<span style="color:#e6db74">&#34;good_job!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,<span style="color:#ae81ff">10</span>);
 </span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>  close(__fd);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">close</span>(__fd);
 </span></span><span style="display:flex;"><span>LAB_00400b48:
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (local_c <span style="color:#f92672">!=</span> __stack_chk_guard) {
 </span></span><span style="display:flex;"><span>                    <span style="color:#75715e">/* WARNING: Subroutine does not return */</span>
-</span></span><span style="display:flex;"><span>    __stack_chk_fail();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">__stack_chk_fail</span>();
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span>;
 </span></span><span style="display:flex;"><span>}
@@ -755,7 +755,7 @@ flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">char</span> cVar1;
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> local_10;
 </span></span><span style="display:flex;"><span>  
-</span></span><span style="display:flex;"><span>  init(param_1);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">init</span>(param_1);
 </span></span><span style="display:flex;"><span>  cVar1 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;\x05&#39;</span>;
 </span></span><span style="display:flex;"><span>  local_10 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> (local_10 <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x13</span>) {
@@ -777,10 +777,10 @@ flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> local_20;
 </span></span><span style="display:flex;"><span>  
 </span></span><span style="display:flex;"><span>  iVar1 <span style="color:#f92672">=</span> __stack_chk_guard;
-</span></span><span style="display:flex;"><span>  srand(<span style="color:#ae81ff">0x1c5e</span>);
-</span></span><span style="display:flex;"><span>  rand();
-</span></span><span style="display:flex;"><span>  rand();
-</span></span><span style="display:flex;"><span>  rand();
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">srand</span>(<span style="color:#ae81ff">0x1c5e</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">rand</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">rand</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">rand</span>();
 </span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>ctx <span style="color:#f92672">=</span> (EVP_PKEY_CTX)((byte)<span style="color:#f92672">*</span>ctx <span style="color:#f92672">^</span> extraout_var <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x32U</span>);
 </span></span><span style="display:flex;"><span>  ctx[<span style="color:#ae81ff">5</span>] <span style="color:#f92672">=</span> (EVP_PKEY_CTX)((byte)ctx[<span style="color:#ae81ff">5</span>] <span style="color:#f92672">^</span> extraout_var_00 <span style="color:#f92672">-</span> <span style="color:#ae81ff">0x39U</span>);
 </span></span><span style="display:flex;"><span>  ctx[<span style="color:#ae81ff">6</span>] <span style="color:#f92672">=</span> (EVP_PKEY_CTX)((byte)ctx[<span style="color:#ae81ff">6</span>] <span style="color:#f92672">^</span> extraout_var_01 <span style="color:#f92672">+</span> <span style="color:#ae81ff">0x30U</span>);
@@ -790,7 +790,7 @@ flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (iVar1 <span style="color:#f92672">!=</span> __stack_chk_guard) {
 </span></span><span style="display:flex;"><span>                    <span style="color:#75715e">/* WARNING: Subroutine does not return */</span>
-</span></span><span style="display:flex;"><span>    __stack_chk_fail();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">__stack_chk_fail</span>();
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> __stack_chk_guard;
 </span></span><span style="display:flex;"><span>}
@@ -827,12 +827,12 @@ flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
-</span></span><span style="display:flex;"><span>    srand(<span style="color:#ae81ff">0x1c5e</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">srand</span>(<span style="color:#ae81ff">0x1c5e</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> a[<span style="color:#ae81ff">20</span>];
 </span></span><span style="display:flex;"><span>    a[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;8&#39;</span>;
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, rand());
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, rand());
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, rand());
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#a6e22e">rand</span>());
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#a6e22e">rand</span>());
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#a6e22e">rand</span>());
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>运行得到</p>
@@ -1035,21 +1035,13 @@ flag is Right!!!, please md5(&#39;Nep{you_input_num}&#39;) submit th4 flag
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

@@ -149,11 +149,11 @@
 <h2 id="n1ctfbabyrust">[N1CTF]babyrust</h2>
 <p>题目直接给了Rust源码，之前没有见过，现查文档学习</p>
 <p>首先main函数里只是调用了一个 <code>check!</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> check<span style="color:#f92672">!</span>(<span style="color:#f92672">@</span>s <span style="color:#75715e">/*your answer*/</span>);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> check!(<span style="color:#f92672">@</span>s <span style="color:#75715e">/*your answer*/</span>);
 </span></span></code></pre></div><p><code>main</code> 上面就是 <code>check</code> 的实现</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>macro_rules! check {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>macro_rules<span style="color:#f92672">!</span> check {
 </span></span><span style="display:flex;"><span>    (<span style="color:#f92672">@</span>s n1ctf{<span style="color:#75715e">$Never</span>:<span style="color:#a6e22e">tt</span>}) <span style="color:#f92672">=&gt;</span> {
-</span></span><span style="display:flex;"><span>        check<span style="color:#f92672">!</span>(stringify!(<span style="color:#75715e">$Never</span>))
+</span></span><span style="display:flex;"><span>        check!(stringify!(<span style="color:#75715e">$Never</span>))
 </span></span><span style="display:flex;"><span>    };
 </span></span></code></pre></div><p><code>macro_rules!</code> 是个宏定义，里面的 <code>@s</code>，<code>@e</code> 应该是类似字符串匹配的东西</p>
 <p>一开始的 <code>(@s n1ctf{$Never:tt})</code> 就把flag中去除 <code>n1ctf{}</code> 的部分存到了 <code>$Never</code> 变量中，<code>stringify!</code> 将其转换为字符串常量</p>
@@ -163,7 +163,7 @@
 <p>接下来的宏定义有很多类似这个的：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>    (<span style="color:#f92672">@</span>e (<span style="color:#75715e">$Never</span>:<span style="color:#a6e22e">expr</span>,<span style="color:#75715e">$Gonna</span>:<span style="color:#a6e22e">expr</span>,<span style="color:#75715e">$Give</span>:<span style="color:#a6e22e">expr</span>); (Never gonna give you up <span style="color:#75715e">$($code</span>:<span style="color:#a6e22e">tt</span>)<span style="color:#f92672">*</span>)) <span style="color:#f92672">=&gt;</span> {
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">$Give</span> <span style="color:#f92672">+=</span> <span style="color:#66d9ef">true</span> <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">usize</span>;
-</span></span><span style="display:flex;"><span>        check<span style="color:#f92672">!</span>(<span style="color:#f92672">@</span>e (<span style="color:#75715e">$Never</span>,<span style="color:#75715e">$Gonna</span>,<span style="color:#75715e">$Give</span>); (<span style="color:#75715e">$($code</span>)<span style="color:#f92672">*</span>));
+</span></span><span style="display:flex;"><span>        check!(<span style="color:#f92672">@</span>e (<span style="color:#75715e">$Never</span>,<span style="color:#75715e">$Gonna</span>,<span style="color:#75715e">$Give</span>); (<span style="color:#75715e">$($code</span>)<span style="color:#f92672">*</span>));
 </span></span><span style="display:flex;"><span>    };
 </span></span></code></pre></div><p>理解一下大概就是根据传入的 <code>code</code> 字符串开头是否为 <code>Never gonna give you up</code>，来判断是否进入这个定义，所以判断是一个根据字符串内容实现的Rust的简单vm，指令就是对 <code>$Never, $Gone, $Give</code>三个变量进行变化</p>
 <p>为了快速分析，直接在各个指令上加个输出，然后编译运行，会发现整体逻辑大概就是：</p>
@@ -178,17 +178,17 @@
 </span></span><span style="display:flex;"><span><span style="color:#75715e">// 宏定义如下两个定义添加输出，可以打印出明文和密文
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    (<span style="color:#f92672">@</span>e (<span style="color:#75715e">$Never</span>:<span style="color:#a6e22e">expr</span>,<span style="color:#75715e">$Gonna</span>:<span style="color:#a6e22e">expr</span>,<span style="color:#75715e">$Give</span>:<span style="color:#a6e22e">expr</span>); (Never gonna say goodbye <span style="color:#75715e">$($code</span>:<span style="color:#a6e22e">tt</span>)<span style="color:#f92672">*</span>)) <span style="color:#f92672">=&gt;</span> {
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">$Gonna</span> <span style="color:#f92672">=</span> <span style="color:#75715e">$Never</span>[<span style="color:#75715e">$Give</span>];
-</span></span><span style="display:flex;"><span>        println!(<span style="color:#e6db74">&#34;Gonna = Never[Give: {}]: {}&#34;</span>, <span style="color:#75715e">$Give</span>, <span style="color:#75715e">$Never</span>[<span style="color:#75715e">$Give</span>]);
-</span></span><span style="display:flex;"><span>        check<span style="color:#f92672">!</span>(<span style="color:#f92672">@</span>e (<span style="color:#75715e">$Never</span>,<span style="color:#75715e">$Gonna</span>,<span style="color:#75715e">$Give</span>); (<span style="color:#75715e">$($code</span>)<span style="color:#f92672">*</span>));
+</span></span><span style="display:flex;"><span>        println!(<span style="color:#e6db74">&#34;Gonna = Never[Give: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">]: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, <span style="color:#75715e">$Give</span>, <span style="color:#75715e">$Never</span>[<span style="color:#75715e">$Give</span>]);
+</span></span><span style="display:flex;"><span>        check!(<span style="color:#f92672">@</span>e (<span style="color:#75715e">$Never</span>,<span style="color:#75715e">$Gonna</span>,<span style="color:#75715e">$Give</span>); (<span style="color:#75715e">$($code</span>)<span style="color:#f92672">*</span>));
 </span></span><span style="display:flex;"><span>    };
 </span></span><span style="display:flex;"><span>    (<span style="color:#f92672">@</span>e (<span style="color:#75715e">$Never</span>:<span style="color:#a6e22e">expr</span>,<span style="color:#75715e">$Gonna</span>:<span style="color:#a6e22e">expr</span>,<span style="color:#75715e">$Give</span>:<span style="color:#a6e22e">expr</span>); (Never gonna tell a lie and hurt you <span style="color:#75715e">$($code</span>:<span style="color:#a6e22e">tt</span>)<span style="color:#f92672">*</span>)) <span style="color:#f92672">=&gt;</span> {
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">$Never</span>[<span style="color:#75715e">$Give</span>] <span style="color:#f92672">=</span> <span style="color:#75715e">$Gonna</span>;
-</span></span><span style="display:flex;"><span>        println!(<span style="color:#e6db74">&#34;Never[Give: {}] = Gonna: {}&#34;</span>, <span style="color:#75715e">$Give</span>, <span style="color:#75715e">$Gonna</span>);
-</span></span><span style="display:flex;"><span>        check<span style="color:#f92672">!</span>(<span style="color:#f92672">@</span>e (<span style="color:#75715e">$Never</span>,<span style="color:#75715e">$Gonna</span>,<span style="color:#75715e">$Give</span>); (<span style="color:#75715e">$($code</span>)<span style="color:#f92672">*</span>));
+</span></span><span style="display:flex;"><span>        println!(<span style="color:#e6db74">&#34;Never[Give: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">] = Gonna: </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, <span style="color:#75715e">$Give</span>, <span style="color:#75715e">$Gonna</span>);
+</span></span><span style="display:flex;"><span>        check!(<span style="color:#f92672">@</span>e (<span style="color:#75715e">$Never</span>,<span style="color:#75715e">$Gonna</span>,<span style="color:#75715e">$Give</span>); (<span style="color:#75715e">$($code</span>)<span style="color:#f92672">*</span>));
 </span></span><span style="display:flex;"><span>    };
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">// 随便设置一个容易计算的明文
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> check<span style="color:#f92672">!</span>(<span style="color:#f92672">@</span>s n1ctf{<span style="color:#ae81ff">00000000000000000000000000000000</span>}<span style="color:#75715e">/*your answer*/</span>);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">let</span> result <span style="color:#f92672">=</span> check!(<span style="color:#f92672">@</span>s n1ctf{<span style="color:#ae81ff">00000000000000000000000000000000</span>}<span style="color:#75715e">/*your answer*/</span>);
 </span></span></code></pre></div><p>加密只有加减法，所以偏移始终相等</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cipher <span style="color:#f92672">=</span> [
 </span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">148</span>, <span style="color:#ae81ff">59</span>, <span style="color:#ae81ff">143</span>, <span style="color:#ae81ff">112</span>, <span style="color:#ae81ff">121</span>, <span style="color:#ae81ff">186</span>, <span style="color:#ae81ff">106</span>, <span style="color:#ae81ff">133</span>, <span style="color:#ae81ff">55</span>, <span style="color:#ae81ff">90</span>, <span style="color:#ae81ff">164</span>, <span style="color:#ae81ff">166</span>, <span style="color:#ae81ff">167</span>, <span style="color:#ae81ff">121</span>, <span style="color:#ae81ff">174</span>, <span style="color:#ae81ff">147</span>, 
@@ -777,7 +777,7 @@ exec(z)
 </figure></p>
 <p>401070函数是将13字节拆成9和4字节分别存入src和v27，分别是3<em>3和2</em>2的矩阵</p>
 <p>401370函数较大，且调用了一个递归函数</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>      v11 <span style="color:#f92672">=</span> mul_matrix_4012A0(v17, v6) <span style="color:#f92672">*</span> a1[v5];
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>      v11 <span style="color:#f92672">=</span> <span style="color:#a6e22e">mul_matrix_4012A0</span>(v17, v6) <span style="color:#f92672">*</span> a1[v5];
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> ( (v5 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> )
 </span></span><span style="display:flex;"><span>        v4 <span style="color:#f92672">-=</span> v11;
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">else</span>
@@ -933,14 +933,14 @@ pycdc一直更新最新版本，但反编译效果较差，而且在细节上容
 </span></span><span style="display:flex;"><span>  
 </span></span><span style="display:flex;"><span>  bVar3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span> {
-</span></span><span style="display:flex;"><span>    write_1(PORTA,bVar3);
-</span></span><span style="display:flex;"><span>    bVar1 <span style="color:#f92672">=</span> read_1(PORTA);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">write_1</span>(PORTA,bVar3);
+</span></span><span style="display:flex;"><span>    bVar1 <span style="color:#f92672">=</span> <span style="color:#a6e22e">read_1</span>(PORTA);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ((bVar1 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
 </span></span><span style="display:flex;"><span>      BYTE_ARRAY_5234[bVar3] <span style="color:#f92672">=</span> BYTE_ARRAY_50c2[bVar3] <span style="color:#f92672">^</span> BYTE_ARRAY_50c2[(byte)(bVar3 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)];
-</span></span><span style="display:flex;"><span>      bVar2 <span style="color:#f92672">=</span> read_1(PORTA);
+</span></span><span style="display:flex;"><span>      bVar2 <span style="color:#f92672">=</span> <span style="color:#a6e22e">read_1</span>(PORTA);
 </span></span><span style="display:flex;"><span>      BYTE_ARRAY_5234[bVar3] <span style="color:#f92672">=</span> BYTE_ARRAY_5234[bVar3];
 </span></span><span style="display:flex;"><span>      bVar1 <span style="color:#f92672">=</span> BYTE_ARRAY_5234[bVar3];
-</span></span><span style="display:flex;"><span>      BYTE_ARRAY_5234[bVar3] <span style="color:#f92672">=</span> bVar1 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> CARRY1(bVar2,BYTE_ARRAY_50c2[bVar3]);
+</span></span><span style="display:flex;"><span>      BYTE_ARRAY_5234[bVar3] <span style="color:#f92672">=</span> bVar1 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">CARRY1</span>(bVar2,BYTE_ARRAY_50c2[bVar3]);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> {
 </span></span><span style="display:flex;"><span>      BYTE_ARRAY_5234[bVar3] <span style="color:#f92672">=</span> BYTE_ARRAY_50c2[bVar3] <span style="color:#f92672">^</span> BYTE_ARRAY_5219[(byte)(bVar3 <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>];
@@ -963,7 +963,7 @@ pycdc一直更新最新版本，但反编译效果较差，而且在细节上容
 </span></span><span style="display:flex;"><span>  bVar1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (BYTE_ARRAY_5200[bVar1] <span style="color:#f92672">!=</span> BYTE_ARRAY_5234[bVar1]) {
-</span></span><span style="display:flex;"><span>      FUN_531d();
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">FUN_531d</span>();
 </span></span><span style="display:flex;"><span>      bVar1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">do</span> {
 </span></span><span style="display:flex;"><span>        BYTE_ARRAY_509a[bVar1] <span style="color:#f92672">=</span> s__NICE_TRY,_MAYBE_NEXT_TIME_ITS_C_5276[bVar1];
@@ -1272,21 +1272,13 @@ pycdc一直更新最新版本，但反编译效果较差，而且在细节上容
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

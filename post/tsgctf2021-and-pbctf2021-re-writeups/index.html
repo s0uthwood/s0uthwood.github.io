@@ -149,12 +149,12 @@
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#66d9ef">do</span>
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">++</span>v2;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span>fork() )
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">!</span><span style="color:#a6e22e">fork</span>() )
 </span></span><span style="display:flex;"><span>    {
 </span></span><span style="display:flex;"><span>      v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>      v1 <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> v3;
-</span></span><span style="display:flex;"><span>      v7 <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#34;/dev/null&#34;</span>, <span style="color:#ae81ff">1</span>);
-</span></span><span style="display:flex;"><span>      dup2(v7, <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>      v7 <span style="color:#f92672">=</span> <span style="color:#a6e22e">open</span>(<span style="color:#e6db74">&#34;/dev/null&#34;</span>, <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">dup2</span>(v7, <span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">++</span>v3;
 </span></span><span style="display:flex;"><span>  }
@@ -392,10 +392,10 @@
 <p>这道题的UPX特征被完全去除了，以至于比赛的时候只看出来了是个壳，但没发现是UPX壳（其实猜到了，但elf就有点懒了&hellip;）</p>
 <p>只需要打开010，将所有的 <code>tsg_</code> 修改为 <code>UPX!</code> 就行</p>
 <p>脱壳后发现就是简单的数学约束，例如</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>_mm_movemask_epi8(
-</span></span><span style="display:flex;"><span>  _mm_cmpeq_epi8(
-</span></span><span style="display:flex;"><span>    _mm_slli_si128((<span style="color:#66d9ef">__m128i</span>)<span style="color:#ae81ff">0x9569uLL</span>, <span style="color:#ae81ff">8</span>),
-</span></span><span style="display:flex;"><span>    _mm_slli_si128(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#a6e22e">_mm_movemask_epi8</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">_mm_cmpeq_epi8</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_mm_slli_si128</span>((<span style="color:#66d9ef">__m128i</span>)<span style="color:#ae81ff">0x9569uLL</span>, <span style="color:#ae81ff">8</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_mm_slli_si128</span>(
 </span></span><span style="display:flex;"><span>      (<span style="color:#66d9ef">__m128i</span>)(((<span style="color:#ae81ff">0x2AF91</span> <span style="color:#f92672">*</span> (<span style="color:#66d9ef">unsigned</span> __int128)(<span style="color:#ae81ff">0x5F50DDCA7B17LL</span> <span style="color:#f92672">*</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int64</span>)v8)) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">64</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0x3FFFF</span>),
 </span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">8</span>))) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xFFFF</span>
 </span></span></code></pre></div><p>去官网查了一下函数的定义，就是要求</p>
@@ -467,8 +467,8 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x20</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x80</span>; i<span style="color:#f92672">++</span>){
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x20</span>; j <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0x80</span>; j<span style="color:#f92672">++</span>){
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">char</span> a[] <span style="color:#f92672">=</span> {i, j};
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (encrypt(a, <span style="color:#ae81ff">2</span>, cnt) <span style="color:#f92672">==</span> qword_40C000[cnt]){
-</span></span><span style="display:flex;"><span>                printf(<span style="color:#e6db74">&#34;%c%c&#34;</span>, i, j);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">encrypt</span>(a, <span style="color:#ae81ff">2</span>, cnt) <span style="color:#f92672">==</span> qword_40C000[cnt]){
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%c%c&#34;</span>, i, j);
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>            }
 </span></span><span style="display:flex;"><span>        }
@@ -476,10 +476,10 @@
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(){
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;pbctf{&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;pbctf{&#34;</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">19</span>; i<span style="color:#f92672">++</span>)
-</span></span><span style="display:flex;"><span>        test_cnt(i);
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">test_cnt</span>(i);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>除了找main函数之外也没有什么特别的</p>
@@ -709,15 +709,15 @@ Label:
 </span></span><span style="display:flex;"><span>    a2 <span style="color:#f92672">=</span> {}
 </span></span><span style="display:flex;"><span>    a7 <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> a5:
-</span></span><span style="display:flex;"><span>        match a5:
-</span></span><span style="display:flex;"><span>            case [<span style="color:#e6db74">&#39;p&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>, <span style="color:#e6db74">&#39;t&#39;</span>, <span style="color:#e6db74">&#39;f&#39;</span>, <span style="color:#e6db74">&#39;{&#39;</span>, <span style="color:#f92672">*</span>R, <span style="color:#e6db74">&#39;}&#39;</span>]:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">match</span> a5:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> [<span style="color:#e6db74">&#39;p&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>, <span style="color:#e6db74">&#39;t&#39;</span>, <span style="color:#e6db74">&#39;f&#39;</span>, <span style="color:#e6db74">&#39;{&#39;</span>, <span style="color:#f92672">*</span>R, <span style="color:#e6db74">&#39;}&#39;</span>]:
 </span></span><span style="display:flex;"><span>                a7 <span style="color:#f92672">=</span> a7 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
 </span></span><span style="display:flex;"><span>                a2 <span style="color:#f92672">|=</span> {<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">112</span>} <span style="color:#66d9ef">if</span> a7 <span style="color:#f92672">or</span> len(R) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">32</span> <span style="color:#66d9ef">else</span> {}
 </span></span><span style="display:flex;"><span>                a5 <span style="color:#f92672">=</span> list(gene(enumerate(R)))
-</span></span><span style="display:flex;"><span>            case a1(x, y):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> a1(x, y):
 </span></span><span style="display:flex;"><span>                a7 <span style="color:#f92672">=</span> a7 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
 </span></span><span style="display:flex;"><span>                a2 <span style="color:#f92672">|=</span> {x:y} <span style="color:#66d9ef">if</span> x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">!=</span> a7 <span style="color:#f92672">or</span> a4(a3 <span style="color:#f92672">*</span> x)[x] <span style="color:#f92672">!=</span> y <span style="color:#66d9ef">else</span> {}
-</span></span><span style="display:flex;"><span>            case _:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">case</span> _:
 </span></span><span style="display:flex;"><span>                a2 <span style="color:#f92672">|=</span> {<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">125</span>}
 </span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
 </span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Correct&#39;</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> a2 <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#39;Nope&#39;</span>)
@@ -1033,21 +1033,13 @@ Label:
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

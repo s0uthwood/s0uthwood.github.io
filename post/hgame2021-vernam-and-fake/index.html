@@ -282,17 +282,17 @@ import random import string import itertools from secret import FLAG key = &amp;
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">__asm</span> { endbr64 }
 </span></span><span style="display:flex;"><span>  v9 <span style="color:#f92672">=</span> a3;
-</span></span><span style="display:flex;"><span>  print(<span style="color:#e6db74">&#34;Give me your true flag:&#34;</span>, a1, a2);
-</span></span><span style="display:flex;"><span>  scan(<span style="color:#e6db74">&#34;%50s&#34;</span>, <span style="color:#f92672">&amp;</span>flag);
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( length(<span style="color:#f92672">&amp;</span>flag) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">36</span> )
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Give me your true flag:&#34;</span>, a1, a2);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">scan</span>(<span style="color:#e6db74">&#34;%50s&#34;</span>, <span style="color:#f92672">&amp;</span>flag);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( <span style="color:#a6e22e">length</span>(<span style="color:#f92672">&amp;</span>flag) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">36</span> )
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;Wrong length.&#34;</span>, <span style="color:#f92672">&amp;</span>flag, v3);
-</span></span><span style="display:flex;"><span>    sub_401120();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Wrong length.&#34;</span>, <span style="color:#f92672">&amp;</span>flag, v3);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">sub_401120</span>();
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">35</span>; <span style="color:#f92672">++</span>i )
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>((_DWORD <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v9 <span style="color:#f92672">+</span> i <span style="color:#f92672">-</span> <span style="color:#ae81ff">52</span>) <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>((<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>v9 <span style="color:#f92672">+</span> i <span style="color:#f92672">-</span> <span style="color:#ae81ff">64</span>);<span style="color:#75715e">// v9 - 64 = flag, flag往前偏移12个字节
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)sub_401216((<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v6) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> )<span style="color:#75715e">// 动态调试结果显示，v6就是输入的flag
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    print(<span style="color:#e6db74">&#34;Ohhhhhhhhhh!&#34;</span>, <span style="color:#f92672">&amp;</span>flag, v4);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> ( (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)<span style="color:#a6e22e">sub_401216</span>((<span style="color:#66d9ef">__int64</span>)<span style="color:#f92672">&amp;</span>v6) <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> )<span style="color:#75715e">// 动态调试结果显示，v6就是输入的flag
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Ohhhhhhhhhh!&#34;</span>, <span style="color:#f92672">&amp;</span>flag, v4);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print</span>(<span style="color:#e6db74">&#34;Wrong flag. Keep looking!&#34;</span>, <span style="color:#f92672">&amp;</span>flag, v4);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0LL</span>;
@@ -496,7 +496,7 @@ import random import string import itertools from secret import FLAG key = &amp;
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>  v54 <span style="color:#f92672">=</span> a1;
 </span></span><span style="display:flex;"><span>  <span style="color:#f92672">*</span>(<span style="color:#f92672">&amp;</span>v54 <span style="color:#f92672">-</span> <span style="color:#ae81ff">59</span>) <span style="color:#f92672">=</span> a2;
-</span></span><span style="display:flex;"><span>  memset(<span style="color:#f92672">&amp;</span>v47, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x90uLL</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">memset</span>(<span style="color:#f92672">&amp;</span>v47, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x90uLL</span>);
 </span></span><span style="display:flex;"><span>  v11 <span style="color:#f92672">=</span> <span style="color:#ae81ff">55030</span>;
 </span></span><span style="display:flex;"><span>  v12 <span style="color:#f92672">=</span> <span style="color:#ae81ff">61095</span>;
 </span></span><span style="display:flex;"><span>  v13 <span style="color:#f92672">=</span> <span style="color:#ae81ff">60151</span>;
@@ -858,21 +858,13 @@ import random import string import itertools from secret import FLAG key = &amp;
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

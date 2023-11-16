@@ -241,8 +241,8 @@
 </span></span><span style="display:flex;"><span>    };
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">uint32_t</span> <span style="color:#66d9ef">const</span> k[<span style="color:#ae81ff">4</span>] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0x1</span>,<span style="color:#ae81ff">0x10</span>,<span style="color:#ae81ff">0x100</span>,<span style="color:#ae81ff">0x1000</span>};
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> <span style="color:#ae81ff">9</span>;
-</span></span><span style="display:flex;"><span>    btea(v,n,k);
-</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;解密后的数据：0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x %08x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v[<span style="color:#ae81ff">0</span>],v[<span style="color:#ae81ff">1</span>],v[<span style="color:#ae81ff">2</span>],v[<span style="color:#ae81ff">3</span>],v[<span style="color:#ae81ff">4</span>],v[<span style="color:#ae81ff">5</span>],v[<span style="color:#ae81ff">6</span>],v[<span style="color:#ae81ff">7</span>],v[<span style="color:#ae81ff">8</span>]); 
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">btea</span>(v,n,k);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;解密后的数据：0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x %08x</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,v[<span style="color:#ae81ff">0</span>],v[<span style="color:#ae81ff">1</span>],v[<span style="color:#ae81ff">2</span>],v[<span style="color:#ae81ff">3</span>],v[<span style="color:#ae81ff">4</span>],v[<span style="color:#ae81ff">5</span>],v[<span style="color:#ae81ff">6</span>],v[<span style="color:#ae81ff">7</span>],v[<span style="color:#ae81ff">8</span>]); 
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>然后再接一个RC4</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__rc4_init</span>(key):
@@ -487,21 +487,13 @@
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>

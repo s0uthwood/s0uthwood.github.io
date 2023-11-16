@@ -6,48 +6,7 @@
     <description>Recent content in Labs on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Apr 2023 00:04:31 +0800</lastBuildDate><atom:link href="/categories/labs/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>pwn.college babyheap writeups</title>
-      <link>/post/pwn-college-babyheap/</link>
-      <pubDate>Thu, 13 Apr 2023 00:04:31 +0800</pubDate>
-      
-      <guid>/post/pwn-college-babyheap/</guid>
-      <description>主要的考点是 tcache
-level 1.0 ###### Welcome to ./babyheap_level1.0!###This challenge allows you to perform various heap operations, some of which may involve the flag. Through this series ofchallenges, you will become familiar with the concept of heap exploitation.This challenge can manage up to 1 unique allocations.[*] Function (malloc/free/puts/read_flag/quit): mallocSize: 550[*] allocations[0] = malloc(550)[*] allocations[0] = 0x55706c8782c0[*] Function (malloc/free/puts/read_flag/quit): free[*] free(allocations[0])+====================+========================+==============+============================+============================+| TCACHE BIN #33 | SIZE: 537 - 552 | COUNT: 1 | HEAD: 0x55706c8782c0 | KEY: 0x55706c878010 |+====================+========================+==============+============================+============================+| ADDRESS | PREV_SIZE (-0x10) | SIZE (-0x08) | next (+0x00) | key (+0x08) |+---------------------+---------------------+------------------------------+---------------------+---------------------+| 0x55706c8782c0 | 0 | 0x231 (P) | (nil) | 0x55706c878010 |+----------------------------------------------------------------------------------------------------------------------+[*] Function (malloc/free/puts/read_flag/quit): read_flag[*] flag_buffer = malloc(549)[*] flag_buffer = 0x55706c8782c0[*] read the flag!</description>
-    </item>
-    
-    <item>
-      <title>pwn.college embryosuid writeups</title>
-      <link>/post/pwn-college-babysuid/</link>
-      <pubDate>Tue, 04 Apr 2023 00:26:43 +0800</pubDate>
-      
-      <guid>/post/pwn-college-babysuid/</guid>
-      <description>level 1 - level 49
-Ref: GTFOBins
-level1 cat $ cat /flag level2 more $ more /flag level3 less $ less /flag level4 tail $ tail /flag level5 head $ head /flag level6 sort $ sort /flag level7 vim $ vim /flag level8 emacs $ emacs /flag level9 nano $ nano /flag level10 rev $ rev /flag | rev level11 od $ od -c /flag level12 hd $ hd /flag level13 xxd $ xxd /flag level14 base32 $ base32 /flag | base32 -d level15 base64 $ base64 /flag | base64 -d level16 split $ split /flag $ cat xaa level17 gzip $ gzip -k /flag $ gzip -cd /flag.</description>
-    </item>
-    
-    <item>
-      <title>pwn.college embryoasm writeups</title>
-      <link>/post/pwn-college-embryoasm/</link>
-      <pubDate>Tue, 04 Apr 2023 00:20:12 +0800</pubDate>
-      
-      <guid>/post/pwn-college-embryoasm/</guid>
-      <description>level 6 - level 23
-level 6 from pwn import * context(os=&amp;#39;linux&amp;#39;, arch=&amp;#39;amd64&amp;#39;) p = process(&amp;#39;./embryoasm_level6&amp;#39;) p.recvuntil(b&amp;#39;bytes): \n&amp;#39;) p.send(asm(&amp;#39;movb al, dil\nmovw bx, si&amp;#39;)) p.interactive() level 7 from pwn import * context(os=&amp;#39;linux&amp;#39;, arch=&amp;#39;amd64&amp;#39;) p = process(&amp;#39;./embryoasm_level7&amp;#39;) p.recvuntil(b&amp;#39;bytes): \n&amp;#39;) p.send(asm(&amp;#39;shr rdi, 24\nmovb al, dil&amp;#39;)) p.interactive() level 8 from pwn import * context(os=&amp;#39;linux&amp;#39;, arch=&amp;#39;amd64&amp;#39;) p = process(&amp;#39;./embryoasm_level8&amp;#39;) p.recvuntil(b&amp;#39;bytes): \n&amp;#39;) p.send(asm(&amp;#39;and rdi, rsi\nxor rax, rax\nor rax, rdi&amp;#39;)) p.interactive() level 9 from pwn import * context(os=&amp;#39;linux&amp;#39;, arch=&amp;#39;amd64&amp;#39;) p = process(&amp;#39;.</description>
-    </item>
-    
-    <item>
-      <title>pwn.college embryoio writeups</title>
-      <link>/post/pwn-college-embryoio/</link>
-      <pubDate>Tue, 04 Apr 2023 00:06:59 +0800</pubDate>
-      
-      <guid>/post/pwn-college-embryoio/</guid>
-      <description>已完成：level 7 - level 68
-level7 launch this program with 0 environment variables env -i command bash (non-interactive shell) level 8: cat hacker@embryoio_level8:~$ bash tmp.sh hB [INFO] This challenge will now perform a bunch of checks. [INFO] If you pass these checks, you will receive the flag. [TEST] Performing checks on the parent process of this process. [TEST] Checking to make sure the process is a non-interactive shell script. [GOOD] You have passed the checks on the parent process!</description>
-    </item>
-    
+    <lastBuildDate>Tue, 28 Feb 2023 01:55:25 +0800</lastBuildDate><atom:link href="/categories/labs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CS110L week1 writeup</title>
       <link>/post/cs110l-week1-writeup/</link>

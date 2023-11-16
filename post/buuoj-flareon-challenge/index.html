@@ -400,7 +400,7 @@
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span> v2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0x79</span>;                                      <span style="color:#75715e">// 0x79
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        a1 <span style="color:#f92672">=</span> new_char;
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> v3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">255</span>;
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">255</span>; v2; v3 <span style="color:#f92672">=</span> HIBYTE(v3) <span style="color:#f92672">+</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)v3 ) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> ( i <span style="color:#f92672">=</span> <span style="color:#ae81ff">255</span>; v2; v3 <span style="color:#f92672">=</span> <span style="color:#a6e22e">HIBYTE</span>(v3) <span style="color:#f92672">+</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)v3 ) {
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> v5 <span style="color:#f92672">=</span> i;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> v6 <span style="color:#f92672">=</span> v2;
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> ( v2 <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0x14</span> )
@@ -412,15 +412,15 @@
 </span></span><span style="display:flex;"><span>                <span style="color:#f92672">++</span>a1;
 </span></span><span style="display:flex;"><span>                <span style="color:#f92672">--</span>v6;
 </span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">while</span> ( v6 );
-</span></span><span style="display:flex;"><span>            i <span style="color:#f92672">=</span> HIBYTE(v5) <span style="color:#f92672">+</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)v5;
+</span></span><span style="display:flex;"><span>            i <span style="color:#f92672">=</span> <span style="color:#a6e22e">HIBYTE</span>(v5) <span style="color:#f92672">+</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)v5;
 </span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> ret <span style="color:#f92672">=</span> (HIBYTE(i) <span style="color:#f92672">+</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)i) <span style="color:#f92672">|</span> ((v3 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">+</span> (v3 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFF00</span>));
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> ret <span style="color:#f92672">=</span> (<span style="color:#a6e22e">HIBYTE</span>(i) <span style="color:#f92672">+</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)i) <span style="color:#f92672">|</span> ((v3 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">8</span>) <span style="color:#f92672">+</span> (v3 <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFF00</span>));
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">// if (buf == &#39;f&#39;) 
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">//     printf(&#34;%x\n&#34;, ret); // 0xf51c
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// if (buf == &#39;@&#39;)
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">//     printf(&#34;%x\n&#34;, ret); // 0x60ee
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (ret <span style="color:#f92672">==</span> <span style="color:#ae81ff">0xFB5E</span>) {
-</span></span><span style="display:flex;"><span>            printf(<span style="color:#e6db74">&#34;%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, buf);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, buf);
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">// printf(&#34;%c %x\n&#34;, buf, ret);
@@ -516,8 +516,8 @@
 </span></span><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> ( dword_100194FC <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> )
 </span></span><span style="display:flex;"><span>  {
-</span></span><span style="display:flex;"><span>    _cfltcvt_init();
-</span></span><span style="display:flex;"><span>    sub_10001240();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_cfltcvt_init</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">sub_10001240</span>();
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;m&#34;</span>;
 </span></span><span style="display:flex;"><span>}
@@ -534,7 +534,7 @@
 </span></span><span style="display:flex;"><span>        {
 </span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> ( dword_100194F8 <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> )
 </span></span><span style="display:flex;"><span>          {
-</span></span><span style="display:flex;"><span>            _cfltcvt_init();
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">_cfltcvt_init</span>();
 </span></span><span style="display:flex;"><span>          }
 </span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">else</span>
 </span></span><span style="display:flex;"><span>          {
@@ -573,12 +573,12 @@
 <h2 id="flareonstarter">[FlareOn]starter</h2>
 <p>baby</p>
 <p>先执行给的程序，会自动解压出一个小程序，反编译一下，观察到</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  ReadFile(v2, byte_402158, <span style="color:#ae81ff">0x32u</span>, <span style="color:#f92672">&amp;</span>NumberOfBytesWritten, <span style="color:#ae81ff">0</span>);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>  <span style="color:#a6e22e">ReadFile</span>(v2, byte_402158, <span style="color:#ae81ff">0x32u</span>, <span style="color:#f92672">&amp;</span>NumberOfBytesWritten, <span style="color:#ae81ff">0</span>);
 </span></span><span style="display:flex;"><span>  v0 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> ( ((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">__int8</span>)byte_402158[v0] <span style="color:#f92672">^</span> <span style="color:#ae81ff">0x7D</span>) <span style="color:#f92672">==</span> byte_402140[v0] )
 </span></span><span style="display:flex;"><span>  {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ( <span style="color:#f92672">++</span>v0 <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">24</span> )
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> WriteFile(hFile, aYouAreSuccess, <span style="color:#ae81ff">0x12u</span>, <span style="color:#f92672">&amp;</span>NumberOfBytesWritten, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">WriteFile</span>(hFile, aYouAreSuccess, <span style="color:#ae81ff">0x12u</span>, <span style="color:#f92672">&amp;</span>NumberOfBytesWritten, <span style="color:#ae81ff">0</span>);
 </span></span><span style="display:flex;"><span>  }
 </span></span></code></pre></div><p>直接dump数据进行异或就行</p>
 <h2 id="flareon2elfie">[FlareOn2]elfie</h2>
@@ -850,21 +850,13 @@
             
                 
             
-                
-            
-                
-            
-                
-            
-                
-            
             
             ⌨&nbsp;
-            104.58k&nbsp;
+            86.36k&nbsp;
             字
             &nbsp;&nbsp;
             🧠&nbsp;
-            42&nbsp;
+            38&nbsp;
             篇文章
         
     </section>
