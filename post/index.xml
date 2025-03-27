@@ -19,6 +19,25 @@ public class MainActivity extends AppCompatActivity { public void onCreate(Bundl
     </item>
     
     <item>
+      <title>Deobf ollvm with angr</title>
+      <link>/post/deobf-ollvm-with-angr/</link>
+      <pubDate>Tue, 24 Sep 2024 21:31:06 +0000</pubDate>
+      
+      <guid>/post/deobf-ollvm-with-angr/</guid>
+      <description>控制流平坦化 环境搭建 官方的仓库只支持到llvm4，但有一些开源项目扩展到了一些比较新的版本
+在Ubuntu2204上实测，这个仓库可以正常运行：https://github.com/buffcow/ollvm-project/tree/14.x
+直接用Readme中提供的命令编译：
+cmake -S llvm -B build -G Ninja -DLLVM_ENABLE_PROJECTS=clang -DCMAKE_BUILD_TYPE=Release -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_NEW_PASS_MANAGER=OFF cmake --build build -j16 然后用build里面的clang对目标代码进行编译混淆
+clang test.c -o test -mllvm -fla 混淆思路 控制流平坦化的思路是将原本的控制流图变成一个个基本块（真实块），然后使用分发器（类似大型Switch或者if else语句）将这些真实块按照原本的顺序执行，但在静态分析工具中，真实块就会被平坦化到同一层中，增大了静态难度
+经过混淆后的块可以大致划分为以下几类：
+序言块：函数开始的块为序言块（只有一个），用于初始化一些变量，或者是一些检查 主分发器：紧跟在序言块后的块（只有一个），用于分发控制流 子分发器：主分发器后的分发块，用于分发控制流 真实块：子分发器后、预分发器前的块，用于执行真正的代码 预分发器：真实块后、回到主分发器的块（只有一个） 结束块：没有后继的块（只有一个），用于结束函数，通常位于子分发器的一个分支中 解混淆思路 整个解混淆过程可以大致分为三个步骤：
+识别序言块、主分发器、子分发器、真实块、预分发器、结束块 通过符号执行，重建控制流 进行Patch，将真实块的执行路径还原 解混淆的输入是程序和函数初始地址
+识别混淆块 读取程序并获取函数的CFG图，这里需要使用to_supergraph函数将CFG图转换为SuperGrap，更加接近IDA中的图
+import angr from angr-management.utils.graph import to_supergraph proj = angr.Project(&amp;#34;test&amp;#34;, load_options={&amp;#39;auto_load_libs&amp;#39;: False}) cfg = proj.analyses.CFGFast() supergraph = to_supergraph(cfg.graph) 先通过入度和出度判断序言块和结束块
+for node in supergraph.nodes(): if supergraph.in_degree(node) == 0: prologue_node = node if supergraph.</description>
+    </item>
+    
+    <item>
       <title>CS110L week1 writeup</title>
       <link>/post/cs110l-week1-writeup/</link>
       <pubDate>Tue, 28 Feb 2023 01:55:25 +0800</pubDate>
@@ -624,25 +643,6 @@ A high-performance, open-source universal RPC framework</description>
       
       <guid>/post/my-latex-cheatsheet/</guid>
       <description>标题及基础设置 \documentclass[a4paper, zihao=-4, UTF8]{ctexart} \CTEXsetup[format={\Large\bfseries}]{section} \title{} \author{} \date{} \pagesytle{} %\setcounter{section}{-1} % section start from 0 \begin{document} \maketitle \section{} \section[short title]{} \label{sec:section_with_short_title} section \ref{sec:section_with_short_title} is a section with a short title. %交叉引用 \section*{} \subsection{} \subsection*{} \subsubsection{} \subsubsection*{} \paragraph{} \par \end{document} 数学符号 常用数学符号 Code Latex Code Latex \because $\because$ \therefore $\therefore$ \frac{a}{b} $\frac{a}{b}$ \dfrac{a}{b} $\dfrac{a}{b}$ \cdot $\cdot$ \cdots $\cdots$ \ldots $\ldots$ \infty $\infty$ \log $\log$ \lim $\lim$ \sin $\sin$ \cos $\cos$ \rightarrow $\rightarrow$ \int_{0}^{1} $\int_{0}^{1}$ \iint $\iint$ \oint $\oint$ \oiint $\oiint$ \iiint $\iiint$ \in $\in$ \notin $\notin$ \forall $\forall$ \exist $\exist$ \sqrt{a} $\sqrt{a}$ \exist $\exist$ \neg $\neg$ \oplus $\oplus$ \sum\limits\_{i=1}^{10}: $\sum\limits_{i=1}^{10}$</description>
-    </item>
-    
-    <item>
-      <title>Deobf ollvm with angr</title>
-      <link>/post/deobf-ollvm-with-angr/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/deobf-ollvm-with-angr/</guid>
-      <description>控制流平坦化 环境搭建 官方的仓库只支持到llvm4，但有一些开源项目扩展到了一些比较新的版本
-在Ubuntu2204上实测，这个仓库可以正常运行：https://github.com/buffcow/ollvm-project/tree/14.x
-直接用Readme中提供的命令编译：
-cmake -S llvm -B build -G Ninja -DLLVM_ENABLE_PROJECTS=clang -DCMAKE_BUILD_TYPE=Release -DLLVM_INCLUDE_TESTS=OFF -DLLVM_ENABLE_NEW_PASS_MANAGER=OFF cmake --build build -j16 然后用build里面的clang对目标代码进行编译混淆
-clang test.c -o test -mllvm -fla 混淆思路 控制流平坦化的思路是将原本的控制流图变成一个个基本块（真实块），然后使用分发器（类似大型Switch或者if else语句）将这些真实块按照原本的顺序执行，但在静态分析工具中，真实块就会被平坦化到同一层中，增大了静态难度
-经过混淆后的块可以大致划分为以下几类：
-序言块：函数开始的块为序言块（只有一个），用于初始化一些变量，或者是一些检查 主分发器：紧跟在序言块后的块（只有一个），用于分发控制流 子分发器：主分发器后的分发块，用于分发控制流 真实块：子分发器后、预分发器前的块，用于执行真正的代码 预分发器：真实块后、回到主分发器的块（只有一个） 结束块：没有后继的块（只有一个），用于结束函数，通常位于子分发器的一个分支中 解混淆思路 整个解混淆过程可以大致分为三个步骤：
-识别序言块、主分发器、子分发器、真实块、预分发器、结束块 通过符号执行，重建控制流 进行Patch，将真实块的执行路径还原 解混淆的输入是程序和函数初始地址
-识别混淆块 读取程序并获取函数的CFG图，这里需要使用to_supergraph函数将CFG图转换为SuperGrap，更加接近IDA中的图
-import angr from angr-management.utils.graph import to_supergraph proj = angr.Project(&amp;#34;test&amp;#34;, load_options={&amp;#39;auto_load_libs&amp;#39;: False}) cfg = proj.analyses.CFGFast() supergraph = to_supergraph(cfg.graph) 先通过入度和出度判断序言块和结束块
-for node in supergraph.nodes(): if supergraph.in_degree(node) == 0: prologue_node = node if supergraph.</description>
     </item>
     
   </channel>
