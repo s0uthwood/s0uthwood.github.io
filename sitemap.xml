@@ -3,7 +3,34 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/categories/</loc>
-    <lastmod>2023-02-28T01:55:25+08:00</lastmod>
+    <lastmod>2024-10-25T22:21:06+00:00</lastmod>
+  </url><url>
+    <loc>/tags/ctf/</loc>
+    <lastmod>2024-10-25T22:21:06+00:00</lastmod>
+  </url><url>
+    <loc>/categories/ctf/</loc>
+    <lastmod>2024-10-25T22:21:06+00:00</lastmod>
+  </url><url>
+    <loc>/tags/frida/</loc>
+    <lastmod>2024-10-25T22:21:06+00:00</lastmod>
+  </url><url>
+    <loc>/post/frida-labs/</loc>
+    <lastmod>2024-10-25T22:21:06+00:00</lastmod>
+  </url><url>
+    <loc>/post/</loc>
+    <lastmod>2024-10-25T22:21:06+00:00</lastmod>
+  </url><url>
+    <loc>/tags/reverse/</loc>
+    <lastmod>2024-10-25T22:21:06+00:00</lastmod>
+  </url><url>
+    <loc>/categories/reverse/</loc>
+    <lastmod>2024-10-25T22:21:06+00:00</lastmod>
+  </url><url>
+    <loc>/</loc>
+    <lastmod>2024-10-25T22:21:06+00:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2024-10-25T22:21:06+00:00</lastmod>
   </url><url>
     <loc>/post/cs110l-week1-writeup/</loc>
     <lastmod>2023-02-28T01:55:25+08:00</lastmod>
@@ -14,16 +41,7 @@
     <loc>/categories/labs/</loc>
     <lastmod>2023-02-28T01:55:25+08:00</lastmod>
   </url><url>
-    <loc>/post/</loc>
-    <lastmod>2023-02-28T01:55:25+08:00</lastmod>
-  </url><url>
     <loc>/tags/rust/</loc>
-    <lastmod>2023-02-28T01:55:25+08:00</lastmod>
-  </url><url>
-    <loc>/</loc>
-    <lastmod>2023-03-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/tags/</loc>
     <lastmod>2023-02-28T01:55:25+08:00</lastmod>
   </url><url>
     <loc>/tags/reading/</loc>
@@ -53,19 +71,7 @@
     <loc>/tags/pwn/</loc>
     <lastmod>2022-10-12T00:19:32+08:00</lastmod>
   </url><url>
-    <loc>/tags/reverse/</loc>
-    <lastmod>2022-10-12T00:19:32+08:00</lastmod>
-  </url><url>
-    <loc>/tags/ctf/</loc>
-    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
-  </url><url>
-    <loc>/categories/ctf/</loc>
-    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
-  </url><url>
     <loc>/post/qwb2022-rev-writeups/</loc>
-    <lastmod>2022-08-02T23:23:23+08:00</lastmod>
-  </url><url>
-    <loc>/categories/reverse/</loc>
     <lastmod>2022-08-02T23:23:23+08:00</lastmod>
   </url><url>
     <loc>/categories/writeup/</loc>
@@ -286,6 +292,8 @@
   </url><url>
     <loc>/page/archives/</loc>
     <lastmod>2019-05-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/post/deobf-ollvm-with-angr/</loc>
   </url><url>
     <loc>/page/search/</loc>
   </url>

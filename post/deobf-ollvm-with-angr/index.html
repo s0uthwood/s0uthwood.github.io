@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='看到一个用angr解ollvm控制流平坦化的脚本，就学习顺便记录一下'><title>Deobf ollvm with angr</title>
+
+<link rel='canonical' href='/post/deobf-ollvm-with-angr/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Deobf ollvm with angr'>
+<meta property='og:description' content='看到一个用angr解ollvm控制流平坦化的脚本，就学习顺便记录一下'>
+<meta property='og:url' content='/post/deobf-ollvm-with-angr/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CTF' /><meta property='article:tag' content='Reverse' /><meta property='article:tag' content='Angr' />
+<meta name="twitter:title" content="Deobf ollvm with angr">
+<meta name="twitter:description" content="看到一个用angr解ollvm控制流平坦化的脚本，就学习顺便记录一下">
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/ctf/" >
+                CTF
+            </a>
+        
+            <a href="/categories/reverse/" >
+                Reverse
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/deobf-ollvm-with-angr/">Deobf ollvm with angr</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        看到一个用angr解ollvm控制流平坦化的脚本，就学习顺便记录一下
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M4 20h4L18.5 9.5a1.5 1.5.0 00-4-4L4 16v4"></path>
+    <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
+</svg>
+                <time class="article-words">
+                    156 words
+                </time>
+            </div>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    1 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="控制流平坦化">控制流平坦化</h2>
+<h3 id="环境搭建">环境搭建</h3>
+<p>官方的仓库只支持到llvm4，但有一些开源项目扩展到了一些比较新的版本</p>
+<p>在Ubuntu2204上实测，这个仓库可以正常运行：<code>https://github.com/buffcow/ollvm-project/tree/14.x</code></p>
+<p>直接用Readme中提供的命令编译：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cmake -S llvm -B build -G Ninja -DLLVM_ENABLE_PROJECTS<span style="color:#f92672">=</span>clang -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release -DLLVM_INCLUDE_TESTS<span style="color:#f92672">=</span>OFF -DLLVM_ENABLE_NEW_PASS_MANAGER<span style="color:#f92672">=</span>OFF
+</span></span><span style="display:flex;"><span>cmake --build build -j16
+</span></span></code></pre></div><p>然后用build里面的clang对目标代码进行编译混淆</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>clang test.c -o test -mllvm -fla
+</span></span></code></pre></div><h3 id="混淆思路">混淆思路</h3>
+<p>控制流平坦化的思路是将原本的控制流图变成一个个基本块（真实块），然后使用分发器（类似大型Switch或者if else语句）将这些真实块按照原本的顺序执行，但在静态分析工具中，真实块就会被平坦化到同一层中，增大了静态难度</p>
+<p>经过混淆后的块可以大致划分为以下几类：</p>
+<ul>
+<li>序言块：函数开始的块为序言块（只有一个），用于初始化一些变量，或者是一些检查</li>
+<li>主分发器：紧跟在序言块后的块（只有一个），用于分发控制流</li>
+<li>子分发器：主分发器后的分发块，用于分发控制流</li>
+<li>真实块：子分发器后、预分发器前的块，用于执行真正的代码</li>
+<li>预分发器：真实块后、回到主分发器的块（只有一个）</li>
+<li>结束块：没有后继的块（只有一个），用于结束函数，通常位于子分发器的一个分支中</li>
+</ul>
+<h3 id="解混淆思路">解混淆思路</h3>
+<p>整个解混淆过程可以大致分为三个步骤：</p>
+<ol>
+<li>识别序言块、主分发器、子分发器、真实块、预分发器、结束块</li>
+<li>通过符号执行，重建控制流</li>
+<li>进行Patch，将真实块的执行路径还原</li>
+</ol>
+<p>解混淆的输入是程序和函数初始地址</p>
+<h3 id="识别混淆块">识别混淆块</h3>
+<p>读取程序并获取函数的CFG图，这里需要使用<code>to_supergraph</code>函数将CFG图转换为SuperGrap，更加接近IDA中的图</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> angr
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> angr<span style="color:#f92672">-</span>management<span style="color:#f92672">.</span>utils<span style="color:#f92672">.</span>graph <span style="color:#f92672">import</span> to_supergraph
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>proj <span style="color:#f92672">=</span> angr<span style="color:#f92672">.</span>Project(<span style="color:#e6db74">&#34;test&#34;</span>, load_options<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#39;auto_load_libs&#39;</span>: <span style="color:#66d9ef">False</span>})
+</span></span><span style="display:flex;"><span>cfg <span style="color:#f92672">=</span> proj<span style="color:#f92672">.</span>analyses<span style="color:#f92672">.</span>CFGFast()
+</span></span><span style="display:flex;"><span>supergraph <span style="color:#f92672">=</span> to_supergraph(cfg<span style="color:#f92672">.</span>graph)
+</span></span></code></pre></div><p>先通过入度和出度判断序言块和结束块</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> node <span style="color:#f92672">in</span> supergraph<span style="color:#f92672">.</span>nodes():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> supergraph<span style="color:#f92672">.</span>in_degree(node) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        prologue_node <span style="color:#f92672">=</span> node
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> supergraph<span style="color:#f92672">.</span>out_degree(node) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        return_node <span style="color:#f92672">=</span> node
+</span></span></code></pre></div><p>随后通过序言块的后继找到主分发器</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>main_dispatcher_node <span style="color:#f92672">=</span> list(supergraph<span style="color:#f92672">.</span>successors(prologue_node))[<span style="color:#ae81ff">0</span>]
+</span></span></code></pre></div><p>通过主分发器的前驱找到预分发器，前驱只有序言块和预分发器，所以可以排除序言块</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> node <span style="color:#f92672">in</span> supergraph<span style="color:#f92672">.</span>predecessors(main_dispatcher_node):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>addr <span style="color:#f92672">!=</span> prologue_node<span style="color:#f92672">.</span>addr:
+</span></span><span style="display:flex;"><span>        pre_dispatcher_node <span style="color:#f92672">=</span> node
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span></code></pre></div><p>通过预分发器的前驱找到真实块</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>relevant_nodes <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>nop_nodes <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> node <span style="color:#f92672">in</span> supergraph<span style="color:#f92672">.</span>predecessors(pre_dispatcher_node):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> node<span style="color:#f92672">.</span>size <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">8</span>:
+</span></span><span style="display:flex;"><span>        relevant_nodes<span style="color:#f92672">.</span>append(node)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span>
+</span></span></code></pre></div><p>其他块为子分发器（无用，后面可以直接nop掉），这一步可以和上一步压缩到一个循环中，根据块鱼预分发器是否存在边（<code>supergraph.has_edge(node, pre_dispatcher_node)</code>）来判断是否为真实块</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> node <span style="color:#f92672">in</span> supergraph<span style="color:#f92672">.</span>nodes():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> node <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> (pre_dispatcher_node, prologue_node, main_dispatcher_node, return_node) <span style="color:#f92672">and</span> node <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> relevant_nodes:
+</span></span><span style="display:flex;"><span>        nop_nodes<span style="color:#f92672">.</span>append(node)
+</span></span></code></pre></div><h3 id="重建控制流">重建控制流</h3>
+<p>真实块中也分为两种情况</p>
+<ol>
+<li>后继块唯一</li>
+<li>有两个后继块</li>
+</ol>
+<p>第一种情况直接进行符号执行，由块A走到块B即可</p>
+<p>第二种情况需要先令判断条件为True执行一次，随后再令判断条件为False执行一次</p>
+<p>使用flow记录真实块的后继块地址</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>flow <span style="color:#f92672">=</span> defaultdict(list)
+</span></span></code></pre></div><p>每次执行从一个真实块开始，当执行到另一个真实块时结</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>block_addrs <span style="color:#f92672">=</span> [node<span style="color:#f92672">.</span>addr <span style="color:#66d9ef">for</span> node <span style="color:#f92672">in</span> relevant_nodes] <span style="color:#f92672">+</span> [prologue_node<span style="color:#f92672">.</span>addr, return_node<span style="color:#f92672">.</span>addr]
+</span></span></code></pre></div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ctf/">CTF</a>
+        
+            <a href="/tags/reverse/">Reverse</a>
+        
+            <a href="/tags/angr/">angr</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/post/dragonctf-runofthemill-writeup/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DragonCTF Runofthemill Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/post/frida-labs/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Learning Frida with Labs</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/qwb2022-rev-writeups/">
+        
+        
+            <div class="article-image">
+                <img src="/post/qwb2022-rev-writeups/cover.857debcd860ee83d948aabfb4115b280_huf3a3154eb771834b8e58d0981851333b_950314_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post qwb 2022 rev writeups"
+                        
+                        data-hash="md5-hX3rzYYO6D2Uiqv7QRWygA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">qwb 2022 rev writeups</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/google-ctf-2022-mixed-writeup/">
+        
+        
+            <div class="article-image">
+                <img src="/post/google-ctf-2022-mixed-writeup/cover.9d2e20da231341f69d4c09358a236773_hue95b4dbc0185285c46e601051fa1d00b_430492_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Google CTF 2022 MIXED Writeup"
+                        
+                        data-hash="md5-nS4g2iMTQfadTAk1iiNncw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Google CTF 2022 MIXED Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/defcamp2022-can-you-crack-this-wp/">
+        
+        
+            <div class="article-image">
+                <img src="/post/defcamp2022-can-you-crack-this-wp/cover.676f309364fc3173b8b5757c12da83f2_huce52bdd0a85d719a9e95a81ea04327da_778452_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post DefCamp2022 can-you-crack-this Writeup"
+                        
+                        data-hash="md5-Z28wk2T8MXO4tXV8EtqD8g==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DefCamp2022 can-you-crack-this Writeup</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy;
+        
+        2025 s0uthwood&#39;s Blog
+    
+        
+            <br />
+            已运行 <i class="fas fa-bell"></i> <a id="days">0</a> 天
+        
+    
+        
+            &nbsp;&nbsp;
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            ⌨&nbsp;
+            87.32k&nbsp;
+            字
+            &nbsp;&nbsp;
+            🧠&nbsp;
+            40&nbsp;
+            篇文章
+        
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+
+    
+        <script>
+            var s1 = "2020-11-15";
+            s1 = new Date(s1.replace(/-/g, "/"));
+            s2 = new Date();
+            var days = s2.getTime() - s1.getTime();
+            var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+            document.getElementById('days').innerHTML = number_of_days;
+        </script>
+    
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#控制流平坦化">控制流平坦化</a>
+      <ul>
+        <li><a href="#环境搭建">环境搭建</a></li>
+        <li><a href="#混淆思路">混淆思路</a></li>
+        <li><a href="#解混淆思路">解混淆思路</a></li>
+        <li><a href="#识别混淆块">识别混淆块</a></li>
+        <li><a href="#重建控制流">重建控制流</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

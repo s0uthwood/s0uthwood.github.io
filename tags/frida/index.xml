@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Frida on s0uthwood&#39;s Blog</title>
+    <link>/tags/frida/</link>
+    <description>Recent content in Frida on s0uthwood&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 25 Oct 2024 22:21:06 +0000</lastBuildDate><atom:link href="/tags/frida/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Learning Frida with Labs</title>
+      <link>/post/frida-labs/</link>
+      <pubDate>Fri, 25 Oct 2024 22:21:06 +0000</pubDate>
+      
+      <guid>/post/frida-labs/</guid>
+      <description>Frida 基本原理 Labs 0x1 Hook方法 实验1主要是环境搭建，任务是使用frida hook一个静态方法
+题目的关键代码大致如下：
+public class MainActivity extends AppCompatActivity { public void onCreate(Bundle bundle) { // ... final int i = get_random(); // ... public void onClick() { String user_input = editText.getText().toString(); if (TextUtils.isDigitsOnly(user_input)) { MainActivity.this.check(i, Integer.parseInt(user_input)); } else { Toast.makeText(MainActivity.this, &amp;#34;Invalid input&amp;#34;, 1).show(); } } // ... } public static bool check(int i, int i2) { if (((i * 2) + 4) == i2) { // .</description>
+    </item>
+    
+  </channel>
+</rss>
