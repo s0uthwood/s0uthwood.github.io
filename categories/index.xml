@@ -6,7 +6,16 @@
     <description>Recent content in Categories on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Oct 2024 22:21:06 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 23 May 2025 23:44:45 +0800</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Reading</title>
+      <link>/categories/reading/</link>
+      <pubDate>Fri, 23 May 2025 23:44:45 +0800</pubDate>
+      
+      <guid>/categories/reading/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>CTF</title>
       <link>/categories/ctf/</link>
@@ -31,15 +40,6 @@
       <pubDate>Tue, 28 Feb 2023 01:55:25 +0800</pubDate>
       
       <guid>/categories/labs/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Reading</title>
-      <link>/categories/reading/</link>
-      <pubDate>Thu, 10 Nov 2022 10:28:09 +0800</pubDate>
-      
-      <guid>/categories/reading/</guid>
       <description></description>
     </item>
     

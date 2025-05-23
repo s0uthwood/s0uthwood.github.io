@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='记录下之前读过的论文吧'><title>Note-of-Paper 1: Snipuzz</title>
+
+<link rel='canonical' href='/post/note-of-paper-1-snipuzz/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Note-of-Paper 1: Snipuzz'>
+<meta property='og:description' content='记录下之前读过的论文吧'>
+<meta property='og:url' content='/post/note-of-paper-1-snipuzz/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Fuzzing' /><meta property='article:tag' content='Paper' /><meta property='article:tag' content='Reading' /><meta property='article:published_time' content='2025-05-23T23:44:45&#43;08:00'/><meta property='article:modified_time' content='2025-05-23T23:44:45&#43;08:00'/><meta property='og:image' content='/post/note-of-paper-1-snipuzz/cover.jpg' />
+<meta name="twitter:title" content="Note-of-Paper 1: Snipuzz">
+<meta name="twitter:description" content="记录下之前读过的论文吧"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='/post/note-of-paper-1-snipuzz/cover.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/post/note-of-paper-1-snipuzz/">
+                <img src="/post/note-of-paper-1-snipuzz/cover_hu328afc7168f3c282b3d05374f3ef8f7a_6139820_800x0_resize_q75_box.jpg"
+                        srcset="/post/note-of-paper-1-snipuzz/cover_hu328afc7168f3c282b3d05374f3ef8f7a_6139820_800x0_resize_q75_box.jpg 800w, /post/note-of-paper-1-snipuzz/cover_hu328afc7168f3c282b3d05374f3ef8f7a_6139820_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="450" 
+                        loading="lazy"
+                        alt="Featured image of post Note-of-Paper 1: Snipuzz" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/reading/" >
+                Reading
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/note-of-paper-1-snipuzz/">Note-of-Paper 1: Snipuzz</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        记录下之前读过的论文吧
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">May 23, 2025</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M4 20h4L18.5 9.5a1.5 1.5.0 00-4-4L4 16v4"></path>
+    <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
+</svg>
+                <time class="article-words">
+                    180 words
+                </time>
+            </div>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    1 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="论文简介">论文简介</h2>
+<blockquote>
+<p>Snipuzz: Black-box Fuzzing of IoT Firmware via Message Snippet Inference. In Proceedings of CCS 2021.</p>
+</blockquote>
+<p>其实这篇文章最核心也是最创新的工作就在于，对协议的响应信息进行了相似度计算，然后根据这个计算的结果来完成两个目标：</p>
+<ul>
+<li>协议格式解析</li>
+<li>反馈指导</li>
+</ul>
+<p>ok，直接开读</p>
+<h2 id="introduction">Introduction</h2>
+<ol>
+<li>物联网（IoT）设备现在越来越多，但同时又有各种安全问题，所以我们要早在攻击者之前就发现里面的漏洞</li>
+<li>很多方法都依赖固件的获取，但现在很多厂商都不公开固件了，所以可以用模糊测试来发送数据包并检测是否异常</li>
+<li>现有黑盒模糊测试方法有很多问题，以此引出了三大挑战
+<ul>
+<li>缺少反馈机制</li>
+<li>消息格式有很多，需要能自动推断</li>
+<li>响应中往往包含很多“随机”信息</li>
+</ul>
+</li>
+<li>作者简述了他们的解决方案
+<ul>
+<li>使用响应作为反馈</li>
+<li>根据响应初步推断消息中每个字节的角色</li>
+<li>利用编辑距离和凝聚分层聚类来忽略随机信息</li>
+</ul>
+</li>
+</ol>
+<h2 id="background">Background</h2>
+<p>这章介绍了Fuzz和IoT的通信架构（没有细看，大概是说，第一层是过滤，然后一个switch，之后执行，最后响应）</p>
+<h2 id="motivation">Motivation</h2>
+<p>也没有细看，大概是说这几个方法的灵感来源是什么，两个小节的末尾各自讲了下设计的大致思路</p>
+<p>第一个是使用响应来指导模糊测试，第二个是每次删掉一个字节，每次收集响应并比较，将相同反馈且连续的字节视作一个语法部分</p>
+<p>这章主要是通过一些背景或者现象来引出来这几个技术，看网上说安全的会议还是挺吃这套东西的，看重讲故事和创新，而不是用的技术有多么高级，这篇文章的思路确实很巧妙，没有用一些特别大的新的方法却很好地解决了一个实际问题，而且用响应来指导模糊测试确实给未来的工作带来了很大启发</p>
+<h2 id="method">Method</h2>
+<p>这就是正式开始讲细节了，主要是两个技术 (1) Message Sequence Acquisition (2) Snippet Determination</p>
+<p>整体框架上的话，初始种子中包含了很多个请求，每个请求都会收到响应，所以为每个请求划分一个响应池。接下来就是每个请求分开处理了，会对每个请求都进行语法片段的划分</p>
+<h3 id="message-sequence-acquisition">Message Sequence Acquisition</h3>
+<ul>
+<li>初始种子获取：一串消息，能够触发目标IoT设备的某个行为</li>
+<li>恢复消息：每次测试后，发送恢复消息让设备回到初始状态</li>
+</ul>
+<h3 id="snippet-determination">Snippet Determination</h3>
+<p><strong>4.2.1 语法片段划分</strong></p>
+<p>第一个阶段就是语法划分，Snipuzz的思路很简单，删除其中某个字节，看看响应是什么，再删除后面一个字节，看看响应是否一样，一样的话就认为这两个字节属于同一个语法片段。文章里的例子很直观，直接看例子吧。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Messages</th>
+<th style="text-align:left">Content</th>
+<th style="text-align:left">Responses</th>
+<th style="text-align:left">Content</th>
+<th style="text-align:center">Category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Message $m$</td>
+<td style="text-align:left"><code>{&quot;on&quot;:true}</code></td>
+<td style="text-align:left">$r_0$</td>
+<td style="text-align:left"><code>{&quot;success&quot;:&quot;...&quot;}</code></td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:left">$p_1$</td>
+<td style="text-align:left"><code>&quot;on&quot;:true}</code></td>
+<td style="text-align:left">$r_1$</td>
+<td style="text-align:left"><code>{&quot;error&quot;:&quot;type&quot;:2,&quot;description&quot;:&quot;invalid json&quot;}</code></td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:left">$p_2$</td>
+<td style="text-align:left"><code>{on&quot;:true}</code></td>
+<td style="text-align:left">$r_2$</td>
+<td style="text-align:left"><code>{&quot;error&quot;:&quot;type&quot;:2,&quot;description&quot;:&quot;invalid json&quot;}</code></td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:left">$p_3$</td>
+<td style="text-align:left"><code>{&quot;n&quot;:true}</code></td>
+<td style="text-align:left">$r_3$</td>
+<td style="text-align:left"><code>{&quot;error&quot;:&quot;type&quot;:6,&quot;description&quot;:&quot;n, not avaliable&quot;}</code></td>
+<td style="text-align:center">2</td>
+</tr>
+<tr>
+<td style="text-align:left">$p_4$</td>
+<td style="text-align:left"><code>{&quot;o&quot;:true}</code></td>
+<td style="text-align:left">$r_4$</td>
+<td style="text-align:left"><code>{&quot;error&quot;:&quot;type&quot;:6,&quot;description&quot;:&quot;o, not avaliable&quot;}</code></td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td style="text-align:left">$p_5$</td>
+<td style="text-align:left"><code>{&quot;on:true}</code></td>
+<td style="text-align:left">$r_5$</td>
+<td style="text-align:left"><code>{&quot;error&quot;:&quot;type&quot;:2,&quot;description&quot;:&quot;invalid json&quot;}</code></td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:left">$p_11$</td>
+<td style="text-align:left"><code>{&quot;on&quot;:true</code></td>
+<td style="text-align:left">$r_11$</td>
+<td style="text-align:left"><code>{&quot;error&quot;:&quot;type&quot;:2,&quot;description&quot;:&quot;invalid json&quot;}</code></td>
+<td style="text-align:center">1</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>$p_i$ 是 Probe message 的缩写</p>
+</blockquote>
+<p>那么这个例子最后划分的结果就是：</p>
+<p><code>{&quot;on&quot;:true}</code>: <code>{&quot;</code> | <code>o</code> | <code>n</code> | <code>&quot;:true}</code></p>
+<p>但看到这里不能忘了Introduction里还有一个挑战，那就是响应中是可能包含一些“随机”信息的，比方说时间戳，token这些</p>
+<p>所以作者给出的方法是，使用编辑距离来计算两个响应时间的相似度，具体计算公式如下：</p>
+<p>$$s_{kt}=1-\dfrac{edit_distance(r_k,r_t)}{max_len(r_k,r_t)}$$</p>
+<p>编辑距离是什么就不细讲了，应该是个比较经典的字符串比较算法吧</p>
+<p>那么这样就还有一个问题，相似度达到了多少才算是一样的响应呢？人为设定一个阈值吗？</p>
+<p>作者又给出了一个解决方案，我们不妨把$p_i$发送两次，这样就能接收到两个$r_i$，那么就可以算一个自相似度$s_{ii}$了。这样就可以用这个自相似度$s_{ii}$作为这个阈值，对于另外一个$p_j$的响应$r_j$，就可以计算$s_{ij}$和$s_{jj}$，如果$s_{ij}&lt;=min(s_{ii}, s{jj})$那么就可以认为两个响应是不一样的</p>
+<p><strong>4.2.2 分层聚类</strong></p>
+<p>考虑到划分结果还是会有问题，例如上面的例子里把<code>o</code>和<code>n</code>识别为了两个不同的语法片段，作者又想到了进一步的解决方案，也就是分层聚类</p>
+<p>具体方法是对每个响应构建一个向量：<code>(自相似度，响应长度，字母段数，数字段数量，符号段数)</code></p>
+<p>接下来根据向量的距离，不断对两个最相似的片段进行聚类</p>
+<p>这个结果将会用到后面的过程，也就是用于变异了</p>
+<blockquote>
+<p>其实一直不太明白这一步为什么要这么做，比如这个五元组是怎么构造出来的，为什么就要选择这5个参数，为什么算向量距离</p>
+</blockquote>
+<h3 id="片段变异">片段变异</h3>
+<p>每个变异方法都是对某个语法片段做变异</p>
+<ul>
+<li>Empty: 把某个片段删掉</li>
+<li>Byte Flip: 反转片段中的所有字节</li>
+<li>Data Boundary: 把数值数据修改为边界值（65536）</li>
+<li>Dictionary: 将某个片段替换为true或false等预定义字符串</li>
+<li>Repeat: 多次重复某个片段</li>
+</ul>
+<p>雪崩：选择多个片段来进行变异，直到出现新的响应类别或者崩溃之前，都不会停止雪崩变异</p>
+<h2 id="实验">实验</h2>
+<p>选择了20个IoT设备，和7个方法对比</p>
+<ul>
+<li>IoTFuzzer</li>
+<li>Nemesys</li>
+<li>Boofuzz
+<ul>
+<li>Boofuzz-Default</li>
+<li>Boofuzz-Byte：每个字节单独变异</li>
+<li>Boofuzz-Reversal：专注于非数据部分的变异</li>
+</ul>
+</li>
+<li>Doona</li>
+<li>Snipuzz-NoSnippet：和没有分段的自己做消融实验</li>
+</ul>
+<p>文章里说Peach是灰盒的，但我印象中应该是黑盒，不过对比的方法很多了，不缺这一个</p>
+<p>直接看发现的漏洞吧</p>
+<p>成功在5个设备中找到了13个漏洞，遗憾的是只在json格式的协议中发现了漏洞</p>
+<p>另外作者还计算了语法片段推理的效果，Snipuzz准确率达到了87.1%，而Nemesys只有64.5%。不过可惜作者没有按照JSON，SOAP，K-V pair等不同格式来计算准确率，挺好奇会不会有区别</p>
+<h2 id="讨论">讨论</h2>
+<p>讨论也不是很重要，大概看看吧</p>
+<p>可扩展性：已知有效的网络数据包，Snipuzz就可以测试IoT设备。作者给了三种方法：</p>
+<ol>
+<li>运行API程序和抓包，或者直接静态分析API程序</li>
+<li>反编译和污点分析3</li>
+<li>在APP和IoT设备之间抓包</li>
+</ol>
+<p>手动操作：需要收集初始种子</p>
+<p>可能的限制：</p>
+<ol>
+<li>缺少 API 程序，在这种情况下，可以使用类似于IoTFuzzer的方法（利用IoT设备的配套APP），但可能需要更多的手动工作</li>
+<li>加密，方法是把解密模块集成到Snipuzz中</li>
+<li>测试的范围会受到API功能的限制，比如API只有开灯，那调亮度部分的代码就测不到了，作者说未来可以通过重新组合来自不同种子的消息片段来生成新的有效输入（这里作者说的是Coverage会受到限制，这么写一开始让我有点迷惑，毕竟这个工作和Coverage按理说没啥关系，可能换成别的词会更好懂一些吧，不过也可能是我英语太菜了）</li>
+</ol>
+<h2 id="个人思考">个人思考</h2>
+<p>我感觉这个文章的思路是很新的，21年之前应该几乎没什么文章使用响应来做为反馈信息指导模糊测试，上一个有印象的应该是AFLNet？那篇文章用代码覆盖和状态两个指标共同反馈。不过这篇文章的另一个优势就是又通过反馈来对协议做了一个简单的语法分析。事实上，从这个思路往后展开也能进一步扩展到协议逆向这个方向上，不过可惜刚有这想法没多久就有人这么做了（DynPRE）。</p>
+<p>当然，这个方法的有效性还是有待商榷的，至少用开源的python版本代码体验比较一般。之前试了一个比较长的协议，会耗费很长时间在初始的语法片段分析上，不知道是不是打开的方式不对（不过作者自己也只在JSON里找到了漏洞）。而且对于具有关联信息的协议也不好用，比如对方做了个时间戳的校验，或者分配了一个uuid之类的，也就是场景还有一个隐藏的约束，那就是协议得能够重放，不过好在IoT设备应该都还是可以这么做的。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/fuzzing/">Fuzzing</a>
+        
+            <a href="/tags/paper/">Paper</a>
+        
+            <a href="/tags/reading/">Reading</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/post/rtfsc-linux-part3-a-new-process/">
+        
+        
+            <div class="article-image">
+                <img src="/post/rtfsc-linux-part3-a-new-process/cover.8fd9bcccc6f77f8ba79b36785b31e485_hu5438825b9b6d1014226d20d231e650c2_3269428_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post RTFSC-Linux0.11 Part3: A new process"
+                        
+                        data-hash="md5-j9m8zMb3f4unmzZ4WzHkhQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">RTFSC-Linux0.11 Part3: A new process</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/rtfsc-linux-part2-initialize/">
+        
+        
+            <div class="article-image">
+                <img src="/post/rtfsc-linux-part2-initialize/cover.51a2c26dbc5559910068f18a23a08356_hu9643fb71dc859aff420815f08f79089e_338546_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post RTFSC-Linux0.11 Part2: Initialize"
+                        
+                        data-hash="md5-UaLCbbxVWZEAaPGKI6CDVg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">RTFSC-Linux0.11 Part2: Initialize</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/rtfsc-linux-part1-from-bios-to-main/">
+        
+        
+            <div class="article-image">
+                <img src="/post/rtfsc-linux-part1-from-bios-to-main/cover.fb4bec4af5f1b25acc275c525efcab61_hu9a326951c8c9be216fda73ae6923adfc_1779523_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post RTFSC-Linux0.11 Part1: From BIOS to main"
+                        
+                        data-hash="md5-&#43;0vsSvXxslrMJ1xSXvyrYQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">RTFSC-Linux0.11 Part1: From BIOS to main</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="has-image">
+    <a href="/post/note-of-book-encryption-and-decryption/">
+        
+        
+            <div class="article-image">
+                <img src="/post/note-of-book-encryption-and-decryption/cover.c485ea85e1f847123fac81fc1611fb77_huf14a87ae5877971d635f5feb6ec88f93_885732_250x150_fill_q75_box_smart1.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 加密与解密学习笔记（持续更新ing）"
+                        
+                        data-hash="md5-xIXqheH4RxI/rIH8FhH7dw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">加密与解密学习笔记（持续更新ing）</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy;
+        
+        2025 s0uthwood&#39;s Blog
+    
+        
+            <br />
+            已运行 <i class="fas fa-bell"></i> <a id="days">0</a> 天
+        
+    
+        
+            &nbsp;&nbsp;
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            ⌨&nbsp;
+            87.50k&nbsp;
+            字
+            &nbsp;&nbsp;
+            🧠&nbsp;
+            41&nbsp;
+            篇文章
+        
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+
+    
+        <script>
+            var s1 = "2020-11-15";
+            s1 = new Date(s1.replace(/-/g, "/"));
+            s2 = new Date();
+            var days = s2.getTime() - s1.getTime();
+            var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+            document.getElementById('days').innerHTML = number_of_days;
+        </script>
+    
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#论文简介">论文简介</a></li>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#background">Background</a></li>
+    <li><a href="#motivation">Motivation</a></li>
+    <li><a href="#method">Method</a>
+      <ul>
+        <li><a href="#message-sequence-acquisition">Message Sequence Acquisition</a></li>
+        <li><a href="#snippet-determination">Snippet Determination</a></li>
+        <li><a href="#片段变异">片段变异</a></li>
+      </ul>
+    </li>
+    <li><a href="#实验">实验</a></li>
+    <li><a href="#讨论">讨论</a></li>
+    <li><a href="#个人思考">个人思考</a></li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
