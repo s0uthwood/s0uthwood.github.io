@@ -120,7 +120,7 @@
     <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
 </svg>
                 <time class="article-words">
-                    180 words
+                    182 words
                 </time>
             </div>
             <div>
@@ -270,7 +270,7 @@
 <blockquote>
 <p>其实一直不太明白这一步为什么要这么做，比如这个五元组是怎么构造出来的，为什么就要选择这5个参数，为什么算向量距离</p>
 </blockquote>
-<h3 id="片段变异">片段变异</h3>
+<h3 id="mutation-schemes">Mutation Schemes</h3>
 <p>每个变异方法都是对某个语法片段做变异</p>
 <ul>
 <li>Empty: 把某个片段删掉</li>
@@ -280,7 +280,7 @@
 <li>Repeat: 多次重复某个片段</li>
 </ul>
 <p>雪崩：选择多个片段来进行变异，直到出现新的响应类别或者崩溃之前，都不会停止雪崩变异</p>
-<h2 id="实验">实验</h2>
+<h2 id="experimental-evaluation">Experimental Evaluation</h2>
 <p>选择了20个IoT设备，和7个方法对比</p>
 <ul>
 <li>IoTFuzzer</li>
@@ -299,7 +299,7 @@
 <p>直接看发现的漏洞吧</p>
 <p>成功在5个设备中找到了13个漏洞，遗憾的是只在json格式的协议中发现了漏洞</p>
 <p>另外作者还计算了语法片段推理的效果，Snipuzz准确率达到了87.1%，而Nemesys只有64.5%。不过可惜作者没有按照JSON，SOAP，K-V pair等不同格式来计算准确率，挺好奇会不会有区别</p>
-<h2 id="讨论">讨论</h2>
+<h2 id="discussion">Discussion</h2>
 <p>讨论也不是很重要，大概看看吧</p>
 <p>可扩展性：已知有效的网络数据包，Snipuzz就可以测试IoT设备。作者给了三种方法：</p>
 <ol>
@@ -713,11 +713,11 @@
       <ul>
         <li><a href="#message-sequence-acquisition">Message Sequence Acquisition</a></li>
         <li><a href="#snippet-determination">Snippet Determination</a></li>
-        <li><a href="#片段变异">片段变异</a></li>
+        <li><a href="#mutation-schemes">Mutation Schemes</a></li>
       </ul>
     </li>
-    <li><a href="#实验">实验</a></li>
-    <li><a href="#讨论">讨论</a></li>
+    <li><a href="#experimental-evaluation">Experimental Evaluation</a></li>
+    <li><a href="#discussion">Discussion</a></li>
     <li><a href="#个人思考">个人思考</a></li>
   </ul>
 </nav>
