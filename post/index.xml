@@ -6,7 +6,62 @@
     <description>Recent content in Posts on s0uthwood&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 23 May 2025 23:44:45 +0800</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 05 Apr 2026 00:20:50 +0800</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>一些简单的记录</title>
+      <link>/post/simple-notes/</link>
+      <pubDate>Sun, 05 Apr 2026 00:20:50 +0800</pubDate>
+      
+      <guid>/post/simple-notes/</guid>
+      <description>节选了一部分内容，用AI翻译了一下
+有些感觉不重要的没放进来，还有些可能有趣但没有读的扔到了后面
+现状 QUICK: In terms of what you’re doing with investing. I mean, that’s a huge amount of money. How much cash does Berkshire have on hand at this point?
+目前伯克希尔公司手头持有多少现金？
+BUFFETT: I don’t know the exact number, but it’s not much different than before. So you know, it’s probably north of $350 billion in cash and treasury bills.
+我不清楚确切数额，但和此前相比没有太大变化。我们持有的现金及短期国库券总额，大概在3500 亿美元以上。
+QUICK: Yeah. So –
+BUFFETT: We bought 17 billion this week.</description>
+    </item>
+    
+    <item>
+      <title>秋招小结</title>
+      <link>/post/brief-summary-of-campus-recruitment/</link>
+      <pubDate>Fri, 03 Apr 2026 13:00:00 +0800</pubDate>
+      
+      <guid>/post/brief-summary-of-campus-recruitment/</guid>
+      <description>写在前面 简单聊聊整体的感受
+bg短板挺多的，没有实习，没有好论文，学历比不过清北爷，但也没专门准备过笔面（后期笔试前会上公司主页看一下信息，感觉够用），建议别学我 一定要有实习，很重要，被问过无数次为什么没实习 回忆起来比较深刻的一点是，不要把群面想得太复杂，想到什么正常表达出来就行，本质上是行为面+再筛选一轮简历（个人理解，仅供参考），（当然我对于此类面试形式深恶痛绝，坚决反对） 我的理解：树立良好的心态，面试就是要展示真实的一面，“招聘”与“应聘”，这两件事情是统一的（在面试过程中同步发生的）（所以我也不喜欢“求职”这个说法） 经历介绍 投的主要地方还是国央企，很多公司和单位公开说还是不太好，就大概按照类型说一下了（具体信息网上还是挺多的，我xhs上看到不少人分享，但我还是保守着说吧）
+下面顺序是完全打乱的，想到哪里就写哪里，可能也会有些遗忘的，想起来再补吧
+某体系内的所 印象中这个体系主要有进度的是三个地方：
+某t1所的子公司，offer，个人感觉平台小+待遇一般 某it为主业的所，offer 某it非主业的所，hr面（没去，不想折腾了） 其实不去主要是体系问题，个人感觉部分面试体验还是挺好的，有几位面试官人很好
+另外现在应该是都没编制了，吸引力更弱了一些
+网上很多不懂的把这一类央国企排得很靠前，只能说很不合理了
+四大行总部 都没拿到offer，也没啥特殊的信息，就直接点名说一下吧
+交行总部base原因，没报 邮储总部忘了啥情况了 中行笔试和移动冲突了（后悔死了） 农行因为在上一个群面后心态崩了没去（也很后悔） 工行群面和别人意见不一致，然后笔试没做好 建行回答问题都不太好 无所谓吧，感觉我也不适合总行
+某城商行总行 怎么说呢，不知道为啥管培进了群面，技术反而没进 面试没通过，也挺好 四大行北分 好像没啥特殊的，印象里只有农行北分拿了offer
+四大行直属 印象中总共拿了农数 建数 交软，别的忘了 工行直属因为和政策行冲突了就没去 政策行 国开报的产业投融，没去面试 农发面试了，单纯没过 口行，忘了去没去笔试 某类似国企的制造业公司 offer
+不喜欢企业文化，pass
+某类似外企的制造业公司 offer
+比较意外的待遇，但个人感觉这个公司的护城河是有隐患的，而且网上看到的各种事件越来越多
+招聘很人性化
+运营商 三大运营商都没给啥机会，我也只报了总部和北分，子公司根本不报
+有印象的是面试了电信总部，当时还是第一次穿西装面试
+移动的时间安排真的拉完了，永远在和别的地方冲突，第二次冲突的时候放弃移动了，考完另一个机试之后找了个教师用30分钟做了场笔试（竟然没过，想不通）
+星网不招，这个很可惜，还是挺想试试的
+某矿业央企贵金属子公司 二面（未通过）
+唯一一个两轮面试都是无领导的，面试体验拉完了，喜欢搞压力面，理解不了，面试的时候直接摆了
+当然据说待遇巨好
+某顶级保险央企 offer
+去听了待遇介绍，个人感觉很夯
+但感觉毕竟不是核心部门，并且这个方向目前看中的产出还是政策导向的（说的比较委婉了）
+某庞大央企的保险子公司 offer
+感觉可能是个小众宝藏公司？收到offer的时候已经签约了，就没继续聊
+三桶油 某财务子公司 二面（未通过）
+应该是很顶级的公司，只招1个人，笔试完筛选后大概是70多人，一面是群面，二面入围了12个人，形式比较特殊，现场做一个汇报，可惜没通过
+某下属银行 offer
+报名的时候以为是银行的总部，但offer里写的好像是类似分行的地方，那就没必要去了</description>
+    </item>
+    
     <item>
       <title>Note-of-Paper 1: Snipuzz</title>
       <link>/post/note-of-paper-1-snipuzz/</link>
