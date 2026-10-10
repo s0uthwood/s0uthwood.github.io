@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='发现Codex占用了30多个GB的空间，排查了一下'><title>ChatGPT Crashpad 崩溃分析</title>
+
+<link rel='canonical' href='/post/chatgpt-crashpad/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='ChatGPT Crashpad 崩溃分析'>
+<meta property='og:description' content='发现Codex占用了30多个GB的空间，排查了一下'>
+<meta property='og:url' content='/post/chatgpt-crashpad/'>
+<meta property='og:site_name' content='s0uthwood&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Daily' /><meta property='article:published_time' content='2026-10-09T20:07:43&#43;00:00'/><meta property='article:modified_time' content='2026-10-09T20:07:43&#43;00:00'/><meta property='og:image' content='/post/chatgpt-crashpad/cover.jpg' />
+<meta name="twitter:title" content="ChatGPT Crashpad 崩溃分析">
+<meta name="twitter:description" content="发现Codex占用了30多个GB的空间，排查了一下"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='/post/chatgpt-crashpad/cover.jpg' />
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/post/chatgpt-crashpad/">
+                <img src="/post/chatgpt-crashpad/cover_hu9c18cb951cf59d36031a124084f68345_529579_800x0_resize_q75_box.jpg"
+                        srcset="/post/chatgpt-crashpad/cover_hu9c18cb951cf59d36031a124084f68345_529579_800x0_resize_q75_box.jpg 800w, /post/chatgpt-crashpad/cover_hu9c18cb951cf59d36031a124084f68345_529579_1600x0_resize_q75_box.jpg 1600w"
+                        width="800" 
+                        height="450" 
+                        loading="lazy"
+                        alt="Featured image of post ChatGPT Crashpad 崩溃分析" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/daily/" >
+                Daily
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/post/chatgpt-crashpad/">ChatGPT Crashpad 崩溃分析</a>
+    </h2>
+
+    
+    <h3 class="article-subtitle">
+        发现Codex占用了30多个GB的空间，排查了一下
+    </h3>
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 09, 2026</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M4 20h4L18.5 9.5a1.5 1.5.0 00-4-4L4 16v4"></path>
+    <line x1="13.5" y1="6.5" x2="17.5" y2="10.5"></line>
+</svg>
+                <time class="article-words">
+                    182 words
+                </time>
+            </div>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    1 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="1-报告概况">1. 报告概况</h2>
+<ul>
+<li><strong>报告日期：</strong> 2026-10-09</li>
+<li><strong>涉及应用：</strong> ChatGPT macOS 桌面应用</li>
+<li><strong>涉及组件：</strong> <code>browser_crashpad_handler</code>（崩溃报告处理进程）</li>
+<li><strong>检查目录：</strong> <code>$HOME/Library/Application Support/Codex/Crashpad/pending/</code></li>
+<li><strong>相关issue：</strong> <a class="link" href="https://github.com/openai/codex/issues/47466"  target="_blank" rel="noopener"
+    >https://github.com/openai/codex/issues/47466</a></li>
+</ul>
+<h2 id="2-执行摘要">2. 执行摘要</h2>
+<p>在 ChatGPT macOS 应用使用的 Crashpad 待处理报告目录中，发现异常规模的转储文件积累，<strong>目录占用约 30 GB</strong>。目录统计显示共有 <strong>344,006 个文件</strong>，其中 <strong>171,998 个 <code>.dmp</code> 文件</strong>，合计占用 <strong>28.900 GiB</strong>。文件主要集中形成于 <strong>2026-09-07 至 2026-09-15</strong>，2026-09-10 为目录文件增长峰值，当天新增 <strong>38,002 个 <code>.dmp</code></strong>。</p>
+<p>在已分析的 ChatGPT 相关样本中，发生异常的进程为 <code>browser_crashpad_handler</code>，即 ChatGPT 内置的 Crashpad 崩溃报告处理进程。相关样本指向同一类 macOS Mach 端口通知请求失败，随后触发程序内置的致命检查。</p>
+<p><strong>统计口径说明：</strong> 上述文件数、体积和每日新增量是 <strong>Crashpad 目录层面的统计</strong>，不是逐份核验后的 ChatGPT 进程崩溃次数。因此，本报告不将全部 <code>171,998</code> 份 <code>.dmp</code> 等同于已确认的 ChatGPT 崩溃，也不据此断言每份文件的来源。</p>
+<h2 id="3-目录统计与时间分布">3. 目录统计与时间分布</h2>
+<table>
+<thead>
+<tr>
+<th>统计项目</th>
+<th style="text-align:right">检查结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>待处理报告目录占用</td>
+<td style="text-align:right">约 30 GB</td>
+</tr>
+<tr>
+<td>目录总文件数</td>
+<td style="text-align:right">344,006</td>
+</tr>
+<tr>
+<td><code>.dmp</code> 转储文件数</td>
+<td style="text-align:right">171,998</td>
+</tr>
+<tr>
+<td><code>.dmp</code> 文件总大小</td>
+<td style="text-align:right">28.900 GiB</td>
+</tr>
+<tr>
+<td><code>.json</code> 元数据文件数</td>
+<td style="text-align:right">172,008</td>
+</tr>
+<tr>
+<td><code>.json</code> 文件总大小</td>
+<td style="text-align:right">约 3.9 MiB</td>
+</tr>
+<tr>
+<td>报告文件增长主要集中期</td>
+<td style="text-align:right">2026-09-07 至 2026-09-15</td>
+</tr>
+<tr>
+<td>单日 <code>.dmp</code> 增量峰值</td>
+<td style="text-align:right">2026-09-10：38,002 份</td>
+</tr>
+</tbody>
+</table>
+<p>在目录增量峰值日，按全天 24 小时计算，平均约每小时生成 <strong>1,583 份</strong>转储文件，折合约每 <strong>2.3 秒</strong>生成一份。该速度体现的是报告目录增长频率，不能直接视为已确认的 ChatGPT 主进程崩溃频率。</p>
+<p>检查时，<code>pending</code> 目录积累了大量待处理文件，而 <code>completed</code> 目录为空。这表明报告未在检查时形成可见的已完成归档记录；仅凭这一点，尚不能确认具体的上传失败原因。</p>
+<h2 id="4-chatgpt-crashpad-崩溃样本分析">4. ChatGPT Crashpad 崩溃样本分析</h2>
+<p>已确认的 ChatGPT Crashpad 样本记录了以下进程：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>ChatGPT.app / Codex Framework / Helpers / browser_crashpad_handler
+</span></span></code></pre></div><p>样本中的关键错误信息为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>FATAL: third_party/crashpad/crashpad/handler/mac/exception_handler_server.cc:76
+</span></span><span style="display:flex;"><span>Check failed: kr == KERN_SUCCESS.
+</span></span><span style="display:flex;"><span>mach_port_request_notification: (os/kern) invalid capability (20)
+</span></span></code></pre></div><p>该信息说明，Crashpad 在 macOS 异常处理服务中调用 <code>mach_port_request_notification</code> 时，收到 <code>invalid capability (20)</code> 错误；随后，程序对 <code>KERN_SUCCESS</code> 的检查失败并触发致命终止。</p>
+<p>所分析的 ChatGPT Crashpad 样本具有相同的关键错误签名，说明存在<strong>可重复出现的同类型故障</strong>。但转储证据尚不足以确定最初的 Mach 端口状态为何不满足请求条件，也不能仅凭这些样本证明 ChatGPT 主应用在每次报告生成时都同步退出。</p>
+<h2 id="5-故障机制初步判断">5. 故障机制初步判断</h2>
+<p>从错误内容和目录增长规模来看，较为合理的解释是：ChatGPT 内置的 Crashpad 处理进程发生异常终止后，在重新启动或被监控的情况下再次遇到相同错误，从而造成反复生成转储报告的现象。</p>
+<p>可能的过程如下：</p>
+<ol>
+<li>ChatGPT 的 Crashpad 处理进程启动或执行异常监控工作。</li>
+<li>进程请求 macOS Mach 端口通知，系统返回 <code>invalid capability (20)</code>。</li>
+<li>Crashpad 内部致命检查失败，处理进程终止。</li>
+<li>若处理进程被重新启动或被再次监控，便可能重复触发故障，持续积累待处理报告。</li>
+</ol>
+<p><strong>证据边界：</strong> 样本可以直接支持错误位置与失败类型；关于“自动重新启动、循环生成”的具体触发机制属于结合统计现象作出的推断，仍需进程日志或稳定复现来验证。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/daily/">Daily</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy;
+        
+        2026 s0uthwood&#39;s Blog
+    
+        
+            <br />
+            已运行 <i class="fas fa-bell"></i> <a id="days">0</a> 天
+        
+    
+        
+            &nbsp;&nbsp;
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            ⌨&nbsp;
+            96.50k&nbsp;
+            字
+            &nbsp;&nbsp;
+            🧠&nbsp;
+            44&nbsp;
+            篇文章
+        
+    </section>
+
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.5.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+
+    
+        <script>
+            var s1 = "2020-11-15";
+            s1 = new Date(s1.replace(/-/g, "/"));
+            s2 = new Date();
+            var days = s2.getTime() - s1.getTime();
+            var number_of_days = parseInt(days / (1000 * 60 * 60 * 24));
+            document.getElementById('days').innerHTML = number_of_days;
+        </script>
+    
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-报告概况">1. 报告概况</a></li>
+    <li><a href="#2-执行摘要">2. 执行摘要</a></li>
+    <li><a href="#3-目录统计与时间分布">3. 目录统计与时间分布</a></li>
+    <li><a href="#4-chatgpt-crashpad-崩溃样本分析">4. ChatGPT Crashpad 崩溃样本分析</a></li>
+    <li><a href="#5-故障机制初步判断">5. 故障机制初步判断</a></li>
+  </ul>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
